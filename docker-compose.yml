@@ -6,3 +6,5 @@ services:
     restart: always
     ports:
       - 8686:80
+    volumes:
+    - ./logs:/var/log
