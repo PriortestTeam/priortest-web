@@ -1,8 +1,13 @@
 version: '2.0'
 services:
-  shenshou:
+  oneclick-web:
     image: oneclick-web
     container_name: oneclick-web
     restart: always
     ports:
       - 8082:8080
+
+networks:
+  default:
+    external:
+      name: bridge
