@@ -6,7 +6,7 @@ export const getRequest = (url, params) => {
         url: `${url}`,
         params: params,
         headers: {
-            'Authorization' : '\teyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjIwMTg2MTAwQHFxLmNvbSIsImV4cCI6MTYwNTYyNTQ4NiwiaWF0IjoxNjA1NjIxODg2fQ.ZzUHAdgMJGipQTX9_IsW60pE5OLHkbfgQnK-kcJcaPM'
+            'Authorization' : 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjIwMTg2MTAwQHFxLmNvbSIsImV4cCI6MTYwNTYyNjg4MywiaWF0IjoxNjA1NjIzMjgzfQ.32l7L1Qb08vaPLNsHsTCAl1avZwF94WczIh-zzSN0Ww'
         }
     });
 };
