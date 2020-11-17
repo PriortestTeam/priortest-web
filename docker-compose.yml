@@ -1,0 +1,8 @@
+version: '2.0'
+services:
+  shenshou:
+    image: oneclick-web
+    container_name: oneclick-web
+    restart: always
+    ports:
+      - 8082:8080
