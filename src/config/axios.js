@@ -1,12 +1,11 @@
 import axios from 'axios';
 
-export const getRequest = (url, params) => {
+export const getRequest = (url) => {
     return axios({
         method: 'get',
         url: `${url}`,
-        params: params,
         headers: {
-            'Authorization' : 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjIwMTg2MTAwQHFxLmNvbSIsImV4cCI6MTYwNTYyNjg4MywiaWF0IjoxNjA1NjIzMjgzfQ.32l7L1Qb08vaPLNsHsTCAl1avZwF94WczIh-zzSN0Ww'
+            'Authorization' : 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjIwMTg2MTAwQHFxLmNvbSIsImV4cCI6MTYwNTY2NTUzNSwiaWF0IjoxNjA1NjYxOTM1fQ.7LSEcQ9_Pfpya8_wNEdusET-FyewtwLj0kIHwqzZqMk'
         }
     });
 };
