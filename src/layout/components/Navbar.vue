@@ -1,17 +1,17 @@
 <template>
   <div class="navbar">
     <!-- 头部选择栏 -->
-    <div class="one_logo">
+    <div class="one_logo" @click="gohome">
       <img src="../../icons/img/one-logo.png" alt="" srcset="">
     </div>
     <div class="one_title">
-      <div>Project A</div>
-      <div>Feature</div>
-      <div>Sprint</div>
-      <div>TestCase</div>
-      <div>TestCycle</div>
-      <div>Issue</div>
-      <div>SignOff</div>
+      <div @click="goProject">Project A</div>
+      <div @click="goFeature">Feature</div>
+      <div @click="goSprint">Sprint</div>
+      <div @click="goTestCase">TestCase</div>
+      <div @click="goTestCycle">TestCycle</div>
+      <div @click="goIssue">Issue</div>
+      <div @click="goSignOff">SignOff</div>
       <div>
         <el-input
           v-model="Idsearch"
@@ -34,7 +34,7 @@
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -68,7 +68,33 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    // goAll
+    goFeature() {
+      this.$router.push({ name: 'Feature' })
+    },
+    goSprint() {
+      this.$router.push({ name: 'Sprint' })
+    },
+    goTestCase() {
+      this.$router.push({ name: 'TestCase' })
+    },
+    goTestCycle() {
+      this.$router.push({ name: 'TestCycle' })
+    },
+    goIssue() {
+      this.$router.push({ name: 'Issue' })
+    },
+    goSignOff() {
+      this.$router.push({ name: 'SignOff' })
+    },
+    goProject() {
+      this.$router.push({ name: 'Project' })
+    },
+    gohome() {
+      this.$router.push({ name: 'Dashboard' })
     }
+
   }
 }
 </script>
@@ -154,7 +180,7 @@ export default {
     }
   }
   .one_title{
-    width: 85%;
+    width: 80%;
     display: flex;
     border: 1px solid $tabcolorBG;
     border-radius: 25px;
@@ -164,7 +190,7 @@ export default {
     color: #d4dce3;
     div{
       box-sizing: border-box;
-      padding: 5px 20px;
+      padding: 5px 15px;
       cursor: pointer;
     }
     ::v-deep .el-input{
@@ -179,6 +205,8 @@ export default {
   }
   .one_logo{
     width: 10%;
+    cursor: pointer;
+    margin: 0 -20px 0 15px;
   }
 }
 </style>

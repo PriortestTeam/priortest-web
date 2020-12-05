@@ -56,6 +56,84 @@ export const constantRoutes = [
   },
 
   {
+    path: '/Feature',
+    component: Layout,
+    redirect: '/Feature',
+    children: [{
+      path: 'feature',
+      name: 'Feature',
+      component: () => import('@/views/Feature/index'),
+      meta: { title: 'Feature', icon: 'Feature' }
+    }]
+  },
+  {
+    path: '/Sprint',
+    component: Layout,
+    redirect: '/Sprint',
+    children: [{
+      path: 'sprint',
+      name: 'Sprint',
+      component: () => import('@/views/Sprint/index'),
+      meta: { title: 'Sprint', icon: 'Sprint' }
+    }]
+  },
+  {
+    path: '/TestCase',
+    component: Layout,
+    redirect: '/TestCase',
+    children: [{
+      path: 'testCase',
+      name: 'TestCase',
+      component: () => import('@/views/TestCase/index'),
+      meta: { title: 'TestCase', icon: 'TestCase' }
+    }]
+  },
+  {
+    path: '/TestCycle',
+    component: Layout,
+    redirect: '/TestCycle',
+    children: [{
+      path: 'testCycle',
+      name: 'TestCycle',
+      component: () => import('@/views/TestCycle/index'),
+      meta: { title: 'TestCycle', icon: 'TestCycle' }
+    }]
+  },
+  {
+    path: '/Issue',
+    component: Layout,
+    redirect: '/Issue',
+    children: [{
+      path: 'issue',
+      name: 'Issue',
+      component: () => import('@/views/Issue/index'),
+      meta: { title: 'Issue', icon: 'Issue' }
+    }]
+  },
+  {
+    path: '/SignOff',
+    component: Layout,
+    redirect: '/SignOff',
+    children: [{
+      path: 'signOff',
+      name: 'SignOff',
+      component: () => import('@/views/SignOff/index'),
+      meta: { title: 'SignOff', icon: 'SignOff' }
+    }]
+  },
+  {
+    path: '/Project',
+    component: Layout,
+    redirect: '/Project',
+    children: [{
+      path: 'project',
+      name: 'Project',
+      component: () => import('@/views/Project/index'),
+      meta: { title: 'Project', icon: 'Project' }
+    }]
+  },
+  // ///////////////////////////////////////////////////
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
