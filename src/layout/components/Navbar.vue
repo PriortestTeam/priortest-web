@@ -1,46 +1,44 @@
 <template>
   <div class="navbar">
-    <el-row>
-      <el-col :span="3">
-        <!-- 头部选择栏 -->
-        <img
-          class="one_logo"
-          @click="gohome"
-          src="../../icons/img/one-logo.png"
-          alt=""
-          srcset=""
-        />
-      </el-col>
-      <el-col :span="19">
-        <div class="one_title">
-          <div
-            :class="['item', itemIndex === index ? 'active' : '']"
-            v-for="(item, index) in clickItem"
-            :key="index"
-            @click="goProject(index, item)"
-          >
-            {{ item }}
-          </div>
-          <!-- <div class="item" @click="goFeature">Feature</div>
-          <div class="item" @click="goSprint">Sprint</div>
-          <div class="item" @click="goTestCase">TestCase</div>
-          <div class="item" @click="goTestCycle">TestCycle</div>
-          <div class="item" @click="goIssue">Issue</div>
-          <div class="item" @click="goSignOff">SignOff</div> -->
-          <el-input v-model="Idsearch" size="mini" placeholder="id/text">
-            <i slot="prefix" class="el-input__icon el-icon-search" />
-          </el-input></div
-      ></el-col>
-      <el-col :span="2">
-        <div class="right-menu">
-          <img class="user-avatar" :src="avatar + '?imageView2/1/w/80/h/80'" />
-          <svg-icon
-            icon-class="tuichu"
-            @click.native="logout"
-            class="tuichu"
-          /></div
-      ></el-col>
-    </el-row>
+    <!-- 头部选择栏 -->
+    <div class="one_logo">
+      <img src="../../icons/img/one-logo.png" alt="" srcset="">
+    </div>
+    <div class="one_title">
+      <div>Project A</div>
+      <div>Feature</div>
+      <div>Sprint</div>
+      <div>TestCase</div>
+      <div>TestCycle</div>
+      <div>Issue</div>
+      <div>SignOff</div>
+      <div>
+        <el-input
+          v-model="Idsearch"
+          placeholder="id/text"
+        >
+          <i slot="prefix" class="el-input__icon el-icon-search" />
+        </el-input>
+      </div>
+    </div>
+    <div class="right-menu">
+      <el-dropdown class="avatar-container" trigger="click">
+        <div class="avatar-wrapper">
+          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <i class="el-icon-caret-bottom" />
+        </div>
+        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+          <router-link to="/">
+            <el-dropdown-item>
+              Home
+            </el-dropdown-item>
+          </router-link>
+          <el-dropdown-item divided @click.native="logout">
+            <span style="display:block;">Log Out</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
@@ -54,9 +52,7 @@ export default {
   },
   data() {
     return {
-      Idsearch: '',
-      itemIndex: '',
-      clickItem: ['Project A', 'Feature', 'Sprint', 'TestCase', 'TestCycle', 'Issue', 'SignOff']
+      Idsearch: ''
     }
   },
   computed: {
@@ -65,9 +61,6 @@ export default {
       'avatar'
     ])
   },
-  mounted() {
-    this.itemIndex = ''
-  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -75,88 +68,117 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    },
-    goProject(index, item) {
-      this.itemIndex = index
-      if (item === 'Project A') {
-        this.$router.push({ name: 'Project' })
-        return
-      }
-      this.$router.push({ name: item })
-    },
-    gohome() {
-      this.$router.push({ name: 'Dashboard' })
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "@/styles/color.scss";
-
 .navbar {
-  padding: 0 $spacing;
-  height: 46px;
-  box-sizing: border-box;
+  height: 80px;
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  .right-menu {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 46px;
-    .user-avatar {
-      cursor: pointer;
-      width: 38px;
-      height: 38px;
-      border-radius: 25px;
-    }
-    .tuichu {
-      font-size: 28px;
-      color: #333;
-      margin-left: 10px;
-      cursor: pointer;
-      margin-left: 20px;
+  .hamburger-container {
+    line-height: 46px;
+    height: 100%;
+    float: left;
+    cursor: pointer;
+    transition: background .3s;
+    -webkit-tap-highlight-color:transparent;
+
+    &:hover {
+      background: rgba(0, 0, 0, .025)
     }
   }
-  .one_title {
-    display: flex;
-    border: 1px solid $tabcolorBG;
-    border-radius: 23px;
-    height: 46px;
-    background: $tabcolorBG;
-    align-items: center;
-    box-sizing: border-box;
-    color: $btnFontbgcolor;
-    .item {
-      height: 100%;
-      padding: 0 15px;
-      line-height: 44px;
-      cursor: pointer;
+
+  .breadcrumb-container {
+    float: left;
+  }
+
+  .right-menu {
+    width: 5%;
+    // float: right;
+    // height: 100%;
+    // line-height: 50px;
+
+    &:focus {
+      outline: none;
     }
-    // .item.active {
-    //   background: #fff;
-    //   color: $tabcolorBG;
-    //   border-radius: 25px;
-    // }
-    ::v-deep .el-input {
-      width: 25%;
-      margin-left: 30px;
-      .el-input__inner {
-        border-radius: 15px;
+
+    .right-menu-item {
+      display: inline-block;
+      padding: 0 8px;
+      height: 100%;
+      font-size: 18px;
+      color: #5a5e66;
+      vertical-align: text-bottom;
+
+      &.hover-effect {
+        cursor: pointer;
+        transition: background .3s;
+
+        &:hover {
+          background: rgba(0, 0, 0, .025)
+        }
+      }
+    }
+
+    .avatar-container {
+      margin-right: 30px;
+
+      .avatar-wrapper {
+        margin-top: 5px;
+        position: relative;
+
+        .user-avatar {
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
+
+        .el-icon-caret-bottom {
+          cursor: pointer;
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
+        }
       }
     }
   }
-  .one_logo {
-    cursor: pointer;
-    width: 90%;
-    height: auto;
-    height: 46px;
+  .one_title{
+    width: 85%;
+    display: flex;
+    border: 1px solid $tabcolorBG;
+    border-radius: 25px;
+    background: $tabcolorBG;
+    justify-content: flex-start;
+    align-items: center;
+    color: #d4dce3;
+    div{
+      box-sizing: border-box;
+      padding: 5px 20px;
+      cursor: pointer;
+    }
+    ::v-deep .el-input{
+      .el-input__inner{
+      height: 25px;
+      border-radius: 15px;
+    }
+    .el-input__prefix{
+      left: 22px;
+    }
+    }
+  }
+  .one_logo{
+    width: 10%;
   }
 }
 </style>
