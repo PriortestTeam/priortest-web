@@ -3,12 +3,13 @@
 @import './transition.scss';
 @import './element-ui.scss';
 @import './sidebar.scss';
-
+@import './color.scss';
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  font-size: 14px;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
 
@@ -58,8 +59,15 @@ div:focus {
     height: 0;
   }
 }
-
 // main-container global css
 .app-container {
-  padding: 20px;
+  padding: $spacing;
+}
+//@at-root 布局总设置
+.el-row {
+  width: 100%;
+}
+//文字按钮颜色修改颜色
+.el-button--text, .el-button--text:focus, .el-button--text:hover{
+  color:$btnbgcolor
 }
