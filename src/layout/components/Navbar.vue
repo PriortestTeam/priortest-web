@@ -22,22 +22,21 @@
       </div>
     </div>
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-        </div>
+      <div class="avatar-wrapper">
+        <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+        <!-- <i class="el-icon-caret-bottom" /> -->
+      </div>
+      <div @click.native="logout"> <svg-icon icon-class="tuichu" class="tuichu" /></div>
+      <!-- <el-dropdown class="avatar-container" trigger="click">
+        <el-dropdown-item divided @click.native="logout" />
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
               Home
             </el-dropdown-item>
           </router-link>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">退出</span>
-          </el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown> -->
     </div>
   </div>
 </template>
@@ -108,7 +107,7 @@ export default {
   background: #fff;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   .hamburger-container {
     line-height: 46px;
@@ -128,15 +127,33 @@ export default {
   }
 
   .right-menu {
-    width: 5%;
+    // width: 5%;
     // float: right;
     // height: 100%;
     // line-height: 50px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .avatar-wrapper{
+        margin-top: 5px;
+        position: relative;
 
+        .user-avatar {
+          cursor: pointer;
+          width: 45px;
+          height: 45px;
+          border-radius: 25px;
+        }
+    }
     &:focus {
       outline: none;
     }
-
+.tuichu{
+  font-size: 28px;
+  color: #333;
+  margin-left: 10px;
+  cursor: pointer;
+}
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;
@@ -158,25 +175,25 @@ export default {
     .avatar-container {
       margin-right: 30px;
 
-      .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
+      // .avatar-wrapper {
+      //   margin-top: 5px;
+      //   position: relative;
 
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
+      //   .user-avatar {
+      //     cursor: pointer;
+      //     width: 40px;
+      //     height: 40px;
+      //     border-radius: 10px;
+      //   }
 
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
-        }
-      }
+      //   .el-icon-caret-bottom {
+      //     cursor: pointer;
+      //     position: absolute;
+      //     right: -20px;
+      //     top: 25px;
+      //     font-size: 12px;
+      //   }
+      // }
     }
   }
   .one_title{
@@ -187,7 +204,7 @@ export default {
     background: $tabcolorBG;
     justify-content: flex-start;
     align-items: center;
-    color: #d4dce3;
+    color: $btnFontbgcolor;
     div{
       box-sizing: border-box;
       padding: 5px 15px;
