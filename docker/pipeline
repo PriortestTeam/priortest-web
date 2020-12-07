@@ -34,7 +34,6 @@ pipeline {
             steps{
                 dir ("${env.WORKSPACE}") {
                     sh """
-                    cd docker
                     docker rmi -f ${IMAGE_NAME}
                     docker build -t ${IMAGE_NAME} -f Dockerfile .
                     """
