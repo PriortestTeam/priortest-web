@@ -21,12 +21,6 @@
           >
             {{ item }}
           </div>
-          <!-- <div class="item" @click="goFeature">Feature</div>
-          <div class="item" @click="goSprint">Sprint</div>
-          <div class="item" @click="goTestCase">TestCase</div>
-          <div class="item" @click="goTestCycle">TestCycle</div>
-          <div class="item" @click="goIssue">Issue</div>
-          <div class="item" @click="goSignOff">SignOff</div> -->
           <el-input v-model="Idsearch" size="mini" placeholder="id/text">
             <i slot="prefix" class="el-input__icon el-icon-search" />
           </el-input></div

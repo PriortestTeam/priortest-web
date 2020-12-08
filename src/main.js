@@ -14,7 +14,12 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
+// 公共方法
+import { resetForm, handleTree, returntomenu } from '@/utils/jeethink'
+// 全局方法挂载
+Vue.prototype.resetForm = resetForm
+Vue.prototype.handleTree = handleTree
+Vue.prototype.returntomenu = returntomenu
 
 
 /**

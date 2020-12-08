@@ -63,11 +63,63 @@ div:focus {
 .app-container {
   padding: $spacing;
 }
-//@at-root 布局总设置
+// 布局总设置
 .el-row {
   width: 100%;
 }
 //文字按钮颜色修改颜色
 .el-button--text, .el-button--text:focus, .el-button--text:hover{
   color:$btnbgcolor
+}
+
+ //一般输入框的样式修改
+ .el-input {
+  input:focus {
+    border-color: $btnbgcolor;
+  }
+  .el-input__inner {
+    color: $btnbgcolor;
+  }
+}
+// 下拉框的颜色
+.el-select {
+  input:focus {
+    border-color: $btnbgcolor;
+  }
+  .el-input .el-select__caret.is-reverse {
+    color: $btnbgcolor;
+  }
+  .el-input__inner:focus{
+    border-color: $btnbgcolor;
+  } 
+  .el-input.is-focus .el-input__inner{
+    border-color: $btnbgcolor;
+  }
+}
+.el-select-dropdown__item.selected {
+  color: $btnbgcolor !important;
+}
+//文本域颜色
+.el-textarea__inner:focus {
+  border-color:$btnbgcolor !important;
+}
+.el-textarea__inner:hover {
+  border-color:$btnbgcolor
+}
+//多级联动颜色
+.el-cascader .el-input .el-input__inner:focus,.el-cascader .el-input.is-focus .el-input__inner, .el-cascader .el-input.is-focus .el-input__inner{
+  border-color: $btnbgcolor !important;
+}
+.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path {
+  color:  $btnbgcolor ;
+}
+//lable颜色
+.el-form-item__label{
+  color: $selectColor;
+}
+
+
+//新增页面 占屏幕宽度的60%
+.form-box{
+  width:60%;
 }

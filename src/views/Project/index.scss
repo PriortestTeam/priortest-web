@@ -1,10 +1,13 @@
 @import "@/styles/mixin.scss";//颜色
 @import "@/styles/color.scss";//按钮
+.set_btn {
+  display: inline-block;
+  margin-bottom: $spacing;
+}
+//列表页面的样式
 .project-container {
-  .set_btn {
-    display: inline-block;
+  .set_btn{
     @include setBtn($btnbgcolor, false);
-    margin-bottom: $spacing;
   }
   /* common end */
   .comp-tree {
@@ -87,4 +90,12 @@
      
     }
   }
+}
+//新增页面的样式
+.add-project{
+  .set_btn{
+    @include setBtn(#666, false);
+    margin-right:$spacing;
+  }
+ 
 }

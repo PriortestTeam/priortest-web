@@ -1,7 +1,8 @@
 <template>
   <div class="project-container app-container">
-    <div class="set_btn">New Project</div>
-
+    <router-link to="/project/addproject">
+      <div class="set_btn">New Project</div>
+    </router-link>
     <el-row>
       <el-col :span="5"
         ><div v-loading="isLoading" class="comp-tree">
