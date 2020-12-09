@@ -54,80 +54,81 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+
   {
-    path: '/feature',
+    path: '/Feature',
     component: Layout,
-    redirect: '/feature',
+    redirect: '/Feature',
     children: [{
       path: 'feature',
       name: 'Feature',
-      component: () => import('@/views/feature/index'),
+      component: () => import('@/views/Feature/index'),
       meta: { title: 'Feature', icon: 'Feature' }
     }]
   },
   {
-    path: '/sprint',
+    path: '/Sprint',
     component: Layout,
-    redirect: '/sprint',
+    redirect: '/Sprint',
     children: [{
       path: 'sprint',
       name: 'Sprint',
-      component: () => import('@/views/sprint/index'),
+      component: () => import('@/views/Sprint/index'),
       meta: { title: 'Sprint', icon: 'Sprint' }
     }]
   },
   {
-    path: '/testcase',
+    path: '/TestCase',
     component: Layout,
-    redirect: '/testcase',
+    redirect: '/TestCase',
     children: [{
-      path: 'testcase',
+      path: 'testCase',
       name: 'TestCase',
-      component: () => import('@/views/testcase/index'),
+      component: () => import('@/views/TestCase/index'),
       meta: { title: 'TestCase', icon: 'TestCase' }
     }]
   },
   {
-    path: '/testcycle',
+    path: '/TestCycle',
     component: Layout,
-    redirect: '/testcycle',
+    redirect: '/TestCycle',
     children: [{
-      path: 'testcycle',
+      path: 'testCycle',
       name: 'TestCycle',
-      component: () => import('@/views/testcycle/index'),
+      component: () => import('@/views/TestCycle/index'),
       meta: { title: 'TestCycle', icon: 'TestCycle' }
     }]
   },
   {
-    path: '/issue',
+    path: '/Issue',
     component: Layout,
-    redirect: '/issue',
+    redirect: '/Issue',
     children: [{
       path: 'issue',
       name: 'Issue',
-      component: () => import('@/views/issue/index'),
+      component: () => import('@/views/Issue/index'),
       meta: { title: 'Issue', icon: 'Issue' }
     }]
   },
   {
-    path: '/signoff',
+    path: '/SignOff',
     component: Layout,
-    redirect: '/signoff',
+    redirect: '/SignOff',
     children: [{
-      path: 'signoff',
+      path: 'signOff',
       name: 'SignOff',
-      component: () => import('@/views/signoff/index'),
+      component: () => import('@/views/SignOff/index'),
       meta: { title: 'SignOff', icon: 'SignOff' }
     }]
   },
   {
-    path: '/project',
+    path: '/Project',
     component: Layout,
-    redirect: '/project',
+    redirect: '/Project',
     children: [{
       path: 'project',
       name: 'Project',
-      component: () => import('@/views/project/index'),
+      component: () => import('@/views/Project/index'),
       meta: { title: 'Project', icon: 'Project' }
     },
     {
@@ -137,6 +138,7 @@ export const constantRoutes = [
       meta: { title: 'Project', icon: 'Project' }
     }]
   },
+  // ///////////////////////////////////////////////////
   {
     path: '/example',
     component: Layout,

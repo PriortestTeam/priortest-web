@@ -14,6 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+<<<<<<< HEAD
 // 公共方法
 import { resetForm, handleTree, returntomenu } from '@/utils/jeethink'
 // 全局方法挂载
@@ -21,6 +22,8 @@ Vue.prototype.resetForm = resetForm
 Vue.prototype.handleTree = handleTree
 Vue.prototype.returntomenu = returntomenu
 
+=======
+>>>>>>> parent of f8a04f0... 修改
 
 /**
  * If you don't want to use mock-server
