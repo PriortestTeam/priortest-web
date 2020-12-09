@@ -9,10 +9,3 @@ export default {
   name: 'App'
 }
 </script>
-<style lang="scss">
-@import "@/styles/color.scss";
-body{
-  background: $bodybg;
-}
-
-</style>

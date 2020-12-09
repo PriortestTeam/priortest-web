@@ -48,9 +48,7 @@ export default {
   },
   data() {
     return {
-      Idsearch: '',
-      itemIndex: '',
-      clickItem: ['Project A', 'Feature', 'Sprint', 'TestCase', 'TestCycle', 'Issue', 'SignOff']
+      Idsearch: ''
     }
   },
   computed: {
@@ -59,9 +57,6 @@ export default {
       'avatar'
     ])
   },
-  mounted() {
-    this.itemIndex = ''
-  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -69,88 +64,117 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    },
-    goProject(index, item) {
-      this.itemIndex = index
-      if (item === 'Project A') {
-        this.$router.push({ name: 'Project' })
-        return
-      }
-      this.$router.push({ name: item })
-    },
-    gohome() {
-      this.$router.push({ name: 'Dashboard' })
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "@/styles/color.scss";
-
 .navbar {
-  padding: 0 $spacing;
-  height: 46px;
-  box-sizing: border-box;
+  height: 80px;
   overflow: hidden;
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  .right-menu {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 46px;
-    .user-avatar {
-      cursor: pointer;
-      width: 38px;
-      height: 38px;
-      border-radius: 25px;
+  .hamburger-container {
+    line-height: 46px;
+    height: 100%;
+    float: left;
+    cursor: pointer;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.025);
     }
-    .tuichu {
-      font-size: 28px;
-      color: #333;
-      margin-left: 10px;
-      cursor: pointer;
-      margin-left: 20px;
+  }
+
+  .breadcrumb-container {
+    float: left;
+  }
+
+  .right-menu {
+    width: 5%;
+    // float: right;
+    // height: 100%;
+    // line-height: 50px;
+
+    &:focus {
+      outline: none;
+    }
+
+    .right-menu-item {
+      display: inline-block;
+      padding: 0 8px;
+      height: 100%;
+      font-size: 18px;
+      color: #5a5e66;
+      vertical-align: text-bottom;
+
+      &.hover-effect {
+        cursor: pointer;
+        transition: background 0.3s;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.025);
+        }
+      }
+    }
+
+    .avatar-container {
+      margin-right: 30px;
+
+      .avatar-wrapper {
+        margin-top: 5px;
+        position: relative;
+
+        .user-avatar {
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
+
+        .el-icon-caret-bottom {
+          cursor: pointer;
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
+        }
+      }
     }
   }
   .one_title {
+    width: 85%;
     display: flex;
     border: 1px solid $tabcolorBG;
-    border-radius: 23px;
-    height: 46px;
+    border-radius: 25px;
     background: $tabcolorBG;
+    justify-content: flex-start;
     align-items: center;
-    box-sizing: border-box;
-    color: $btnFontbgcolor;
-    .item {
-      height: 100%;
-      padding: 0 15px;
-      line-height: 44px;
+    color: #d4dce3;
+    div {
+      box-sizing: border-box;
+      padding: 5px 20px;
       cursor: pointer;
     }
-    // .item.active {
-    //   background: #fff;
-    //   color: $tabcolorBG;
-    //   border-radius: 25px;
-    // }
     ::v-deep .el-input {
-      width: 25%;
-      margin-left: 30px;
       .el-input__inner {
+        height: 25px;
         border-radius: 15px;
+      }
+      .el-input__prefix {
+        left: 22px;
       }
     }
   }
   .one_logo {
-    cursor: pointer;
-    width: 90%;
-    height: auto;
-    height: 46px;
+    width: 10%;
   }
 }
 </style>
