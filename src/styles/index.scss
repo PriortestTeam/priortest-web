@@ -117,7 +117,17 @@ div:focus {
 .el-form-item__label{
   color: $selectColor;
 }
-
+//确定按钮的颜色
+.el-button--primary {
+  color: #FFF;
+  background-color:  $btnbgcolor;
+  border-color: $btnbgcolor;
+}
+.el-button--primary:focus, .el-button--primary:hover {
+  background: $btnbgcolor;
+  border-color: $btnbgcolor;
+  color: #FFF;
+}
 
 //新增页面 占屏幕宽度的60%
 .form-box{

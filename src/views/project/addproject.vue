@@ -9,7 +9,7 @@
     >
       <div>
         <div class="set_btn" @click="submitForm('from')">Save and New</div>
-        <div class="set_btn">Save And Back</div>
+        <div class="set_btn" @click="saveBack">Save And Back</div>
         <div class="set_btn">Save</div>
         <div class="set_btn" @click="giveupBack('from')">Give Up</div>
         <el-button type="text" @click="addFiled">Create Custom Filed</el-button>
@@ -161,7 +161,13 @@ export default {
     },
     //放弃并且返回
     giveupBack(formName) {
+      this.$route.meta.noCache = false
       this.resetForm(formName)
+      this.returntomenu(this)
+    },
+    //保存并且返回
+    saveBack() {
+      this.$route.meta.noCache = true
       this.returntomenu(this)
     },
     //新增域名弹框出现
@@ -195,7 +201,8 @@ export default {
       });
     }
 
-  }
+  },
+
 }
 </script>
 <style lang="scss" scoped>
