@@ -186,5 +186,11 @@ export default {
       }
     }
   }
+  .table {
+    .table-btn {
+      color: $btnbgcolor;
+      cursor: pointer;
+    }
+  }
 }
 </style>
