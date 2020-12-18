@@ -150,7 +150,7 @@ export const constantRoutes = [
       {
         path: 'addproject',
         name: 'Addproject',
-        component: () => import('@/views/project/addproject'),
+        component: () => import('@/views/project/addProject'),
         meta: {
           title: 'Project', icon: 'Project',
           noCache: true // 会被缓存
