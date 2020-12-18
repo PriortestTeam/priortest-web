@@ -136,7 +136,7 @@ export const constantRoutes = [
         name: 'Manageproject',
         component: () => import('@/views/project/manageProject'),
         meta: {
-          title: 'Project', icon: 'Project',
+          title: 'Project', icon: 'Project'
         }
       },
       {
@@ -144,17 +144,17 @@ export const constantRoutes = [
         name: 'Manageview',
         component: () => import('@/views/project/manageView'),
         meta: {
-          title: 'Project', icon: 'Project',
+          title: 'Project', icon: 'Project'
         }
       },
       {
         path: 'addproject',
         name: 'Addproject',
-        component: () => import('@/views/project/addProject'),
+        component: () => import('@/views/project/addproject'),
         meta: {
           title: 'Project', icon: 'Project',
-          noCache: true //会被缓存
-        },
+          noCache: true // 会被缓存
+        }
       }
     ]
   },

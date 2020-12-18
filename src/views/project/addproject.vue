@@ -1,9 +1,9 @@
 <template>
   <div class="app-container add-form add-project">
     <el-form
+      ref="from"
       :model="from"
       :rules="rules"
-      ref="from"
       label-width="100px"
       class="demo-ruleForm"
     >
@@ -18,7 +18,7 @@
       </div>
       <div class="form-box">
         <el-form-item label="Project title" prop="title">
-          <el-input size="small" v-model="from.title"></el-input>
+          <el-input v-model="from.title" size="small" />
         </el-form-item>
         <el-row>
           <el-col :span="8">
@@ -32,15 +32,13 @@
                 <el-option label="Progerss" value="Progerss" />
                 <el-option label="Closed" value="Closed" />
                 <el-option label="Plan" value="Plan" />
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item label="Report To" prop="report">
               <el-input
-                size="small"
                 v-model="from.report"
-              ></el-input> </el-form-item
-          ></el-col>
+                size="small"
+              /> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item label="Customer" prop="customer">
               <el-select
@@ -50,24 +48,23 @@
                 size="small"
               >
                 <el-option label="暂无" value="" />
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
         </el-row>
         <el-form-item label="Description" prop="description">
           <el-input
+            v-model="from.description"
             size="small"
             type="textarea"
             maxlength="100"
             show-word-limit
             :autosize="{ minRows: 3, maxRows: 5 }"
-            v-model="from.description"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item
-          class="dele-input"
           v-for="domain in from.domains"
-          :label="domain.lable"
           :key="domain.key"
+          class="dele-input"
+          :label="domain.lable"
           :prop="domain.lable"
           :rules="{
             required: true,
@@ -75,10 +72,10 @@
             trigger: 'blur',
           }"
         >
-          <el-input width="70%" size="small" v-model="domain.value"></el-input
-          ><el-button type="text" @click.prevent="removeFiled(domain)"
-            >删除</el-button
-          >
+          <el-input v-model="domain.value" width="70%" size="small" /><el-button
+            type="text"
+            @click.prevent="removeFiled(domain)"
+          >删除</el-button>
         </el-form-item>
         <el-upload
           class="upload-demo"
@@ -114,13 +111,13 @@ export default {
         title: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
           { max: 15, message: '应小于15字符', trigger: 'blur' }
-        ],
-      },
+        ]
+      }
 
     }
   },
   methods: {
-    //重置表单
+    // 重置表单
     resetFields(formName) {
       this.from = {
         title: undefined,
@@ -131,43 +128,43 @@ export default {
         fileList: []
       }
     },
-    //提交
+    // 提交
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          alert('submit!')
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    //放弃并且返回
+    // 放弃并且返回
     giveupBack(formName) {
       this.$route.meta.noCache = false
       this.resetForm(formName)
       this.returntomenu(this)
     },
-    //保存并且返回
+    // 保存并且返回
     saveBack() {
       this.$route.meta.noCache = true
       this.returntomenu(this)
     },
-    //上传
+    // 上传
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      console.log(file, fileList)
     },
     handlePreview(file) {
-      console.log(file);
+      console.log(file)
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      return this.$confirm(`确定移除 ${file.name}？`)
     }
 
-  },
+  }
 
 }
 </script>
