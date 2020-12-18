@@ -28,13 +28,13 @@
 }
 //设置按钮
 @mixin setBtn($color,$svg) {
-  height: 30px;
-  line-height: 30px;
+  height: 28px;
+  line-height: 28px;
   color: #fff;
   background: $color;
-  border-radius: 30px;
+  border-radius: 28px;
   cursor: pointer;
-  padding: 0 15px;
+  padding: 0 10px;
     svg,i{
       margin-right: 8px;
     }
