@@ -7,8 +7,12 @@
       <el-col :span="5"
         ><div v-loading="isLoading" class="comp-tree">
           <div class="new_project">
-            <div class="set_btn">New View</div>
-            <div class="set_btn">MangageView</div>
+            <router-link to="/project/manageview">
+              <div class="set_btn">new View</div>
+            </router-link>
+            <router-link to="/project/manageview">
+              <div class="set_btn">MangageView</div>
+            </router-link>
           </div>
           <!-- tree -->
           <el-tree
@@ -45,7 +49,8 @@
                   {{ node.label }}
                 </span>
                 <!-- 按钮 -->
-                <span class="comp-tr-node--btns" v-if="node.id !== 1">
+                <!-- <span class="comp-tr-node--btns" v-if="node.id !== 1"> -->
+                <span class="comp-tr-node--btns">
                   <!-- 编辑 -->
                   <el-button
                     icon="el-icon-edit"
@@ -78,24 +83,60 @@
       <el-col :span="19"
         ><div class="project_table">
           <div class="oprate_btn">
-            <span class="total">ManagProject</span>
-            <el-button type="text">Clone</el-button>
-            <el-button type="text" disabled>Delete</el-button>
-            <el-button type="text" disabled>BatchEdit</el-button>
+            <router-link to="/project/manageproject">
+              <el-button style="margin-right: 10px" type="text"
+                >ManagProject</el-button
+              >
+            </router-link>
+            <el-button type="text" :disabled="single">Clone</el-button>
+            <el-button type="text" :disabled="multiple">Delete</el-button>
+            <el-button type="text" :disabled="multiple">BatchEdit</el-button>
           </div>
-          <div class="protable">
+          <div class="protable table">
             <el-table
               :data="projecttableData"
               :header-cell-style="tableHeader"
               stripe
               style="width: 100%"
+              @selection-change="handleSelectionChange"
             >
-              <el-table-column prop="date" label="日期" width="180" />
-              <el-table-column prop="name" label="姓名" width="180" />
-              <el-table-column prop="address" label="地址" />
+              <el-table-column type="selection" width="55"> </el-table-column>
+              <el-table-column type="index" align="center">
+                <template slot-scope="scope">
+                  {{ scope.$index + 1 }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="title" align="center" label="Title" />
+              <el-table-column prop="report" align="center" label="Report To" />
+              <el-table-column prop="status" align="center" label="Status" />
+              <el-table-column
+                prop="createDate"
+                align="center"
+                label="Creation Date"
+              />
+              <el-table-column
+                prop="customer"
+                align="center"
+                label="Customer"
+              />
+              <el-table-column
+                prop="closeData"
+                align="center"
+                label="Close Dara"
+              />
+              <el-table-column label="Action" align="center">
+                <template>
+                  <span class="table-btn">Edit</span>
+                  <span class="line">|</span>
+                  <span class="table-btn">Clone</span>
+                  <span class="line">|</span>
+                  <span class="table-btn">Del</span>
+                </template>
+              </el-table-column>
             </el-table>
-          </div></div
-      ></el-col>
+          </div>
+        </div></el-col
+      >
     </el-row>
   </div>
 </template>
@@ -130,7 +171,7 @@ export default {
       }
       ], // tree数据
       node_key: 'id', // id对应字段
-      max_level: 3, // 设定最大层级
+      max_level: 4, // 设定最大层级
       node_id_start: 0, // 新增节点id，逐次递减
       startId: null,
       defaultProps: { // 默认设置
@@ -143,22 +184,30 @@ export default {
         children: []
       },
       projecttableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
+        title: 'Project A',
+        report: 'Jon',
+        status: 'Progress',
+        createDate: '2020-10-23',
+        customer: 'tencent',
+        closeData: '-',
       }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
+        title: 'Project A',
+        report: 'Jon',
+        status: 'Progress',
+        createDate: '2020-10-23',
+        customer: 'tencent',
+        closeData: '-',
       }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+        title: 'Project A',
+        report: 'Jon',
+        status: 'Progress',
+        createDate: '2020-10-23',
+        customer: 'tencent',
+        closeData: '-',
+      }],
+      multipleSelection: [],
+      single: true, // 非单个禁用
+      multiple: true,//非多个禁用
     }
   },
   computed: {
@@ -239,6 +288,13 @@ export default {
         node.expanded = true
       }
     },
+    //表格多选
+    handleSelectionChange(val) {
+      // this.multipleSelection = val;
+      this.single = val.length != 1
+      this.multiple = !val.length
+    }
+
 
   }
 }

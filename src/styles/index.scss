@@ -113,10 +113,6 @@ div:focus {
 .el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path {
   color:  $btnbgcolor ;
 }
-//lable颜色
-.el-form-item__label{
-  color: $selectColor;
-}
 //确定按钮的颜色
 .el-button--primary {
   color: #FFF;
@@ -128,8 +124,35 @@ div:focus {
   border-color: $btnbgcolor;
   color: #FFF;
 }
-
+//单选框的颜色修改
+.el-radio__input.is-checked+.el-radio__label {
+  color:  $btnbgcolor;
+}
+.el-radio__input.is-checked .el-radio__inner {
+  border-color:  $btnbgcolor;
+  background:  $btnbgcolor;
+}
+.el-radio__inner:hover {
+  border-color: $btnbgcolor;
+}
+//复选框文字颜色
+.el-checkbox__input.is-checked+.el-checkbox__label {
+  color:  $btnbgcolor;
+}
+//表格多选框央视
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color:$btnbgcolor;
+  border-color: $btnbgcolor;
+}
+.el-checkbox__inner:hover,
+.el-checkbox__input.is-focus .el-checkbox__inner {
+  border-color: $btnbgcolor;
+}
 //新增页面 占屏幕宽度的60%
 .form-box{
   width:60%;
+  .el-form-item {
+    margin-bottom: 18px;
+}
 }

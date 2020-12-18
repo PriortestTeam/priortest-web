@@ -4,6 +4,17 @@
   display: inline-block;
   margin-bottom: $spacing;
 }
+//表格操作的央视
+.table{
+  .table-btn{
+   color:$btnbgcolor;
+   cursor: pointer;
+  }
+  .line{
+    color:$btnbgcolor;
+    margin:0 5px;
+  }
+}
 //列表页面的样式
 .project-container {
   .set_btn{
@@ -80,10 +91,6 @@
       }
     }
     .oprate_btn{
-      .total{
-        color:$btnbgcolor;
-        margin-right: $spacing;
-      }
       .el-button{
         padding-top:0;
       }
@@ -107,4 +114,45 @@
     }
   }
  
+}
+//列表上面管理的样式
+.manage-project{
+  .project-item{
+    margin-bottom: 20px;
+    b{
+      font-size: 18px;
+    }
+    .action{
+      padding-left:30px
+    }
+  }
+ 
+ 
+
+}
+//视图新增管理
+.manage-view{
+  .set_btn{
+    @include setBtn($btnbgcolor, false);
+    margin-right:$spacing;
+  }
+  .form-small{
+    width:60%;
+  }
+  .el-form-item {
+    margin-bottom: 15px;
+}
+  .add-del{
+    i{
+      font-size: 20px;
+      color:$forbidColoe;
+      cursor: pointer;
+    }
+    .el-icon-circle-plus{
+      margin-right: 10px;
+    }
+  }
+
+ 
+
 }

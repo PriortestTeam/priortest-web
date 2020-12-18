@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container add-project add-form">
+  <div class="app-container add-form add-project">
     <el-form
       :model="from"
       :rules="rules"
@@ -12,7 +12,9 @@
         <div class="set_btn" @click="saveBack">Save And Back</div>
         <div class="set_btn">Save</div>
         <div class="set_btn" @click="giveupBack('from')">Give Up</div>
-        <el-button type="text" @click="addFiled">Create Custom Filed</el-button>
+        <router-link to="/publicview/customfiled">
+          <el-button type="text">Create Custom Filed</el-button>
+        </router-link>
       </div>
       <div class="form-box">
         <el-form-item label="Project title" prop="title">
@@ -78,46 +80,35 @@
             >删除</el-button
           >
         </el-form-item>
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="3"
+          :on-exceed="handleExceed"
+          :file-list="from.fileList"
+        >
+          <el-button size="small" type="primary">Attachment</el-button>
+          <!-- <div slot="tip" class="el-upload__tip">
+            只能上传jpg/png文件，且不超过500kb
+          </div> -->
+        </el-upload>
       </div>
     </el-form>
-    <!-- 新增域名时输入的弹框 -->
-    <el-dialog
-      title="新增字段"
-      :visible.sync="addFiledVisiale"
-      width="45%"
-      class="project-dialog"
-    >
-      <el-form
-        ref="addFiledform"
-        :model="addFiledform"
-        :rules="addFiledformRules"
-        label-width="80px"
-        class="demo-ruleForm"
-      >
-        <el-form-item label="字段名" prop="name">
-          <el-input
-            v-model="addFiledform.name"
-            placeholder="请输入字段名,如:address"
-          />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addFiledVisiale = false">取 消</el-button>
-        <el-button type="primary" @click="addFiledSure('addFiledform')"
-          >确 定</el-button
-        >
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
 export default {
-  name: 'Projectadd',
+  name: 'Addproject',
   data() {
     return {
       from: {
         status: 'Progerss',
         domains: [],
+        fileList: []
       },
       rules: {
         title: [
@@ -125,16 +116,7 @@ export default {
           { max: 15, message: '应小于15字符', trigger: 'blur' }
         ],
       },
-      addFiledVisiale: false,
-      addFiledform: {
-        name: undefined
-      },//新增字段的表单
-      addFiledformRules: {
-        name: [
-          { required: true, message: '请输入新增字段名称', trigger: 'blur' },
-          { max: 15, message: '应小于15字符', trigger: 'blur' }
-        ],
-      }
+
     }
   },
   methods: {
@@ -145,7 +127,8 @@ export default {
         description: undefined,
         report: undefined,
         customer: undefined,
-        status: 'Progerss'
+        status: 'Progerss',
+        fileList: []
       }
     },
     //提交
@@ -170,35 +153,18 @@ export default {
       this.$route.meta.noCache = true
       this.returntomenu(this)
     },
-    //新增域名弹框出现
-    addFiled() {
-      this.addFiledVisiale = true
-      this.$nextTick(() => {
-        this.resetForm('addFiledform')
-      })
+    //上传
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
     },
-    //删除新增
-    removeFiled(item) {
-      var index = this.from.domains.indexOf(item)
-      if (index !== -1) {
-        this.from.domains.splice(index, 1)
-      }
+    handlePreview(file) {
+      console.log(file);
     },
-    //确定新增
-    addFiledSure(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.from.domains.push({
-            lable: this.addFiledform.name,
-            value: '',
-            key: Date.now()
-          });
-          this.addFiledVisiale = false
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
     }
 
   },
