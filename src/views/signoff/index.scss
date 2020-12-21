@@ -1,0 +1,42 @@
+@import "@/styles/mixin.scss";//颜色
+@import "@/styles/color.scss";//按钮
+
+.set_btn {
+    display: inline-block;
+    margin-bottom: $spacing;
+  }
+  
+.signoff-container {
+    display: flex;
+    justify-content: center;
+    .set_btn{
+        @include setBtn($btnbgcolor, false);
+    }
+    //复选框样式
+    .radiu {
+        ::v-deep .el-checkbox__inner {
+            border-radius: 100%;
+            border: 1px solid $selectColor;
+            background: #ffffff;
+        }
+        ::v-deep .el-checkbox__inner::after {
+          content: "";
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background:$selectColor;
+          border: none;
+          line-height: 14px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+        }
+      }
+      .Signi-Upload{
+          font-weight: bold;
+          cursor: pointer;
+      }
+}

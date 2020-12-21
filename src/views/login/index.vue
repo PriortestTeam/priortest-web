@@ -13,6 +13,7 @@
       <el-form-item>
         <div class="btnForget">
           <el-button type="primary" round @click="handleLogin('loginForm')">Login</el-button>
+          <!-- @click="forgetPwd()" -->
           <div class="Forget-frist">
             Forget & Set Password
           </div>
@@ -78,6 +79,10 @@ export default {
           return false
         }
       })
+    },
+    // 忘记密码
+    forgetPwd() {
+      this.$router.push({ name: 'Project' })
     }
   }
 }
@@ -86,22 +91,13 @@ export default {
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg:#283443;
-$light_gray:#fff;
-$cursor: #666666;
 </style>
 
 <style lang="scss" scoped>
 @import "@/styles/color.scss";
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
-
 .login-container {
   min-height: 100%;
   width: 100%;
-  // background-color: $bg;
   overflow: hidden;
 
   .login-form {
@@ -130,6 +126,7 @@ $light_gray:#eee;
       .Forget-frist{
         color: #386795;
         font-size: 18px;
+        cursor: pointer;
       }
     }
 
@@ -151,7 +148,6 @@ $light_gray:#eee;
 
     .title {
       font-size: 26px;
-      // color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
@@ -163,7 +159,6 @@ $light_gray:#eee;
     right: 10px;
     top: 7px;
     font-size: 16px;
-    // color: $dark_gray;
     cursor: pointer;
     user-select: none;
   }

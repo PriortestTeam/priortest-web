@@ -32,12 +32,10 @@
                 <el-option label="Progerss" value="Progerss" />
                 <el-option label="Closed" value="Closed" />
                 <el-option label="Plan" value="Plan" />
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item label="Report To" prop="report">
-              <el-input v-model="from.report" size="small" /> </el-form-item
-          ></el-col>
+              <el-input v-model="from.report" size="small" /> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item label="Customer" prop="customer">
               <el-select
@@ -47,8 +45,7 @@
                 size="small"
               >
                 <el-option label="暂无" value="" />
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
         </el-row>
         <el-form-item label="Description" prop="description">
           <el-input
@@ -75,8 +72,7 @@
           <el-input v-model="domain.value" width="70%" size="small" /><el-button
             type="text"
             @click.prevent="removeFiled(domain)"
-            >删除</el-button
-          >
+          >删除</el-button>
         </el-form-item>
         <el-upload
           class="upload-demo"
