@@ -8,8 +8,8 @@
       class="demo-ruleForm"
     >
       <div>
-        <div class="set_btn" @click="submitForm('from')">Save and New</div>
-        <div class="set_btn">Save</div>
+        <div class="set_btn" @click="submitForm('from')">保存并新建</div>
+        <div class="set_btn">保存</div>
       </div>
       <div class="form-box">
         <el-form-item label="Filed Name" prop="name">
@@ -67,7 +67,7 @@
       </div>
     </el-form>
     <div class="table">
-      <el-button type="text" :disabled="multiple">Delete</el-button>
+      <el-button type="text" :disabled="multiple">批量删除</el-button>
       <el-table
         :data="viewData"
         :header-cell-style="tableHeader"

@@ -149,6 +149,10 @@ div:focus {
 .el-checkbox__input.is-focus .el-checkbox__inner {
   border-color: $btnbgcolor;
 }
+//表格高度
+.el-table td, .el-table th {
+  padding: 8px 0;
+}
 //新增页面 占屏幕宽度的60%
 .form-box{
   width:60%;

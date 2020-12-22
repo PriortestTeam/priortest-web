@@ -19,7 +19,23 @@
             :key="index"
             @click="goProject(index, item)"
           >
-            {{ item }}
+            {{
+              index === 0
+                ? "项目"
+                : index === 1
+                ? "故事"
+                : index === 2
+                ? "迭代"
+                : index === 3
+                ? "测试用例"
+                : index === 4
+                ? "测试周期"
+                : index === 5
+                ? "缺陷"
+                : index === 6
+                ? "验收"
+                : ""
+            }}
           </div>
           <el-input v-model="Idsearch" size="mini" placeholder="id/text">
             <i slot="prefix" class="el-input__icon el-icon-search" />
@@ -132,6 +148,7 @@ export default {
       padding: 0 15px;
       line-height: 44px;
       cursor: pointer;
+      font-size: 14px;
     }
     // .item.active {
     //   background: #fff;

@@ -8,8 +8,8 @@
       class="demo-ruleForm"
     >
       <div>
-        <div class="set_btn" @click="submitForm('from')">Save</div>
-        <div class="set_btn">Give Up</div>
+        <div class="set_btn" @click="submitForm('from')">保存</div>
+        <div class="set_btn">放弃</div>
       </div>
       <el-form-item label="New View" prop="name" class="form-small">
         <el-input v-model="from.name" size="small" />
@@ -30,24 +30,18 @@
             <el-col :span="4">
               <el-select v-model="from.scope" size="small" placeholder="status">
                 <el-option label="Project" value="project" />
-                <el-option
-                  label="Sprint"
-                  value="sprint"
-                /> </el-select></el-col>
+                <el-option label="Sprint" value="sprint" /> </el-select
+            ></el-col>
             <el-col :span="4">
               <el-select v-model="from.scope" size="small" placeholder="Is">
                 <el-option label="Project" value="project" />
-                <el-option
-                  label="Sprint"
-                  value="sprint"
-                /> </el-select></el-col>
+                <el-option label="Sprint" value="sprint" /> </el-select
+            ></el-col>
             <el-col :span="4">
               <el-select v-model="from.scope" size="small" placeholder="Open">
                 <el-option label="Project" value="project" />
-                <el-option
-                  label="Sprint"
-                  value="sprint"
-                /> </el-select></el-col>
+                <el-option label="Sprint" value="sprint" /> </el-select
+            ></el-col>
             <el-col :span="2" class="add-del">
               <i class="el-icon-circle-plus" />
               <i class="el-icon-error" />
@@ -67,17 +61,13 @@
                 placeholder="Create Date"
               >
                 <el-option label="Project" value="project" />
-                <el-option
-                  label="Sprint"
-                  value="sprint"
-                /> </el-select></el-col>
+                <el-option label="Sprint" value="sprint" /> </el-select
+            ></el-col>
             <el-col :span="4">
               <el-select v-model="from.scope" size="small" placeholder="Range">
                 <el-option label="Project" value="project" />
-                <el-option
-                  label="Sprint"
-                  value="sprint"
-                /> </el-select></el-col>
+                <el-option label="Sprint" value="sprint" /> </el-select
+            ></el-col>
             <el-col :span="7">
               <el-date-picker
                 v-model="value1"
@@ -86,7 +76,7 @@
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-              /></el-col>
+            /></el-col>
             <el-col :span="2" class="add-del">
               <i class="el-icon-circle-plus" />
               <i class="el-icon-error" />
@@ -113,7 +103,7 @@
         <el-radio v-model="radio3" label="2">Public</el-radio>
       </el-form-item>
       <div class="table">
-        <el-button type="text" :disabled="multiple">Batch Delete</el-button>
+        <el-button type="text" :disabled="multiple">批量删除</el-button>
         <el-table
           :data="viewData"
           :header-cell-style="tableHeader"
@@ -130,7 +120,7 @@
           <el-table-column prop="modified" label="Modified" />
           <el-table-column label="Action">
             <template>
-              <span class="table-btn">Edit</span>
+              <span class="table-btn">编辑</span>
             </template>
           </el-table-column>
         </el-table>

@@ -1,17 +1,17 @@
 <template>
   <div class="project-container app-container">
     <router-link to="/project/addproject">
-      <div class="set_btn">New Project</div>
+      <div class="set_btn">新建项目</div>
     </router-link>
     <el-row>
       <el-col :span="5"
         ><div v-loading="isLoading" class="comp-tree">
           <div class="new_project">
             <router-link to="/project/manageview">
-              <div class="set_btn">new View</div>
+              <div class="set_btn">新建视图</div>
             </router-link>
             <router-link to="/project/manageview">
-              <div class="set_btn">MangageView</div>
+              <div class="set_btn">管理视图</div>
             </router-link>
           </div>
           <!-- tree -->
@@ -85,12 +85,12 @@
           <div class="oprate_btn">
             <router-link to="/project/manageproject">
               <el-button style="margin-right: 10px" type="text"
-                >ManagProject</el-button
+                >管理项目</el-button
               >
             </router-link>
-            <el-button type="text" :disabled="single">Clone</el-button>
-            <el-button type="text" :disabled="multiple">Delete</el-button>
-            <el-button type="text" :disabled="multiple">BatchEdit</el-button>
+            <el-button type="text" :disabled="single">克隆</el-button>
+            <el-button type="text" :disabled="multiple">删除</el-button>
+            <el-button type="text" :disabled="multiple">批量编辑</el-button>
           </div>
           <div class="protable table">
             <el-table
@@ -126,11 +126,11 @@
               />
               <el-table-column label="Action" align="center">
                 <template>
-                  <span class="table-btn">Edit</span>
+                  <span class="table-btn">编辑</span>
                   <span class="line">|</span>
-                  <span class="table-btn">Clone</span>
+                  <span class="table-btn">克隆</span>
                   <span class="line">|</span>
-                  <span class="table-btn">Del</span>
+                  <span class="table-btn">删除</span>
                 </template>
               </el-table-column>
             </el-table>
