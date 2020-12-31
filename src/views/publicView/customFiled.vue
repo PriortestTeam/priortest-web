@@ -1,10 +1,10 @@
 <template>
   <div class="app-container custom-filed">
     <el-form
+      ref="from"
       :model="from"
       :rules="rules"
-      ref="from"
-      label-width="100px"
+      label-width="120px"
       class="demo-ruleForm"
     >
       <div>
@@ -13,7 +13,7 @@
       </div>
       <div class="form-box">
         <el-form-item label="Filed Name" prop="name">
-          <el-input size="small" v-model="from.name"></el-input>
+          <el-input v-model="from.name" size="small" />
         </el-form-item>
         <el-form-item label="Type" prop="type">
           <el-select
@@ -38,30 +38,28 @@
               <el-checkbox v-model="checked1">Project</el-checkbox>
             </el-col>
             <el-col :span="4" class="radiu">
-              <el-checkbox v-model="checked2"></el-checkbox>
+              <el-checkbox v-model="checked2" />
             </el-col>
             <el-col :span="4">
               <el-input
-                size="mini"
                 v-model="from.name"
+                size="mini"
                 placeholder="默认值"
-              ></el-input
-            ></el-col>
+              /></el-col>
           </el-row>
           <el-row class="item">
             <el-col :span="4">
               <el-checkbox v-model="checked3">Feature</el-checkbox>
             </el-col>
             <el-col :span="4" class="radiu">
-              <el-checkbox v-model="checked4"></el-checkbox>
+              <el-checkbox v-model="checked4" />
             </el-col>
             <el-col :span="4">
               <el-input
-                size="mini"
                 v-model="from.name"
+                size="mini"
                 placeholder="默认值"
-              ></el-input
-            ></el-col>
+              /></el-col>
           </el-row>
         </div>
       </div>
@@ -75,7 +73,7 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column type="selection" width="55" />
         <el-table-column align="center" prop="title" label="Filed Name" />
         <el-table-column align="center" prop="scope" label="Type" />
         <el-table-column align="center" prop="parent" label="Scope" />
@@ -101,7 +99,7 @@ export default {
         name: [
           { required: true, message: '请输入字段名称', trigger: 'blur' },
           { max: 10, message: '应小于10字符', trigger: 'blur' }
-        ],
+        ]
       },
       checked1: false,
       checked2: true,
@@ -113,39 +111,39 @@ export default {
           scope: 'sprint',
           parent: 'view1',
           owner: 'Jun',
-          craeted: '2020-12-23',
+          craeted: '2020-12-23'
         },
         {
           title: 'view2',
           scope: 'sprint',
           parent: 'view1',
           owner: 'Jun',
-          craeted: '2020-12-23',
+          craeted: '2020-12-23'
         }
       ],
       tableHeader: {
         color: '#d4dce3',
         background: '#003d79'
       },
-      multipleSelection: [],//选择的表格
-      multiple: true,//非多个禁用
+      multipleSelection: [], // 选择的表格
+      multiple: true // 非多个禁用
 
     }
   },
   methods: {
-    //提交
+    // 提交
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          alert('submit!')
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val;
+      this.multipleSelection = val
       this.multiple = !val.length
     }
   }

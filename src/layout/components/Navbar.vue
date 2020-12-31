@@ -5,51 +5,67 @@
         <!-- 头部选择栏 -->
         <img
           class="one_logo"
-          @click="gohome"
           src="../../icons/img/one-logo.png"
           alt=""
           srcset=""
-        />
+          @click="gohome"
+        >
       </el-col>
-      <el-col :span="19">
+      <el-col :span="17">
         <div class="one_title">
           <div
-            :class="['item', itemIndex === index ? 'active' : '']"
             v-for="(item, index) in clickItem"
             :key="index"
+            :class="['item', itemIndex === index ? 'active' : '']"
             @click="goProject(index, item)"
           >
             {{
               index === 0
-                ? "项目"
+                ? $t("lang.menuTitle.Project")
                 : index === 1
-                ? "故事"
-                : index === 2
-                ? "迭代"
-                : index === 3
-                ? "测试用例"
-                : index === 4
-                ? "测试周期"
-                : index === 5
-                ? "缺陷"
-                : index === 6
-                ? "验收"
-                : ""
+                  ? $t("lang.menuTitle.Feature")
+                  : index === 2
+                    ? $t("lang.menuTitle.Sprint")
+                    : index === 3
+                      ? $t("lang.menuTitle.TestCase")
+                      : index === 4
+                        ? $t("lang.menuTitle.TestCycle")
+                        : index === 5
+                          ? $t("lang.menuTitle.Issue")
+                          : index === 6
+                            ? $t("lang.menuTitle.SignOff")
+                            : ""
             }}
           </div>
           <el-input v-model="Idsearch" size="mini" placeholder="id/text">
             <i slot="prefix" class="el-input__icon el-icon-search" />
-          </el-input></div
-      ></el-col>
-      <el-col :span="2">
+          </el-input></div></el-col>
+      <el-col :span="4">
         <div class="right-menu">
-          <img class="user-avatar" :src="avatar + '?imageView2/1/w/80/h/80'" />
+          <div v-if="false" class="lang">
+            <el-dropdown :hide-on-click="false" @command="changeLang">
+              <span
+                class="el-dropdown-link"
+              >{{ $t("lang.custom.name") }}<i
+                class="el-icon-arrow-down el-icon--right"
+              /></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="zh-CN">{{
+                  $t("lang.chinese")
+                }}</el-dropdown-item>
+                <el-dropdown-item command="en-US">{{
+                  $t("lang.engLish")
+                }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <img class="user-avatar" :src="avatar + '?imageView2/1/w/80/h/80'">
           <svg-icon
             icon-class="tuichu"
-            @click.native="logout"
             class="tuichu"
-          /></div
-      ></el-col>
+            @click.native="logout"
+          /></div>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -70,10 +86,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
+    ...mapGetters(
+      ['sidebar',
+        'avatar',
+        {
+          isCollapse: state => state.tab.isCollapse,
+          lang: state => state.header.lang
+        }]
+    )
   },
   mounted() {
     this.itemIndex = ''
@@ -96,6 +116,18 @@ export default {
     },
     gohome() {
       this.$router.push({ name: 'Dashboard' })
+    },
+
+    // 切换语言
+    changeLang(command) {
+      console.log(command)
+      if (command === 'zh-CN') {
+        this.$i18n.locale = 'zh-CN'
+      }
+      if (command === 'en-US') {
+        this.$i18n.locale = 'en-US'
+      }
+      this.$store.dispatch('changeLang', command)
     }
 
   }
@@ -132,6 +164,9 @@ export default {
       margin-left: 10px;
       cursor: pointer;
       margin-left: 20px;
+    }
+    .lang{
+      margin-right: 20px;
     }
   }
   .one_title {

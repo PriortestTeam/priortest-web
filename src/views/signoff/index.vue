@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div>
-        <div class="set_btn">Generate</div>
+        <div class="set_btn">{{ $t("lang.SignOff.Generate") }}</div>
       </div>
 
       <el-form-item label="Project" prop="scope" class="form-small">
@@ -107,10 +107,11 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'name'
+      'name',
+      {
+        lang: state => state.header.lang
+      }
     ])
-  },
-  mounted: {
   }
 }
 </script>
