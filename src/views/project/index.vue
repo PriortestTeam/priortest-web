@@ -98,36 +98,35 @@
               :header-cell-style="tableHeader"
               stripe
               style="width: 100%"
+              @row-click="openEdit"
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="55"> </el-table-column>
-              <el-table-column type="index" align="center">
+              <el-table-column type="index" align="center" label="序号">
                 <template slot-scope="scope">
                   {{ scope.$index + 1 }}
                 </template>
               </el-table-column>
-              <el-table-column prop="title" align="center" label="Title" />
-              <el-table-column prop="report" align="center" label="Report To" />
-              <el-table-column prop="status" align="center" label="Status" />
+              <el-table-column prop="title" align="center" label="标题" />
+              <el-table-column prop="report" align="center" label="负责人" />
+              <el-table-column prop="status" align="center" label="状态" />
               <el-table-column
                 prop="createDate"
                 align="center"
-                label="Creation Date"
+                label="创建日期"
               />
               <el-table-column
-                prop="customer"
+                prop="createDate"
                 align="center"
-                label="Customer"
+                label="计划上线日期"
               />
               <el-table-column
-                prop="closeData"
+                prop="createDate"
                 align="center"
-                label="Close Dara"
+                label="关闭日期"
               />
-              <el-table-column label="Action" align="center">
+              <el-table-column label="操作" align="center">
                 <template>
-                  <span class="table-btn">编辑</span>
-                  <span class="line">|</span>
                   <span class="table-btn">克隆</span>
                   <span class="line">|</span>
                   <span class="table-btn">删除</span>
@@ -256,16 +255,15 @@ export default {
       }
     },
     handleEdit(node, data) { // 编辑节点
-      // 设置编辑状态
-      if (!node.isEdit) {
-        this.$set(node, 'isEdit', true)
-      }
-      // 输入框聚焦
-      this.$nextTick(() => {
-        if (this.$refs['slotTreeInput' + data[this.node_key]]) {
-          this.$refs['slotTreeInput' + data[this.node_key]].$refs.input.focus()
-        }
-      })
+      this.$router.push({ path: '/project/manageview' })
+      // if (!node.isEdit) {
+      //   this.$set(node, 'isEdit', true)
+      // }
+      // this.$nextTick(() => {
+      //   if (this.$refs['slotTreeInput' + data[this.node_key]]) {
+      //     this.$refs['slotTreeInput' + data[this.node_key]].$refs.input.focus()
+      //   }
+      // })
     },
     handleAdd(node, data) { // 新增节点
       // 判断层级
@@ -293,6 +291,10 @@ export default {
       // this.multipleSelection = val;
       this.single = val.length != 1
       this.multiple = !val.length
+    },
+    //表格行点击去编辑
+    openEdit(row) {
+      this.$router.push({ path: '/project/addproject' })
     }
 
 

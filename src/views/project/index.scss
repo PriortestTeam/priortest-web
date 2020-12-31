@@ -14,6 +14,9 @@
     color:$btnbgcolor;
     margin:0 5px;
   }
+  ::v-deep .el-table__row{
+    cursor: pointer;
+  }
 }
 //列表页面的样式
 .project-container {
@@ -130,10 +133,10 @@
  
 
 }
-//视图新增管理
+//视图新增管理   
 .manage-view{
   .set_btn{
-    @include setBtn($btnbgcolor, false);
+    @include setBtn($forbidColoe, false);
     margin-right:$spacing;
   }
   .form-small{
@@ -141,18 +144,6 @@
   }
   .el-form-item {
     margin-bottom: 15px;
-}
-  .add-del{
-    i{
-      font-size: 20px;
-      color:$forbidColoe;
-      cursor: pointer;
-    }
-    .el-icon-circle-plus{
-      margin-right: 10px;
-    }
   }
-
- 
 
 }

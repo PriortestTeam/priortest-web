@@ -11,7 +11,6 @@
       <div>
         <div class="set_btn">Generate</div>
       </div>
-
       <el-form-item label="Project" prop="scope" class="form-small">
         <el-select
           v-model="from.scope"
@@ -29,11 +28,7 @@
             <el-checkbox label="Current Version" />
             <el-checkbox label="Latest Version" />
             <el-checkbox label="复选框 C">
-              <el-select
-                v-model="from.version"
-                size="mini"
-                placeholder="1.0"
-              >
+              <el-select v-model="from.version" size="mini" placeholder="1.0">
                 <el-option label="1.0" value="1.0" />
                 <el-option label="2.0" value="2.0" />
               </el-select>
@@ -110,12 +105,11 @@ export default {
       'name'
     ])
   },
-  mounted: {
+  mounted() {
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "index.scss";
-
 </style>
