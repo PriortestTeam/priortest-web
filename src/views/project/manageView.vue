@@ -32,71 +32,8 @@
                 <el-option label="Project" value="project" />
                 <el-option label="Sprint" value="sprint" /> </el-select
             ></el-col>
-            <el-col :span="4">
-              <el-select v-model="from.scope" size="small" placeholder="Is">
-                <el-option label="Project" value="project" />
-                <el-option label="Sprint" value="sprint" /> </el-select
-            ></el-col>
-            <el-col :span="4">
-              <el-select v-model="from.scope" size="small" placeholder="Open">
-                <el-option label="Project" value="project" />
-                <el-option label="Sprint" value="sprint" /> </el-select
-            ></el-col>
-            <el-col :span="2" class="add-del">
-              <i class="el-icon-circle-plus" />
-              <i class="el-icon-error" />
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-radio v-model="radio2" label="1">And</el-radio>
-            <el-radio v-model="radio2" label="2">Or</el-radio>
           </el-row>
         </div>
-        <div class="filter-item">
-          <el-row>
-            <el-col :span="4">
-              <el-select
-                v-model="from.scope"
-                size="small"
-                placeholder="Create Date"
-              >
-                <el-option label="Project" value="project" />
-                <el-option label="Sprint" value="sprint" /> </el-select
-            ></el-col>
-            <el-col :span="4">
-              <el-select v-model="from.scope" size="small" placeholder="Range">
-                <el-option label="Project" value="project" />
-                <el-option label="Sprint" value="sprint" /> </el-select
-            ></el-col>
-            <el-col :span="7">
-              <el-date-picker
-                v-model="value1"
-                size="small"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-            /></el-col>
-            <el-col :span="2" class="add-del">
-              <i class="el-icon-circle-plus" />
-              <i class="el-icon-error" />
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-radio v-model="radio1" label="1">And</el-radio>
-            <el-radio v-model="radio1" label="2">Or</el-radio>
-          </el-row>
-        </div>
-      </el-form-item>
-      <el-form-item label="Project" prop="project" class="form-small">
-        <el-select
-          v-model="from.project"
-          size="small"
-          placeholder="请选择适用项目"
-        >
-          <el-option label="Project A" value="project" />
-          <el-option label="Project B" value="sprint" />
-        </el-select>
       </el-form-item>
       <el-form-item label="Status" prop="status" class="form-small">
         <el-radio v-model="radio3" label="1">Private</el-radio>
@@ -109,6 +46,7 @@
           :header-cell-style="tableHeader"
           stripe
           style="width: 100%"
+          @row-click="toEdit"
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" />
@@ -120,7 +58,7 @@
           <el-table-column prop="modified" label="Modified" />
           <el-table-column label="Action">
             <template>
-              <span class="table-btn">编辑</span>
+              <span class="table-btn">删除</span>
             </template>
           </el-table-column>
         </el-table>

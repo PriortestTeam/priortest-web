@@ -33,26 +33,12 @@
             <el-col :span="4"> <span class="item">Mandatory</span></el-col>
             <el-col :span="4"> <span class="item">Default Value</span></el-col>
           </el-row>
-          <el-row class="item">
+          <el-row v-for="(item, index) in scopeData" :key="index" class="item">
             <el-col :span="4">
-              <el-checkbox v-model="checked1">Project</el-checkbox>
+              <el-checkbox v-model="checked1">{{ item }}</el-checkbox>
             </el-col>
             <el-col :span="4" class="radiu">
               <el-checkbox v-model="checked2" />
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                v-model="from.name"
-                size="mini"
-                placeholder="默认值"
-              /></el-col>
-          </el-row>
-          <el-row class="item">
-            <el-col :span="4">
-              <el-checkbox v-model="checked3">Feature</el-checkbox>
-            </el-col>
-            <el-col :span="4" class="radiu">
-              <el-checkbox v-model="checked4" />
             </el-col>
             <el-col :span="4">
               <el-input
@@ -105,6 +91,7 @@ export default {
       checked2: true,
       checked4: false,
       checked3: true,
+      scopeData: ['Project', 'Feature', 'Sprint', 'TestCase', 'TestCycle', 'Issue', 'SignOff'],
       viewData: [
         {
           title: 'view2',
@@ -162,6 +149,12 @@ export default {
     .el-col-4 {
       text-align: center;
       line-height: 32px;
+    }
+    .item {
+      .el-col-4:nth-child(1) {
+        text-align: left;
+        padding-left: 30px;
+      }
     }
     .radiu {
       ::v-deep .el-checkbox__inner {
