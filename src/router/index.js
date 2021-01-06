@@ -108,7 +108,6 @@ export const constantRoutes = [
     }
     ]
   },
-  // 注册
   {
     path: '/testcase',
     component: Layout,
@@ -191,7 +190,17 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/admincenter',
+    component: Layout,
+    redirect: '/admincenter',
+    children: [{
+      path: 'admincenter',
+      name: 'Admincenter',
+      component: () => import('@/views/adminCenter/index'),
+      meta: { title: 'admincenter', icon: 'admincenter' }
+    }]
+  },
   {
     path: 'external-link',
     component: Layout,

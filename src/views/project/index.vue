@@ -4,144 +4,144 @@
       <div class="set_btn">新建项目</div>
     </router-link>
     <el-row>
-      <el-col
-        :span="5"
-      ><div v-loading="isLoading" class="comp-tree">
-        <div class="new_project">
-          <router-link to="/project/manageview">
-            <div class="set_btn">新建视图</div>
-          </router-link>
-          <router-link to="/project/manageview">
-            <div class="set_btn">管理视图</div>
-          </router-link>
-        </div>
-        <!-- tree -->
-        <el-tree
-          ref="SlotTree"
-          :data="setTree"
-          :props="defaultProps"
-          :expand-on-click-node="false"
-          highlight-current
-          :node-key="node_key"
-          default-expand-all
-        >
-          <div slot-scope="{ node, data }" class="comp-tr-node">
-            <!-- 编辑状态 -->
-            <template v-if="node.isEdit">
-              <el-input
-                :ref="'slotTreeInput' + data[node_key]"
-                v-model="data.name"
-                autofocus
-                size="mini"
-                class="editinput"
-                @blur.stop="handleInput(node, data)"
-                @keyup.enter.native="handleInput(node, data)"
-              />
-            </template>
-            <!-- 非编辑状态 -->
-            <template v-else>
-              <!-- 名称： 新增节点增加class（is-new） -->
-              <span
-                :class="[
-                  data[node_key] < node_id_start ? 'is-new' : '',
-                  'comp-tr-node--name',
-                ]"
-              >
-                {{ node.label }}
-              </span>
-              <!-- 按钮 -->
-              <!-- <span class="comp-tr-node--btns" v-if="node.id !== 1"> -->
-              <span class="comp-tr-node--btns">
-                <!-- 编辑 -->
-                <el-button
-                  icon="el-icon-edit"
-                  size="mini"
-                  circle
-                  type="info"
-                  @click="handleEdit(node, data)"
-                />
-                <!-- 删除 -->
-                <el-button
-                  icon="el-icon-delete"
-                  size="mini"
-                  circle
-                  type="info"
-                  @click="handleDelete(node, data)"
-                />
-                <!-- 新增 -->
-                <el-button
-                  icon="el-icon-plus"
-                  size="mini"
-                  circle
-                  type="info"
-                  @click="handleAdd(node, data)"
-                />
-              </span>
-            </template>
+      <el-col :span="5"
+        ><div v-loading="isLoading" class="comp-tree">
+          <div class="new_project">
+            <router-link to="/project/manageview">
+              <div class="set_btn">新建视图</div>
+            </router-link>
+            <router-link to="/project/manageview">
+              <div class="set_btn">管理视图</div>
+            </router-link>
           </div>
-        </el-tree></div></el-col>
-      <el-col
-        :span="19"
-      ><div class="project_table">
-        <div class="oprate_btn">
-          <router-link to="/project/manageproject">
-            <el-button
-              style="margin-right: 10px"
-              type="text"
-            >管理项目</el-button>
-          </router-link>
-          <el-button type="text" :disabled="single">克隆</el-button>
-          <el-button type="text" :disabled="multiple">删除</el-button>
-          <el-button type="text" :disabled="multiple">批量编辑</el-button>
-        </div>
-        <div class="protable table">
-          <el-table
-            :data="projecttableData"
-            :header-cell-style="tableHeader"
-            stripe
-            style="width: 100%"
-            @row-click="openEdit"
-            @selection-change="handleSelectionChange"
+          <!-- tree -->
+          <el-tree
+            ref="SlotTree"
+            :data="setTree"
+            :props="defaultProps"
+            :expand-on-click-node="false"
+            highlight-current
+            :node-key="node_key"
+            default-expand-all
           >
-            <el-table-column type="selection" width="55" />
-            <el-table-column type="index" align="center" label="序号">
-              <template slot-scope="scope">
-                {{ scope.$index + 1 }}
+            <div slot-scope="{ node, data }" class="comp-tr-node">
+              <!-- 编辑状态 -->
+              <template v-if="node.isEdit">
+                <el-input
+                  :ref="'slotTreeInput' + data[node_key]"
+                  v-model="data.name"
+                  autofocus
+                  size="mini"
+                  class="editinput"
+                  @blur.stop="handleInput(node, data)"
+                  @keyup.enter.native="handleInput(node, data)"
+                />
               </template>
-            </el-table-column>
-            <el-table-column prop="title" align="center" label="标题" />
-            <el-table-column prop="report" align="center" label="负责人" />
-            <el-table-column prop="status" align="center" label="状态" />
-            <el-table-column
-              prop="createDate"
-              align="center"
-              label="创建日期"
-            />
-            <el-table-column
-              prop="createDate"
-              align="center"
-              label="计划上线日期"
-            />
-            <el-table-column
-              prop="createDate"
-              align="center"
-              label="关闭日期"
-            />
-            <el-table-column label="操作" align="center">
-              <template>
-                <span class="table-btn">克隆</span>
-                <span class="line">|</span>
-                <span class="table-btn">删除</span>
+              <!-- 非编辑状态 -->
+              <template v-else>
+                <!-- 名称： 新增节点增加class（is-new） -->
+                <span
+                  :class="[
+                    data[node_key] < node_id_start ? 'is-new' : '',
+                    'comp-tr-node--name',
+                  ]"
+                >
+                  {{ node.label }}
+                </span>
+                <!-- 按钮 -->
+                <!-- <span class="comp-tr-node--btns" v-if="node.id !== 1"> -->
+                <span class="comp-tr-node--btns">
+                  <!-- 编辑 -->
+                  <el-button
+                    icon="el-icon-edit"
+                    size="mini"
+                    circle
+                    type="info"
+                    @click="handleEdit(node, data)"
+                  />
+                  <!-- 删除 -->
+                  <el-button
+                    icon="el-icon-delete"
+                    size="mini"
+                    circle
+                    type="info"
+                    @click="handleDelete(node, data)"
+                  />
+                  <!-- 新增 -->
+                  <el-button
+                    icon="el-icon-plus"
+                    size="mini"
+                    circle
+                    type="info"
+                    @click="handleAdd(node, data)"
+                  />
+                </span>
               </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </div></el-col>
+            </div>
+          </el-tree></div
+      ></el-col>
+      <el-col :span="19"
+        ><div class="project_table">
+          <div class="oprate_btn">
+            <router-link to="/project/manageproject">
+              <el-button style="margin-right: 10px" type="text"
+                >管理项目</el-button
+              >
+            </router-link>
+            <el-button type="text" :disabled="single">克隆</el-button>
+            <el-button type="text" :disabled="multiple">删除</el-button>
+            <el-button type="text" :disabled="multiple">批量编辑</el-button>
+          </div>
+          <div class="protable table">
+            <el-table
+              :data="projecttableData"
+              :header-cell-style="tableHeader"
+              stripe
+              style="width: 100%"
+              @row-click="openEdit"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column type="selection" width="55" />
+              <el-table-column type="index" align="center" label="序号">
+                <template slot-scope="scope">
+                  {{ scope.$index + 1 }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="title" align="center" label="标题" />
+              <el-table-column prop="report" align="center" label="负责人" />
+              <el-table-column prop="status" align="center" label="状态" />
+              <el-table-column
+                prop="createDate"
+                align="center"
+                label="创建日期"
+              />
+              <el-table-column
+                prop="createDate"
+                align="center"
+                label="计划上线日期"
+              />
+              <el-table-column
+                prop="createDate"
+                align="center"
+                label="关闭日期"
+              />
+              <el-table-column label="操作" align="center">
+                <template>
+                  <span class="table-btn">克隆</span>
+                  <span class="line">|</span>
+                  <span class="table-btn">删除</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div></el-col
+      >
     </el-row>
   </div>
 </template>
 
 <script>
+import { queryForProjects } from '@/api/project'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
@@ -183,6 +183,10 @@ export default {
         pid: 0,
         children: []
       },
+      projectQuery: {
+        pageNum: '1',
+        pageSize: '10'
+      },
       projecttableData: [{
         title: 'Project A',
         report: 'Jon',
@@ -218,8 +222,15 @@ export default {
   created() {
     // 初始值
     this.startId = this.node_id_start
+    // this.getqueryForProjects()//获取管理项目列表
   },
   methods: {
+    //得到首页列表
+    getqueryForProjects() {
+      queryForProjects(this.projectQuery).then(res => {
+        console.log(res)
+      })
+    },
     //  左侧数的增删改
     handleDelete(node, data) { // 删除节点
       if (data.children && data.children.length !== 0) {

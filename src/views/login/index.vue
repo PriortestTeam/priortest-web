@@ -1,8 +1,15 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" class="login-form" label-position="left" label-width="80px" :rules="loginRules" :model="loginForm">
+    <el-form
+      ref="loginForm"
+      class="login-form"
+      label-position="left"
+      label-width="80px"
+      :rules="loginRules"
+      :model="loginForm"
+    >
       <div class="one-logo">
-        <img src="@/icons/img/one-logo.png" alt="" srcset="">
+        <img src="@/icons/img/one-logo.png" alt="" srcset="" />
       </div>
       <el-form-item prop="username" label="Email">
         <el-input v-model="loginForm.username" />
@@ -12,11 +19,11 @@
       </el-form-item>
       <el-form-item>
         <div class="btnForget">
-          <el-button type="primary" round @click="handleLogin('loginForm')">Login</el-button>
+          <el-button type="primary" round @click="handleLogin('loginForm')"
+            >Login</el-button
+          >
           <!-- @click="forgetPwd()" -->
-          <div class="Forget-frist">
-            Forget & Set Password
-          </div>
+          <div class="Forget-frist">Forget & Set Password</div>
         </div>
       </el-form-item>
     </el-form>
@@ -31,13 +38,13 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '1220186100@qq.com',
+        username: '1220186101@qq.com',
         password: '12345678A'
       },
       loginRules: {
         username: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' }
-          // { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
         ],
         password: [{ required: true, message: '请输入活动名称', trigger: 'blur' }]
       },
@@ -48,7 +55,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
@@ -69,16 +76,16 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          console.log('01')
-          this.$store.dispatch('user/login', this.loginForm).then((res) => {
-            console.log('001', res)
-            if (res.code === '200') {
-              this.$router.push({ path: '/' })
+          this.loginForm = {
+            username: '1220186101@qq.com',
+            password: '12345678A'
+          },
+            this.$store.dispatch('user/login', this.loginForm).then((res) => {
               message('success', res.msg)
-            }
-          }).catch(error => {
-            console.log(error)
-          })
+              this.$router.push({ path: '/' })
+            }).catch(error => {
+              console.log(error)
+            })
         } else {
           console.log('error submit!!')
           return false
@@ -106,44 +113,45 @@ export default {
   overflow: hidden;
 
   .login-form {
+    .one-logo {
+      margin-left: -70px;
+      margin-bottom: 20px;
+    }
     position: relative;
     width: 620px;
     max-width: 100%;
     padding: 160px 90px 0;
     margin: 0 auto;
     overflow: hidden;
-    .one-logo{
-      margin-left: -70px;
-      margin-bottom: 20px;
-    }
-    .btnForget{
+
+    .btnForget {
       display: flex;
       justify-content: space-evenly;
       align-items: center;
-    .el-button--primary{
-      background: $btnbgcolor;
-      border: none;
-      font-size: 12px;
-    }
-    .el-button.is-round{
-      padding: 9px 15px;
-    }
-      .Forget-frist{
+      .el-button--primary {
+        background: $btnbgcolor;
+        border: none;
+        font-size: 12px;
+      }
+      .el-button.is-round {
+        padding: 9px 15px;
+      }
+      .Forget-frist {
         color: #386795;
         font-size: 18px;
         cursor: pointer;
       }
     }
 
-    ::v-deep .el-form-item__content{
-      .el-input{
-      font-size: 12px;
+    ::v-deep .el-form-item__content {
+      .el-input {
+        font-size: 12px;
       }
-      .el-input__inner{
+      .el-input__inner {
         height: 26px !important;
       }
     }
-    ::v-deep .el-form-item__label{
+    ::v-deep .el-form-item__label {
       font-size: 12px;
     }
   }

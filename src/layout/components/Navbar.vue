@@ -9,7 +9,7 @@
           alt=""
           srcset=""
           @click="gohome"
-        >
+        />
       </el-col>
       <el-col :span="17">
         <div class="one_title">
@@ -23,31 +23,31 @@
               index === 0
                 ? $t("lang.menuTitle.Project")
                 : index === 1
-                  ? $t("lang.menuTitle.Feature")
-                  : index === 2
-                    ? $t("lang.menuTitle.Sprint")
-                    : index === 3
-                      ? $t("lang.menuTitle.TestCase")
-                      : index === 4
-                        ? $t("lang.menuTitle.TestCycle")
-                        : index === 5
-                          ? $t("lang.menuTitle.Issue")
-                          : index === 6
-                            ? $t("lang.menuTitle.SignOff")
-                            : ""
+                ? $t("lang.menuTitle.Feature")
+                : index === 2
+                ? $t("lang.menuTitle.Sprint")
+                : index === 3
+                ? $t("lang.menuTitle.TestCase")
+                : index === 4
+                ? $t("lang.menuTitle.TestCycle")
+                : index === 5
+                ? $t("lang.menuTitle.Issue")
+                : index === 6
+                ? $t("lang.menuTitle.SignOff")
+                : ""
             }}
           </div>
           <el-input v-model="Idsearch" size="mini" placeholder="id/text">
             <i slot="prefix" class="el-input__icon el-icon-search" />
-          </el-input></div></el-col>
+          </el-input></div
+      ></el-col>
       <el-col :span="4">
         <div class="right-menu">
           <div v-if="false" class="lang">
             <el-dropdown :hide-on-click="false" @command="changeLang">
-              <span
-                class="el-dropdown-link"
-              >{{ $t("lang.custom.name") }}<i
-                class="el-icon-arrow-down el-icon--right"
+              <span class="el-dropdown-link"
+                >{{ $t("lang.custom.name")
+                }}<i class="el-icon-arrow-down el-icon--right"
               /></span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="zh-CN">{{
@@ -59,12 +59,12 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <img class="user-avatar" :src="avatar + '?imageView2/1/w/80/h/80'">
-          <svg-icon
-            icon-class="tuichu"
-            class="tuichu"
-            @click.native="logout"
-          /></div>
+          <router-link to="/admincenter/admincenter">
+            <img class="user-avatar" :src="userInfo.photo" />
+          </router-link>
+
+          <svg-icon icon-class="tuichu" class="tuichu" @click.native="logout" />
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -88,12 +88,15 @@ export default {
   computed: {
     ...mapGetters(
       ['sidebar',
-        'avatar',
         {
           isCollapse: state => state.tab.isCollapse,
           lang: state => state.header.lang
         }]
-    )
+    ),
+    userInfo() {
+      return this.$store.state.user.userinfo
+    }
+
   },
   mounted() {
     this.itemIndex = ''
@@ -165,7 +168,7 @@ export default {
       cursor: pointer;
       margin-left: 20px;
     }
-    .lang{
+    .lang {
       margin-right: 20px;
     }
   }

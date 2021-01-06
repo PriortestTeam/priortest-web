@@ -123,6 +123,9 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
       this.multiple = !val.length
+    },
+    toEdit() {
+
     }
   }
 }

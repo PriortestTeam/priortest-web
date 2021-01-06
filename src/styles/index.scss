@@ -68,6 +68,14 @@ div:focus {
   width: 100%;
 }
 //文字按钮颜色修改颜色
+.el-button{
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.el-button.is-round {
+  border-radius: 20px;
+  padding: 6px 10px;
+}
 .el-button--text, .el-button--text:focus, .el-button--text:hover{
   color:$btnbgcolor
 }
@@ -119,6 +127,11 @@ div:focus {
   background-color:  $btnbgcolor;
   border-color: $btnbgcolor;
 }
+//禁止
+.el-button--primary.is-disabled, .el-button--primary.is-disabled:active, .el-button--primary.is-disabled:focus, .el-button--primary.is-disabled:hover{
+  background-color: $forbidColoe;
+  border-color: $forbidColoe;
+}
 .el-button--primary:focus, .el-button--primary:hover {
   background: $btnbgcolor;
   border-color: $btnbgcolor;
@@ -153,10 +166,9 @@ div:focus {
 .el-table td, .el-table th {
   padding: 8px 0;
 }
+
+
 //新增页面 占屏幕宽度的60%
 .form-box{
   width:60%;
-  .el-form-item {
-    margin-bottom: 18px;
-}
 }

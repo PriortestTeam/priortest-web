@@ -14,6 +14,12 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+
+//分页
+import Pagination from '@/components/Pagination'
+Vue.component('Pagination', Pagination)
+
+
 // 公共方法
 import { resetForm, handleTree, returntomenu } from '@/utils/jeethink'
 // 全局方法挂载

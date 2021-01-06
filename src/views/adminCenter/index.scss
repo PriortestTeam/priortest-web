@@ -1,0 +1,16 @@
+@import "@/styles/mixin.scss";//颜色
+@import "@/styles/color.scss";//按钮
+
+.admin-center {
+ .tab-box{
+   width:100%;
+   overflow: hidden;
+   .add-account{
+     width: 30%;
+     margin-top:$spacing;
+     .el-select{
+       width:100%;
+     }
+   }
+ }
+}
