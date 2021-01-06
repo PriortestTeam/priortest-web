@@ -5,7 +5,7 @@
         <!-- 头部选择栏 -->
         <img
           class="one_logo"
-          src="../../icons/img/one-logo.png"
+          src="@/icons/img/one-logo.png"
           alt=""
           srcset=""
           @click="gohome"

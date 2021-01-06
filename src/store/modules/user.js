@@ -36,7 +36,7 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
-        resolve()
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
@@ -52,7 +52,6 @@ const actions = {
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
-
         const { name, avatar } = data
 
         commit('SET_NAME', name)

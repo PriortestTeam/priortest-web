@@ -12,11 +12,7 @@
       </el-form-item>
       <el-form-item>
         <div class="btnForget">
-          <el-button type="primary" round @click="handleLogin('loginForm')">Login</el-button>
-          <!-- @click="forgetPwd()" -->
-          <div class="Forget-frist">
-            Forget & Set Password
-          </div>
+          <el-button type="primary" round @click="handleLogin('loginForm')">Register</el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -25,14 +21,13 @@
 
 <script>
 
-import { message } from '@/utils/common'
 export default {
-  name: 'Login',
+  name: 'Register',
   data() {
     return {
       loginForm: {
-        username: '1220186100@qq.com',
-        password: '12345678A'
+        username: 'admin',
+        password: '111111'
       },
       loginRules: {
         username: [
@@ -69,15 +64,11 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          console.log('01')
-          this.$store.dispatch('user/login', this.loginForm).then((res) => {
-            console.log('001', res)
-            if (res.code === '200') {
-              this.$router.push({ path: '/' })
-              message('success', res.msg)
-            }
-          }).catch(error => {
-            console.log(error)
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            this.$router.push({ path: '/' || '/' })
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
           })
         } else {
           console.log('error submit!!')

@@ -54,6 +54,7 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+
   {
     path: '/feature',
     component: Layout,
@@ -76,6 +77,38 @@ export const constantRoutes = [
       meta: { title: 'Sprint', icon: 'Sprint' }
     }]
   },
+  // 注册
+  {
+    path: '/register',
+    component: Layout,
+    redirect: '/register',
+    children: [{
+      path: 'register',
+      name: 'Register',
+      component: () => import('@/views/register/index'),
+      meta: { title: 'Register', icon: 'Register' }
+    },
+    {
+      path: 'extendedLife',
+      name: 'ExtendedLife',
+      component: () => import('@/views/register/extendedLife'),
+      meta: { title: 'ExtendedLife', icon: 'ExtendedLife' }
+    },
+    {
+      path: 'activaUser',
+      name: 'ActivaUser',
+      component: () => import('@/views/register/activaUser'),
+      meta: { title: 'ActivaUser', icon: 'ActivaUser' }
+    },
+    {
+      path: 'passwrodSet',
+      name: 'PasswrodSet',
+      component: () => import('@/views/register/passwrodSet'),
+      meta: { title: 'PasswrodSet', icon: 'PasswrodSet' }
+    }
+    ]
+  },
+  // 注册
   {
     path: '/testcase',
     component: Layout,
