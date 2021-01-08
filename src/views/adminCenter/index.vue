@@ -23,20 +23,28 @@
                   placeholder="请输入邮箱地址"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="用户名" prop="name" size="small">
+              <el-form-item label="用户名" prop="userName" size="small">
                 <el-input
-                  v-model="accountForm.name"
-                  placeholder="请设置初始密码"
+                  v-model="accountForm.userName"
+                  placeholder="请输入用户名"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="密码" prop="password" size="small">
+              <el-form-item
+                label="密码"
+                v-if="accountSingle"
+                prop="password"
+                size="small"
+              >
                 <el-input
                   v-model="accountForm.password"
                   placeholder="请设置初始密码"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="角色" prop="role" size="small">
-                <el-select v-model="accountForm.role" placeholder="请选择角色">
+              <el-form-item label="角色" prop="sysRoleId" size="small">
+                <el-select
+                  v-model="accountForm.sysRoleId"
+                  placeholder="请选择角色"
+                >
                   <el-option
                     v-for="item in accountRoleOption"
                     :key="item.id"
@@ -45,20 +53,26 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item label="项目" prop="project" size="small">
-                <el-input
-                  v-model="accountForm.project"
+              <el-form-item label="项目" prop="projectsSts" size="small">
+                <!-- <el-input
+                  v-model="accountForm.projectsSts"
                   placeholder="请选择项目"
-                ></el-input>
+                ></el-input> -->
+
+                <el-autocomplete
+                  class="inline-input"
+                  v-model="accountForm.projectsSts"
+                  :fetch-suggestions="querySearch"
+                  placeholder="请输入内容"
+                  @select="handleSelect"
+                ></el-autocomplete>
               </el-form-item>
             </div>
             <div class="table">
               <el-button type="text" :disabled="accountMultiple"
                 >批量删除</el-button
               >
-              <el-button type="text" :disabled="accountMultiple"
-                >权限</el-button
-              >
+              <el-button type="text" :disabled="accountSingle">权限</el-button>
               <el-table
                 :data="accountData"
                 :header-cell-style="tableHeader"
@@ -70,6 +84,7 @@
                 <el-table-column type="selection" width="55" />
                 <el-table-column align="center" label="序号" type="index">
                 </el-table-column>
+
                 <el-table-column prop="email" align="center" label="邮箱" />
                 <el-table-column
                   prop="userName"
@@ -80,7 +95,6 @@
                   prop="projectsSts"
                   align="center"
                   label="项目"
-                  width="400"
                   :show-overflow-tooltip="true"
                 />
                 <el-table-column
@@ -89,7 +103,7 @@
                   label="注册日期"
                 />
                 <el-table-column prop="roleName" align="center" label="角色" />
-                <el-table-column label="Action" align="center">
+                <el-table-column label="操作" align="center">
                   <template>
                     <span class="table-btn">删除</span>
                   </template>
@@ -124,6 +138,7 @@ export default {
       },
       accountRoleOption: [],
       accountForm: {},
+      accountProject: [],
       accountRules: {
         email: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -146,15 +161,19 @@ export default {
         pageSize: 10
       },
       accountSelection: [], // 选择的表格
-      accountMultiple: true // 非多个禁用
+      accountSingle: true, // 非单个禁用
+      accountMultiple: true,// 非多个禁用
     }
   },
   created() {
     queryRoles().then(res => {
       this.accountRoleOption = res.data
     })
-    this.getProject()
     this.getquerySubUsers()
+  },
+  mounted() {
+    this.getProject()
+
   },
   methods: {
     handleClick() {
@@ -163,8 +182,8 @@ export default {
     /**˙账户开始 */
     //得到项目
     getProject() {
-      queryForProjectTitles({ pageNum: '1', pageSize: '5', title: '' }).then(res => {
-        console.log(res)
+      queryForProjectTitles().then(res => {
+        this.accountProject = res.data
       })
     },
     //得到账户列表
@@ -173,6 +192,31 @@ export default {
         this.accountData = res.data
         this.accountTotal = res.total
       })
+    },
+    querySearch(queryString, cb) {
+      var restaurants = this.accountProject;
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    handleSelect(item) {
+      console.log(item);
+    },
+    //重置
+    resetAccountForm() {
+      this.accountForm = {
+        email: undefined,
+        userName: undefined,
+        password: undefined,
+        sysRoleId: undefined,
+        projectsSts: undefined,
+      }
+      this.$refs['accountForm'].resetFields();
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -184,12 +228,13 @@ export default {
         }
       });
     },
-    accountEdit() {
-
+    accountEdit(row) {
+      this.accountForm = row
     },
     accountSelectionChange(val) {
       this.accountSelection = val
       this.accountMultiple = !val.length
+      this.accountSingle = val.length !== 1
     },
     /**˙账户结束 */
 

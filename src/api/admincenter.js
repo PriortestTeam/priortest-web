@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { data } from 'autoprefixer'
 
 
 //个人中心获取角色
@@ -10,13 +9,13 @@ export function queryRoles() {
   })
 }
 //个人中心获取项目
-export function queryForProjectTitles(data) {
+export function queryForProjectTitles() {
   return request({
-    url: '/subUser/queryForProjectTitles',
+    url: '/subUser/queryForProjects',
     method: 'get',
-    params: data
   })
 }
+
 //个人中心账户列表
 export function querySubUsers(query) {
   return request({
