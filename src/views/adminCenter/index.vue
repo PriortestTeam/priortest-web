@@ -4,16 +4,18 @@
       <el-tab-pane label="用户管理" name="first">
         <div class="tab-box">
           <el-form
+            ref="accountForm"
             :model="accountForm"
             :rules="accountRules"
-            ref="accountForm"
             label-width="100px"
             class="demo-ruleForm"
           >
             <div>
-              <el-button type="primary" round @click="submitForm('accountForm')"
-                >新建账户</el-button
-              >
+              <el-button
+                type="primary"
+                round
+                @click="submitForm('accountForm')"
+              >新建账户</el-button>
               <el-button type="primary" round>确认修改</el-button>
             </div>
             <div class="add-account">
@@ -21,19 +23,19 @@
                 <el-input
                   v-model="accountForm.email"
                   placeholder="请输入邮箱地址"
-                ></el-input>
+                />
               </el-form-item>
               <el-form-item label="用户名" prop="name" size="small">
                 <el-input
                   v-model="accountForm.name"
                   placeholder="请设置初始密码"
-                ></el-input>
+                />
               </el-form-item>
               <el-form-item label="密码" prop="password" size="small">
                 <el-input
                   v-model="accountForm.password"
                   placeholder="请设置初始密码"
-                ></el-input>
+                />
               </el-form-item>
               <el-form-item label="角色" prop="role" size="small">
                 <el-select v-model="accountForm.role" placeholder="请选择角色">
@@ -49,16 +51,18 @@
                 <el-input
                   v-model="accountForm.project"
                   placeholder="请选择项目"
-                ></el-input>
+                />
               </el-form-item>
             </div>
             <div class="table">
-              <el-button type="text" :disabled="accountMultiple"
-                >批量删除</el-button
-              >
-              <el-button type="text" :disabled="accountMultiple"
-                >权限</el-button
-              >
+              <el-button
+                type="text"
+                :disabled="accountMultiple"
+              >批量删除</el-button>
+              <el-button
+                type="text"
+                :disabled="accountMultiple"
+              >权限</el-button>
               <el-table
                 :data="accountData"
                 :header-cell-style="tableHeader"
@@ -68,8 +72,7 @@
                 @selection-change="accountSelectionChange"
               >
                 <el-table-column type="selection" width="55" />
-                <el-table-column align="center" label="序号" type="index">
-                </el-table-column>
+                <el-table-column align="center" label="序号" type="index" />
                 <el-table-column prop="email" align="center" label="邮箱" />
                 <el-table-column
                   prop="userName"
@@ -112,7 +115,7 @@
   </div>
 </template>
 <script>
-import { queryRoles, queryForProjectTitles, querySubUsers } from "@/api/admincenter";
+import { queryRoles, queryForProjectTitles, querySubUsers } from '@/api/admincenter'
 export default {
   name: 'Admincenter',
   data() {
@@ -137,7 +140,7 @@ export default {
         ],
         project: [
           { required: true, message: '请选择项目', trigger: 'change' }
-        ],
+        ]
       },
       accountData: [],
       accountTotal: 0,
@@ -160,14 +163,14 @@ export default {
     handleClick() {
 
     },
-    /**˙账户开始 */
-    //得到项目
+    /** ˙账户开始 */
+    // 得到项目
     getProject() {
       queryForProjectTitles({ pageNum: '1', pageSize: '5', title: '' }).then(res => {
         console.log(res)
       })
     },
-    //得到账户列表
+    // 得到账户列表
     getquerySubUsers() {
       querySubUsers(this.accountQuery).then(res => {
         this.accountData = res.data
@@ -177,12 +180,12 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          alert('submit!')
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     accountEdit() {
 
@@ -190,8 +193,8 @@ export default {
     accountSelectionChange(val) {
       this.accountSelection = val
       this.accountMultiple = !val.length
-    },
-    /**˙账户结束 */
+    }
+    /** ˙账户结束 */
 
   }
 }

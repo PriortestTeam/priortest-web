@@ -1,21 +1,21 @@
 <template>
   <div class="app-container add-form add-project">
     <el-form
-      ref="from"
-      :model="from"
-      :rules="rules"
+      ref="projectFrom"
+      :model="projectFrom"
+      :rules="Projectrules"
       label-width="120px"
       class="demo-ruleForm"
     >
       <div>
-        <div class="set_btn" @click="submitForm('from')">
+        <div class="set_btn" @click="submitForm('projectFrom',true)">
           {{ $t("lang.PublicBtn.SaveAndNew") }}
         </div>
-        <div class="set_btn" @click="saveBack">
+        <div class="set_btn" @click="submitForm('projectFrom',false)">
           {{ $t("lang.PublicBtn.SaveAndBack") }}
         </div>
-        <div class="set_btn">{{ $t("lang.PublicBtn.Save") }}</div>
-        <div class="set_btn" @click="giveupBack('from')">
+        <!-- <div class="set_btn">{{ $t("lang.PublicBtn.Save") }}</div> -->
+        <div class="set_btn" @click="giveupBack('projectFrom')">
           {{ $t("lang.PublicBtn.GiveUp") }}
         </div>
         <router-link to="/publicview/customfiled">
@@ -26,7 +26,7 @@
       </div>
       <div class="form-box">
         <el-form-item :label="$t('lang.Project.ProjectTitle')" prop="title">
-          <el-input v-model="from.title" size="small" />
+          <el-input v-model="projectFrom.title" size="small" />
         </el-form-item>
         <el-row>
           <el-col :span="8">
@@ -36,36 +36,30 @@
               prop="status"
             >
               <el-select
-                v-model="from.status"
+                v-model="projectFrom.status"
                 placeholder="请选择项目状态"
                 clearable
               >
-                <el-option
-                  :label="$t('lang.Project.Progress')"
-                  value="Progress"
-                />
-                <el-option :label="$t('lang.Project.Closed')" value="Closed" />
-                <el-option :label="$t('lang.Project.Plan')" value="Plan" />
-              </el-select> </el-form-item
-          ></el-col>
+                <el-option :label="$t('lang.Project.Progress')" value="3" />
+                <el-option :label="$t('lang.Project.Closed')" value="1" />
+                <el-option :label="$t('lang.Project.Plan')" value="2" />
+              </el-select> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item
               :label="$t('lang.Project.ReportTo')"
               size="small"
               prop="report"
             >
-              <el-input v-model="from.report" /> </el-form-item
-          ></el-col>
+              <el-input v-model="projectFrom.reportToName" /> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item
               size="small"
               :label="$t('lang.Project.Customer')"
               prop="customer"
             >
-              <el-select v-model="from.customer" placeholder="请选择" clearable>
+              <el-select v-model="projectFrom.customer" placeholder="请选择" clearable>
                 <el-option label="暂无" value="" />
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -73,7 +67,7 @@
           size="small"
         >
           <el-input
-            v-model="from.description"
+            v-model="projectFrom.description"
             type="textarea"
             maxlength="100"
             show-word-limit
@@ -81,7 +75,7 @@
           />
         </el-form-item>
         <el-form-item
-          v-for="domain in from.domains"
+          v-for="domain in projectFrom.domains"
           :key="domain.key"
           class="dele-input"
           size="small"
@@ -96,8 +90,7 @@
           <el-input v-model="domain.value" width="70%" /><el-button
             type="text"
             @click.prevent="removeFiled(domain)"
-            >删除</el-button
-          >
+          >删除</el-button>
         </el-form-item>
         <el-upload
           class="upload-demo"
@@ -108,7 +101,7 @@
           multiple
           :limit="3"
           :on-exceed="handleExceed"
-          :file-list="from.fileList"
+          :file-list="projectFrom.fileList"
         >
           <el-button size="small" type="primary">{{
             $t("lang.Project.Attachment")
@@ -123,18 +116,20 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { addProjects, editProjects } from '@/api/project'
+import { message, returntomenu } from '@/utils/common'
 export default {
   name: 'Addproject',
   data() {
     return {
-      from: {
-        status: 'Progerss',
-        domains: [],
-        fileList: []
+      projectFrom: {
+        status: '3'
       },
-      rules: {
+      Projectrules: {
         title: []
-      }
+      },
+      prijectId: '',
+      requstsType: ''
 
     }
   },
@@ -145,14 +140,16 @@ export default {
       }
     )
   },
+  created() {
+  },
   mounted() {
-    console.log(this.rules.title = this.$t('lang').Project.title)
-    console.log(this.rules.title)
+    this.projectFrom = this.$route.query.id
+    this.requstsType = this.$route.query.type
   },
   methods: {
     // 重置表单
     resetFields(formName) {
-      this.from = {
+      this.projectFrom = {
         title: undefined,
         description: undefined,
         report: undefined,
@@ -165,7 +162,35 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          var obj = {
+            title: this.projectFrom.title,
+            reportToName: this.projectFrom.reportToName,
+            description: this.projectFrom.description,
+            status: this.projectFrom.status,
+            planReleaseDate: '',
+            attachmentId: '' // 附件地址
+          }
+          if (this.requstsType === 'edit') {
+            editProjects(this.projectFrom).then(res => {
+              if (res.code === '200') {
+                message('success', res.data)
+                returntomenu(this, 1000)
+              }
+            }).catch(error => {
+              console.log(error)
+            })
+          } else if (this.requstsType === 'add') {
+            addProjects(obj).then(res => {
+              if (res.code === '200') {
+                message('success', res.data)
+                this.projectFrom = {
+                  status: '3'
+                }
+              }
+            }).catch(error => {
+              console.log(error)
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
