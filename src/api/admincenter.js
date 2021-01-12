@@ -25,3 +25,26 @@ export function querySubUsers(query) {
     data: {}
   })
 }
+//个人中心新建账户
+export function createSubUser(query) {
+  return request({
+    url: '/subUser/createSubUser',
+    method: 'post',
+    data: query
+  })
+}
+//个人中心更新账户
+export function updateSubUser(query) {
+  return request({
+    url: '/subUser/updateSubUser',
+    method: 'post',
+    data: query
+  })
+}
+//删除账户
+export function deleteSubUser(data) {
+  return request({
+    url: '/subUser/deleteSubUser/' + data,
+    method: 'delete'
+  })
+}

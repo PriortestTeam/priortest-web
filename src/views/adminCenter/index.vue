@@ -11,10 +11,27 @@
             class="demo-ruleForm"
           >
             <div>
-              <el-button type="primary" round @click="submitForm('accountForm')"
+              <el-button
+                type="primary"
+                round
+                :disabled="!accountUpdate"
+                @click="submitForm('accountForm')"
                 >新建账户</el-button
               >
-              <el-button type="primary" round>确认修改</el-button>
+              <el-button
+                type="primary"
+                :disabled="accountUpdate"
+                round
+                @click="submitForm('accountForm')"
+                >确认修改</el-button
+              >
+              <el-button
+                type="primary"
+                :disabled="accountUpdate"
+                round
+                @click="cancelUpdate('accountForm')"
+                >取消修改</el-button
+              >
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -53,27 +70,32 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item label="项目" prop="projectsSts" size="small">
-                <!-- <el-input
-                  v-model="accountForm.projectsSts"
-                  placeholder="请选择项目"
-                ></el-input> -->
-
-                <el-autocomplete
-                  class="inline-input"
-                  v-model="accountForm.projectsSts"
-                  :fetch-suggestions="querySearch"
-                  placeholder="请输入内容"
-                  @select="handleSelect"
-                ></el-autocomplete>
+              <el-form-item label="项目" prop="projectIdStr" size="small">
+                <el-select
+                  filterable
+                  @change="accountChangePro"
+                  v-model="accountForm.projectIdStr"
+                  multiple
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in accountProject"
+                    :key="item.id"
+                    :value="item.id"
+                    :label="item.title"
+                  >
+                  </el-option>
+                </el-select>
               </el-form-item>
             </div>
             <div class="table">
-              <el-button type="text" :disabled="accountMultiple"
+              <el-button type="text" @click="accountRefresh">刷新</el-button>
+              <!-- <el-button type="text" :disabled="accountMultiple"
                 >批量删除</el-button
-              >
+              > -->
               <el-button type="text" :disabled="accountSingle">权限</el-button>
               <el-table
+                ref="accountData"
                 :data="accountData"
                 :header-cell-style="tableHeader"
                 stripe
@@ -104,8 +126,10 @@
                 />
                 <el-table-column prop="roleName" align="center" label="角色" />
                 <el-table-column label="操作" align="center">
-                  <template>
-                    <span class="table-btn">删除</span>
+                  <template slot-scope="scope">
+                    <span class="table-btn" @click.stop="accountDel(scope.row)"
+                      >删除</span
+                    >
                   </template>
                 </el-table-column>
               </el-table>
@@ -126,7 +150,9 @@
   </div>
 </template>
 <script>
-import { queryRoles, queryForProjectTitles, querySubUsers } from "@/api/admincenter";
+import { message, formatChangedPara } from '@/utils/common'
+
+import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from "@/api/admincenter";
 export default {
   name: 'Admincenter',
   data() {
@@ -137,7 +163,15 @@ export default {
         background: '#003d79'
       },
       accountRoleOption: [],
-      accountForm: {},
+      accountTempForm: {},
+      accountForm: {
+        id: undefined,
+        email: undefined,
+        userName: undefined,
+        password: undefined,
+        sysRoleId: undefined,
+        projectIdStr: [],
+      },
       accountProject: [],
       accountRules: {
         email: [
@@ -147,10 +181,13 @@ export default {
         password: [
           { required: true, message: '请设置初始密码', trigger: 'blur' }
         ],
-        role: [
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        sysRoleId: [
           { required: true, message: '请选择角色', trigger: 'change' }
         ],
-        project: [
+        projectIdStr: [
           { required: true, message: '请选择项目', trigger: 'change' }
         ],
       },
@@ -163,6 +200,7 @@ export default {
       accountSelection: [], // 选择的表格
       accountSingle: true, // 非单个禁用
       accountMultiple: true,// 非多个禁用
+      accountUpdate: true,
     }
   },
   created() {
@@ -170,9 +208,10 @@ export default {
       this.accountRoleOption = res.data
     })
     this.getquerySubUsers()
+    this.getProject()
   },
   mounted() {
-    this.getProject()
+
 
   },
   methods: {
@@ -184,57 +223,121 @@ export default {
     getProject() {
       queryForProjectTitles().then(res => {
         this.accountProject = res.data
+        this.accountProject.unshift({ title: 'ALL', id: '0' })
       })
+    },
+
+    //项目互斥
+    accountChangePro(val) {
+      let index = val.indexOf("0")
+      if (index !== -1) {
+        this.accountForm.projectIdStr = ['0']
+      }
     },
     //得到账户列表
     getquerySubUsers() {
-      querySubUsers(this.accountQuery).then(res => {
-        this.accountData = res.data
-        this.accountTotal = res.total
+      return new Promise((resolve, reject) => {
+        querySubUsers(this.accountQuery).then(res => {
+          if (res.code === '200') {
+            this.accountData = res.data
+            this.accountTotal = res.total
+            resolve(res)
+          }
+        })
       })
-    },
-    querySearch(queryString, cb) {
-      var restaurants = this.accountProject;
-      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
-    createFilter(queryString) {
-      return (restaurant) => {
-        return (restaurant.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-      };
-    },
-    handleSelect(item) {
-      console.log(item);
     },
     //重置
     resetAccountForm() {
       this.accountForm = {
+        id: undefined,
         email: undefined,
         userName: undefined,
         password: undefined,
         sysRoleId: undefined,
-        projectsSts: undefined,
+        projectIdStr: [],
       }
       this.$refs['accountForm'].resetFields();
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          if (this.accountForm.id) {
+            const param = formatChangedPara(this.accountTempForm, this.accountForm)
+            if (param.projectIdStr) {
+              param.projectIdStr = param.projectIdStr.join(",")
+            }
+            updateSubUser(param).then(res => {
+              message('success', res.msg)
+              this.resetAccountForm()
+              this.$refs.accountData.clearSelection();
+              this.accountUpdate = true
+              this.getquerySubUsers()
+            })
+          } else {
+            var form = JSON.parse(JSON.stringify(this.accountForm))
+            form.projectIdStr = form.projectIdStr.join(",")
+            createSubUser(form).then(res => {
+              message('success', res.msg)
+              this.resetAccountForm()
+              this.getquerySubUsers()
+            })
+          }
         } else {
           console.log('error submit!!');
           return false;
         }
       });
     },
+    async accountRefresh() {
+      let res = await this.getquerySubUsers()
+      if (res.code === '200') {
+        this.$refs.accountData.clearSelection();
+        this.accountUpdate = true
+        this.resetAccountForm()
+        message('success', '刷新成功')
+      }
+    },
+    //行点击编辑
     accountEdit(row) {
-      this.accountForm = row
+      this.$refs.accountData.clearSelection();
+      this.$refs.accountData.toggleRowSelection(row)
+      let form = JSON.parse(JSON.stringify(row))
+      form.projectIdStr = form.projectIdStr.split(",")
+      for (var x in this.accountForm) {
+        this.accountForm[x] = form[x]
+      }
+      this.accountTempForm = Object.assign({}, this.accountForm)
+      this.accountUpdate = false
+    },
+    //取消修改
+    cancelUpdate() {
+      this.$refs.accountData.clearSelection();
+      this.accountUpdate = true
+      this.resetAccountForm()
     },
     accountSelectionChange(val) {
       this.accountSelection = val
       this.accountMultiple = !val.length
       this.accountSingle = val.length !== 1
+      if (this.accountSingle) {
+        this.resetAccountForm()
+        this.accountUpdate = true
+      }
+    },
+    //删除
+    accountDel(val) {
+      this.$confirm('是否确认删除数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        deleteSubUser(val.id).then(res => {
+          if (res.code === '200') {
+            this.getquerySubUsers()
+            message("success", '删除成功')
+          }
+        })
+      }).catch(function () { });
     },
     /**˙账户结束 */
 

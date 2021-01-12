@@ -17,7 +17,20 @@ function message(type, msg) {
     duration: 2 * 1000
   })
 }
+//检验字段是否修改
+function formatChangedPara(originObj, newObj) {
+  const tempObj = {};
+  Object.keys(originObj).forEach(item => {
+    if (originObj[item] !== newObj[item]) {
+      tempObj[item] = newObj[item];
+    }
+  });
+  tempObj.id = newObj.id;
+  return tempObj;
+}
+
 export {
   formData,
-  message
+  message,
+  formatChangedPara
 }
