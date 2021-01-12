@@ -11,6 +11,16 @@
      .el-select{
        width:100%;
      }
+    
    }
+   .table{
+    ::v-deep .el-table__row{
+      cursor: pointer;
+    }
+    .table-btn{
+      color:$btnbgcolor;
+      padding: 0 3px;;
+    }
+  }
  }
 }

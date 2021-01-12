@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { data } from 'autoprefixer'
 
 
 //个人中心获取角色
@@ -10,13 +9,13 @@ export function queryRoles() {
   })
 }
 //个人中心获取项目
-export function queryForProjectTitles(data) {
+export function queryForProjectTitles() {
   return request({
-    url: '/subUser/queryForProjectTitles',
+    url: '/subUser/queryForProjects',
     method: 'get',
-    params: data
   })
 }
+
 //个人中心账户列表
 export function querySubUsers(query) {
   return request({
@@ -24,5 +23,28 @@ export function querySubUsers(query) {
     method: 'post',
     params: query,
     data: {}
+  })
+}
+//个人中心新建账户
+export function createSubUser(query) {
+  return request({
+    url: '/subUser/createSubUser',
+    method: 'post',
+    data: query
+  })
+}
+//个人中心更新账户
+export function updateSubUser(query) {
+  return request({
+    url: '/subUser/updateSubUser',
+    method: 'post',
+    data: query
+  })
+}
+//删除账户
+export function deleteSubUser(data) {
+  return request({
+    url: '/subUser/deleteSubUser/' + data,
+    method: 'delete'
   })
 }
