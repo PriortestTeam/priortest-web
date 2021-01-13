@@ -26,11 +26,10 @@ export function delProjects(data) {
 }
 
 // 修改项目
-export function editProjects(data) {
+export function queryViews(data) {
   return request({
-    url: '/project/updateProject',
-    method: 'post',
-    data
+    url: '/view/queryViews',
+    method: 'post'
   })
 }
-
+// 项目view

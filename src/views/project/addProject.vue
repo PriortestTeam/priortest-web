@@ -8,17 +8,35 @@
       class="demo-ruleForm"
     >
       <div>
-        <div class="set_btn" @click="submitForm('projectFrom',true)">
-          {{ $t("lang.PublicBtn.SaveAndNew") }}
-        </div>
-        <div class="set_btn" @click="submitForm('projectFrom',false)">
-          {{ $t("lang.PublicBtn.SaveAndBack") }}
-        </div>
-        <!-- <div class="set_btn">{{ $t("lang.PublicBtn.Save") }}</div> -->
-        <div class="set_btn" @click="giveupBack('projectFrom')">
-          {{ $t("lang.PublicBtn.GiveUp") }}
-        </div>
-        <router-link to="/publicview/customfiled">
+        <el-button
+          v-if="requstsType==='add'"
+          type="primary"
+          round
+          :disabled="!proUpdate"
+          @click="submitForm('projectFrom',false)"
+        >保存并新建</el-button>
+        <el-button
+          v-if="requstsType==='add'"
+          type="primary"
+          round
+          :disabled="!proUpdate"
+          @click="submitForm('projectFrom',true)"
+        >保存并返回</el-button>
+        <el-button
+          v-if="requstsType==='edit'"
+          type="primary"
+          round
+          @click="suresubForm('projectFrom')"
+        >确认修改</el-button>
+        <el-button
+          type="primary"
+          round
+          @click="giveupBack('projectFrom')"
+        >放弃</el-button>
+        <router-link
+          v-if="requstsType==='add'"
+          to="/publicview/customfiled"
+        >
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
@@ -48,7 +66,7 @@
             <el-form-item
               :label="$t('lang.Project.ReportTo')"
               size="small"
-              prop="report"
+              prop="reportToName"
             >
               <el-input v-model="projectFrom.reportToName" /> </el-form-item></el-col>
           <el-col :span="8">
@@ -126,10 +144,19 @@ export default {
         status: '3'
       },
       Projectrules: {
-        title: []
+        title: [
+          { required: true, message: '请输入负责人', trigger: 'blur' }
+        ],
+        reportToName: [
+          { required: true, message: '请输入项目标题', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '请选择状态', trigger: 'change' }
+        ]
       },
       prijectId: '',
-      requstsType: ''
+      requstsType: '',
+      proUpdate: true
 
     }
   },
@@ -159,7 +186,7 @@ export default {
       }
     },
     // 提交
-    submitForm(formName) {
+    submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           var obj = {
@@ -170,33 +197,44 @@ export default {
             planReleaseDate: '',
             attachmentId: '' // 附件地址
           }
-          if (this.requstsType === 'edit') {
-            editProjects(this.projectFrom).then(res => {
-              if (res.code === '200') {
-                message('success', res.data)
+          addProjects(obj).then(res => {
+            if (res.code === '200') {
+              message('success', res.msg)
+              this.projectFrom = {
+                status: '3'
+              }
+              if (type) {
                 returntomenu(this, 1000)
               }
-            }).catch(error => {
-              console.log(error)
-            })
-          } else if (this.requstsType === 'add') {
-            addProjects(obj).then(res => {
-              if (res.code === '200') {
-                message('success', res.data)
-                this.projectFrom = {
-                  status: '3'
-                }
-              }
-            }).catch(error => {
-              console.log(error)
-            })
-          }
+            }
+          }).catch(error => {
+            console.log(error)
+          })
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
+    // 修改项目
+    suresubForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          editProjects(this.projectFrom).then(res => {
+            if (res.code === '200') {
+              message('success', res.msg)
+              returntomenu(this, 1000)
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+
     // 放弃并且返回
     giveupBack(formName) {
       this.$route.meta.noCache = false
