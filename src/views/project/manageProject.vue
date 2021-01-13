@@ -28,7 +28,18 @@
 </template>
 <script>
 export default {
-  name: 'Manageproject'
+  name: 'Manageproject',
+  data() {
+    return {
+
+    }
+  },
+  mounted() {
+
+  },
+  methods: {
+
+  }
 }
 </script>
 <style lang="scss" scoped>

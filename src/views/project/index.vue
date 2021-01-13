@@ -82,15 +82,15 @@
         :span="19"
       ><div class="project_table">
         <div class="oprate_btn">
-          <router-link to="/project/manageproject">
+          <!-- <router-link to="/project/manageproject">
             <el-button
               style="margin-right: 10px"
               type="text"
             >管理项目</el-button>
-          </router-link>
+          </router-link> -->
           <el-button type="text" :disabled="single">克隆</el-button>
-          <el-button type="text" :disabled="multiple">删除</el-button>
-          <el-button type="text" :disabled="multiple">批量编辑</el-button>
+          <el-button type="text" :disabled="multiple" @click="delproject('all')">删除</el-button>
+          <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
         </div>
         <div class="protable table">
           <el-table
@@ -132,9 +132,9 @@
             />
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
-                <span class="table-btn">克隆</span>
-                <span class="line">|</span>
-                <span class="table-btn" @click.stop="delproject(scope.row.id)">删除</span>
+                <!-- <el-button type="text" class="table-btn">克隆</el-button>
+                <span class="line">|</span> -->
+                <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -146,7 +146,7 @@
 
 <script>
 import { message } from '@/utils/common'
-import { queryForProjects, delProjects } from '@/api/project'
+import { queryForProjects, delProjects, queryViews } from '@/api/project'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
@@ -193,7 +193,8 @@ export default {
       projecttableData: [],
       multipleSelection: [],
       single: true, // 非单个禁用
-      multiple: true // 非多个禁用
+      multiple: true, // 非多个禁用
+      projectIds: ''
     }
   },
   computed: {
@@ -205,6 +206,7 @@ export default {
     // 初始值
     this.startId = this.node_id_start
     this.getqueryForProjects()// 获取管理项目列表
+    this.queryViews() // 获取视图
   },
   methods: {
     // 项目列表
@@ -221,10 +223,21 @@ export default {
     },
     // 删除项目
     delproject(id) {
+      if (id === 'all') {
+        id = this.projectIds
+      }
       delProjects(id).then(res => {
         if (res.code === '200') {
           message('success', res.data)
           this.getqueryForProjects()
+        }
+      })
+    },
+    // view视图列表
+    queryViews() {
+      queryViews().then(res => {
+        if (res.code === '200') {
+          console.log(res)
         }
       })
     },
@@ -297,9 +310,17 @@ export default {
     },
     // 表格多选
     handleSelectionChange(val) {
+      // 暂时不实现批量删除
       // this.multipleSelection = val;
-      this.single = val.length !== 1
-      this.multiple = !val.length
+      // this.single = val.length !== 1
+      // this.multiple = !val.length
+
+      this.projectIds = ''
+      for (let i = 0; i < val.length; i++) {
+        this.projectIds += val[i].id + ','
+      }
+      this.projectIds = this.projectIds.slice(0, this.projectIds.length - 1)
+      console.log(this.projectIds)
     },
     // 表格行点击去编辑
     openEdit(row) {
