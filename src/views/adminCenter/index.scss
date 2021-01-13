@@ -23,4 +23,53 @@
     }
   }
  }
+//权限管理
+ .tab-box1{
+   .left,.right{
+    float: left;
+   }
+   .left{
+     width:30%;
+     .role-item{
+       display: flex;
+       .item-left{
+         width:50%;
+        .item{
+          b,span{
+            display: block;
+            margin:5px 0 ;
+          }
+          margin-top:$spacing;
+        }
+       }
+       .info-right{
+         padding-top:$spacing;
+       }
+      
+     }
+   }
+   .right{
+      width:70%;
+      ::v-deep .el-collapse-item__header {
+        border-bottom: none;
+        color: $btnbgcolor;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: $bodybg;
+      }
+      ::v-deep .el-collapse,
+      ::v-deep .el-collapse-item__wrap {
+        border: none;
+        background-color: $bodybg;
+      }
+      ::v-deep .el-collapse-item__content{
+        display: flex;
+        .project-item{
+          width:10%;
+          height: 300px;
+          border:1px solid red;
+        }
+      }
+   }
+ }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="admin-center app-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="用户管理" name="first">
+      <el-tab-pane label="用户管理" name="0">
         <div class="tab-box">
           <el-form
             :model="accountForm"
@@ -93,7 +93,12 @@
               <!-- <el-button type="text" :disabled="accountMultiple"
                 >批量删除</el-button
               > -->
-              <el-button type="text" :disabled="accountSingle">权限</el-button>
+              <el-button
+                type="text"
+                :disabled="accountSingle"
+                @click="accountJurisdiction"
+                >权限</el-button
+              >
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -144,20 +149,76 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="权限管理" name="second">权限管理</el-tab-pane>
-      <el-tab-pane label="项目管理" name="third">项目管理</el-tab-pane>
+      <el-tab-pane label="权限管理" name="1">
+        <div class="tab-box tab-box1">
+          <div class="left">
+            <div>
+              <el-button type="primary" round>QA 账户</el-button>
+              <el-button type="primary" round>Developer 账户</el-button>
+              <el-button type="primary" round>Admin 账户</el-button>
+            </div>
+            <div class="role-item">
+              <div class="item-left">
+                <div class="item">
+                  <b>Administrator</b>
+                  <span>默认 Administrator</span>
+                </div>
+                <div class="item">
+                  <b>QA</b>
+                  <span>QA Default Group</span>
+                  <span>Group B</span>
+                </div>
+                <div class="item">
+                  <b>Developer</b>
+                  <span>Developer Default Group</span>
+                  <span>Group C</span>
+                </div>
+              </div>
+              <div class="info-right">
+                <b> zkx - ke@qq.com</b>
+              </div>
+            </div>
+          </div>
+          <div class="right">
+            <el-collapse v-model="jurisdiction">
+              <el-collapse-item
+                :name="index + 1"
+                v-for="(item, index) in jurisdictionData"
+                :key="index"
+                :title="item.title"
+              >
+                <div class="project-item">
+                  <!-- <el-checkbox v-model="checked">备选项</el-checkbox> -->
+                </div>
+              </el-collapse-item>
+              <el-collapse-item title="Project B" name="2">
+                <div
+                  class="project-item"
+                  v-for="(item, index) in jurisdictionItem"
+                  :key="index"
+                >
+                  <el-checkbox v-model="checked">{{
+                    item.markNameDesc
+                  }}</el-checkbox>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="项目管理" name="2">项目管理</el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
 import { message, formatChangedPara } from '@/utils/common'
 
-import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from "@/api/admincenter";
+import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysOperationAuthority, getPermissions } from "@/api/admincenter";
 export default {
   name: 'Admincenter',
   data() {
     return {
-      activeName: 'first',
+      activeName: '0',
       tableHeader: {
         color: '#d4dce3',
         background: '#003d79'
@@ -201,6 +262,15 @@ export default {
       accountSingle: true, // 非单个禁用
       accountMultiple: true,// 非多个禁用
       accountUpdate: true,
+
+
+
+      jurisdiction: ['1'],//权限折叠
+      jurisdictionData: [],
+      jurisdictionItem: [],
+      checked: true
+
+
     }
   },
   created() {
@@ -215,8 +285,7 @@ export default {
 
   },
   methods: {
-    handleClick() {
-
+    handleClick(val) {
     },
     /**˙账户开始 */
     //得到项目
@@ -339,6 +408,20 @@ export default {
         })
       }).catch(function () { });
     },
+    //权限
+    accountJurisdiction() {
+      this.activeName = '1'
+      getSysOperationAuthority().then(res => {
+        this.jurisdictionItem = res.data
+        console.log(this.jurisdictionItem)
+      })
+      getPermissions(this.accountSelection[0].id).then(res => {
+        this.jurisdictionData = res.data.projects
+        console.log(this.jurisdictionData)
+
+
+      })
+    }
     /**˙账户结束 */
 
   }
