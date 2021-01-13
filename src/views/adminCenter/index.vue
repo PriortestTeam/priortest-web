@@ -1,12 +1,12 @@
 <template>
   <div class="admin-center app-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="用户管理" name="first">
+      <el-tab-pane label="用户管理" name="0">
         <div class="tab-box">
           <el-form
-            ref="accountForm"
             :model="accountForm"
             :rules="accountRules"
+            ref="accountForm"
             label-width="100px"
             class="demo-ruleForm"
           >
@@ -16,43 +16,46 @@
                 round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-              >新建账户</el-button>
+                >新建账户</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="submitForm('accountForm')"
-              >确认修改</el-button>
+                >确认修改</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="cancelUpdate('accountForm')"
-              >取消修改</el-button>
+                >取消修改</el-button
+              >
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
                 <el-input
                   v-model="accountForm.email"
                   placeholder="请输入邮箱地址"
-                />
+                ></el-input>
               </el-form-item>
               <el-form-item label="用户名" prop="userName" size="small">
                 <el-input
                   v-model="accountForm.userName"
                   placeholder="请输入用户名"
-                />
+                ></el-input>
               </el-form-item>
               <el-form-item
-                v-if="accountSingle"
                 label="密码"
+                v-if="accountSingle"
                 prop="password"
                 size="small"
               >
                 <el-input
                   v-model="accountForm.password"
                   placeholder="请设置初始密码"
-                />
+                ></el-input>
               </el-form-item>
               <el-form-item label="角色" prop="sysRoleId" size="small">
                 <el-select
@@ -69,18 +72,19 @@
               </el-form-item>
               <el-form-item label="项目" prop="projectIdStr" size="small">
                 <el-select
-                  v-model="accountForm.projectIdStr"
                   filterable
+                  @change="accountChangePro"
+                  v-model="accountForm.projectIdStr"
                   multiple
                   placeholder="请选择"
-                  @change="accountChangePro"
                 >
                   <el-option
                     v-for="item in accountProject"
                     :key="item.id"
                     :value="item.id"
                     :label="item.title"
-                  />
+                  >
+                  </el-option>
                 </el-select>
               </el-form-item>
             </div>
@@ -89,7 +93,12 @@
               <!-- <el-button type="text" :disabled="accountMultiple"
                 >批量删除</el-button
               > -->
-              <el-button type="text" :disabled="accountSingle">权限</el-button>
+              <el-button
+                type="text"
+                :disabled="accountSingle"
+                @click="accountJurisdiction"
+                >权限</el-button
+              >
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -100,7 +109,8 @@
                 @selection-change="accountSelectionChange"
               >
                 <el-table-column type="selection" width="55" />
-                <el-table-column align="center" label="序号" type="index" />
+                <el-table-column align="center" label="序号" type="index">
+                </el-table-column>
 
                 <el-table-column prop="email" align="center" label="邮箱" />
                 <el-table-column
@@ -122,10 +132,9 @@
                 <el-table-column prop="roleName" align="center" label="角色" />
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <span
-                      class="table-btn"
-                      @click.stop="accountDel(scope.row)"
-                    >删除</span>
+                    <span class="table-btn" @click.stop="accountDel(scope.row)"
+                      >删除</span
+                    >
                   </template>
                 </el-table-column>
               </el-table>
@@ -140,20 +149,76 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="权限管理" name="second">权限管理</el-tab-pane>
-      <el-tab-pane label="项目管理" name="third">项目管理</el-tab-pane>
+      <el-tab-pane label="权限管理" name="1">
+        <div class="tab-box tab-box1">
+          <div class="left">
+            <div>
+              <el-button type="primary" round>QA 账户</el-button>
+              <el-button type="primary" round>Developer 账户</el-button>
+              <el-button type="primary" round>Admin 账户</el-button>
+            </div>
+            <div class="role-item">
+              <div class="item-left">
+                <div class="item">
+                  <b>Administrator</b>
+                  <span>默认 Administrator</span>
+                </div>
+                <div class="item">
+                  <b>QA</b>
+                  <span>QA Default Group</span>
+                  <span>Group B</span>
+                </div>
+                <div class="item">
+                  <b>Developer</b>
+                  <span>Developer Default Group</span>
+                  <span>Group C</span>
+                </div>
+              </div>
+              <div class="info-right">
+                <b> zkx - ke@qq.com</b>
+              </div>
+            </div>
+          </div>
+          <div class="right">
+            <el-collapse v-model="jurisdiction">
+              <el-collapse-item
+                :name="index + 1"
+                v-for="(item, index) in jurisdictionData"
+                :key="index"
+                :title="item.title"
+              >
+                <div class="project-item">
+                  <!-- <el-checkbox v-model="checked">备选项</el-checkbox> -->
+                </div>
+              </el-collapse-item>
+              <el-collapse-item title="Project B" name="2">
+                <div
+                  class="project-item"
+                  v-for="(item, index) in jurisdictionItem"
+                  :key="index"
+                >
+                  <el-checkbox v-model="checked">{{
+                    item.markNameDesc
+                  }}</el-checkbox>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="项目管理" name="2">项目管理</el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
 import { message, formatChangedPara } from '@/utils/common'
 
-import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
+import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysOperationAuthority, getPermissions } from "@/api/admincenter";
 export default {
   name: 'Admincenter',
   data() {
     return {
-      activeName: 'first',
+      activeName: '0',
       tableHeader: {
         color: '#d4dce3',
         background: '#003d79'
@@ -166,7 +231,7 @@ export default {
         userName: undefined,
         password: undefined,
         sysRoleId: undefined,
-        projectIdStr: []
+        projectIdStr: [],
       },
       accountProject: [],
       accountRules: {
@@ -185,7 +250,7 @@ export default {
         ],
         projectIdStr: [
           { required: true, message: '请选择项目', trigger: 'change' }
-        ]
+        ],
       },
       accountData: [],
       accountTotal: 0,
@@ -195,8 +260,17 @@ export default {
       },
       accountSelection: [], // 选择的表格
       accountSingle: true, // 非单个禁用
-      accountMultiple: true, // 非多个禁用
-      accountUpdate: true
+      accountMultiple: true,// 非多个禁用
+      accountUpdate: true,
+
+
+
+      jurisdiction: ['1'],//权限折叠
+      jurisdictionData: [],
+      jurisdictionItem: [],
+      checked: true
+
+
     }
   },
   created() {
@@ -208,13 +282,13 @@ export default {
   },
   mounted() {
 
+
   },
   methods: {
-    handleClick() {
-
+    handleClick(val) {
     },
-    /** ˙账户开始 */
-    // 得到项目
+    /**˙账户开始 */
+    //得到项目
     getProject() {
       queryForProjectTitles().then(res => {
         this.accountProject = res.data
@@ -222,14 +296,14 @@ export default {
       })
     },
 
-    // 项目互斥
+    //项目互斥
     accountChangePro(val) {
-      const index = val.indexOf('0')
+      let index = val.indexOf("0")
       if (index !== -1) {
         this.accountForm.projectIdStr = ['0']
       }
     },
-    // 得到账户列表
+    //得到账户列表
     getquerySubUsers() {
       return new Promise((resolve, reject) => {
         querySubUsers(this.accountQuery).then(res => {
@@ -241,7 +315,7 @@ export default {
         })
       })
     },
-    // 重置
+    //重置
     resetAccountForm() {
       this.accountForm = {
         id: undefined,
@@ -249,9 +323,9 @@ export default {
         userName: undefined,
         password: undefined,
         sysRoleId: undefined,
-        projectIdStr: []
+        projectIdStr: [],
       }
-      this.$refs['accountForm'].resetFields()
+      this.$refs['accountForm'].resetFields();
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -259,18 +333,18 @@ export default {
           if (this.accountForm.id) {
             const param = formatChangedPara(this.accountTempForm, this.accountForm)
             if (param.projectIdStr) {
-              param.projectIdStr = param.projectIdStr.join(',')
+              param.projectIdStr = param.projectIdStr.join(",")
             }
             updateSubUser(param).then(res => {
               message('success', res.msg)
               this.resetAccountForm()
-              this.$refs.accountData.clearSelection()
+              this.$refs.accountData.clearSelection();
               this.accountUpdate = true
               this.getquerySubUsers()
             })
           } else {
             var form = JSON.parse(JSON.stringify(this.accountForm))
-            form.projectIdStr = form.projectIdStr.join(',')
+            form.projectIdStr = form.projectIdStr.join(",")
             createSubUser(form).then(res => {
               message('success', res.msg)
               this.resetAccountForm()
@@ -278,35 +352,35 @@ export default {
             })
           }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
     },
     async accountRefresh() {
-      const res = await this.getquerySubUsers()
+      let res = await this.getquerySubUsers()
       if (res.code === '200') {
-        this.$refs.accountData.clearSelection()
+        this.$refs.accountData.clearSelection();
         this.accountUpdate = true
         this.resetAccountForm()
         message('success', '刷新成功')
       }
     },
-    // 行点击编辑
+    //行点击编辑
     accountEdit(row) {
-      this.$refs.accountData.clearSelection()
+      this.$refs.accountData.clearSelection();
       this.$refs.accountData.toggleRowSelection(row)
-      const form = JSON.parse(JSON.stringify(row))
-      form.projectIdStr = form.projectIdStr.split(',')
+      let form = JSON.parse(JSON.stringify(row))
+      form.projectIdStr = form.projectIdStr.split(",")
       for (var x in this.accountForm) {
         this.accountForm[x] = form[x]
       }
       this.accountTempForm = Object.assign({}, this.accountForm)
       this.accountUpdate = false
     },
-    // 取消修改
+    //取消修改
     cancelUpdate() {
-      this.$refs.accountData.clearSelection()
+      this.$refs.accountData.clearSelection();
       this.accountUpdate = true
       this.resetAccountForm()
     },
@@ -319,22 +393,36 @@ export default {
         this.accountUpdate = true
       }
     },
-    // 删除
+    //删除
     accountDel(val) {
-      this.$confirm('是否确认删除数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm('是否确认删除数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       }).then(() => {
         deleteSubUser(val.id).then(res => {
           if (res.code === '200') {
             this.getquerySubUsers()
-            message('success', '删除成功')
+            message("success", '删除成功')
           }
         })
-      }).catch(function() { })
+      }).catch(function () { });
+    },
+    //权限
+    accountJurisdiction() {
+      this.activeName = '1'
+      getSysOperationAuthority().then(res => {
+        this.jurisdictionItem = res.data
+        console.log(this.jurisdictionItem)
+      })
+      getPermissions(this.accountSelection[0].id).then(res => {
+        this.jurisdictionData = res.data.projects
+        console.log(this.jurisdictionData)
+
+
+      })
     }
-    /** ˙账户结束 */
+    /**˙账户结束 */
 
   }
 }
