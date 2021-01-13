@@ -184,10 +184,11 @@ export const constantRoutes = [
         name: 'Addproject',
         component: () => import('@/views/project/addProject'),
         meta: {
-          title: 'Project', icon: 'Project',
-          noCache: true // 会被缓存
+          title: 'Project', icon: 'Project'
+          // noCache: true // 会被缓存
         }
       }
+
     ]
   },
   {

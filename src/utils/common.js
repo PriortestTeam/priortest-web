@@ -17,20 +17,29 @@ function message(type, msg) {
     duration: 2 * 1000
   })
 }
-//检验字段是否修改
+// 返回上级路由
+function returntomenu(that, time) {
+  return setTimeout(() => {
+    // console.log(this, '路由')
+    that.$store.dispatch('tagsView/delView', that.$route)
+    that.$router.go(-1)
+  }, time)
+}
+// 检验字段是否修改
 function formatChangedPara(originObj, newObj) {
-  const tempObj = {};
+  const tempObj = {}
   Object.keys(originObj).forEach(item => {
     if (originObj[item] !== newObj[item]) {
-      tempObj[item] = newObj[item];
+      tempObj[item] = newObj[item]
     }
-  });
-  tempObj.id = newObj.id;
-  return tempObj;
+  })
+  tempObj.id = newObj.id
+  return tempObj
 }
 
 export {
   formData,
   message,
-  formatChangedPara
+  formatChangedPara,
+  returntomenu
 }
