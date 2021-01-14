@@ -155,22 +155,27 @@
             <div class="role-item">
               <div class="item-left">
                 <div class="item">
-                  <b>Administrator</b>
-                  <span>默认 Administrator</span>
-                </div>
-                <div class="item">
-                  <b>QA</b>
-                  <span>QA Default Group</span>
-                  <span>Group B</span>
-                </div>
-                <div class="item">
-                  <b>Developer</b>
-                  <span>Developer Default Group</span>
-                  <span>Group C</span>
+                  <b> {{ jurisdictioninfo.roleName }}</b>
+                  <span
+                    v-if="jurisdictioninfo.roleName === 'Administrator'"
+                  >默认 Administrator</span>
+                  <span
+                    v-if="jurisdictioninfo.roleName === 'QA'"
+                  >QA Default Group</span>
+                  <span v-if="jurisdictioninfo.roleName === 'QA'">Group B</span>
+                  <span
+                    v-if="jurisdictioninfo.roleName === 'Developer'"
+                  >Developer Default Group</span>
+                  <span
+                    v-if="jurisdictioninfo.roleName === 'Developer'"
+                  >Group C</span>
                 </div>
               </div>
               <div class="info-right">
-                <b> zkx - ke@qq.com</b>
+                <b> {{ jurisdictioninfo.userName }}</b>
+                <span>
+                  {{ jurisdictioninfo.email }}
+                </span>
               </div>
             </div>
           </div>
@@ -182,19 +187,26 @@
                 :name="index + 1"
                 :title="item.title"
               >
-                <div class="project-item">
-                  <!-- <el-checkbox v-model="checked">备选项</el-checkbox> -->
-                </div>
-              </el-collapse-item>
-              <el-collapse-item title="Project B" name="2">
                 <div
-                  v-for="(item, index) in jurisdictionItem"
-                  :key="index"
+                  v-for="(item1, index1) in item.sysOperationAuthorities"
+                  :key="index1"
                   class="project-item"
                 >
-                  <el-checkbox v-model="checked">{{
-                    item.markNameDesc
-                  }}</el-checkbox>
+                  <div class="top">
+                    <el-checkbox
+                      v-model="checked"
+                      true-label="1"
+                      false-label="0"
+                    >{{ item1.markNameDesc }}</el-checkbox>
+                    <el-checkbox
+                      v-for="(item2, index2) in item1.childList"
+                      :key="index2"
+                      v-model="item2.isSelect"
+                      true-label="1"
+                      false-label="0"
+                    >
+                      {{ item2.markNameDesc }}</el-checkbox>
+                  </div>
                 </div>
               </el-collapse-item>
             </el-collapse>
@@ -321,7 +333,7 @@
 <script>
 import { message, formatChangedPara } from '@/utils/common'
 
-import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysOperationAuthority, getPermissions } from '@/api/admincenter'
+import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getPermissions } from '@/api/admincenter'
 export default {
   name: 'Admincenter',
   data() {
@@ -384,6 +396,7 @@ export default {
       dbfields: true, // 非多个禁用
       checked1: true
       // 自定义字段
+
     }
   },
   created() {
@@ -523,13 +536,10 @@ export default {
     // 权限
     accountJurisdiction() {
       this.activeName = '1'
-      getSysOperationAuthority().then(res => {
-        this.jurisdictionItem = res.data
-        console.log(this.jurisdictionItem)
-      })
       getPermissions(this.accountSelection[0].id).then(res => {
         this.jurisdictionData = res.data.projects
-        console.log(this.jurisdictionData)
+        this.jurisdictioninfo = res.data.subUserDto
+        console.log(this.jurisdictionData, res)
       })
     },
     /** ˙账户结束 */
