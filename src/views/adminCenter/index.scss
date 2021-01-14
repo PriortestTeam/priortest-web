@@ -45,8 +45,6 @@
    }
    .right{
       width:75%;
-      height: 100%;
-      overflow: auto;
       ::v-deep .el-collapse-item__header {
         border-bottom: none;
         color: $btnbgcolor;
@@ -64,11 +62,14 @@
       ::v-deep .el-collapse-item__content{
         display: flex;
         .project-item{
-          min-width:7%;
+          min-width:8%;
           .top{
             .el-checkbox:nth-child(1){
               .el-checkbox__input{
                 display: none;
+              }
+              .el-checkbox__label{
+                padding-left: 0;
               }
             }
           }

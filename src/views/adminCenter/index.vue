@@ -226,7 +226,6 @@
 </template>
 <script>
 import { message, formatChangedPara } from '@/utils/common'
-
 import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysOperationAuthority, getPermissions } from "@/api/admincenter";
 export default {
   name: 'Admincenter',
@@ -283,6 +282,8 @@ export default {
       jurisdictioninfo: {},
       jurisdictionData: [],
       checked: '1',
+
+
 
     }
   },
