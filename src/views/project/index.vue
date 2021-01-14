@@ -206,7 +206,7 @@ export default {
     // 初始值
     this.startId = this.node_id_start
     this.getqueryForProjects()// 获取管理项目列表
-    this.queryViews() // 获取视图
+    // this.queryViews() // 获取视图
   },
   methods: {
     // 项目列表
