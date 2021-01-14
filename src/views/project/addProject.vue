@@ -9,34 +9,32 @@
     >
       <div>
         <el-button
-          v-if="requstsType==='add'"
+          v-if="requstsType === 'add'"
           type="primary"
           round
           :disabled="!proUpdate"
-          @click="submitForm('projectFrom',false)"
-        >保存并新建</el-button>
+          @click="submitForm('projectFrom', false)"
+          >保存并新建</el-button
+        >
         <el-button
-          v-if="requstsType==='add'"
+          v-if="requstsType === 'add'"
           type="primary"
           round
           :disabled="!proUpdate"
-          @click="submitForm('projectFrom',true)"
-        >保存并返回</el-button>
+          @click="submitForm('projectFrom', true)"
+          >保存并返回</el-button
+        >
         <el-button
-          v-if="requstsType==='edit'"
+          v-if="requstsType === 'edit'"
           type="primary"
           round
           @click="suresubForm('projectFrom')"
-        >确认修改</el-button>
-        <el-button
-          type="primary"
-          round
-          @click="giveupBack('projectFrom')"
-        >放弃</el-button>
-        <router-link
-          v-if="requstsType==='add'"
-          to="/publicview/customfiled"
+          >确认修改</el-button
         >
+        <el-button type="primary" round @click="giveupBack('projectFrom')"
+          >放弃</el-button
+        >
+        <router-link v-if="requstsType === 'add'" to="/publicview/customfiled">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
@@ -61,23 +59,30 @@
                 <el-option :label="$t('lang.Project.Progress')" value="3" />
                 <el-option :label="$t('lang.Project.Closed')" value="1" />
                 <el-option :label="$t('lang.Project.Plan')" value="2" />
-              </el-select> </el-form-item></el-col>
+              </el-select> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item
               :label="$t('lang.Project.ReportTo')"
               size="small"
               prop="reportToName"
             >
-              <el-input v-model="projectFrom.reportToName" /> </el-form-item></el-col>
+              <el-input v-model="projectFrom.reportToName" /> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item
               size="small"
               :label="$t('lang.Project.Customer')"
               prop="customer"
             >
-              <el-select v-model="projectFrom.customer" placeholder="请选择" clearable>
+              <el-select
+                v-model="projectFrom.customer"
+                placeholder="请选择"
+                clearable
+              >
                 <el-option label="暂无" value="" />
-              </el-select> </el-form-item></el-col>
+              </el-select> </el-form-item
+          ></el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -108,7 +113,8 @@
           <el-input v-model="domain.value" width="70%" /><el-button
             type="text"
             @click.prevent="removeFiled(domain)"
-          >删除</el-button>
+            >删除</el-button
+          >
         </el-form-item>
         <el-upload
           class="upload-demo"
@@ -170,7 +176,8 @@ export default {
   created() {
   },
   mounted() {
-    this.projectFrom = this.$route.query.id
+
+    this.projectFrom = JSON.parse(this.$route.query.info)
     this.requstsType = this.$route.query.type
   },
   methods: {

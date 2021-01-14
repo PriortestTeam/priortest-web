@@ -87,12 +87,13 @@
               type="text"
             >管理项目</el-button>
           </router-link> -->
+            <el-button type="text" @click="projectRefresh">刷新</el-button>
             <el-button type="text" :disabled="single">克隆</el-button>
             <el-button
               type="text"
               :disabled="multiple"
               @click="delproject('all')"
-              >删除</el-button
+              >批量删除</el-button
             >
             <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
           </div>
@@ -111,7 +112,12 @@
                   {{ scope.$index + 1 }}
                 </template>
               </el-table-column>
-              <el-table-column prop="title" align="center" label="标题" />
+              <el-table-column
+                prop="title"
+                :show-overflow-tooltip="true"
+                align="center"
+                label="标题"
+              />
               <el-table-column
                 prop="reportToName"
                 align="center"
@@ -133,25 +139,35 @@
                 prop="createTime"
                 align="center"
                 label="创建日期"
+                min-width="170"
                 :show-overflow-tooltip="true"
               />
               <el-table-column
                 prop="planReleaseDate"
                 align="center"
                 label="计划上线日期"
+                min-width="170"
                 :show-overflow-tooltip="true"
-              />
+              >
+                <template slot-scope="scope">
+                  <span>{{ scope.row.planReleaseDate || "待定" }}</span>
+                </template>
+              </el-table-column>
               <el-table-column
                 prop="closeDate"
                 align="center"
                 label="关闭日期"
+                min-width="170"
                 :show-overflow-tooltip="true"
-              />
+              >
+                <template slot-scope="scope">
+                  <span>{{ scope.row.closeDate || "待定" }}</span>
+                </template>
+              </el-table-column>
               <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
                   <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
-<<<<<<< HEAD
                   <el-button
                     type="text"
                     class="table-btn"
@@ -161,25 +177,16 @@
                 </template>
               </el-table-column>
             </el-table>
-          </div>
-        </div></el-col
-      >
-=======
-                <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
 
-          <pagination
-            v-show="projectTotal > 0"
-            :total="projectTotal"
-            :page.sync="projectpageNum"
-            :limit.sync="projectpageSize"
-            @pagination="getqueryForProjects"
-          />
-        </div>
-      </div></el-col>
->>>>>>> 6355c37ad31a1332d6ad7100558f852741c4ee45
+            <pagination
+              v-show="projectTotal > 0"
+              :total="projectTotal"
+              :page.sync="projectQuery.pageNum"
+              :limit.sync="projectQuery.projectpageSize"
+              @pagination="getqueryForProjects"
+            />
+          </div></div
+      ></el-col>
     </el-row>
   </div>
 </template>
@@ -228,9 +235,10 @@ export default {
         pid: 0,
         children: []
       },
-
-      projectpageNum: 1,
-      projectpageSize: 10,
+      projectQuery: {
+        pageNum: 1,
+        pageSize: 10
+      },
       projectTotal: 0,
       projecttableData: [],
       multipleSelection: [],
@@ -253,16 +261,22 @@ export default {
   methods: {
     // 项目列表
     getqueryForProjects() {
-      var obj = {
-        pageNum: this.projectpageNum,
-        pageSize: this.projectpageSize
-      }
-      queryForProjects(obj).then(res => {
-        if (res.code === '200') {
-          this.projecttableData = res.data
-          this.projectTotal = res.total
-        }
+      return new Promise((resolve, reject) => {
+        queryForProjects(this.projectQuery).then(res => {
+          if (res.code === '200') {
+            this.projecttableData = res.data
+            this.projectTotal = res.total
+            resolve(res)
+          }
+        })
       })
+    },
+    //刷新
+    async projectRefresh() {
+      const res = await this.getqueryForProjects()
+      if (res.code === '200') {
+        message('success', '刷新成功')
+      }
     },
     // 删除项目
     delproject(id) {
@@ -354,20 +368,16 @@ export default {
     // 表格多选
     handleSelectionChange(val) {
       // 暂时不实现批量删除
-      // this.multipleSelection = val;
-      // this.single = val.length !== 1
-      // this.multiple = !val.length
-
       this.projectIds = ''
       for (let i = 0; i < val.length; i++) {
         this.projectIds += val[i].id + ','
       }
       this.projectIds = this.projectIds.slice(0, this.projectIds.length - 1)
-      console.log(this.projectIds)
     },
     // 表格行点击去编辑
     openEdit(row) {
-      this.$router.push({ name: 'Addproject', query: { id: row, type: 'edit' } })
+      let data = JSON.stringify(row)
+      this.$router.push({ name: 'Addproject', query: { info: data, type: 'edit' } })
     },
     // 新建项目
     newproject() {

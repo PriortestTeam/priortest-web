@@ -16,19 +16,22 @@
                 round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-              >新建账户</el-button>
+                >新建账户</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="submitForm('accountForm')"
-              >确认修改</el-button>
+                >确认修改</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="cancelUpdate('accountForm')"
-              >取消修改</el-button>
+                >取消修改</el-button
+              >
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -93,7 +96,8 @@
                 type="text"
                 :disabled="accountSingle"
                 @click="accountJurisdiction"
-              >权限</el-button>
+                >权限</el-button
+              >
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -126,10 +130,9 @@
                 <el-table-column prop="roleName" align="center" label="角色" />
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <span
-                      class="table-btn"
-                      @click.stop="accountDel(scope.row)"
-                    >删除</span>
+                    <span class="table-btn" @click.stop="accountDel(scope.row)"
+                      >删除</span
+                    >
                   </template>
                 </el-table-column>
               </el-table>
@@ -156,19 +159,19 @@
               <div class="item-left">
                 <div class="item">
                   <b> {{ jurisdictioninfo.roleName }}</b>
-                  <span
-                    v-if="jurisdictioninfo.roleName === 'Administrator'"
-                  >默认 Administrator</span>
-                  <span
-                    v-if="jurisdictioninfo.roleName === 'QA'"
-                  >QA Default Group</span>
+                  <span v-if="jurisdictioninfo.roleName === 'Administrator'"
+                    >默认 Administrator</span
+                  >
+                  <span v-if="jurisdictioninfo.roleName === 'QA'"
+                    >QA Default Group</span
+                  >
                   <span v-if="jurisdictioninfo.roleName === 'QA'">Group B</span>
-                  <span
-                    v-if="jurisdictioninfo.roleName === 'Developer'"
-                  >Developer Default Group</span>
-                  <span
-                    v-if="jurisdictioninfo.roleName === 'Developer'"
-                  >Group C</span>
+                  <span v-if="jurisdictioninfo.roleName === 'Developer'"
+                    >Developer Default Group</span
+                  >
+                  <span v-if="jurisdictioninfo.roleName === 'Developer'"
+                    >Group C</span
+                  >
                 </div>
               </div>
               <div class="info-right">
@@ -197,7 +200,8 @@
                       v-model="checked"
                       true-label="1"
                       false-label="0"
-                    >{{ item1.markNameDesc }}</el-checkbox>
+                      >{{ item1.markNameDesc }}</el-checkbox
+                    >
                     <el-checkbox
                       v-for="(item2, index2) in item1.childList"
                       :key="index2"
@@ -205,7 +209,8 @@
                       true-label="1"
                       false-label="0"
                     >
-                      {{ item2.markNameDesc }}</el-checkbox>
+                      {{ item2.markNameDesc }}</el-checkbox
+                    >
                   </div>
                 </div>
               </el-collapse-item>
@@ -218,7 +223,8 @@
         <!-- 自定义字段 -->
         <div class="manage-view">
           <el-row class="fd-row" :gutter="20">
-            <el-col :span="12"><div class="grid-content bg-purple" />
+            <el-col :span="12"
+              ><div class="grid-content bg-purple" />
               <el-form
                 ref="fieldsfrom"
                 :model="fieldsfrom"
@@ -227,7 +233,9 @@
                 class="demo-ruleForm"
               >
                 <div>
-                  <div class="set_btn" @click="submitfdForm('fieldsfrom')">保存</div>
+                  <div class="set_btn" @click="submitfdForm('fieldsfrom')">
+                    保存
+                  </div>
                   <div class="set_btn">放弃</div>
                 </div>
                 <el-form-item label="字段名称" prop="name" class="form-small">
@@ -248,57 +256,118 @@
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col :span="6"><div class="grid-content bg-purple" />
+            <el-col :span="6"
+              ><div class="grid-content bg-purple" />
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"><div class="grid-content bg-purple" />
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
                   <el-checkbox v-model="checked1" />
                 </el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />范围</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />是否必填</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />初始值</el-col>
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  范围</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  是否必填</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  初始值</el-col
+                >
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"><div class="grid-content bg-purple" />
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
                   <el-checkbox v-model="checked1" />
                 </el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />项目</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />是否必填</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />初始值</el-col>
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  项目</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  是否必填</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  初始值</el-col
+                >
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"><div class="grid-content bg-purple" />
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
                   <el-checkbox v-model="checked1" />
                 </el-col>
 
-                <el-col :span="4"><div class="grid-content bg-purple" />故事</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />是否必填</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />初始值</el-col>
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  故事</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  是否必填</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  初始值</el-col
+                >
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"><div class="grid-content bg-purple" />
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
                   <el-checkbox v-model="checked1" />
                 </el-col>
 
-                <el-col :span="4"><div class="grid-content bg-purple" />测试用例</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />是否必填</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />初始值</el-col>
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  测试用例</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  是否必填</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  初始值</el-col
+                >
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"><div class="grid-content bg-purple" />
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
                   <el-checkbox v-model="checked1" />
                 </el-col>
 
-                <el-col :span="4"><div class="grid-content bg-purple" />测试周期</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />是否必填</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />初始值</el-col>
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  测试周期</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  是否必填</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  初始值</el-col
+                >
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"><div class="grid-content bg-purple" />
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
                   <el-checkbox v-model="checked1" />
                 </el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />验收</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />是否必填</el-col>
-                <el-col :span="4"><div class="grid-content bg-purple" />初始值</el-col>
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  验收</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  是否必填</el-col
+                >
+                <el-col :span="4"
+                  ><div class="grid-content bg-purple" />
+                  初始值</el-col
+                >
               </el-row>
             </el-col>
           </el-row>
@@ -332,12 +401,8 @@
 </template>
 <script>
 import { message, formatChangedPara } from '@/utils/common'
-<<<<<<< HEAD
-import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysOperationAuthority, getPermissions } from "@/api/admincenter";
-=======
 
 import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getPermissions } from '@/api/admincenter'
->>>>>>> 6355c37ad31a1332d6ad7100558f852741c4ee45
 export default {
   name: 'Admincenter',
   data() {
@@ -492,7 +557,6 @@ export default {
     async accountRefresh() {
       const res = await this.getquerySubUsers()
       if (res.code === '200') {
-        this.$refs.accountData.clearSelection()
         this.accountUpdate = true
         this.resetAccountForm()
         message('success', '刷新成功')
@@ -538,7 +602,7 @@ export default {
             message('success', '删除成功')
           }
         })
-      }).catch(function() { })
+      }).catch(function () { })
     },
     // 权限
     accountJurisdiction() {
@@ -589,15 +653,15 @@ export default {
     line-height: 14px;
   }
 }
-.fd-row{
+.fd-row {
   display: flex;
   align-items: center;
-  .sen-row{
+  .sen-row {
     margin-bottom: 5px;
   }
 }
 </style>
 <style lang="scss" scoped>
 @import "index.scss";
-@import "@/views/project/index.scss"
+@import "@/views/project/index.scss";
 </style>
