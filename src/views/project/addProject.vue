@@ -9,21 +9,21 @@
     >
       <div>
         <el-button
-          v-if="requstsType==='add'"
+          v-if="requstsType === 'add'"
           type="primary"
           round
           :disabled="!proUpdate"
-          @click="submitForm('projectFrom',false)"
+          @click="submitForm('projectFrom', false)"
         >保存并新建</el-button>
         <el-button
-          v-if="requstsType==='add'"
+          v-if="requstsType === 'add'"
           type="primary"
           round
           :disabled="!proUpdate"
-          @click="submitForm('projectFrom',true)"
+          @click="submitForm('projectFrom', true)"
         >保存并返回</el-button>
         <el-button
-          v-if="requstsType==='edit'"
+          v-if="requstsType === 'edit'"
           type="primary"
           round
           @click="suresubForm('projectFrom')"
@@ -33,10 +33,7 @@
           round
           @click="giveupBack('projectFrom')"
         >放弃</el-button>
-        <router-link
-          v-if="requstsType==='add'"
-          to="/publicview/customfiled"
-        >
+        <router-link v-if="requstsType === 'add'" to="/publicview/customfiled">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
@@ -75,7 +72,11 @@
               :label="$t('lang.Project.Customer')"
               prop="customer"
             >
-              <el-select v-model="projectFrom.customer" placeholder="请选择" clearable>
+              <el-select
+                v-model="projectFrom.customer"
+                placeholder="请选择"
+                clearable
+              >
                 <el-option label="暂无" value="" />
               </el-select> </el-form-item></el-col>
         </el-row>
@@ -170,7 +171,7 @@ export default {
   created() {
   },
   mounted() {
-    this.projectFrom = this.$route.query.id
+    this.projectFrom = JSON.parse(this.$route.query.info)
     this.requstsType = this.$route.query.type
   },
   methods: {

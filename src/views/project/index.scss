@@ -103,9 +103,8 @@
 }
 //新增页面的样式
 .add-project{
-  .set_btn{
-    @include setBtn(#666, false);
-    margin-right:$spacing;
+  .el-button{
+    margin-bottom: $spacing;
   }
   .dele-input{
     .el-input{

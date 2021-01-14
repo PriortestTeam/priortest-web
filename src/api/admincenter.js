@@ -48,13 +48,7 @@ export function deleteSubUser(data) {
     method: 'delete'
   })
 }
-//权限
-export function getSysOperationAuthority() {
-  return request({
-    url: '/settingPermission/getSysOperationAuthority',
-    method: 'get',
-  })
-}
+
 //权限
 export function getPermissions(data) {
   return request({

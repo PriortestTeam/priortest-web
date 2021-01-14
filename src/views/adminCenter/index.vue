@@ -218,7 +218,9 @@
         <!-- 自定义字段 -->
         <div class="manage-view">
           <el-row class="fd-row" :gutter="20">
-            <el-col :span="12"><div class="grid-content bg-purple" />
+            <el-col
+              :span="12"
+            ><div class="grid-content bg-purple" />
               <el-form
                 ref="fieldsfrom"
                 :model="fieldsfrom"
@@ -227,7 +229,9 @@
                 class="demo-ruleForm"
               >
                 <div>
-                  <div class="set_btn" @click="submitfdForm('fieldsfrom')">保存</div>
+                  <div class="set_btn" @click="submitfdForm('fieldsfrom')">
+                    保存
+                  </div>
                   <div class="set_btn">放弃</div>
                 </div>
                 <el-form-item label="字段名称" prop="name" class="form-small">
@@ -524,7 +528,6 @@ export default {
     async accountRefresh() {
       const res = await this.getquerySubUsers()
       if (res.code === '200') {
-        this.$refs.accountData.clearSelection()
         this.accountUpdate = true
         this.resetAccountForm()
         message('success', '刷新成功')
