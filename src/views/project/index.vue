@@ -151,6 +151,7 @@
                 <template slot-scope="scope">
                   <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
+<<<<<<< HEAD
                   <el-button
                     type="text"
                     class="table-btn"
@@ -163,6 +164,22 @@
           </div>
         </div></el-col
       >
+=======
+                <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <pagination
+            v-show="projectTotal > 0"
+            :total="projectTotal"
+            :page.sync="projectpageNum"
+            :limit.sync="projectpageSize"
+            @pagination="getqueryForProjects"
+          />
+        </div>
+      </div></el-col>
+>>>>>>> 6355c37ad31a1332d6ad7100558f852741c4ee45
     </el-row>
   </div>
 </template>
@@ -211,8 +228,10 @@ export default {
         pid: 0,
         children: []
       },
+
       projectpageNum: 1,
       projectpageSize: 10,
+      projectTotal: 0,
       projecttableData: [],
       multipleSelection: [],
       single: true, // 非单个禁用
@@ -229,7 +248,7 @@ export default {
     // 初始值
     this.startId = this.node_id_start
     this.getqueryForProjects()// 获取管理项目列表
-    this.queryViews() // 获取视图
+    // this.queryViews() // 获取视图
   },
   methods: {
     // 项目列表
@@ -241,6 +260,7 @@ export default {
       queryForProjects(obj).then(res => {
         if (res.code === '200') {
           this.projecttableData = res.data
+          this.projectTotal = res.total
         }
       })
     },

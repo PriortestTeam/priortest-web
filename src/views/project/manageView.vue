@@ -30,8 +30,7 @@
             <el-col :span="4">
               <el-select v-model="from.scope" size="small" placeholder="status">
                 <el-option label="Project" value="project" />
-                <el-option label="Sprint" value="sprint" /> </el-select
-            ></el-col>
+                <el-option label="Sprint" value="sprint" /> </el-select></el-col>
           </el-row>
         </div>
       </el-form-item>
