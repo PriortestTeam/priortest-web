@@ -138,6 +138,14 @@
               </template>
             </el-table-column>
           </el-table>
+
+          <pagination
+            v-show="projectTotal > 0"
+            :total="projectTotal"
+            :page.sync="projectpageNum"
+            :limit.sync="projectpageSize"
+            @pagination="getqueryForProjects"
+          />
         </div>
       </div></el-col>
     </el-row>
@@ -188,8 +196,10 @@ export default {
         pid: 0,
         children: []
       },
+
       projectpageNum: 1,
       projectpageSize: 10,
+      projectTotal: 0,
       projecttableData: [],
       multipleSelection: [],
       single: true, // 非单个禁用
@@ -218,6 +228,7 @@ export default {
       queryForProjects(obj).then(res => {
         if (res.code === '200') {
           this.projecttableData = res.data
+          this.projectTotal = res.total
         }
       })
     },

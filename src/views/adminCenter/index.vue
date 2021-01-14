@@ -386,6 +386,7 @@ export default {
       jurisdiction: ['1'], // 权限折叠
       jurisdictionData: [],
       jurisdictionItem: [],
+      jurisdictioninfo: {},
       checked: true,
       // 自定义字段
       fieldsfrom: {},
