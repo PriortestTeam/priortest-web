@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-06 16:38:28
+ * @LastEditTime: 2021-01-14 13:34:42
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \oneclick-web\src\api\project.js
+ */
 import request from '@/utils/request'
 
 export function queryForProjects(data) {
@@ -26,10 +34,11 @@ export function delProjects(data) {
 }
 
 // 修改项目
-export function queryViews(data) {
+export function editProjects(data) {
   return request({
-    url: '/view/queryViews',
-    method: 'post'
+    url: '/project/updateProject',
+    method: 'post',
+    data
   })
 }
 // 项目view

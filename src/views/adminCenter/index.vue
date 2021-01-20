@@ -147,12 +147,11 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="权限管理" name="1" v-if="activeName==='1'">
+      <el-tab-pane label="权限管理" name="1" v-if="activeName === '1'">
         <Jurisdiction
           v-if="jurisdictionAccountId"
           :id="jurisdictionAccountId"
         ></Jurisdiction>
-
       </el-tab-pane>
       <el-tab-pane label="项目管理" name="2">项目管理</el-tab-pane>
       <el-tab-pane label="自定义字段" name="3">
@@ -195,115 +194,92 @@
             <el-col :span="8"
               ><div class="grid-content bg-purple" />
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
+                <el-col :span="4">
                   <el-checkbox v-model="checked1" />
                 </el-col>
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  范围</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  是否必填</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  初始值</el-col
-                >
+                <el-col :span="4">范围</el-col>
+                <el-col :span="4">是否必填</el-col>
+                <el-col :span="4">初始值</el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
+                <el-col :span="4">
                   <el-checkbox v-model="checked1" />
                 </el-col>
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  项目</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  是否必填</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  初始值</el-col
-                >
+                <el-col :span="4">项目</el-col>
+                <el-col :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
+                  </div>
+                </el-col>
+                <el-col :span="4">
+                  <div class="ng-input">
+                    <el-input />
+                  </div>
+                </el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
+                <el-col :span="4">
                   <el-checkbox v-model="checked1" />
                 </el-col>
-
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  故事</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  是否必填</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  初始值</el-col
-                >
+                <el-col :span="4">故事</el-col>
+                <el-col :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
+                  </div>
+                </el-col>
+                <el-col :span="4">
+                  <div class="ng-input">
+                    <el-input />
+                  </div>
+                </el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
+                <el-col :span="4">
                   <el-checkbox v-model="checked1" />
                 </el-col>
-
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  测试用例</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  是否必填</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  初始值</el-col
-                >
+                <el-col :span="4">测试用例</el-col>
+                <el-col :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
+                  </div>
+                </el-col>
+                <el-col :span="4">
+                  <div class="ng-input">
+                    <el-input />
+                  </div>
+                </el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
+                <el-col :span="4">
                   <el-checkbox v-model="checked1" />
                 </el-col>
-
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  测试周期</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  是否必填</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  初始值</el-col
-                >
+                <el-col :span="4">测试周期</el-col>
+                <el-col :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
+                  </div>
+                </el-col>
+                <el-col :span="4">
+                  <div class="ng-input">
+                    <el-input />
+                  </div>
+                </el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
+                <el-col :span="4">
                   <el-checkbox v-model="checked1" />
                 </el-col>
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  验收</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  是否必填</el-col
-                >
-                <el-col :span="4"
-                  ><div class="grid-content bg-purple" />
-                  初始值</el-col
-                >
+                <el-col :span="4">验收</el-col>
+                <el-col :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
+                  </div>
+                </el-col>
+                <el-col :span="4">
+                  <div class="ng-input">
+                    <el-input />
+                  </div>
+                </el-col>
               </el-row>
             </el-col>
           </el-row>
@@ -406,10 +382,9 @@ export default {
       fieldsData: [],
       fieldsSelection: [], // 选择的表格
       dbfields: true, // 非多个禁用
-      checked1: true
-      // 自定义字段
-
-
+      checked1: true,
+      required: true
+      // 自定义字段 结束
 
     }
   },
@@ -592,15 +567,8 @@ export default {
     line-height: 14px;
   }
 }
-.fd-row {
-  display: flex;
-  align-items: center;
-  .sen-row {
-    margin-bottom: 5px;
-  }
-}
 </style>
 <style lang="scss" scoped>
 @import "index.scss";
-@import "@/views/project/index.scss";
+@import "field.scss";
 </style>
