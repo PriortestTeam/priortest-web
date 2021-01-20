@@ -147,76 +147,12 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="权限管理" name="1">
-        <div class="tab-box tab-box1">
-          <div class="left">
-            <div>
-              <el-button type="primary" round>QA 账户</el-button>
-              <el-button type="primary" round>Developer 账户</el-button>
-              <el-button type="primary" round>Admin 账户</el-button>
-            </div>
-            <div class="role-item">
-              <div class="item-left">
-                <div class="item">
-                  <b> {{ jurisdictioninfo.roleName }}</b>
-                  <span v-if="jurisdictioninfo.roleName === 'Administrator'"
-                    >默认 Administrator</span
-                  >
-                  <span v-if="jurisdictioninfo.roleName === 'QA'"
-                    >QA Default Group</span
-                  >
-                  <span v-if="jurisdictioninfo.roleName === 'QA'">Group B</span>
-                  <span v-if="jurisdictioninfo.roleName === 'Developer'"
-                    >Developer Default Group</span
-                  >
-                  <span v-if="jurisdictioninfo.roleName === 'Developer'"
-                    >Group C</span
-                  >
-                </div>
-              </div>
-              <div class="info-right">
-                <b> {{ jurisdictioninfo.userName }}</b>
-                <span>
-                  {{ jurisdictioninfo.email }}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="right">
-            <el-collapse v-model="jurisdiction">
-              <el-collapse-item
-                v-for="(item, index) in jurisdictionData"
-                :key="index"
-                :name="index + 1"
-                :title="item.title"
-              >
-                <div
-                  v-for="(item1, index1) in item.sysOperationAuthorities"
-                  :key="index1"
-                  class="project-item"
-                >
-                  <div class="top">
-                    <el-checkbox
-                      v-model="checked"
-                      true-label="1"
-                      false-label="0"
-                      >{{ item1.markNameDesc }}</el-checkbox
-                    >
-                    <el-checkbox
-                      v-for="(item2, index2) in item1.childList"
-                      :key="index2"
-                      v-model="item2.isSelect"
-                      true-label="1"
-                      false-label="0"
-                    >
-                      {{ item2.markNameDesc }}</el-checkbox
-                    >
-                  </div>
-                </div>
-              </el-collapse-item>
-            </el-collapse>
-          </div>
-        </div>
+      <el-tab-pane label="权限管理" name="1" v-if="activeName==='1'">
+        <Jurisdiction
+          v-if="jurisdictionAccountId"
+          :id="jurisdictionAccountId"
+        ></Jurisdiction>
+
       </el-tab-pane>
       <el-tab-pane label="项目管理" name="2">项目管理</el-tab-pane>
       <el-tab-pane label="自定义字段" name="3">
@@ -256,7 +192,7 @@
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col :span="6"
+            <el-col :span="8"
               ><div class="grid-content bg-purple" />
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4"
@@ -401,10 +337,13 @@
 </template>
 <script>
 import { message, formatChangedPara } from '@/utils/common'
-
+import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getPermissions } from '@/api/admincenter'
 export default {
   name: 'Admincenter',
+  components: {
+    Jurisdiction,
+  },
   data() {
     return {
       activeName: '0',
@@ -452,11 +391,14 @@ export default {
       accountMultiple: true, // 非多个禁用
       accountUpdate: true,
 
+
+      jurisdictionAccountId: '',
       jurisdiction: ['1'], // 权限折叠
       jurisdictionData: [],
       jurisdictionItem: [],
       jurisdictioninfo: {},
       checked: true,
+
       // 自定义字段
       fieldsfrom: {},
       fieldsrules: {},
@@ -606,12 +548,9 @@ export default {
     },
     // 权限
     accountJurisdiction() {
+      this.jurisdictionAccountId = ''
       this.activeName = '1'
-      getPermissions(this.accountSelection[0].id).then(res => {
-        this.jurisdictionData = res.data.projects
-        this.jurisdictioninfo = res.data.subUserDto
-        console.log(this.jurisdictionData, res)
-      })
+      this.jurisdictionAccountId = this.accountSelection[0].id
     },
     /** ˙账户结束 */
     // 自定义字段开始
