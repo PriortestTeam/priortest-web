@@ -35,7 +35,12 @@
     </div>
     <div class="right">
       <div class="top-info">
-        <el-select v-model="projectId" size="mini" @change='changeProject' placeholder="请选择项目">
+        <el-select
+          v-model="projectId"
+          size="mini"
+          @change="changeProject"
+          placeholder="请选择项目"
+        >
           <el-option
             v-for="item in jurisdictionOptions"
             :key="item.id"
@@ -77,8 +82,8 @@
 </template>
 
 <script>
-  import { message, formatChangedPara } from '@/utils/common'
-import { getProjects, getPermissions,updatePermissions } from '@/api/admincenter'
+import { message, formatChangedPara } from '@/utils/common'
+import { getProjects, getPermissions, updatePermissions } from '@/api/admincenter'
 export default {
   name: 'Jurisdiction',
   props: {
@@ -97,17 +102,17 @@ export default {
       isIndeterminate: true,
       checkAll: [],
       checkedCities: [],
-      jurisdictionUpdate:{
-        subUserDto:{
-          id:''
+      jurisdictionUpdate: {
+        subUserDto: {
+          id: ''
         },
-        projectPermissions:[]
+        projectPermissions: []
       }
     }
   },
   created() {
     if (this.id) {
-      this.jurisdictionUpdate.subUserDto.id=this.id
+      this.jurisdictionUpdate.subUserDto.id = this.id
       getProjects({ subUserId: this.id }).then(res => {
         this.jurisdictionOptions = res.data
         this.projectId = this.jurisdictionOptions[0].id
@@ -126,35 +131,39 @@ export default {
         this.jurisdictioninfo = res.data.subUserDto
       })
     },
-    changeProject(){
-       this.getPermissions()
+    changeProject() {
+      this.getPermissions()
     },
-    formObj(item){
-        let temObj={}
-        temObj.projectId=this.projectId
-        temObj.subUserId=this.id
-        temObj.operationAuthId=item.id
-        return temObj
+    formObj(item) {
+      let temObj = {}
+      temObj.projectId = this.projectId
+      temObj.subUserId = this.id
+      temObj.operationAuthId = item.id
+      return temObj
     },
     sureUpdate() {
-      this.jurisdictionItem.filter(item=>{
-        if(item.isSelect==='1'){
-          let obj= this.formObj(item)
+      this.jurisdictionUpdate.projectPermissions = []
+      this.jurisdictionItem.filter(item => {
+        if (item.isSelect === '1') {
+          let obj = this.formObj(item)
           this.jurisdictionUpdate.projectPermissions.push(obj)
+          if (item.childList.length > 0) {
+            item.childList.filter(item1 => {
+              if (item1.isSelect === '1') {
+                let obj1 = this.formObj(item1)
+                this.jurisdictionUpdate.projectPermissions.push(obj1)
+              }
+            })
+          }
         }
-        if(item.childList.length>0){
-          item.childList.filter(item1=>{
-            if(item1.isSelect==='1'){
-              let obj=  this.formObj(item1)
-              this.jurisdictionUpdate.projectPermissions.push(obj)
-            }
-          })
-        }
+
       })
-      updatePermissions(this.jurisdictionUpdate).then(res=>{
-       if (res.code === '200') {
-         message('success', '修改成功')
-       }
+      updatePermissions(this.jurisdictionUpdate).then(res => {
+        if (res.code === '200') {
+          message('success', '修改成功')
+          this.getPermissions()
+
+        }
       })
 
     },
@@ -182,9 +191,9 @@ export default {
       if (checked === '1') {
         this.jurisdictionItem[index].isSelect = '1'
       }
-        let len1=this.isAll(this.jurisdictionItem[index])
-      if(len1===0){
-         this.jurisdictionItem[index].isSelect = '0'
+      let len1 = this.isAll(this.jurisdictionItem[index])
+      if (len1 === 0) {
+        this.jurisdictionItem[index].isSelect = '0'
       }
 
 
