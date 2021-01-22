@@ -278,7 +278,7 @@ export default {
         })
       })
     },
-    //刷新
+    // 刷新
     async projectRefresh() {
       const res = await this.getqueryForProjects()
       if (res.code === '200') {
@@ -393,6 +393,7 @@ export default {
     },
     // 表格行点击去编辑
     openEdit(row) {
+<<<<<<< HEAD
       let data = JSON.stringify(row)
       this.$router.push({ name: 'Addproject', query: { info: data } })
     },
@@ -400,6 +401,14 @@ export default {
     newproject() {
       let data = JSON.stringify({ status: '3' })
       this.$router.push({ name: 'Addproject', query: { info: data } })
+=======
+      const data = JSON.stringify(row)
+      this.$router.push({ name: 'Addproject', query: { info: data, type: 'edit' }})
+    },
+    // 新建项目
+    newproject() {
+      this.$router.push({ name: 'Addproject', query: { id: { status: '3' }, type: 'add' }})
+>>>>>>> 656665e689f4dd69ad86c6b8a85de1c513bfbcfb
     }
 
   }

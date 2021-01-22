@@ -16,22 +16,19 @@
                 round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-                >新建账户</el-button
-              >
+              >新建账户</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="submitForm('accountForm')"
-                >确认修改</el-button
-              >
+              >确认修改</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="cancelUpdate('accountForm')"
-                >取消修改</el-button
-              >
+              >取消修改</el-button>
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -96,8 +93,7 @@
                 type="text"
                 :disabled="accountSingle"
                 @click="accountJurisdiction"
-                >权限</el-button
-              >
+              >权限</el-button>
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -130,9 +126,10 @@
                 <el-table-column prop="roleName" align="center" label="角色" />
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <span class="table-btn" @click.stop="accountDel(scope.row)"
-                      >删除</span
-                    >
+                    <span
+                      class="table-btn"
+                      @click.stop="accountDel(scope.row)"
+                    >删除</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -147,19 +144,20 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="权限管理" name="1" v-if="activeName === '1'">
+      <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
         <Jurisdiction
           v-if="jurisdictionAccountId"
           :id="jurisdictionAccountId"
-        ></Jurisdiction>
+        />
       </el-tab-pane>
       <el-tab-pane label="项目管理" name="2">项目管理</el-tab-pane>
       <el-tab-pane label="自定义字段" name="3">
         <!-- 自定义字段 -->
         <div class="manage-view">
           <el-row class="fd-row" :gutter="20">
-            <el-col :span="12"
-              ><div class="grid-content bg-purple" />
+            <el-col
+              :span="8"
+            ><div class="grid-content bg-purple" />
               <el-form
                 ref="fieldsfrom"
                 :model="fieldsfrom"
@@ -178,9 +176,10 @@
                 </el-form-item>
                 <el-form-item label="类型" prop="type" class="form-small">
                   <el-select
-                    v-model="fieldsfrom.scope"
+                    v-model="fieldsfrom.type"
                     size="small"
                     placeholder="请选择适用范围"
+                    @change="PleaseType"
                   >
                     <el-option label="DropDown" value="DropDown" />
                     <el-option label="Text" value="Text" />
@@ -189,10 +188,51 @@
                     <el-option label="Radio" value="Radio" />
                   </el-select>
                 </el-form-item>
+                <el-form-item v-if="showLength" label="长度" prop="length" class="form-small">
+                  <el-input v-model="fieldsfrom.length" size="small" />
+                </el-form-item>
+                <el-form-item v-if="dropValue" label="值" prop="length" class="form-small">
+                  <el-row>
+                    <el-col :span="16"><el-input v-model="fieldsfrom.Value" size="small" /></el-col>
+                    <el-col :span="8">
+                      <div style="marginLeft:5px;">
+                        <el-button
+                          type="primary"
+                          round
+                          :disabled="!fieldsfrom.Value"
+                          @click="addDrop"
+                        >添加</el-button>
+                      </div>
+                    </el-col>
+                  </el-row>
+
+                </el-form-item>
               </el-form>
             </el-col>
-            <el-col :span="8"
-              ><div class="grid-content bg-purple" />
+            <el-col v-if="dropValue" :span="4">
+              <el-row>
+                <el-col :span="16">
+                  <el-table border max-height="205" :data="dropData" @row-click="dropselect">
+                    <el-table-column
+                      prop="name"
+                      align="center"
+                      label="value"
+                    />
+                  </el-table>
+                </el-col>
+                <el-col :span="8">
+                  <div style="marginLeft:5px;">
+                    <el-button
+                      type="primary"
+                      round
+                      :disabled="!droprow"
+                      @click="delDrop"
+                    >删除</el-button>
+                  </div>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col v-if="true" :span="6"><div class="grid-content bg-purple" />
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4">
                   <el-checkbox v-model="checked1" />
@@ -211,9 +251,15 @@
                     <el-checkbox v-model="required" />
                   </div>
                 </el-col>
-                <el-col :span="4">
+                <el-col v-if="!singleorType" :span="4">
                   <div class="ng-input">
-                    <el-input />
+                    <el-input v-model="inputvalue" />
+                  </div>
+                </el-col>
+                <!-- 单选 or 复选-->
+                <el-col v-if="singleorType" :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
                   </div>
                 </el-col>
               </el-row>
@@ -227,9 +273,15 @@
                     <el-checkbox v-model="required" />
                   </div>
                 </el-col>
-                <el-col :span="4">
+                <el-col v-if="!singleorType" :span="4">
                   <div class="ng-input">
-                    <el-input />
+                    <el-input v-model="inputvalue" />
+                  </div>
+                </el-col>
+                <!-- 单选 or 复选-->
+                <el-col v-if="singleorType" :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
                   </div>
                 </el-col>
               </el-row>
@@ -243,9 +295,15 @@
                     <el-checkbox v-model="required" />
                   </div>
                 </el-col>
-                <el-col :span="4">
+                <el-col v-if="!singleorType" :span="4">
                   <div class="ng-input">
-                    <el-input />
+                    <el-input v-model="inputvalue" />
+                  </div>
+                </el-col>
+                <!-- 单选 or 复选-->
+                <el-col v-if="singleorType" :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
                   </div>
                 </el-col>
               </el-row>
@@ -259,9 +317,15 @@
                     <el-checkbox v-model="required" />
                   </div>
                 </el-col>
-                <el-col :span="4">
+                <el-col v-if="!singleorType" :span="4">
                   <div class="ng-input">
-                    <el-input />
+                    <el-input v-model="inputvalue" />
+                  </div>
+                </el-col>
+                <!-- 单选 or 复选-->
+                <el-col v-if="singleorType" :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
                   </div>
                 </el-col>
               </el-row>
@@ -275,9 +339,15 @@
                     <el-checkbox v-model="required" />
                   </div>
                 </el-col>
-                <el-col :span="4">
+                <el-col v-if="!singleorType" :span="4">
                   <div class="ng-input">
-                    <el-input />
+                    <el-input v-model="inputvalue" />
+                  </div>
+                </el-col>
+                <!-- 单选 or 复选-->
+                <el-col v-if="singleorType" :span="4">
+                  <div class="ng-red">
+                    <el-checkbox v-model="required" />
                   </div>
                 </el-col>
               </el-row>
@@ -318,7 +388,7 @@ import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, delete
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction,
+    Jurisdiction
   },
   data() {
     return {
@@ -367,7 +437,6 @@ export default {
       accountMultiple: true, // 非多个禁用
       accountUpdate: true,
 
-
       jurisdictionAccountId: '',
       jurisdiction: ['1'], // 权限折叠
       jurisdictionData: [],
@@ -383,7 +452,18 @@ export default {
       fieldsSelection: [], // 选择的表格
       dbfields: true, // 非多个禁用
       checked1: true,
-      required: true
+      required: true,
+      inputvalue: '',
+      // 类型选择（单选 or 复选）
+      singleorType: false,
+      // 字符长度 （文本 or 备注）
+      showLength: false,
+      dropValue: false,
+      dropData: [
+        { name: '01' },
+        { name: '02' }
+      ],
+      droprow: ''
       // 自定义字段 结束
 
     }
@@ -519,7 +599,7 @@ export default {
             message('success', '删除成功')
           }
         })
-      }).catch(function () { })
+      }).catch(function() { })
     },
     // 权限
     accountJurisdiction() {
@@ -528,7 +608,7 @@ export default {
       this.jurisdictionAccountId = this.accountSelection[0].id
     },
     /** ˙账户结束 */
-    // 自定义字段开始
+    // 自定义字段 开始
     submitfdForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -543,9 +623,47 @@ export default {
     fieldsSelectionChange(val) {
       this.fieldsSelection = val
       this.dbfields = !val.length
+    },
+    PleaseType() {
+      const type = this.fieldsfrom.type
+      if (type === 'Radio' || type === 'Chackbox') {
+        this.singleorType = true
+      } else {
+        this.singleorType = false
+      }
+      if (type === 'Text' || type === 'Memo') {
+        this.showLength = true
+      } else {
+        this.showLength = false
+      }
+      if (type === 'DropDown') {
+        this.dropValue = true
+      } else {
+        this.dropValue = false
+      }
+    },
+    // drop表格选中
+    dropselect(val) {
+      this.droprow = val
+    },
+    // 添加drop值
+    addDrop() {
+      const obj = {
+        name: this.fieldsfrom.Value
+      }
+      this.dropData.push(obj)
+    },
+    // 删除drop值
+    delDrop() {
+      const val = this.droprow
+      this.dropData.filter((item, index) => {
+        if (item === val) {
+          this.dropData.splice(index, 1)
+          this.droprow = ''
+        }
+      })
     }
-
-    // 自定义字段结束
+    // 自定义字段 结束
 
   }
 }
