@@ -88,7 +88,12 @@
             >管理项目</el-button>
           </router-link> -->
             <el-button type="text" @click="projectRefresh">刷新</el-button>
-            <el-button type="text" :disabled="single">克隆</el-button>
+            <el-button type="text" :disabled="single" @click="projectChange"
+              >切换项目</el-button
+            >
+            <el-button type="text" :disabled="single" @click="projectClone"
+              >克隆</el-button
+            >
             <el-button
               type="text"
               :disabled="multiple"
@@ -100,6 +105,7 @@
           <div class="protable table">
             <el-table
               :data="projecttableData"
+              ref="projecttableData"
               :header-cell-style="tableHeader"
               stripe
               style="width: 100%"
@@ -193,7 +199,8 @@
 
 <script>
 import { message } from '@/utils/common'
-import { queryForProjects, delProjects, queryViews } from '@/api/project'
+import store from '@/store'
+import { queryForProjects, delProjects, queryViews, checkProject } from '@/api/project'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
@@ -278,10 +285,25 @@ export default {
         message('success', '刷新成功')
       }
     },
+    //切换项目
+    projectChange() {
+      checkProject(this.multipleSelection[0].id).then(res => {
+        if (res.code === '200') {
+          this.$refs.projecttableData.clearSelection();
+          store.dispatch('user/getInfo')
+          message('success', '切换项目成功')
+        }
+      })
+    },
+    //克隆
+    projectClone() {
+      message('error', '暂未开发')
+    },
     // 删除项目
     delproject(id) {
       if (id === 'all') {
-        id = this.projectIds
+        message('error', '暂未开发')
+        return
       }
       delProjects(id).then(res => {
         if (res.code === '200') {
@@ -335,14 +357,6 @@ export default {
     },
     handleEdit(node, data) { // 编辑节点
       this.$router.push({ path: '/project/manageview' })
-      // if (!node.isEdit) {
-      //   this.$set(node, 'isEdit', true)
-      // }
-      // this.$nextTick(() => {
-      //   if (this.$refs['slotTreeInput' + data[this.node_key]]) {
-      //     this.$refs['slotTreeInput' + data[this.node_key]].$refs.input.focus()
-      //   }
-      // })
     },
     handleAdd(node, data) { // 新增节点
       // 判断层级
@@ -367,21 +381,25 @@ export default {
     },
     // 表格多选
     handleSelectionChange(val) {
+      this.multipleSelection = val
       // 暂时不实现批量删除
       this.projectIds = ''
       for (let i = 0; i < val.length; i++) {
         this.projectIds += val[i].id + ','
       }
       this.projectIds = this.projectIds.slice(0, this.projectIds.length - 1)
+      this.multiple = !val.length
+      this.single = val.length !== 1
     },
     // 表格行点击去编辑
     openEdit(row) {
       let data = JSON.stringify(row)
-      this.$router.push({ name: 'Addproject', query: { info: data, type: 'edit' } })
+      this.$router.push({ name: 'Addproject', query: { info: data } })
     },
     // 新建项目
     newproject() {
-      this.$router.push({ name: 'Addproject', query: { id: { status: '3' }, type: 'add' } })
+      let data = JSON.stringify({ status: '3' })
+      this.$router.push({ name: 'Addproject', query: { info: data } })
     }
 
   }

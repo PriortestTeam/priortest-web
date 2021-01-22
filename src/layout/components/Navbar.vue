@@ -13,26 +13,25 @@
       </el-col>
       <el-col :span="17">
         <div class="one_title">
+          <div class="item" @click="goProject">{{ projectName }}</div>
           <div
             v-for="(item, index) in clickItem"
             :key="index"
-            :class="['item', itemIndex === index ? 'active' : '']"
-            @click="goProject(index, item)"
+            class="item"
+            @click="goOther(item)"
           >
             {{
               index === 0
-                ? $t("lang.menuTitle.Project")
-                : index === 1
                 ? $t("lang.menuTitle.Feature")
-                : index === 2
+                : index === 1
                 ? $t("lang.menuTitle.Sprint")
-                : index === 3
+                : index === 2
                 ? $t("lang.menuTitle.TestCase")
-                : index === 4
+                : index === 3
                 ? $t("lang.menuTitle.TestCycle")
-                : index === 5
+                : index === 4
                 ? $t("lang.menuTitle.Issue")
-                : index === 6
+                : index === 5
                 ? $t("lang.menuTitle.SignOff")
                 : ""
             }}
@@ -72,17 +71,16 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { queryForProjects } from '@/api/project'
 
 export default {
-  components: {
-    // Breadcrumb,
-    // Hamburger
-  },
+
   data() {
     return {
       Idsearch: '',
-      itemIndex: '',
-      clickItem: ['Project A', 'Feature', 'Sprint', 'TestCase', 'TestCycle', 'Issue', 'SignOff']
+      projectName: '项目',
+      userinfo: {},
+      clickItem: ['Feature', 'Sprint', 'TestCase', 'TestCycle', 'Issue', 'SignOff']
     }
   },
   computed: {
@@ -96,10 +94,19 @@ export default {
     userInfo() {
       return this.$store.state.user.userinfo
     }
-
+  },
+  created() {
+  },
+  watch: {
+    'userInfo': function (newVal, oldVal) {
+      this.projectName = newVal.userUseOpenProject.title
+    }
   },
   mounted() {
-    this.itemIndex = ''
+    console.log(this.userInfo)
+    if (this.userInfo.userUseOpenProject.title) {
+      this.projectName = this.userInfo.userUseOpenProject.title
+    }
   },
   methods: {
     toggleSideBar() {
@@ -109,12 +116,11 @@ export default {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
-    goProject(index, item) {
-      this.itemIndex = index
-      if (item === 'Project A') {
-        this.$router.push({ name: 'Project' })
-        return
-      }
+    goProject() {
+      this.$router.push({ name: 'Project' })
+    },
+    goOther(item) {
+      console.log(item)
       this.$router.push({ name: item })
     },
     gohome() {
@@ -123,7 +129,6 @@ export default {
 
     // 切换语言
     changeLang(command) {
-      console.log(command)
       if (command === 'zh-CN') {
         this.$i18n.locale = 'zh-CN'
       }
@@ -188,11 +193,7 @@ export default {
       cursor: pointer;
       font-size: 14px;
     }
-    // .item.active {
-    //   background: #fff;
-    //   color: $tabcolorBG;
-    //   border-radius: 25px;
-    // }
+
     ::v-deep .el-input {
       width: 25%;
       margin-left: 30px;

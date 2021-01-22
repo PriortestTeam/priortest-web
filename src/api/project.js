@@ -41,4 +41,11 @@ export function editProjects(data) {
     data
   })
 }
+//切换项目
+export function checkProject(id) {
+  return request({
+    url: '/project/checkProject/' + id,
+    method: 'get'
+  })
+}
 // 项目view

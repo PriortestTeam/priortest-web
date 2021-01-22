@@ -21,12 +21,6 @@ const mutations = {
   SET_USERINFO: (state, userinfo) => {
     state.userinfo = userinfo
   },
-  // SET_NAME: (state, name) => {
-  //   state.name = name
-  // },
-  // SET_AVATAR: (state, avatar) => {
-  //   state.avatar = avatar
-  // }
 }
 
 const actions = {
@@ -53,7 +47,6 @@ const actions = {
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
-        // const { name, avatar } = data
         commit('SET_USERINFO', data)
         resolve(data)
       }).catch(error => {

@@ -9,31 +9,32 @@
     >
       <div>
         <el-button
-          v-if="requstsType === 'add'"
+          v-if="!projectFrom.id"
           type="primary"
           round
           :disabled="!proUpdate"
           @click="submitForm('projectFrom', false)"
-        >保存并新建</el-button>
+          >保存并新建</el-button
+        >
         <el-button
-          v-if="requstsType === 'add'"
+          v-if="!projectFrom.id"
           type="primary"
           round
           :disabled="!proUpdate"
           @click="submitForm('projectFrom', true)"
-        >保存并返回</el-button>
+          >保存并返回</el-button
+        >
         <el-button
-          v-if="requstsType === 'edit'"
+          v-if="projectFrom.id"
           type="primary"
           round
-          @click="suresubForm('projectFrom')"
-        >确认修改</el-button>
-        <el-button
-          type="primary"
-          round
-          @click="giveupBack('projectFrom')"
-        >放弃</el-button>
-        <router-link v-if="requstsType === 'add'" to="/publicview/customfiled">
+          @click="submitForm('projectFrom')"
+          >确认修改</el-button
+        >
+        <el-button type="primary" round @click="giveupBack('projectFrom')"
+          >放弃</el-button
+        >
+        <router-link v-if="!projectFrom.id" to="/publicview/customfiled">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
@@ -58,14 +59,16 @@
                 <el-option :label="$t('lang.Project.Progress')" value="3" />
                 <el-option :label="$t('lang.Project.Closed')" value="1" />
                 <el-option :label="$t('lang.Project.Plan')" value="2" />
-              </el-select> </el-form-item></el-col>
+              </el-select> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item
               :label="$t('lang.Project.ReportTo')"
               size="small"
               prop="reportToName"
             >
-              <el-input v-model="projectFrom.reportToName" /> </el-form-item></el-col>
+              <el-input v-model="projectFrom.reportToName" /> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item
               size="small"
@@ -78,7 +81,8 @@
                 clearable
               >
                 <el-option label="暂无" value="" />
-              </el-select> </el-form-item></el-col>
+              </el-select> </el-form-item
+          ></el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -109,7 +113,8 @@
           <el-input v-model="domain.value" width="70%" /><el-button
             type="text"
             @click.prevent="removeFiled(domain)"
-          >删除</el-button>
+            >删除</el-button
+          >
         </el-form-item>
         <el-upload
           class="upload-demo"
@@ -141,22 +146,19 @@ export default {
   name: 'Addproject',
   data() {
     return {
-      projectFrom: {
-        status: '3'
-      },
+      projectFrom: {},
       Projectrules: {
         title: [
-          { required: true, message: '请输入负责人', trigger: 'blur' }
+          { required: true, message: '请输入项目标题', trigger: 'blur' }
         ],
         reportToName: [
-          { required: true, message: '请输入项目标题', trigger: 'blur' }
+          { required: true, message: '请输入负责人', trigger: 'blur' }
         ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
         ]
       },
       prijectId: '',
-      requstsType: '',
       proUpdate: true
 
     }
@@ -172,17 +174,17 @@ export default {
   },
   mounted() {
     this.projectFrom = JSON.parse(this.$route.query.info)
-    this.requstsType = this.$route.query.type
   },
   methods: {
     // 重置表单
     resetFields(formName) {
       this.projectFrom = {
+        id: undefined,
         title: undefined,
         description: undefined,
         report: undefined,
         customer: undefined,
-        status: 'Progerss',
+        status: '3',
         fileList: []
       }
     },
@@ -190,61 +192,37 @@ export default {
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          var obj = {
-            title: this.projectFrom.title,
-            reportToName: this.projectFrom.reportToName,
-            description: this.projectFrom.description,
-            status: this.projectFrom.status,
-            planReleaseDate: '',
-            attachmentId: '' // 附件地址
-          }
-          addProjects(obj).then(res => {
-            if (res.code === '200') {
-              message('success', res.msg)
-              this.projectFrom = {
-                status: '3'
-              }
-              if (type) {
+          if (this.projectFrom.id) {
+            editProjects(this.projectFrom).then(res => {
+              if (res.code === '200') {
+                message('success', res.msg)
                 returntomenu(this, 1000)
               }
-            }
-          }).catch(error => {
-            console.log(error)
-          })
+            }).catch(error => {
+              console.log(error)
+            })
+          } else {
+            addProjects(this.projectFrom).then(res => {
+              if (res.code === '200') {
+                message('success', res.msg)
+                this.resetFields()
+                if (type) {
+                  returntomenu(this, 1000)
+                }
+              }
+            }).catch(error => {
+              console.log(error)
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    // 修改项目
-    suresubForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          editProjects(this.projectFrom).then(res => {
-            if (res.code === '200') {
-              message('success', res.msg)
-              returntomenu(this, 1000)
-            }
-          }).catch(error => {
-            console.log(error)
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-
     // 放弃并且返回
     giveupBack(formName) {
-      this.$route.meta.noCache = false
-      this.resetForm(formName)
-      this.returntomenu(this)
-    },
-    // 保存并且返回
-    saveBack() {
-      this.$route.meta.noCache = true
+      this.resetFields()
       this.returntomenu(this)
     },
     // 上传
