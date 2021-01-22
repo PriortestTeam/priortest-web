@@ -9,7 +9,7 @@
       :model="loginForm"
     >
       <div class="one-logo">
-        <img src="@/icons/img/one-logo.png" alt="" srcset="" />
+        <img src="@/icons/img/one-logo.png" alt="" srcset="">
       </div>
       <el-form-item prop="username" label="Email">
         <el-input v-model="loginForm.username" />
@@ -19,9 +19,11 @@
       </el-form-item>
       <el-form-item>
         <div class="btnForget">
-          <el-button type="primary" round @click="handleLogin('loginForm')"
-            >Login</el-button
-          >
+          <el-button
+            type="primary"
+            round
+            @click="handleLogin('loginForm')"
+          >Login</el-button>
           <!-- @click="forgetPwd()" -->
           <div class="Forget-frist">Forget & Set Password</div>
         </div>
@@ -55,7 +57,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function (route) {
+      handler: function(route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true

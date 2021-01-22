@@ -2,191 +2,189 @@
   <div class="project-container app-container">
     <div class="set_btn" @click="newproject">新建项目</div>
     <el-row>
-      <el-col :span="5"
-        ><div v-loading="isLoading" class="comp-tree">
-          <div class="new_project">
-            <router-link to="/project/manageview">
-              <div class="set_btn">新建视图</div>
-            </router-link>
-            <router-link to="/project/manageview">
-              <div class="set_btn">管理视图</div>
-            </router-link>
-          </div>
-          <!-- tree -->
-          <el-tree
-            ref="SlotTree"
-            :data="setTree"
-            :props="defaultProps"
-            :expand-on-click-node="false"
-            highlight-current
-            :node-key="node_key"
-            default-expand-all
-          >
-            <div slot-scope="{ node, data }" class="comp-tr-node">
-              <!-- 编辑状态 -->
-              <template v-if="node.isEdit">
-                <el-input
-                  :ref="'slotTreeInput' + data[node_key]"
-                  v-model="data.name"
-                  autofocus
+      <el-col
+        :span="5"
+      ><div v-loading="isLoading" class="comp-tree">
+        <div class="new_project">
+          <router-link to="/project/manageview">
+            <div class="set_btn">新建视图</div>
+          </router-link>
+          <router-link to="/project/manageview">
+            <div class="set_btn">管理视图</div>
+          </router-link>
+        </div>
+        <!-- tree -->
+        <el-tree
+          ref="SlotTree"
+          :data="setTree"
+          :props="defaultProps"
+          :expand-on-click-node="false"
+          highlight-current
+          :node-key="node_key"
+          default-expand-all
+        >
+          <div slot-scope="{ node, data }" class="comp-tr-node">
+            <!-- 编辑状态 -->
+            <template v-if="node.isEdit">
+              <el-input
+                :ref="'slotTreeInput' + data[node_key]"
+                v-model="data.name"
+                autofocus
+                size="mini"
+                class="editinput"
+                @blur.stop="handleInput(node, data)"
+                @keyup.enter.native="handleInput(node, data)"
+              />
+            </template>
+            <!-- 非编辑状态 -->
+            <template v-else>
+              <!-- 名称： 新增节点增加class（is-new） -->
+              <span
+                :class="[
+                  data[node_key] < node_id_start ? 'is-new' : '',
+                  'comp-tr-node--name',
+                ]"
+              >
+                {{ node.label }}
+              </span>
+              <!-- 按钮 -->
+              <!-- <span class="comp-tr-node--btns" v-if="node.id !== 1"> -->
+              <span class="comp-tr-node--btns">
+                <!-- 编辑 -->
+                <el-button
+                  icon="el-icon-edit"
                   size="mini"
-                  class="editinput"
-                  @blur.stop="handleInput(node, data)"
-                  @keyup.enter.native="handleInput(node, data)"
+                  circle
+                  type="info"
+                  @click="handleEdit(node, data)"
                 />
-              </template>
-              <!-- 非编辑状态 -->
-              <template v-else>
-                <!-- 名称： 新增节点增加class（is-new） -->
-                <span
-                  :class="[
-                    data[node_key] < node_id_start ? 'is-new' : '',
-                    'comp-tr-node--name',
-                  ]"
-                >
-                  {{ node.label }}
-                </span>
-                <!-- 按钮 -->
-                <!-- <span class="comp-tr-node--btns" v-if="node.id !== 1"> -->
-                <span class="comp-tr-node--btns">
-                  <!-- 编辑 -->
-                  <el-button
-                    icon="el-icon-edit"
-                    size="mini"
-                    circle
-                    type="info"
-                    @click="handleEdit(node, data)"
-                  />
-                  <!-- 删除 -->
-                  <el-button
-                    icon="el-icon-delete"
-                    size="mini"
-                    circle
-                    type="info"
-                    @click="handleDelete(node, data)"
-                  />
-                  <!-- 新增 -->
-                  <el-button
-                    icon="el-icon-plus"
-                    size="mini"
-                    circle
-                    type="info"
-                    @click="handleAdd(node, data)"
-                  />
-                </span>
-              </template>
-            </div>
-          </el-tree></div
-      ></el-col>
-      <el-col :span="19"
-        ><div class="project_table">
-          <div class="oprate_btn">
-            <!-- <router-link to="/project/manageproject">
+                <!-- 删除 -->
+                <el-button
+                  icon="el-icon-delete"
+                  size="mini"
+                  circle
+                  type="info"
+                  @click="handleDelete(node, data)"
+                />
+                <!-- 新增 -->
+                <el-button
+                  icon="el-icon-plus"
+                  size="mini"
+                  circle
+                  type="info"
+                  @click="handleAdd(node, data)"
+                />
+              </span>
+            </template>
+          </div>
+        </el-tree></div></el-col>
+      <el-col
+        :span="19"
+      ><div class="project_table">
+        <div class="oprate_btn">
+          <!-- <router-link to="/project/manageproject">
             <el-button
               style="margin-right: 10px"
               type="text"
             >管理项目</el-button>
           </router-link> -->
-            <el-button type="text" @click="projectRefresh">刷新</el-button>
-            <el-button type="text" :disabled="single">克隆</el-button>
-            <el-button
-              type="text"
-              :disabled="multiple"
-              @click="delproject('all')"
-              >批量删除</el-button
-            >
-            <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
-          </div>
-          <div class="protable table">
-            <el-table
-              :data="projecttableData"
-              :header-cell-style="tableHeader"
-              stripe
-              style="width: 100%"
-              @row-click="openEdit"
-              @selection-change="handleSelectionChange"
-            >
-              <el-table-column type="selection" width="55" />
-              <el-table-column type="index" align="center" label="序号">
-                <template slot-scope="scope">
-                  {{ scope.$index + 1 }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="title"
-                :show-overflow-tooltip="true"
-                align="center"
-                label="标题"
-              />
-              <el-table-column
-                prop="reportToName"
-                align="center"
-                label="负责人"
-              />
-              <el-table-column prop="status" align="center" label="状态">
-                <template slot-scope="scope">
-                  <span>{{
-                    scope.row.status === 1
-                      ? "Progress"
-                      : scope.row.status === 2
+          <el-button type="text" @click="projectRefresh">刷新</el-button>
+          <el-button type="text" :disabled="single">克隆</el-button>
+          <el-button
+            type="text"
+            :disabled="multiple"
+            @click="delproject('all')"
+          >批量删除</el-button>
+          <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
+        </div>
+        <div class="protable table">
+          <el-table
+            :data="projecttableData"
+            :header-cell-style="tableHeader"
+            stripe
+            style="width: 100%"
+            @row-click="openEdit"
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column type="selection" width="55" />
+            <el-table-column type="index" align="center" label="序号">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="title"
+              :show-overflow-tooltip="true"
+              align="center"
+              label="标题"
+            />
+            <el-table-column
+              prop="reportToName"
+              align="center"
+              label="负责人"
+            />
+            <el-table-column prop="status" align="center" label="状态">
+              <template slot-scope="scope">
+                <span>{{
+                  scope.row.status === 1
+                    ? "Progress"
+                    : scope.row.status === 2
                       ? "Plan"
                       : "Closed"
-                  }}</span>
-                </template>
-              </el-table-column>
+                }}</span>
+              </template>
+            </el-table-column>
 
-              <el-table-column
-                prop="createTime"
-                align="center"
-                label="创建日期"
-                min-width="170"
-                :show-overflow-tooltip="true"
-              />
-              <el-table-column
-                prop="planReleaseDate"
-                align="center"
-                label="计划上线日期"
-                min-width="170"
-                :show-overflow-tooltip="true"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.planReleaseDate || "待定" }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="closeDate"
-                align="center"
-                label="关闭日期"
-                min-width="170"
-                :show-overflow-tooltip="true"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.closeDate || "待定" }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="操作" align="center">
-                <template slot-scope="scope">
-                  <!-- <el-button type="text" class="table-btn">克隆</el-button>
-                <span class="line">|</span> -->
-                  <el-button
-                    type="text"
-                    class="table-btn"
-                    @click.stop="delproject(scope.row.id)"
-                    >删除</el-button
-                  >
-                </template>
-              </el-table-column>
-            </el-table>
-
-            <pagination
-              v-show="projectTotal > 0"
-              :total="projectTotal"
-              :page.sync="projectQuery.pageNum"
-              :limit.sync="projectQuery.projectpageSize"
-              @pagination="getqueryForProjects"
+            <el-table-column
+              prop="createTime"
+              align="center"
+              label="创建日期"
+              min-width="170"
+              :show-overflow-tooltip="true"
             />
-          </div></div
-      ></el-col>
+            <el-table-column
+              prop="planReleaseDate"
+              align="center"
+              label="计划上线日期"
+              min-width="170"
+              :show-overflow-tooltip="true"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.planReleaseDate || "待定" }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="closeDate"
+              align="center"
+              label="关闭日期"
+              min-width="170"
+              :show-overflow-tooltip="true"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.closeDate || "待定" }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+              <template slot-scope="scope">
+                <!-- <el-button type="text" class="table-btn">克隆</el-button>
+                <span class="line">|</span> -->
+                <el-button
+                  type="text"
+                  class="table-btn"
+                  @click.stop="delproject(scope.row.id)"
+                >删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <pagination
+            v-show="projectTotal > 0"
+            :total="projectTotal"
+            :page.sync="projectQuery.pageNum"
+            :limit.sync="projectQuery.projectpageSize"
+            @pagination="getqueryForProjects"
+          />
+        </div></div></el-col>
     </el-row>
   </div>
 </template>
@@ -271,7 +269,7 @@ export default {
         })
       })
     },
-    //刷新
+    // 刷新
     async projectRefresh() {
       const res = await this.getqueryForProjects()
       if (res.code === '200') {
@@ -376,12 +374,12 @@ export default {
     },
     // 表格行点击去编辑
     openEdit(row) {
-      let data = JSON.stringify(row)
-      this.$router.push({ name: 'Addproject', query: { info: data, type: 'edit' } })
+      const data = JSON.stringify(row)
+      this.$router.push({ name: 'Addproject', query: { info: data, type: 'edit' }})
     },
     // 新建项目
     newproject() {
-      this.$router.push({ name: 'Addproject', query: { id: { status: '3' }, type: 'add' } })
+      this.$router.push({ name: 'Addproject', query: { id: { status: '3' }, type: 'add' }})
     }
 
   }
