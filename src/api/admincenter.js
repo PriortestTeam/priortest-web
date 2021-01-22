@@ -50,9 +50,25 @@ export function deleteSubUser(data) {
 }
 
 //权限
+export function getProjects(data) {
+  return request({
+    url: '/settingPermission/getProjects',
+    method: 'get',
+    params: data
+  })
+}
 export function getPermissions(data) {
   return request({
-    url: '/settingPermission/getPermissions/' + data,
-    method: 'get'
+    url: '/settingPermission/getPermissions',
+    method: 'get',
+    params: data
+  })
+}
+
+export function updatePermissions(query) {
+  return request({
+    url: '/settingPermission/updatePermissions',
+    method: 'post',
+    data: query
   })
 }
