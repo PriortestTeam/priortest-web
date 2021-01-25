@@ -16,19 +16,22 @@
                 round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-              >新建账户</el-button>
+                >新建账户</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="submitForm('accountForm')"
-              >确认修改</el-button>
+                >确认修改</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="cancelUpdate('accountForm')"
-              >取消修改</el-button>
+                >取消修改</el-button
+              >
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -93,7 +96,8 @@
                 type="text"
                 :disabled="accountSingle"
                 @click="accountJurisdiction"
-              >权限</el-button>
+                >权限</el-button
+              >
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -126,10 +130,9 @@
                 <el-table-column prop="roleName" align="center" label="角色" />
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <span
-                      class="table-btn"
-                      @click.stop="accountDel(scope.row)"
-                    >删除</span>
+                    <span class="table-btn" @click.stop="accountDel(scope.row)"
+                      >删除</span
+                    >
                   </template>
                 </el-table-column>
               </el-table>
@@ -155,9 +158,8 @@
         <!-- 自定义字段 -->
         <div class="manage-view">
           <el-row class="fd-row" :gutter="20">
-            <el-col
-              :span="8"
-            ><div class="grid-content bg-purple" />
+            <el-col :span="8"
+              ><div class="grid-content bg-purple" />
               <el-form
                 ref="fieldsfrom"
                 :model="fieldsfrom"
@@ -188,51 +190,66 @@
                     <el-option label="Radio" value="Radio" />
                   </el-select>
                 </el-form-item>
-                <el-form-item v-if="showLength" label="长度" prop="length" class="form-small">
+                <el-form-item
+                  v-if="showLength"
+                  label="长度"
+                  prop="length"
+                  class="form-small"
+                >
                   <el-input v-model="fieldsfrom.length" size="small" />
                 </el-form-item>
-                <el-form-item v-if="dropValue" label="值" prop="length" class="form-small">
+                <el-form-item
+                  v-if="dropValue"
+                  label="值"
+                  prop="length"
+                  class="form-small"
+                >
                   <el-row>
-                    <el-col :span="16"><el-input v-model="fieldsfrom.Value" size="small" /></el-col>
+                    <el-col :span="16"
+                      ><el-input v-model="fieldsfrom.Value" size="small"
+                    /></el-col>
                     <el-col :span="8">
-                      <div style="marginLeft:5px;">
+                      <div style="marginleft: 5px">
                         <el-button
                           type="primary"
                           round
                           :disabled="!fieldsfrom.Value"
                           @click="addDrop"
-                        >添加</el-button>
+                          >添加</el-button
+                        >
                       </div>
                     </el-col>
                   </el-row>
-
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col v-if="dropValue" :span="4">
               <el-row>
                 <el-col :span="16">
-                  <el-table border max-height="205" :data="dropData" @row-click="dropselect">
-                    <el-table-column
-                      prop="name"
-                      align="center"
-                      label="value"
-                    />
+                  <el-table
+                    border
+                    max-height="205"
+                    :data="dropData"
+                    @row-click="dropselect"
+                  >
+                    <el-table-column prop="name" align="center" label="value" />
                   </el-table>
                 </el-col>
                 <el-col :span="8">
-                  <div style="marginLeft:5px;">
+                  <div style="marginleft: 5px">
                     <el-button
                       type="primary"
                       round
                       :disabled="!droprow"
                       @click="delDrop"
-                    >删除</el-button>
+                      >删除</el-button
+                    >
                   </div>
                 </el-col>
               </el-row>
             </el-col>
-            <el-col v-if="true" :span="6"><div class="grid-content bg-purple" />
+            <el-col v-if="true" :span="6"
+              ><div class="grid-content bg-purple" />
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4">
                   <el-checkbox v-model="checked1" />
@@ -438,11 +455,6 @@ export default {
       accountUpdate: true,
 
       jurisdictionAccountId: '',
-      jurisdiction: ['1'], // 权限折叠
-      jurisdictionData: [],
-      jurisdictionItem: [],
-      jurisdictioninfo: {},
-      checked: true,
 
       // 自定义字段
       fieldsfrom: {},
@@ -489,7 +501,6 @@ export default {
         this.accountProject.unshift({ title: 'ALL', id: '0' })
       })
     },
-
     // 项目互斥
     accountChangePro(val) {
       const index = val.indexOf('0')
@@ -599,7 +610,7 @@ export default {
             message('success', '删除成功')
           }
         })
-      }).catch(function() { })
+      }).catch(function () { })
     },
     // 权限
     accountJurisdiction() {
