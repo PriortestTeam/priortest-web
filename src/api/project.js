@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 16:38:28
- * @LastEditTime: 2021-01-14 13:34:42
- * @LastEditors: your name
+ * @LastEditTime: 2021-01-28 15:01:09
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \oneclick-web\src\api\project.js
  */
@@ -41,11 +41,51 @@ export function editProjects(data) {
     data
   })
 }
-//切换项目
+// 切换项目
 export function checkProject(id) {
   return request({
     url: '/project/checkProject/' + id,
     method: 'get'
   })
 }
-// 项目view
+//  *************************   项目view   *********************//
+export function queryViews(data, page) {
+  return request({
+    url: '/view/queryViews',
+    method: 'post',
+    params: page,
+    data: data
+  })
+}
+// 查看view
+export function lookView(data) {
+  return request({
+    url: '/view/queryById/' + data,
+    method: 'get'
+  })
+}
+// 添加view
+export function addView(data) {
+  return request({
+    url: '/view/addView',
+    method: 'post',
+    data
+  })
+}
+// 更新view
+export function updateView(data) {
+  return request({
+    url: '/view/updateView',
+    method: 'post',
+    data
+  })
+}
+// 删除view
+
+export function deleteView(data) {
+  return request({
+    url: '/view/deleteView/' + data,
+    method: 'delete'
+  })
+}
+

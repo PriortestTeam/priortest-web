@@ -65,3 +65,55 @@
    }
  }
 }
+//视图新增管理   
+.manage-view{
+  .set_btn{
+    @include setBtn($forbidColoe, false);
+    margin-right:$spacing;
+  }
+  .form-small{
+    width:60%;
+  }
+  .fieldbtn,.el-form-item {
+    margin-bottom: 15px;
+  }
+
+  .fd-row{
+    display: flex;
+    align-items: center;
+    .sen-row{
+      margin-bottom: 5px;    
+      display: flex;
+      align-items: center;
+      .ng-red{
+          ::v-deep .el-checkbox__inner {
+              border-radius: 100%;
+              border: 1px solid $forbidColoe;
+              background: #ffffff;
+          }
+          ::v-deep .el-checkbox__inner::after {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background:$forbidColoe;
+            border: none;
+            line-height: 14px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+          }
+      }
+      .ng-input{
+        ::v-deep .el-input__inner{
+          height: 32px;
+          line-height: 32px;
+          width: 185px;
+        }
+      }
+    }
+  }
+}

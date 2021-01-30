@@ -16,22 +16,19 @@
                 round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-                >新建账户</el-button
-              >
+              >新建账户</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="submitForm('accountForm')"
-                >确认修改</el-button
-              >
+              >确认修改</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="cancelUpdate('accountForm')"
-                >取消修改</el-button
-              >
+              >取消修改</el-button>
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -96,8 +93,7 @@
                 type="text"
                 :disabled="accountSingle"
                 @click="accountJurisdiction"
-                >权限</el-button
-              >
+              >权限</el-button>
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -130,9 +126,10 @@
                 <el-table-column prop="roleName" align="center" label="角色" />
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <span class="table-btn" @click.stop="accountDel(scope.row)"
-                      >删除</span
-                    >
+                    <span
+                      class="table-btn"
+                      @click.stop="accountDel(scope.row)"
+                    >删除</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -158,8 +155,9 @@
         <!-- 自定义字段 -->
         <div class="manage-view">
           <el-row class="fd-row" :gutter="20">
-            <el-col :span="8"
-              ><div class="grid-content bg-purple" />
+            <el-col
+              :span="8"
+            ><div class="grid-content bg-purple" />
               <el-form
                 ref="fieldsfrom"
                 :model="fieldsfrom"
@@ -167,27 +165,32 @@
                 label-width="100px"
                 class="demo-ruleForm"
               >
-                <div>
-                  <div class="set_btn" @click="submitfdForm('fieldsfrom')">
-                    保存
-                  </div>
-                  <div class="set_btn">放弃</div>
+                <div class="fieldbtn">
+                  <el-button
+                    type="primary"
+                    round
+                    :disabled="fielddisabled"
+                    @click="submitfdForm('fieldsfrom')"
+                  >保存</el-button>
+                  <el-button
+                    type="primary"
+                    round
+                  >放弃</el-button>
                 </div>
-                <el-form-item label="字段名称" prop="name" class="form-small">
-                  <el-input v-model="fieldsfrom.name" size="small" />
+                <el-form-item label="字段名称" prop="fieldName" class="form-small">
+                  <el-input v-model="fieldsfrom.fieldName" size="small" />
                 </el-form-item>
                 <el-form-item label="类型" prop="type" class="form-small">
                   <el-select
                     v-model="fieldsfrom.type"
                     size="small"
                     placeholder="请选择适用范围"
-                    @change="PleaseType"
                   >
-                    <el-option label="DropDown" value="DropDown" />
-                    <el-option label="Text" value="Text" />
-                    <el-option label="Memo" value="Memo" />
-                    <el-option label="Chackbox" value="Chackbox" />
-                    <el-option label="Radio" value="Radio" />
+                    <el-option label="下拉框" disabled value="dropDown" />
+                    <el-option label="文本" disabled value="text" />
+                    <el-option label="备注" disabled value="memo" />
+                    <el-option label="多选框" disabled value="chackbox" />
+                    <el-option label="单选框" value="radio" />
                   </el-select>
                 </el-form-item>
                 <el-form-item
@@ -205,8 +208,11 @@
                   class="form-small"
                 >
                   <el-row>
-                    <el-col :span="16"
-                      ><el-input v-model="fieldsfrom.Value" size="small"
+                    <el-col
+                      :span="16"
+                    ><el-input
+                      v-model="fieldsfrom.Value"
+                      size="small"
                     /></el-col>
                     <el-col :span="8">
                       <div style="marginleft: 5px">
@@ -215,8 +221,7 @@
                           round
                           :disabled="!fieldsfrom.Value"
                           @click="addDrop"
-                          >添加</el-button
-                        >
+                        >添加</el-button>
                       </div>
                     </el-col>
                   </el-row>
@@ -242,14 +247,15 @@
                       round
                       :disabled="!droprow"
                       @click="delDrop"
-                      >删除</el-button
-                    >
+                    >删除</el-button>
                   </div>
                 </el-col>
               </el-row>
             </el-col>
-            <el-col v-if="true" :span="6"
-              ><div class="grid-content bg-purple" />
+            <el-col
+              v-if="true"
+              :span="6"
+            ><div class="grid-content bg-purple" />
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4">
                   <el-checkbox v-model="checked1" />
@@ -260,12 +266,12 @@
               </el-row>
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4">
-                  <el-checkbox v-model="checked1" />
+                  <el-checkbox v-model="fieldsfrom.scope[0]" />
                 </el-col>
                 <el-col :span="4">项目</el-col>
                 <el-col :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.mandatory[0]" />
                   </div>
                 </el-col>
                 <el-col v-if="!singleorType" :span="4">
@@ -276,18 +282,18 @@
                 <!-- 单选 or 复选-->
                 <el-col v-if="singleorType" :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.defaultValue[0]" />
                   </div>
                 </el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4">
-                  <el-checkbox v-model="checked1" />
+                  <el-checkbox v-model="fieldsfrom.scope[1]" />
                 </el-col>
                 <el-col :span="4">故事</el-col>
                 <el-col :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.mandatory[1]" />
                   </div>
                 </el-col>
                 <el-col v-if="!singleorType" :span="4">
@@ -298,18 +304,18 @@
                 <!-- 单选 or 复选-->
                 <el-col v-if="singleorType" :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.defaultValue[1]" />
                   </div>
                 </el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4">
-                  <el-checkbox v-model="checked1" />
+                  <el-checkbox v-model="fieldsfrom.scope[2]" />
                 </el-col>
                 <el-col :span="4">测试用例</el-col>
                 <el-col :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.mandatory[2]" />
                   </div>
                 </el-col>
                 <el-col v-if="!singleorType" :span="4">
@@ -320,18 +326,18 @@
                 <!-- 单选 or 复选-->
                 <el-col v-if="singleorType" :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.defaultValue[2]" />
                   </div>
                 </el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4">
-                  <el-checkbox v-model="checked1" />
+                  <el-checkbox v-model="fieldsfrom.scope[3]" />
                 </el-col>
                 <el-col :span="4">测试周期</el-col>
                 <el-col :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.mandatory[3]" />
                   </div>
                 </el-col>
                 <el-col v-if="!singleorType" :span="4">
@@ -342,18 +348,18 @@
                 <!-- 单选 or 复选-->
                 <el-col v-if="singleorType" :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.defaultValue[3]" />
                   </div>
                 </el-col>
               </el-row>
               <el-row class="sen-row" :gutter="20">
                 <el-col :span="4">
-                  <el-checkbox v-model="checked1" />
+                  <el-checkbox v-model="fieldsfrom.scope[4]" />
                 </el-col>
                 <el-col :span="4">验收</el-col>
                 <el-col :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.mandatory[4]" />
                   </div>
                 </el-col>
                 <el-col v-if="!singleorType" :span="4">
@@ -364,7 +370,7 @@
                 <!-- 单选 or 复选-->
                 <el-col v-if="singleorType" :span="4">
                   <div class="ng-red">
-                    <el-checkbox v-model="required" />
+                    <el-checkbox v-model="fieldsfrom.defaultValue[4]" />
                   </div>
                 </el-col>
               </el-row>
@@ -377,14 +383,14 @@
               :header-cell-style="tableHeader"
               stripe
               style="width: 100%"
+              @row-click="showfield"
               @selection-change="fieldsSelectionChange"
             >
               <el-table-column type="selection" width="55" />
-              <el-table-column prop="title" label="字段名称" />
-              <el-table-column prop="scope" label="类型" />
-              <el-table-column prop="parent" label="范围" />
-              <el-table-column prop="owner" label="是否必填" />
-              <el-table-column prop="craeted" label="初始值" />
+              <el-table-column prop="fieldName" label="字段名称" />
+              <el-table-column prop="type" label="类型" />
+              <el-table-column prop="scope" label="范围" />
+              <el-table-column prop="mandatory" label="是否必填" />
               <el-table-column label="Action">
                 <template>
                   <span class="table-btn">删除</span>
@@ -401,7 +407,8 @@
 <script>
 import { message, formatChangedPara } from '@/utils/common'
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
-import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getPermissions } from '@/api/admincenter'
+import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
+import { queryCustomList, queryFieldRadioById, addCustomRadio, updateCustomRadio } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
@@ -457,14 +464,22 @@ export default {
       jurisdictionAccountId: '',
 
       // 自定义字段
-      fieldsfrom: {},
-      fieldsrules: {},
+      fieldsfrom: {
+        scope: [false, false, false, false, false],
+        defaultValue: [false, false, false, false, false],
+        mandatory: [false, false, false, false, false],
+        projectId: '361971315692802048'
+      },
+      fieldsrules: {
+        fieldName: [{ required: true, message: '请输入字段名称', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择类型', trigger: 'change' }]
+      },
       // 表格数据
       fieldsData: [],
       fieldsSelection: [], // 选择的表格
       dbfields: true, // 非多个禁用
       checked1: true,
-      required: true,
+      fielddisabled: true,
       inputvalue: '',
       // 类型选择（单选 or 复选）
       singleorType: false,
@@ -480,12 +495,25 @@ export default {
 
     }
   },
+  watch: {
+    'fieldsfrom.type': function(val) {
+      this.PleaseType(val)
+    },
+    'fieldsfrom.fieldName': function(val) {
+      if (val) {
+        this.fielddisabled = false
+      } else {
+        this.fielddisabled = true
+      }
+    }
+  },
   created() {
     queryRoles().then(res => {
       this.accountRoleOption = res.data
     })
     this.getquerySubUsers()
     this.getProject()
+    this.getqueryCustomList()
   },
   mounted() {
 
@@ -610,7 +638,7 @@ export default {
             message('success', '删除成功')
           }
         })
-      }).catch(function () { })
+      }).catch(function() { })
     },
     // 权限
     accountJurisdiction() {
@@ -619,35 +647,104 @@ export default {
       this.jurisdictionAccountId = this.accountSelection[0].id
     },
     /** ˙账户结束 */
-    // 自定义字段 开始
+
+    /** 自定义字段 开始 */
+    // 获取自定义字段列表
+    getqueryCustomList() {
+      const obj = {
+        projectId: '361971315692802048'
+      }
+      const page = {
+        pageNum: 1,
+        pageSize: 10
+      }
+      queryCustomList(obj, page).then(res => {
+        if (res.code === '200') {
+          console.log(res, '获取自定义字段列表')
+          this.fieldsData = res.data
+        }
+      })
+    },
     submitfdForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.fielddisabled = true
+          const radio = this.fieldsfrom
+          for (const key in radio) {
+            if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
+              for (let i = 0; i < radio[key].length; i++) {
+                if (radio[key][i] === false) {
+                  radio[key][i] = '0'
+                } else {
+                  radio[key][i] = '1'
+                }
+              }
+            }
+          }
+
+          for (const i in radio) {
+            if (i === 'scope' || i === 'defaultValue' || i === 'mandatory') {
+              radio[i] = radio[i].join(',')
+            }
+          }
+          if (!this.fieldsfrom.id) {
+            addCustomRadio(radio).then(res => {
+              if (res.code === '200') {
+                message('success', res.msg)
+                this.getqueryCustomList()
+              }
+            })
+          } else {
+            updateCustomRadio(radio).then(res => {
+              if (res.code === '200') {
+                message('success', res.msg)
+                this.getqueryCustomList()
+              }
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-
+    // 查看字段详情
+    showfield(row) {
+      queryFieldRadioById(row.id).then(res => {
+        const radio = res.data
+        for (const key in radio) {
+          if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
+            radio[key] = radio[key].split(',')
+            for (let i = 0; i < radio[key].length; i++) {
+              if (radio[key][i] === '0') {
+                radio[key][i] = false
+              } else {
+                radio[key][i] = true
+              }
+            }
+          }
+        }
+        // console.log(radio)
+        this.fieldsfrom = res.data
+      })
+    },
     fieldsSelectionChange(val) {
       this.fieldsSelection = val
       this.dbfields = !val.length
     },
-    PleaseType() {
-      const type = this.fieldsfrom.type
-      if (type === 'Radio' || type === 'Chackbox') {
+    PleaseType(val) {
+      const type = val
+      if (type === 'radio' || type === 'chackbox') {
         this.singleorType = true
       } else {
         this.singleorType = false
       }
-      if (type === 'Text' || type === 'Memo') {
+      if (type === 'text' || type === 'memo') {
         this.showLength = true
       } else {
         this.showLength = false
       }
-      if (type === 'DropDown') {
+      if (type === 'dropDown') {
         this.dropValue = true
       } else {
         this.dropValue = false
@@ -699,5 +796,5 @@ export default {
 </style>
 <style lang="scss" scoped>
 @import "index.scss";
-@import "field.scss";
+// @import "field.scss";
 </style>
