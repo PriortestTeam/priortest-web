@@ -13,12 +13,13 @@
           :disabled="savedisabled"
           round
           @click.stop="submitForm('from')"
-          >保存</el-button
-        >
+        >保存</el-button>
 
-        <el-button type="primary" round @click.stop="waiveForm('from')"
-          >放弃</el-button
-        >
+        <el-button
+          type="primary"
+          round
+          @click.stop="waiveForm('from')"
+        >放弃</el-button>
       </div>
       <el-form-item label="New View" prop="title" class="form-small">
         <el-input v-model="from.title" size="small" />
@@ -42,12 +43,12 @@
         <div class="filter-item">
           <!-- for -->
           <el-row />
-          <el-col v-if="from.oneFilters.length === 0" :span="1">
+          <el-col v-if="from.oneFilters.length===0" :span="1">
             <span @click="addFliter">
               <i class="el-icon-circle-plus circle" />
             </span>
           </el-col>
-          <el-row v-for="(item, index) in from.oneFilters" :key="index">
+          <el-row v-for="(item,index) in from.oneFilters" :key="index">
             <el-row>
               <el-col :span="1">
                 <span @click="addFliter">
@@ -58,12 +59,7 @@
                 </span>
               </el-col>
               <el-col :span="3">
-                <el-select
-                  v-model="item.fieldName"
-                  size="small"
-                  placeholder="请选择字段"
-                  @change="getType(item.fieldName, index)"
-                >
+                <el-select v-model="item.fieldName" size="small" placeholder="请选择字段" @change="getType(item.fieldName,index)">
                   <el-option label="标题" value="title" />
                   <el-option label="负责人" value="reportToName" />
                   <el-option label="状态" value="status" />
@@ -73,16 +69,12 @@
                 </el-select>
               </el-col>
               <!-- input -->
-              <el-col v-if="item.type === 'fString'" :span="3">
+              <el-col v-if="item.type==='fString'" :span="3">
                 <el-input v-model="item.textVal" size="small" />
               </el-col>
               <!-- select -->
-              <el-col v-else-if="item.type === 'fInteger'" :span="3">
-                <el-select
-                  v-model="item.textVal"
-                  size="small"
-                  placeholder="请选择状态"
-                >
+              <el-col v-else-if="item.type==='fInteger'" :span="3">
+                <el-select v-model="item.textVal" size="small" placeholder="请选择状态">
                   <el-option label="关闭" value="1" />
                   <el-option label="计划" value="2" />
                   <el-option label="开发中" value="3" />
@@ -144,9 +136,7 @@
           <el-table-column prop="updateTime" label="Modified" />
           <el-table-column label="Action">
             <template slot-scope="scope">
-              <span class="table-btn" @click.stop="delview(scope.row.id)"
-                >删除</span
-              >
+              <span class="table-btn" @click.stop="delview(scope.row.id)">删除</span>
             </template>
           </el-table-column>
         </el-table>
@@ -195,7 +185,7 @@ export default {
     }
   },
   watch: {
-    'from.title': function (val) {
+    'from.title': function(val) {
       if (val) {
         this.savedisabled = false
       } else {

@@ -1,22 +1,29 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-06 16:38:28
+ * @LastEditTime: 2021-01-29 10:03:20
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \idm-project-uid:\project\oneclick-web\src\api\admincenter.js
+ */
 import request from '@/utils/request'
 
-
-//个人中心获取角色
+// 个人中心获取角色
 export function queryRoles() {
   return request({
     url: '/subUser/queryRoles',
     method: 'get'
   })
 }
-//个人中心获取项目
+// 个人中心获取项目
 export function queryForProjectTitles() {
   return request({
     url: '/subUser/queryForProjects',
-    method: 'get',
+    method: 'get'
   })
 }
 
-//个人中心账户列表
+// 个人中心账户列表
 export function querySubUsers(query) {
   return request({
     url: '/subUser/querySubUsers',
@@ -25,7 +32,7 @@ export function querySubUsers(query) {
     data: {}
   })
 }
-//个人中心新建账户
+// 个人中心新建账户
 export function createSubUser(query) {
   return request({
     url: '/subUser/createSubUser',
@@ -33,7 +40,7 @@ export function createSubUser(query) {
     data: query
   })
 }
-//个人中心更新账户
+// 个人中心更新账户
 export function updateSubUser(query) {
   return request({
     url: '/subUser/updateSubUser',
@@ -41,7 +48,7 @@ export function updateSubUser(query) {
     data: query
   })
 }
-//删除账户
+// 删除账户
 export function deleteSubUser(data) {
   return request({
     url: '/subUser/deleteSubUser/' + data,
@@ -49,7 +56,7 @@ export function deleteSubUser(data) {
   })
 }
 
-//权限
+// 权限
 export function getProjects(data) {
   return request({
     url: '/settingPermission/getProjects',

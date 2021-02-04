@@ -6,18 +6,17 @@
     <el-row>
       <el-col :span="5"
         ><div v-loading="isLoading" class="comp-tree">
-          <div class="set_btn between">
-            <el-button type="primary" round>
-              <router-link to="/project/manageview"> 新建视图 </router-link>
-            </el-button>
-            <el-button type="primary" round>
-              <router-link to="/project/manageview">
-                管理视图
-              </router-link></el-button
-            >
+          <div class="new_project">
+            <router-link to="/project/manageview">
+              <div class="set_btn">新建视图</div>
+            </router-link>
+            <router-link to="/project/manageview">
+              <div class="set_btn">管理视图</div>
+            </router-link>
           </div>
           <!-- tree -->
           <el-tree
+            v-if="false"
             ref="SlotTree"
             :data="setTree"
             :props="defaultProps"
@@ -80,8 +79,27 @@
                 </span>
               </template>
             </div>
-          </el-tree></div
-      ></el-col>
+          </el-tree>
+          <!-- 折叠面板 -->
+          <el-collapse v-model="activeNames" @change="handleChange">
+            <el-collapse-item
+              v-for="(item, index) in setTree"
+              :key="index"
+              :title="item.scope"
+              :name="index"
+            >
+              <div
+                v-for="(item1, index1) in item.oneFilters"
+                :key="index1"
+                class="viewtext"
+              >
+                {{ item1.fieldName }}
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+          <div v-if="setTree.length === 0" class="nodata">暂无数据</div>
+        </div>
+      </el-col>
       <el-col :span="19"
         ><div class="project_table">
           <div class="oprate_btn">
@@ -108,12 +126,12 @@
           </div>
           <div class="protable table">
             <el-table
-              :data="projecttableData"
               ref="projecttableData"
+              :data="projecttableData"
               :header-cell-style="tableHeader"
               stripe
               style="width: 100%"
-              @row-click="openEdit"
+              @row-click="switcproject"
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="55" />
@@ -181,6 +199,12 @@
                   <el-button
                     type="text"
                     class="table-btn"
+                    @click.stop="openEdit(scope.row)"
+                    >编辑</el-button
+                  >
+                  <el-button
+                    type="text"
+                    class="table-btn"
                     @click.stop="delproject(scope.row.id)"
                     >删除</el-button
                   >
@@ -192,7 +216,7 @@
               v-show="projectTotal > 0"
               :total="projectTotal"
               :page.sync="projectQuery.pageNum"
-              :limit.sync="projectQuery.projectpageSize"
+              :limit.sync="projectQuery.pageSize"
               @pagination="getqueryForProjects"
             />
           </div></div
@@ -204,7 +228,7 @@
 <script>
 import { message } from '@/utils/common'
 import store from '@/store'
-import { queryForProjects, delProjects, queryViews, checkProject } from '@/api/project'
+import { queryForProjects, delProjects, checkProject, queryViews } from '@/api/project'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
@@ -217,30 +241,16 @@ export default {
       }, // 表头颜色加粗设置
       Setbtn: ['New lestCase', 'Import'],
       isLoading: false, // 是否加载
-      setTree: [{
-        id: 1,
-        name: 'All Item',
-        children: [{
-          id: 2,
-          name: 'Status',
-          children: [{
-            id: 3,
-            name: 'Closed'
-          }, {
-            id: 4,
-            name: 'Plan'
-          }]
-        }]
-      }
-      ], // tree数据
+      activeNames: ['1'],
+      setTree: [], // tree数据
+      defaultProps: { // 默认设置
+        children: 'oneFilters',
+        label: 'title'
+      },
       node_key: 'id', // id对应字段
       max_level: 4, // 设定最大层级
       node_id_start: 0, // 新增节点id，逐次递减
       startId: null,
-      defaultProps: { // 默认设置
-        children: 'children',
-        label: 'name'
-      },
       initParam: { // 新增参数
         name: '新增节点',
         pid: 0,
@@ -255,7 +265,11 @@ export default {
       multipleSelection: [],
       single: true, // 非单个禁用
       multiple: true, // 非多个禁用
-      projectIds: ''
+      projectIds: '',
+      projectBody: {
+        scope: '',
+        projectId: ''
+      }
     }
   },
   computed: {
@@ -267,7 +281,6 @@ export default {
     // 初始值
     this.startId = this.node_id_start
     this.getqueryForProjects()// 获取管理项目列表
-    // this.queryViews() // 获取视图
   },
   methods: {
     // 项目列表
@@ -277,6 +290,11 @@ export default {
           if (res.code === '200') {
             this.projecttableData = res.data
             this.projectTotal = res.total
+            // 默认取第一条
+            this.projectBody.scope = res.data[0].scope
+            this.projectBody.projectId = res.data[0].id
+
+            this.getqueryViews()
             resolve(res)
           }
         })
@@ -289,17 +307,17 @@ export default {
         message('success', '刷新成功')
       }
     },
-    //切换项目
+    // 切换项目
     projectChange() {
       checkProject(this.multipleSelection[0].id).then(res => {
         if (res.code === '200') {
-          this.$refs.projecttableData.clearSelection();
+          this.$refs.projecttableData.clearSelection()
           store.dispatch('user/getInfo')
           message('success', '切换项目成功')
         }
       })
     },
-    //克隆
+    // 克隆
     projectClone() {
       message('error', '暂未开发')
     },
@@ -311,16 +329,8 @@ export default {
       }
       delProjects(id).then(res => {
         if (res.code === '200') {
-          message('success', res.data)
+          message('success', res.msg)
           this.getqueryForProjects()
-        }
-      })
-    },
-    // view视图列表
-    queryViews() {
-      queryViews().then(res => {
-        if (res.code === '200') {
-          console.log(res)
         }
       })
     },
@@ -360,7 +370,15 @@ export default {
       }
     },
     handleEdit(node, data) { // 编辑节点
-      this.$router.push({ path: '/project/manageview' })
+      // this.$router.push({ path: '/project/manageview' })
+      if (!node.isEdit) {
+        this.$set(node, 'isEdit', true)
+      }
+      this.$nextTick(() => {
+        if (this.$refs['slotTreeInput' + data[this.node_key]]) {
+          this.$refs['slotTreeInput' + data[this.node_key]].$refs.input.focus()
+        }
+      })
     },
     handleAdd(node, data) { // 新增节点
       // 判断层级
@@ -397,15 +415,37 @@ export default {
     },
     // 表格行点击去编辑
     openEdit(row) {
-      let data = JSON.stringify(row)
+      const data = JSON.stringify(row)
       this.$router.push({ name: 'Addproject', query: { info: data } })
     },
     // 新建项目
     newproject() {
-      let data = JSON.stringify({ status: '3' })
+      const data = JSON.stringify({ status: '3' })
       this.$router.push({ name: 'Addproject', query: { info: data } })
+    },
+    // 项目切换
+    switcproject(row) {
+      this.projectBody.scope = row.scope
+      this.projectBody.projectId = row.id
+      this.getqueryViews()
+    },
+    /**
+     * 左侧视图
+     * */
+    // view视图列表
+    getqueryViews() {
+      return new Promise((resolve, reject) => {
+        queryViews(this.projectBody, this.projectQuery).then(res => {
+          if (res.code === '200') {
+            this.setTree = res.data
+            resolve(res)
+          }
+        })
+      })
+    },
+    handleChange(val) {
+      console.log(val)
     }
-
   }
 }
 </script>

@@ -10,19 +10,19 @@
         <div class="item-left">
           <div class="item">
             <b> {{ jurisdictioninfo.roleName }}</b>
-            <span v-if="jurisdictioninfo.roleName === 'Administrator'"
-              >默认 Administrator</span
-            >
-            <span v-if="jurisdictioninfo.roleName === 'QA'"
-              >QA Default Group</span
-            >
+            <span
+              v-if="jurisdictioninfo.roleName === 'Administrator'"
+            >默认 Administrator</span>
+            <span
+              v-if="jurisdictioninfo.roleName === 'QA'"
+            >QA Default Group</span>
             <span v-if="jurisdictioninfo.roleName === 'QA'">Group B</span>
-            <span v-if="jurisdictioninfo.roleName === 'Developer'"
-              >Developer Default Group</span
-            >
-            <span v-if="jurisdictioninfo.roleName === 'Developer'"
-              >Group C</span
-            >
+            <span
+              v-if="jurisdictioninfo.roleName === 'Developer'"
+            >Developer Default Group</span>
+            <span
+              v-if="jurisdictioninfo.roleName === 'Developer'"
+            >Group C</span>
           </div>
         </div>
         <div class="info-right">
@@ -38,8 +38,8 @@
         <el-select
           v-model="projectId"
           size="mini"
-          @change="changeProject"
           placeholder="请选择项目"
+          @change="changeProject"
         >
           <el-option
             v-for="item in jurisdictionOptions"
@@ -62,8 +62,7 @@
               true-label="1"
               false-label="0"
               @change="(checked) => allChange(checked, index1)"
-              >{{ item1.markNameDesc }}</el-checkbox
-            >
+            >{{ item1.markNameDesc }}</el-checkbox>
             <el-checkbox
               v-for="(item2, index2) in item1.childList"
               :key="index2"
@@ -72,8 +71,7 @@
               false-label="0"
               @change="(checked) => itemChange(checked, index1)"
             >
-              {{ item2.markNameDesc }}</el-checkbox
-            >
+              {{ item2.markNameDesc }}</el-checkbox>
           </div>
         </div>
       </div>
@@ -82,7 +80,7 @@
 </template>
 
 <script>
-import { message, formatChangedPara } from '@/utils/common'
+import { message } from '@/utils/common'
 import { getProjects, getPermissions, updatePermissions } from '@/api/admincenter'
 export default {
   name: 'Jurisdiction',
@@ -90,7 +88,7 @@ export default {
     id: {
       type: String,
       required: true
-    },
+    }
   },
   data() {
     return {
@@ -122,7 +120,6 @@ export default {
   },
   mounted() {
 
-
   },
   methods: {
     getPermissions() {
@@ -135,7 +132,7 @@ export default {
       this.getPermissions()
     },
     formObj(item) {
-      let temObj = {}
+      const temObj = {}
       temObj.projectId = this.projectId
       temObj.subUserId = this.id
       temObj.operationAuthId = item.id
@@ -145,27 +142,24 @@ export default {
       this.jurisdictionUpdate.projectPermissions = []
       this.jurisdictionItem.filter(item => {
         if (item.isSelect === '1') {
-          let obj = this.formObj(item)
+          const obj = this.formObj(item)
           this.jurisdictionUpdate.projectPermissions.push(obj)
           if (item.childList.length > 0) {
             item.childList.filter(item1 => {
               if (item1.isSelect === '1') {
-                let obj1 = this.formObj(item1)
+                const obj1 = this.formObj(item1)
                 this.jurisdictionUpdate.projectPermissions.push(obj1)
               }
             })
           }
         }
-
       })
       updatePermissions(this.jurisdictionUpdate).then(res => {
         if (res.code === '200') {
           message('success', '修改成功')
           this.getPermissions()
-
         }
       })
-
     },
     isAll(item) {
       var len = 0
@@ -173,7 +167,7 @@ export default {
         if (element.isSelect === '1') {
           len = len + 1
         }
-      });
+      })
       return len
     },
     allChange(checked, index) {
@@ -191,15 +185,13 @@ export default {
       if (checked === '1') {
         this.jurisdictionItem[index].isSelect = '1'
       }
-      let len1 = this.isAll(this.jurisdictionItem[index])
+      const len1 = this.isAll(this.jurisdictionItem[index])
       if (len1 === 0) {
         this.jurisdictionItem[index].isSelect = '0'
       }
-
-
     }
 
-  },
+  }
 }
 
 </script>
