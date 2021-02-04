@@ -20,9 +20,10 @@
 }
 //列表页面的样式
 .project-container {
-  .set_btn{
-    @include setBtn($btnbgcolor, false);
-  }
+   .between{
+     display: flex;
+     justify-content: space-between;
+   }
   /* common end */
   .comp-tree {
     overflow: auto;
@@ -134,10 +135,7 @@
 }
 //视图新增管理   
 .manage-view{
-  .set_btn{
-    @include setBtn($forbidColoe, false);
-    margin-right:$spacing;
-  }
+
   .form-small{
     width:60%;
   }

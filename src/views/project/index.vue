@@ -1,16 +1,20 @@
 <template>
   <div class="project-container app-container">
-    <div class="set_btn" @click="newproject">新建项目</div>
+    <div class="set_btn">
+      <el-button type="primary" round @click="newproject"> 新建项目 </el-button>
+    </div>
     <el-row>
       <el-col :span="5"
         ><div v-loading="isLoading" class="comp-tree">
-          <div class="new_project">
-            <router-link to="/project/manageview">
-              <div class="set_btn">新建视图</div>
-            </router-link>
-            <router-link to="/project/manageview">
-              <div class="set_btn">管理视图</div>
-            </router-link>
+          <div class="set_btn between">
+            <el-button type="primary" round>
+              <router-link to="/project/manageview"> 新建视图 </router-link>
+            </el-button>
+            <el-button type="primary" round>
+              <router-link to="/project/manageview">
+                管理视图
+              </router-link></el-button
+            >
           </div>
           <!-- tree -->
           <el-tree

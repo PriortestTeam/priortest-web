@@ -7,22 +7,30 @@
       label-width="100px"
       class="demo-ruleForm"
     >
-      <div>
-        <div class="set_btn" @click="submitForm('from')">保存</div>
-        <div class="set_btn">放弃</div>
-      </div>
-      <el-form-item label="New View" prop="name" class="form-small">
-        <el-input v-model="from.name" size="small" />
-      </el-form-item>
-      <el-form-item label="Scope" prop="scope" class="form-small">
-        <el-select
-          v-model="from.scope"
-          size="small"
-          placeholder="请选择适用范围"
+      <div class="set_btn">
+        <el-button type="primary" round @click="submitForm('from')"
+          >保存</el-button
         >
+        <el-button type="primary" round>放弃</el-button>
+        <!-- <div class="set_btn" @click="submitForm('from')">保存</div> -->
+      </div>
+      <el-form-item
+        label="New View"
+        prop="name"
+        class="form-small"
+        size="small"
+      >
+        <el-input v-model="from.name" />
+      </el-form-item>
+      <el-form-item label="Scope" prop="scope" size="small" class="form-small">
+        <el-select v-model="from.scope" placeholder="请选择适用范围">
           <el-option label="Project" value="project" />
           <el-option label="Sprint" value="sprint" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="Status" prop="status" class="form-small">
+        <el-radio v-model="radio3" label="1">Private</el-radio>
+        <el-radio v-model="radio3" label="2">Public</el-radio>
       </el-form-item>
       <el-form-item label="Filter" prop="scope">
         <div class="filter-item">
@@ -30,14 +38,12 @@
             <el-col :span="4">
               <el-select v-model="from.scope" size="small" placeholder="status">
                 <el-option label="Project" value="project" />
-                <el-option label="Sprint" value="sprint" /> </el-select></el-col>
+                <el-option label="Sprint" value="sprint" /> </el-select
+            ></el-col>
           </el-row>
         </div>
       </el-form-item>
-      <el-form-item label="Status" prop="status" class="form-small">
-        <el-radio v-model="radio3" label="1">Private</el-radio>
-        <el-radio v-model="radio3" label="2">Public</el-radio>
-      </el-form-item>
+
       <div class="table">
         <el-button type="text" :disabled="multiple">批量删除</el-button>
         <el-table
@@ -70,6 +76,10 @@ export default {
   name: 'Manageview',
   data() {
     return {
+      tableHeader: {
+        color: '#d4dce3',
+        background: '#003d79'
+      },
       from: {
       },
       radio1: '1',
@@ -81,10 +91,7 @@ export default {
           { required: true, message: '请输入视图名称', trigger: 'blur' }
         ]
       },
-      tableHeader: {
-        color: '#d4dce3',
-        background: '#003d79'
-      },
+
       viewData: [
         {
           title: 'view2',
