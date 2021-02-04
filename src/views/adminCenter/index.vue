@@ -152,230 +152,25 @@
       </el-tab-pane>
       <el-tab-pane label="项目管理" name="2">项目管理</el-tab-pane>
       <el-tab-pane label="自定义字段" name="3">
-        <!-- 自定义字段 -->
         <div class="manage-view">
-          <el-row class="fd-row" :gutter="20">
-            <el-col
-              :span="8"
-            ><div class="grid-content bg-purple" />
-              <el-form
-                ref="fieldsfrom"
-                :model="fieldsfrom"
-                :rules="fieldsrules"
-                label-width="100px"
-                class="demo-ruleForm"
-              >
-                <div class="fieldbtn">
-                  <el-button
-                    type="primary"
-                    round
-                    :disabled="fielddisabled"
-                    @click="submitfdForm('fieldsfrom')"
-                  >保存</el-button>
-                  <el-button
-                    type="primary"
-                    round
-                  >放弃</el-button>
-                </div>
-                <el-form-item label="字段名称" prop="fieldName" class="form-small">
-                  <el-input v-model="fieldsfrom.fieldName" size="small" />
-                </el-form-item>
-                <el-form-item label="类型" prop="type" class="form-small">
-                  <el-select
-                    v-model="fieldsfrom.type"
-                    size="small"
-                    placeholder="请选择适用范围"
-                  >
-                    <el-option label="下拉框" disabled value="dropDown" />
-                    <el-option label="文本" disabled value="text" />
-                    <el-option label="备注" disabled value="memo" />
-                    <el-option label="多选框" disabled value="chackbox" />
-                    <el-option label="单选框" value="radio" />
-                  </el-select>
-                </el-form-item>
-                <el-form-item
-                  v-if="showLength"
-                  label="长度"
-                  prop="length"
-                  class="form-small"
-                >
-                  <el-input v-model="fieldsfrom.length" size="small" />
-                </el-form-item>
-                <el-form-item
-                  v-if="dropValue"
-                  label="值"
-                  prop="length"
-                  class="form-small"
-                >
-                  <el-row>
-                    <el-col
-                      :span="16"
-                    ><el-input
-                      v-model="fieldsfrom.Value"
-                      size="small"
-                    /></el-col>
-                    <el-col :span="8">
-                      <div style="marginleft: 5px">
-                        <el-button
-                          type="primary"
-                          round
-                          :disabled="!fieldsfrom.Value"
-                          @click="addDrop"
-                        >添加</el-button>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <el-col v-if="dropValue" :span="4">
-              <el-row>
-                <el-col :span="16">
-                  <el-table
-                    border
-                    max-height="205"
-                    :data="dropData"
-                    @row-click="dropselect"
-                  >
-                    <el-table-column prop="name" align="center" label="value" />
-                  </el-table>
-                </el-col>
-                <el-col :span="8">
-                  <div style="marginleft: 5px">
-                    <el-button
-                      type="primary"
-                      round
-                      :disabled="!droprow"
-                      @click="delDrop"
-                    >删除</el-button>
-                  </div>
-                </el-col>
-              </el-row>
-            </el-col>
-            <el-col
-              v-if="true"
-              :span="6"
-            ><div class="grid-content bg-purple" />
-              <el-row class="sen-row" :gutter="20">
-                <el-col :span="4">
-                  <el-checkbox v-model="checked1" />
-                </el-col>
-                <el-col :span="4">范围</el-col>
-                <el-col :span="4">是否必填</el-col>
-                <el-col :span="4">初始值</el-col>
-              </el-row>
-              <el-row class="sen-row" :gutter="20">
-                <el-col :span="4">
-                  <el-checkbox v-model="fieldsfrom.scope[0]" />
-                </el-col>
-                <el-col :span="4">项目</el-col>
-                <el-col :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.mandatory[0]" />
-                  </div>
-                </el-col>
-                <el-col v-if="!singleorType" :span="4">
-                  <div class="ng-input">
-                    <el-input v-model="inputvalue" />
-                  </div>
-                </el-col>
-                <!-- 单选 or 复选-->
-                <el-col v-if="singleorType" :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.defaultValue[0]" />
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row class="sen-row" :gutter="20">
-                <el-col :span="4">
-                  <el-checkbox v-model="fieldsfrom.scope[1]" />
-                </el-col>
-                <el-col :span="4">故事</el-col>
-                <el-col :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.mandatory[1]" />
-                  </div>
-                </el-col>
-                <el-col v-if="!singleorType" :span="4">
-                  <div class="ng-input">
-                    <el-input v-model="inputvalue" />
-                  </div>
-                </el-col>
-                <!-- 单选 or 复选-->
-                <el-col v-if="singleorType" :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.defaultValue[1]" />
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row class="sen-row" :gutter="20">
-                <el-col :span="4">
-                  <el-checkbox v-model="fieldsfrom.scope[2]" />
-                </el-col>
-                <el-col :span="4">测试用例</el-col>
-                <el-col :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.mandatory[2]" />
-                  </div>
-                </el-col>
-                <el-col v-if="!singleorType" :span="4">
-                  <div class="ng-input">
-                    <el-input v-model="inputvalue" />
-                  </div>
-                </el-col>
-                <!-- 单选 or 复选-->
-                <el-col v-if="singleorType" :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.defaultValue[2]" />
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row class="sen-row" :gutter="20">
-                <el-col :span="4">
-                  <el-checkbox v-model="fieldsfrom.scope[3]" />
-                </el-col>
-                <el-col :span="4">测试周期</el-col>
-                <el-col :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.mandatory[3]" />
-                  </div>
-                </el-col>
-                <el-col v-if="!singleorType" :span="4">
-                  <div class="ng-input">
-                    <el-input v-model="inputvalue" />
-                  </div>
-                </el-col>
-                <!-- 单选 or 复选-->
-                <el-col v-if="singleorType" :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.defaultValue[3]" />
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row class="sen-row" :gutter="20">
-                <el-col :span="4">
-                  <el-checkbox v-model="fieldsfrom.scope[4]" />
-                </el-col>
-                <el-col :span="4">验收</el-col>
-                <el-col :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.mandatory[4]" />
-                  </div>
-                </el-col>
-                <el-col v-if="!singleorType" :span="4">
-                  <div class="ng-input">
-                    <el-input v-model="inputvalue" />
-                  </div>
-                </el-col>
-                <!-- 单选 or 复选-->
-                <el-col v-if="singleorType" :span="4">
-                  <div class="ng-red">
-                    <el-checkbox v-model="fieldsfrom.defaultValue[4]" />
-                  </div>
-                </el-col>
-              </el-row>
-            </el-col>
-          </el-row>
+          <!-- 自定义字段 -->
+          <Radioindex
+            v-if="customType==='radio'"
+            :customname="fieldsfrom"
+            @PleaseType="chType"
+          />
+
+          <Textindex
+            v-else-if="customType==='text'"
+            :customname="fieldsfrom"
+            @PleaseType="chType"
+          />
+
+          <Memoindex
+            v-else-if="customType==='memo'"
+            :customname="fieldsfrom"
+            @PleaseType="chType"
+          />
           <div class="table">
             <el-button type="text" :disabled="dbfields">删除</el-button>
             <el-table
@@ -392,8 +187,12 @@
               <el-table-column prop="scope" label="范围" />
               <el-table-column prop="mandatory" label="是否必填" />
               <el-table-column label="Action">
-                <template>
-                  <span class="table-btn">删除</span>
+                <template slot-scope="scope">
+                  <el-button
+                    type="text"
+                    class="table-btn"
+                    @click.stop="delfield(scope.row)"
+                  >删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -405,14 +204,17 @@
   </div>
 </template>
 <script>
-import { message, formatChangedPara } from '@/utils/common'
+import { message, formatChangedPara, customradioData, customtextData } from '@/utils/common'
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
+import Radioindex from '@/views/adminCenter/radio'
+import Textindex from '@/views/adminCenter/text'
+import Memoindex from '@/views/adminCenter/memo'
 import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
-import { queryCustomList, queryFieldRadioById, addCustomRadio, updateCustomRadio } from '@/api/customField'
+import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction
+    Jurisdiction, Radioindex, Textindex, Memoindex
   },
   data() {
     return {
@@ -462,37 +264,16 @@ export default {
       accountUpdate: true,
 
       jurisdictionAccountId: '',
+      // 父传子数据
+      fieldsfrom: {},
+      textfrom: {},
+      // 子传父数据
+      customType: 'radio',
 
-      // 自定义字段
-      fieldsfrom: {
-        scope: [false, false, false, false, false],
-        defaultValue: [false, false, false, false, false],
-        mandatory: [false, false, false, false, false],
-        projectId: '361971315692802048'
-      },
-      fieldsrules: {
-        fieldName: [{ required: true, message: '请输入字段名称', trigger: 'blur' }],
-        type: [{ required: true, message: '请选择类型', trigger: 'change' }]
-      },
-      // 表格数据
+      // 自定义字段表格数据
       fieldsData: [],
       fieldsSelection: [], // 选择的表格
-      dbfields: true, // 非多个禁用
-      checked1: true,
-      fielddisabled: true,
-      inputvalue: '',
-      // 类型选择（单选 or 复选）
-      singleorType: false,
-      // 字符长度 （文本 or 备注）
-      showLength: false,
-      dropValue: false,
-      dropData: [
-        { name: '01' },
-        { name: '02' }
-      ],
-      droprow: ''
-      // 自定义字段 结束
-
+      dbfields: true // 非多个禁用
     }
   },
   watch: {
@@ -649,8 +430,15 @@ export default {
     /** ˙账户结束 */
 
     /** 自定义字段 开始 */
+    // 获取子类的传值
+    chType(type) {
+      this.customType = type
+      console.log('出发了')
+    },
+
     // 获取自定义字段列表
     getqueryCustomList() {
+      console.log('出发了001')
       const obj = {
         projectId: '361971315692802048'
       }
@@ -660,116 +448,66 @@ export default {
       }
       queryCustomList(obj, page).then(res => {
         if (res.code === '200') {
-          console.log(res, '获取自定义字段列表')
           this.fieldsData = res.data
         }
       })
     },
-    submitfdForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.fielddisabled = true
-          const radio = this.fieldsfrom
-          for (const key in radio) {
-            if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
-              for (let i = 0; i < radio[key].length; i++) {
-                if (radio[key][i] === false) {
-                  radio[key][i] = '0'
-                } else {
-                  radio[key][i] = '1'
-                }
-              }
-            }
-          }
-
-          for (const i in radio) {
-            if (i === 'scope' || i === 'defaultValue' || i === 'mandatory') {
-              radio[i] = radio[i].join(',')
-            }
-          }
-          if (!this.fieldsfrom.id) {
-            addCustomRadio(radio).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                this.getqueryCustomList()
-              }
-            })
-          } else {
-            updateCustomRadio(radio).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                this.getqueryCustomList()
-              }
-            })
-          }
-        } else {
-          console.log('error submit!!')
-          return false
+    // 删除自定义字段
+    delfield(row) {
+      if (row.type === 'text' || row.type === 'memo') {
+        this.deltext(row.id)
+      } else if (row.type === 'radio') {
+        this.delradio(row.id)
+      }
+    },
+    // 删除radio类型
+    delradio(id) {
+      deleteCustomRadio(id).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)
+          this.getqueryCustomList()
+        }
+      })
+    },
+    // 删除text，Remarks备注类型
+    deltext(id) {
+      deleteCustomText(id).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)
+          this.getqueryCustomList()
         }
       })
     },
     // 查看字段详情
     showfield(row) {
-      queryFieldRadioById(row.id).then(res => {
-        const radio = res.data
-        for (const key in radio) {
-          if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
-            radio[key] = radio[key].split(',')
-            for (let i = 0; i < radio[key].length; i++) {
-              if (radio[key][i] === '0') {
-                radio[key][i] = false
-              } else {
-                radio[key][i] = true
-              }
-            }
-          }
-        }
-        // console.log(radio)
-        this.fieldsfrom = res.data
+      // 类型不同，查询接口不同
+      if (row.type === 'text' || row.type === 'memo') {
+        this.gettextInfo(row.id)
+      } else if (row.type === 'radio') {
+        this.getradioInfo(row.id)
+      }
+    },
+    // 获取radio详情
+    getradioInfo(id) {
+      queryFieldRadioById(id).then(res => {
+        const data = customradioData(res.data)
+        this.fieldsfrom = data
       })
     },
+    // 获取text，Remarks详情
+    gettextInfo(id) {
+      queryFieldTextById(id).then(res => {
+        const data = customtextData(res.data)
+        this.fieldsfrom = data
+      })
+    },
+    // 批量删除字段
     fieldsSelectionChange(val) {
       this.fieldsSelection = val
       this.dbfields = !val.length
     },
     PleaseType(val) {
-      const type = val
-      if (type === 'radio' || type === 'chackbox') {
-        this.singleorType = true
-      } else {
-        this.singleorType = false
-      }
-      if (type === 'text' || type === 'memo') {
-        this.showLength = true
-      } else {
-        this.showLength = false
-      }
-      if (type === 'dropDown') {
-        this.dropValue = true
-      } else {
-        this.dropValue = false
-      }
-    },
-    // drop表格选中
-    dropselect(val) {
-      this.droprow = val
-    },
-    // 添加drop值
-    addDrop() {
-      const obj = {
-        name: this.fieldsfrom.Value
-      }
-      this.dropData.push(obj)
-    },
-    // 删除drop值
-    delDrop() {
-      const val = this.droprow
-      this.dropData.filter((item, index) => {
-        if (item === val) {
-          this.dropData.splice(index, 1)
-          this.droprow = ''
-        }
-      })
+      this.customType = val
     }
     // 自定义字段 结束
 
