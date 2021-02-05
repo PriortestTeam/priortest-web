@@ -1,10 +1,11 @@
 @import "@/styles/mixin.scss";//颜色
 @import "@/styles/color.scss";//按钮
-.set_btn {
-  display: inline-block;
-  margin-bottom: $spacing;
+.new_project{
+  margin-bottom:  $spacing;
+  display: flex;
+  justify-content: space-between;
 }
-//表格操作的央视
+//表格操作的样式
 .table{
   .table-btn{
    color:$btnbgcolor;
@@ -20,9 +21,10 @@
 }
 //列表页面的样式
 .project-container {
-  .set_btn{
-    @include setBtn($btnbgcolor, false);
-  }
+   .between{
+     display: flex;
+     justify-content: space-between;
+   }
   /* common end */
   .comp-tree {
     overflow: auto;
@@ -30,9 +32,8 @@
     padding: $spacing;
     box-sizing: border-box;
     margin-right: 20px;
-    .new_project{
-      display: flex;
-      justify-content: space-between;
+    ::v-deep .el-collapse-item__content {
+      padding-bottom: 0px;
     }
     // 自定义节点
     .show-btns {
@@ -101,7 +102,6 @@
       .el-button{
         padding-top:0;
       }
-     
     }
   }
 }
@@ -138,10 +138,6 @@
 }
 //视图新增管理   
 .manage-view{
-  .set_btn{
-    @include setBtn($forbidColoe, false);
-    margin-right:$spacing;
-  }
   .form-small{
     width:60%;
   }
