@@ -179,6 +179,7 @@ export default {
       },
       // 自定义字段
       fieldsfrom: {
+        type: 'text',
         concat: '',
         scope: [false, false, false, false, false],
         defaultValues: ['', '', '', '', ''],

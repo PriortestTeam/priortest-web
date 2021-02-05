@@ -171,6 +171,12 @@
             :customname="fieldsfrom"
             @PleaseType="chType"
           />
+
+          <!-- <Chackbox
+            v-else-if="customType==='chackbox'"
+            :customname="fieldsfrom"
+            @PleaseType="chType"
+          /> -->
           <div class="table">
             <el-button type="text" :disabled="dbfields">删除</el-button>
             <el-table
@@ -209,6 +215,7 @@ import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
 import Memoindex from '@/views/adminCenter/memo'
+// import Chackbox from '@/views/adminCenter/chackbox'
 import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
 import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText } from '@/api/customField'
 export default {
