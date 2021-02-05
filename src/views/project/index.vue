@@ -1,20 +1,19 @@
 <template>
   <div class="project-container app-container">
-    <div class="set_btn">
+    <div class="new_project">
       <el-button type="primary" round @click="newproject"> 新建项目 </el-button>
     </div>
     <el-row>
-      <el-col :span="5"
-        ><div v-loading="isLoading" class="comp-tree">
+      <el-col :span="5">
+        <div v-loading="isLoading" class="comp-tree">
           <div class="new_project">
-            <router-link to="/project/manageview">
-              <div class="set_btn">新建视图</div>
-            </router-link>
-            <router-link to="/project/manageview">
-              <div class="set_btn">管理视图</div>
-            </router-link>
+            <el-button type="primary" round>
+              <router-link to="/project/manageview"> 新建视图 </router-link>
+            </el-button>
+            <el-button type="primary" round>
+              <router-link to="/project/manageview"> 管理视图 </router-link>
+            </el-button>
           </div>
-          <!-- tree -->
           <el-tree
             v-if="false"
             ref="SlotTree"
@@ -103,12 +102,6 @@
       <el-col :span="19"
         ><div class="project_table">
           <div class="oprate_btn">
-            <!-- <router-link to="/project/manageproject">
-            <el-button
-              style="margin-right: 10px"
-              type="text"
-            >管理项目</el-button>
-          </router-link> -->
             <el-button type="text" @click="projectRefresh">刷新</el-button>
             <el-button type="text" :disabled="single" @click="projectChange"
               >切换项目</el-button
@@ -167,14 +160,14 @@
                 prop="createTime"
                 align="center"
                 label="创建日期"
-                min-width="170"
+                min-width="120"
                 :show-overflow-tooltip="true"
               />
               <el-table-column
                 prop="planReleaseDate"
                 align="center"
                 label="计划上线日期"
-                min-width="170"
+                min-width="120"
                 :show-overflow-tooltip="true"
               >
                 <template slot-scope="scope">
@@ -185,14 +178,14 @@
                 prop="closeDate"
                 align="center"
                 label="关闭日期"
-                min-width="170"
+                min-width="120"
                 :show-overflow-tooltip="true"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.closeDate || "待定" }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" align="center">
+              <el-table-column label="操作" min-width="120" align="center">
                 <template slot-scope="scope">
                   <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
