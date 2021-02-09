@@ -5,7 +5,7 @@
     </div>
     <el-row>
       <el-col :span="5">
-        <div class="comp-tree">
+        <div v-loading="isLoading" class="comp-tree">
           <div class="new_project">
             <el-button type="primary" round>
               <router-link to="/project/manageview"> 新建视图 </router-link>
@@ -14,6 +14,71 @@
               <router-link to="/project/manageview"> 管理视图 </router-link>
             </el-button>
           </div>
+          <el-tree
+            v-if="false"
+            ref="SlotTree"
+            :data="setTree"
+            :props="defaultProps"
+            :expand-on-click-node="false"
+            highlight-current
+            :node-key="node_key"
+            default-expand-all
+          >
+            <div slot-scope="{ node, data }" class="comp-tr-node">
+              <!-- 编辑状态 -->
+              <template v-if="node.isEdit">
+                <el-input
+                  :ref="'slotTreeInput' + data[node_key]"
+                  v-model="data.name"
+                  autofocus
+                  size="mini"
+                  class="editinput"
+                  @blur.stop="handleInput(node, data)"
+                  @keyup.enter.native="handleInput(node, data)"
+                />
+              </template>
+              <!-- 非编辑状态 -->
+              <template v-else>
+                <!-- 名称： 新增节点增加class（is-new） -->
+                <span
+                  :class="[
+                    data[node_key] < node_id_start ? 'is-new' : '',
+                    'comp-tr-node--name',
+                  ]"
+                >
+                  {{ node.label }}
+                </span>
+                <!-- 按钮 -->
+                <!-- <span class="comp-tr-node--btns" v-if="node.id !== 1"> -->
+                <span class="comp-tr-node--btns">
+                  <!-- 编辑 -->
+                  <el-button
+                    icon="el-icon-edit"
+                    size="mini"
+                    circle
+                    type="info"
+                    @click="handleEdit(node, data)"
+                  />
+                  <!-- 删除 -->
+                  <el-button
+                    icon="el-icon-delete"
+                    size="mini"
+                    circle
+                    type="info"
+                    @click="handleDelete(node, data)"
+                  />
+                  <!-- 新增 -->
+                  <el-button
+                    icon="el-icon-plus"
+                    size="mini"
+                    circle
+                    type="info"
+                    @click="handleAdd(node, data)"
+                  />
+                </span>
+              </template>
+            </div>
+          </el-tree>
           <!-- 折叠面板 -->
           <el-collapse v-model="activeNames">
             <el-collapse-item
@@ -52,7 +117,7 @@
             >
             <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
           </div>
-          <div class="protable table" v-loading="isLoading">
+          <div class="protable table">
             <el-table
               ref="projecttableData"
               :data="projecttableData"
@@ -83,10 +148,10 @@
                 <template slot-scope="scope">
                   <span>{{
                     scope.row.status === 1
-                      ? "开发中"
+                      ? "Progress"
                       : scope.row.status === 2
-                      ? "计划中"
-                      : "关闭"
+                      ? "Plan"
+                      : "Closed"
                   }}</span>
                 </template>
               </el-table-column>
@@ -106,7 +171,7 @@
                 :show-overflow-tooltip="true"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.planReleaseDate || "-" }}</span>
+                  <span>{{ scope.row.planReleaseDate || "待定" }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -117,7 +182,7 @@
                 :show-overflow-tooltip="true"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.closeDate || "-" }}</span>
+                  <span>{{ scope.row.closeDate || "待定" }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="操作" min-width="120" align="center">
@@ -162,22 +227,35 @@ export default {
   name: 'Dashboard',
   data() {
     return {
+      text: 'niaho',
       tableHeader: {
         color: '#d4dce3',
         background: '#003d79'
       }, // 表头颜色加粗设置
+      Setbtn: ['New lestCase', 'Import'],
       isLoading: false, // 是否加载
       activeNames: ['1'],
       setTree: [], // tree数据
-
-
+      defaultProps: { // 默认设置
+        children: 'oneFilters',
+        label: 'title'
+      },
+      node_key: 'id', // id对应字段
+      max_level: 4, // 设定最大层级
+      node_id_start: 0, // 新增节点id，逐次递减
+      startId: null,
+      initParam: { // 新增参数
+        name: '新增节点',
+        pid: 0,
+        children: []
+      },
       projectQuery: {
         pageNum: 1,
         pageSize: 10
       },
       projectTotal: 0,
       projecttableData: [],
-      multipleSelection: [],//多选
+      multipleSelection: [],
       single: true, // 非单个禁用
       multiple: true, // 非多个禁用
       projectIds: '',
@@ -194,6 +272,7 @@ export default {
   },
   created() {
     // 初始值
+    this.startId = this.node_id_start
     this.getqueryForProjects()// 获取管理项目列表
   },
   methods: {
@@ -219,11 +298,9 @@ export default {
 
     /**项目列表表格开始 */
     getqueryForProjects() {
-      this.isLoading = true
       return new Promise((resolve, reject) => {
         queryForProjects(this.projectQuery).then(res => {
           if (res.code === '200') {
-            this.isLoading = false
             this.projecttableData = res.data
             this.projectTotal = res.total
             // 默认取第一条
@@ -294,6 +371,76 @@ export default {
       this.getqueryViews()
     },
     /**项目列表表格结束 */
+
+    //  左侧数的增删改
+    handleDelete(node, data) { // 删除节点
+      if (data.children && data.children.length !== 0) {
+        this.$message.error('此节点有子级，不可删除！')
+        return false
+      } else {
+        // 删除操作
+        const DeletOprate = () => {
+          this.$nextTick(() => {
+            if (this.$refs.SlotTree) {
+              this.$refs.SlotTree.remove(data)
+              this.$message.success('删除成功！')
+            }
+          })
+        }
+        // 二次确认
+        const ConfirmFun = () => {
+          this.$confirm('是否删除此节点？', '提示', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            DeletOprate()
+          }).catch(() => { })
+        }
+        // 判断是否新增： 新增节点直接删除，已存在的节点要二次确认
+        data[this.node_key] < this.node_id_start ? DeletOprate() : ConfirmFun()
+      }
+    },
+    handleInput(node, data) { // 修改节点
+      // 退出编辑状态
+      if (node.isEdit) {
+        this.$set(node, 'isEdit', false)
+      }
+    },
+    handleEdit(node, data) { // 编辑节点
+      // this.$router.push({ path: '/project/manageview' })
+      if (!node.isEdit) {
+        this.$set(node, 'isEdit', true)
+      }
+      this.$nextTick(() => {
+        if (this.$refs['slotTreeInput' + data[this.node_key]]) {
+          this.$refs['slotTreeInput' + data[this.node_key]].$refs.input.focus()
+        }
+      })
+    },
+    handleAdd(node, data) { // 新增节点
+      // 判断层级
+      if (node.level >= this.max_level) {
+        this.$message.warning('当前已达到' + this.max_level + '级，无法新增！')
+        return false
+      }
+      // 参数修改
+      const obj = JSON.parse(JSON.stringify(this.initParam))// copy参数
+      obj.pid = data[this.node_key]// 父id
+      obj[this.node_key] = --this.startId// 节点id：逐次递减id
+      // 判断字段是否存在
+      if (!data.children) {
+        this.$set(data, 'children', [])
+      }
+      // 新增数据
+      data.children.push(obj)
+      // 展开节点
+      if (!node.expanded) {
+        node.expanded = true
+      }
+    },
+
+
 
   }
 }

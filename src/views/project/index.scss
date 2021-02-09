@@ -104,8 +104,14 @@
       }
     }
   }
+  // 暂无数据
+.nodata{
+  padding-top: $spacing;
+  box-sizing: border-box;
+  text-align: center;
 }
-//新增页面的样式
+}
+//新增项目页面的样式
 .add-project{
   .el-button{
     margin-bottom: $spacing;
@@ -121,7 +127,7 @@
   }
  
 }
-//列表上面管理的样式
+//列表左侧管理视图的样式
 .manage-project{
   .project-item{
     margin-bottom: 20px;
@@ -136,29 +142,7 @@
  
 
 }
-//视图新增管理   
-.manage-view{
-  .form-small{
-    width:60%;
-  }
-  .el-form-item {
-    margin-bottom: 15px;
-  }
 
-}
-.lucency{
-  color: $bodybg;
-}
-.circle{
-  cursor: pointer;
-  font-size: 20px;
-}
-.remove{
-  margin-left: 10px;
-}
-// 暂无数据
-.nodata{
-  padding-top: $spacing;
-  box-sizing: border-box;
-  text-align: center;
-}
+
+
+

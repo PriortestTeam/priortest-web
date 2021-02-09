@@ -13,13 +13,12 @@
           :disabled="savedisabled"
           round
           @click.stop="submitForm('from')"
-        >保存</el-button>
+          >保存</el-button
+        >
 
-        <el-button
-          type="primary"
-          round
-          @click.stop="waiveForm('from')"
-        >放弃</el-button>
+        <el-button type="primary" round @click.stop="waiveForm('from')"
+          >放弃</el-button
+        >
       </div>
       <el-form-item label="New View" prop="title" class="form-small">
         <el-input v-model="from.title" size="small" />
@@ -145,10 +144,9 @@
           <el-table-column prop="updateTime" label="Modified" />
           <el-table-column label="Action">
             <template slot-scope="scope">
-              <span
-                class="table-btn"
-                @click.stop="delview(scope.row.id)"
-              >删除</span>
+              <span class="table-btn" @click.stop="delview(scope.row.id)"
+                >删除</span
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -197,7 +195,7 @@ export default {
     }
   },
   watch: {
-    'from.title': function(val) {
+    'from.title': function (val) {
       if (val) {
         this.savedisabled = false
       } else {
