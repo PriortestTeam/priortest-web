@@ -8,9 +8,9 @@
  */
 import request from '@/utils/request'
 
-export function featureList(params, data) {
+export function sprintList(params, data) {
   return request({
-    url: '/feature/queryList',
+    url: '/sprint/queryList',
     method: 'post',
     // post拼接路由参数
     params: params,

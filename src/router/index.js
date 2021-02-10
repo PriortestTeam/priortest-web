@@ -67,14 +67,6 @@ export const constantRoutes = [
         meta: { title: 'Feature', icon: 'Feature' }
       },
       {
-        path: 'featureview',
-        name: 'Featureview',
-        component: () => import('@/views/feature/featureView'),
-        meta: {
-          title: 'feature', icon: 'feature'
-        }
-      },
-      {
         path: 'addfeature',
         name: 'Addfeature',
         component: () => import('@/views/feature/addFeature'),
@@ -93,7 +85,18 @@ export const constantRoutes = [
       name: 'Sprint',
       component: () => import('@/views/sprint/index'),
       meta: { title: 'Sprint', icon: 'Sprint' }
-    }]
+    },
+    {
+      path: 'addsprint',
+      name: 'Addsprint',
+      component: () => import('@/views/sprint/addSprint'),
+      meta: {
+        title: 'Project', icon: 'Project'
+      }
+    }
+
+
+    ]
   },
   // 注册
   {
@@ -182,9 +185,9 @@ export const constantRoutes = [
         meta: { title: 'Project', icon: 'Project' }
       },
       {
-        path: 'manageview',
-        name: 'Manageview',
-        component: () => import('@/views/project/manageView'),
+        path: 'projectview',
+        name: 'Projectview',
+        component: () => import('@/views/project/projectView'),
         meta: {
           title: 'Project', icon: 'Project'
         }

@@ -136,7 +136,7 @@ import { mapGetters } from 'vuex'
 import { addFeature, detailFeature, editFeature } from '@/api/feature'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
-  name: 'Addproject',
+  name: 'Addfeature',
   data() {
     return {
       featureFrom: {
@@ -176,7 +176,7 @@ export default {
       })
 
     } else {
-      this.featureFrom.projectId = this.projectInfo.userUseOpenProject.id
+      this.featureFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
 
   },
@@ -188,7 +188,7 @@ export default {
       this.featureFrom = {
         id: undefined,
 
-        projectId: this.projectInfo.userUseOpenProject.id,
+        projectId: this.projectInfo.userUseOpenProject.projectId,
         title: undefined,
         description: undefined,
         status: 1,

@@ -8,10 +8,14 @@
         <div class="comp-tree">
           <div class="new_project">
             <el-button type="primary" round>
-              <router-link to="/feature/featureview"> 新建视图 </router-link>
+              <router-link to="/project/projectview?scope=Feature">
+                新建视图
+              </router-link>
             </el-button>
             <el-button type="primary" round>
-              <router-link to="/feature/featureview"> 管理视图 </router-link>
+              <router-link to="/project/projectview?scope=Feature">
+                管理视图
+              </router-link>
             </el-button>
           </div>
           <!-- 折叠面板 -->
@@ -38,9 +42,6 @@
         ><div class="project_table">
           <div class="oprate_btn">
             <el-button type="text" @click="projectRefresh">刷新</el-button>
-            <el-button type="text" :disabled="single" @click="projectChange"
-              >切换故事</el-button
-            >
             <el-button type="text" :disabled="single" @click="projectClone"
               >克隆</el-button
             >
@@ -160,11 +161,13 @@
 </template>
 
 <script>
-import { message, parseTime } from '@/utils/common'
-import { featureList, delFeature, editFeature, checkProject, queryViews } from '@/api/feature'
+import { message } from '@/utils/common'
+import { featureList, delFeature, closeUpdate } from '@/api/feature'
+import { queryViews } from '@/api/project'
+
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Dashboard',
+  name: 'Feature',
   data() {
     return {
       tableHeader: {
@@ -173,7 +176,7 @@ export default {
       }, // 表头颜色加粗设置
       isLoading: false, // 是否加载
       activeNames: ['1'],
-      setTree: [], // tree数据
+
 
 
       featureQuery: {
@@ -186,10 +189,12 @@ export default {
       single: true, // 非单个禁用
       multiple: true, // 非多个禁用
       featureIds: '',
+
+      setTree: [], // tree数据
       featureBody: {
         scope: '',
         projectId: ''
-      }
+      },//tree的参数
     }
   },
   computed: {
@@ -210,7 +215,7 @@ export default {
       this.$router.push({ name: 'Addfeature' })
     },
     /** 左侧视图*/
-    // view视图列表
+    // view视图列表 
     getqueryViews() {
       return new Promise((resolve, reject) => {
         queryViews(this.featureBody, this.featureQuery).then(res => {
@@ -226,16 +231,17 @@ export default {
     getfeatureList() {
       // this.isLoading = true
       return new Promise((resolve, reject) => {
-        featureList(this.featureQuery, { projectId: this.projectInfo.userUseOpenProject.id }).then(res => {
+        featureList(this.featureQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(res => {
           if (res.code === '200') {
             this.isLoading = false
             this.featureData = res.data
             this.featureTotal = res.total
             // 默认取第一条
-            // this.featureBody.scope = res.data[0].scope
-            // this.featureBody.projectId = res.data[0].id
 
-            // this.getqueryViews()
+            this.featureBody.scope = res.data[0].scope
+            this.featureBody.projectId = this.projectInfo.userUseOpenProject.projectId
+
+            this.getqueryViews()
             resolve(res)
           }
         })
@@ -248,16 +254,7 @@ export default {
         message('success', '刷新成功')
       }
     },
-    // 切换项目
-    projectChange() {
-      checkProject(this.multipleSelection[0].id).then(res => {
-        if (res.code === '200') {
-          this.$refs.featureData.clearSelection()
-          store.dispatch('user/getInfo')
-          message('success', '切换项目成功')
-        }
-      })
-    },
+
     // 克隆
     projectClone() {
       message('error', '暂未开发')
@@ -295,17 +292,16 @@ export default {
     // 表格行点击
     switcproject(row) {
       this.featureBody.scope = row.scope
-      this.featureBody.projectId = row.id
+      this.featureBody.projectId = this.projectInfo.userUseOpenProject.projectId
+
       this.getqueryViews()
     },
     //关闭
     closeEdit(row) {
       let param = {
         id: row.id,
-        projectId: this.projectInfo.userUseOpenProject.id,
-        closeDate: parseTime(new Date())
       }
-      editFeature(param).then(res => {
+      closeUpdate(param).then(res => {
         if (res.code === '200') {
           message('success', res.msg)
           this.getfeatureList()

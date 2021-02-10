@@ -127,20 +127,17 @@
   }
  
 }
-//列表左侧管理视图的样式
-.manage-project{
-  .project-item{
-    margin-bottom: 20px;
-    b{
-      font-size: 18px;
-    }
-    .action{
-      padding-left:30px
-    }
+//管理试图
+.manage-view{
+.new_project{
+  justify-content: flex-start;
+}
+.demo-ruleForm{
+  width:80%;
+  i{
+    font-size: 16px;
   }
- 
- 
-
+}
 }
 
 

@@ -8,10 +8,14 @@
         <div class="comp-tree">
           <div class="new_project">
             <el-button type="primary" round>
-              <router-link to="/project/manageview"> 新建视图 </router-link>
+              <router-link to="/project/projectview?scope=Project">
+                新建视图
+              </router-link>
             </el-button>
             <el-button type="primary" round>
-              <router-link to="/project/manageview"> 管理视图 </router-link>
+              <router-link to="/project/projectview?scope=Project">
+                管理视图
+              </router-link>
             </el-button>
           </div>
           <!-- 折叠面板 -->
@@ -159,7 +163,7 @@ import store from '@/store'
 import { queryForProjects, delProjects, checkProject, queryViews } from '@/api/project'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Dashboard',
+  name: 'Project',
   data() {
     return {
       tableHeader: {
@@ -168,7 +172,7 @@ export default {
       }, // 表头颜色加粗设置
       isLoading: false, // 是否加载
       activeNames: ['1'],
-      setTree: [], // tree数据
+
 
 
       projectQuery: {
@@ -181,6 +185,8 @@ export default {
       single: true, // 非单个禁用
       multiple: true, // 非多个禁用
       projectIds: '',
+
+      setTree: [], // tree数据
       projectBody: {
         scope: '',
         projectId: ''

@@ -290,7 +290,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       //新增项目到自定义字段
-      if (from.name === 'Addproject') {
+      if (from.name === 'Addproject' || from.name === 'Addfeature') {
         vm.activeName = '3'
       }
     })
