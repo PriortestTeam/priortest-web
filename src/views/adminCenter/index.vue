@@ -155,19 +155,19 @@
         <div class="manage-view">
           <!-- 自定义字段 -->
           <Radioindex
-            v-if="customType==='radio'"
+            v-if="customType=='radio'"
             :customname="fieldsfrom"
             @PleaseType="chType"
           />
 
           <Textindex
-            v-else-if="customType==='text'"
+            v-else-if="customType=='text'"
             :customname="fieldsfrom"
             @PleaseType="chType"
           />
 
           <Memoindex
-            v-else-if="customType==='memo'"
+            v-else-if="customType=='memo'"
             :customname="fieldsfrom"
             @PleaseType="chType"
           />
@@ -177,6 +177,12 @@
             :customname="fieldsfrom"
             @PleaseType="chType"
           /> -->
+
+          <Dropdown
+            v-else-if="customType==='DropDown' || customType==='dropDown'"
+            :customname="fieldsfrom"
+            @PleaseType="chType"
+          />
           <div class="table">
             <el-button type="text" :disabled="dbfields">删除</el-button>
             <el-table
@@ -216,12 +222,13 @@ import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
 import Memoindex from '@/views/adminCenter/memo'
 // import Chackbox from '@/views/adminCenter/chackbox'
+import Dropdown from '@/views/adminCenter/dropDown'
 import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
-import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText } from '@/api/customField'
+import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Radioindex, Textindex, Memoindex
+    Jurisdiction, Radioindex, Textindex, Memoindex, Dropdown
   },
   data() {
     return {
@@ -440,7 +447,7 @@ export default {
     // 获取子类的传值
     chType(type) {
       this.customType = type
-      console.log('出发了')
+      console.log('出发了', type)
     },
 
     // 获取自定义字段列表
@@ -465,6 +472,8 @@ export default {
         this.deltext(row.id)
       } else if (row.type === 'radio') {
         this.delradio(row.id)
+      } else if (row.type === 'DropDown') {
+        this.deldropDown(row.id)
       }
     },
     // 删除radio类型
@@ -485,6 +494,16 @@ export default {
         }
       })
     },
+    // 删除dropDown备注类型
+    deldropDown(id) {
+      deleteCustomDropDown(id).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)
+          this.getqueryCustomList()
+          console.log('删除dropDown备注类型')
+        }
+      })
+    },
     // 查看字段详情
     showfield(row) {
       // 类型不同，查询接口不同
@@ -492,6 +511,8 @@ export default {
         this.gettextInfo(row.id)
       } else if (row.type === 'radio') {
         this.getradioInfo(row.id)
+      } else if (row.type === 'DropDown') {
+        this.getdropdownInfo(row.id)
       }
     },
     // 获取radio详情
@@ -506,6 +527,15 @@ export default {
       queryFieldTextById(id).then(res => {
         const data = customtextData(res.data)
         this.fieldsfrom = data
+      })
+    },
+
+    // 获取dropdown详情
+    getdropdownInfo(id) {
+      queryFieldDropDownById(id).then(res => {
+        const data = customtextData(res.data)
+        this.fieldsfrom = data
+        console.log('获取dropdown详情')
       })
     },
     // 批量删除字段

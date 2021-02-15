@@ -40,15 +40,6 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="showLength"
-          label="长度"
-          prop="length"
-          class="form-small"
-        >
-          <el-input v-model="fieldsfrom.length" size="small" />
-        </el-form-item>
-        <el-form-item
-          v-if="dropValue"
           label="值"
           prop="length"
           class="form-small"
@@ -74,16 +65,20 @@
         </el-form-item>
       </el-form>
     </el-col>
-    <el-col v-if="dropValue" :span="4">
+    <el-col :span="4">
       <el-row>
         <el-col :span="16">
           <el-table
             border
             max-height="205"
-            :data="dropData"
+            :data="fieldsfrom.dropDowns"
             @row-click="dropselect"
           >
-            <el-table-column prop="name" align="center" label="value" />
+            <el-table-column align="center" label="value">
+              <template slot-scope="scope">
+                {{ scope.row }}
+              </template>
+            </el-table-column>
           </el-table>
         </el-col>
         <el-col :span="8">
@@ -108,7 +103,7 @@
         </el-col>
         <el-col :span="4">范围</el-col>
         <el-col :span="4">是否必填</el-col>
-        <el-col :span="4">初始值</el-col>
+        <!-- <el-col :span="4">初始值</el-col> -->
       </el-row>
       <el-row class="sen-row" :gutter="20">
         <el-col :span="4">
@@ -120,12 +115,11 @@
             <el-checkbox v-model="fieldsfrom.mandatory[0]" />
           </div>
         </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[0]" />
+        <!-- <el-col :span="4">
+          <div class="ng-input">
+            <el-input v-model="fieldsfrom.defaultValues[0]" />
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
       <el-row class="sen-row" :gutter="20">
         <el-col :span="4">
@@ -137,12 +131,11 @@
             <el-checkbox v-model="fieldsfrom.mandatory[1]" />
           </div>
         </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[1]" />
+        <!-- <el-col :span="4">
+          <div class="ng-input">
+            <el-input v-model="fieldsfrom.defaultValues[1]" />
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
       <el-row class="sen-row" :gutter="20">
         <el-col :span="4">
@@ -154,12 +147,11 @@
             <el-checkbox v-model="fieldsfrom.mandatory[2]" />
           </div>
         </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[2]" />
+        <!-- <el-col :span="4">
+          <div class="ng-input">
+            <el-input v-model="fieldsfrom.defaultValues[2]" />
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
       <el-row class="sen-row" :gutter="20">
         <el-col :span="4">
@@ -171,12 +163,11 @@
             <el-checkbox v-model="fieldsfrom.mandatory[3]" />
           </div>
         </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[3]" />
+        <!-- <el-col :span="4">
+          <div class="ng-input">
+            <el-input v-model="fieldsfrom.defaultValues[3]" />
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
       <el-row class="sen-row" :gutter="20">
         <el-col :span="4">
@@ -188,12 +179,11 @@
             <el-checkbox v-model="fieldsfrom.mandatory[4]" />
           </div>
         </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[4]" />
+        <!-- <el-col :span="4">
+          <div class="ng-input">
+            <el-input v-model="fieldsfrom.defaultValues[4]" />
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
     </el-col>
   </el-row>
@@ -201,7 +191,7 @@
 
 <script>
 import { message } from '@/utils/common'
-import { addCustomRadio, updateCustomRadio } from '@/api/customField'
+import { addCustomDropDown, updateCustomDropDown } from '@/api/customField'
 export default {
   name: 'Radio',
   props: {
@@ -213,7 +203,7 @@ export default {
   data() {
     return {
       fieldsOptions: [{
-        value: 'dropDown',
+        value: 'DropDown',
         label: '下拉框'
       }, {
         value: 'text',
@@ -234,10 +224,11 @@ export default {
       },
       // 自定义字段
       fieldsfrom: {
-        type: 'radio',
+        type: 'DropDown',
+        concat: '',
         scope: [false, false, false, false, false],
-        defaultValue: [false, false, false, false, false],
         mandatory: [false, false, false, false, false],
+        dropDowns: [],
         projectId: '361971315692802048'
       },
       fieldsrules: {
@@ -250,11 +241,6 @@ export default {
       singleorType: false,
       // 字符长度 （文本 or 备注）
       showLength: false,
-      dropValue: false,
-      dropData: [
-        { name: '01' },
-        { name: '02' }
-      ],
       droprow: ''
       // 自定义字段 结束
     }
@@ -267,16 +253,17 @@ export default {
   created() {
   },
   mounted() {
-    console.log(this.customname, '父传的值')
+
   },
   methods: {
+
     // 字段表单提交
     submitfdForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const radio = this.fieldsfrom
           for (const key in radio) {
-            if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
+            if (key === 'scope' || key === 'mandatory') {
               for (let i = 0; i < radio[key].length; i++) {
                 if (radio[key][i] === false) {
                   radio[key][i] = '0'
@@ -288,18 +275,18 @@ export default {
           }
 
           for (const i in radio) {
-            if (i === 'scope' || i === 'defaultValue' || i === 'mandatory') {
+            if (i === 'scope' || i === 'mandatory') {
               radio[i] = radio[i].join(',')
             }
           }
           if (!this.fieldsfrom.id) {
-            addCustomRadio(radio).then(res => {
+            addCustomDropDown(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
               }
             })
           } else {
-            updateCustomRadio(radio).then(res => {
+            updateCustomDropDown(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
               }
@@ -320,17 +307,18 @@ export default {
     },
     // 添加drop值
     addDrop() {
-      const obj = {
-        name: this.fieldsfrom.Value
-      }
-      this.dropData.push(obj)
+      // const obj = {
+      //   name: this.fieldsfrom.Value
+      // }
+      this.fieldsfrom.dropDowns.push(this.fieldsfrom.Value)
+      console.log(this.fieldsfrom.dropDowns)
     },
     // 删除drop值
     delDrop() {
       const val = this.droprow
-      this.dropData.filter((item, index) => {
+      this.fieldsfrom.dropDowns.filter((item, index) => {
         if (item === val) {
-          this.dropData.splice(index, 1)
+          this.fieldsfrom.dropDowns.splice(index, 1)
           this.droprow = ''
         }
       })

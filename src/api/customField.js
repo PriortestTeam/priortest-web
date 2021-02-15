@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 16:38:28
- * @LastEditTime: 2021-02-04 09:35:36
+ * @LastEditTime: 2021-02-09 14:59:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \idm-project-uid:\project\oneclick-web\src\api\admincenter.js
@@ -99,5 +99,40 @@ export function updateCustomRichText(data) {
     url: '/customField/updateCustomRichText',
     method: 'post',
     data
+  })
+}
+// dropDown下拉框
+
+// 新增dropDown字段
+export function addCustomDropDown(data) {
+  return request({
+    url: '/customField/addCustomDropDown',
+    method: 'post',
+    data
+  })
+}
+// 修改dropDown字段
+export function updateCustomDropDown(data) {
+  return request({
+    url: '/customField/updateCustomDropDown',
+    method: 'post',
+    data
+  })
+}
+
+// 删除dropDown字段
+
+export function deleteCustomDropDown(data) {
+  return request({
+    url: '/customField/deleteCustomDropDown/' + data,
+    method: 'delete'
+  })
+}
+
+// 查看dropDown详情
+export function queryFieldDropDownById(data) {
+  return request({
+    url: '/customField/queryFieldDropDownById/' + data,
+    method: 'get'
   })
 }
