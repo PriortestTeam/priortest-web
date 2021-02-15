@@ -8,10 +8,14 @@
         <div class="comp-tree">
           <div class="new_project">
             <el-button type="primary" round>
-              <router-link to="/project/projectview"> 新建视图 </router-link>
+              <router-link to="/project/projectview?scope=Sprint">
+                新建视图
+              </router-link>
             </el-button>
             <el-button type="primary" round>
-              <router-link to="/project/projectview"> 管理视图 </router-link>
+              <router-link to="/project/projectview?scope=Sprint">
+                管理视图
+              </router-link>
             </el-button>
           </div>
           <!-- 折叠面板 -->
@@ -56,7 +60,6 @@
               :header-cell-style="tableHeader"
               stripe
               style="width: 100%"
-              @row-click="switcproject"
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="55" />
@@ -71,11 +74,7 @@
                 align="center"
                 label="标题"
               />
-              <el-table-column
-                prop="reportToName"
-                align="center"
-                label="负责人"
-              />
+
               <el-table-column prop="status" align="center" label="状态">
                 <template slot-scope="scope">
                   <span>{{
@@ -96,25 +95,25 @@
                 :show-overflow-tooltip="true"
               />
               <el-table-column
-                prop="planReleaseDate"
+                prop="startDate"
                 align="center"
-                label="计划上线日期"
+                label="开始日期"
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.planReleaseDate || "-" }}</span>
+                  <span>{{ scope.row.startDate || "-" }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                prop="closeDate"
+                prop="endDate"
                 align="center"
-                label="关闭日期"
+                label="结束日期"
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.closeDate || "-" }}</span>
+                  <span>{{ scope.row.endDate || "-" }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="操作" min-width="120" align="center">
@@ -152,9 +151,9 @@
 
 <script>
 import { message } from '@/utils/common'
-import store from '@/store'
-import { sprintList, delProjects, queryViews } from '@/api/sprint'
-import { mapGetters } from 'vuex'
+import { sprintList, delSprint } from '@/api/sprint'
+import { queryViews } from '@/api/project'
+
 export default {
   name: 'Sprint',
   data() {
@@ -186,9 +185,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'name'
-    ])
+    projectInfo() {
+      return this.$store.state.user.userinfo
+    }
   },
   created() {
     // 初始值
@@ -197,12 +196,12 @@ export default {
   methods: {
     // 新建项目
     newproject() {
-      const data = JSON.stringify({ status: '3' })
-      this.$router.push({ name: 'Addsprint', query: { info: data } })
+      this.$router.push({ name: 'Addsprint' })
     },
     /** 左侧视图*/
     // view视图列表
     getqueryViews() {
+      console.log("12")
       return new Promise((resolve, reject) => {
         queryViews(this.sprintBody, this.sprintQuery).then(res => {
           if (res.code === '200') {
@@ -217,16 +216,19 @@ export default {
     getqueryForSprint() {
       this.isLoading = true
       return new Promise((resolve, reject) => {
-        sprintList(this.sprintQuery).then(res => {
+        sprintList(this.sprintQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(res => {
           if (res.code === '200') {
             this.isLoading = false
             this.sprinttableData = res.data
             this.sprintTotal = res.total
             // 默认取第一条
-            this.sprintBody.scope = res.data[0].scope
-            this.sprintBody.projectId = res.data[0].id
+            if (res.total > 0) {
+              this.sprintBody.scope = res.data[0].scope
+              this.sprintBody.projectId = this.projectInfo.userUseOpenProject.projectId
 
-            this.getqueryViews()
+              this.getqueryViews()
+            }
+
             resolve(res)
           }
         })
@@ -250,7 +252,7 @@ export default {
         message('error', '暂未开发')
         return
       }
-      delProjects(id).then(res => {
+      delSprint(id).then(res => {
         if (res.code === '200') {
           message('success', res.msg)
           this.getqueryForSprint()
@@ -271,15 +273,9 @@ export default {
     },
     // 表格行点击去编辑
     openEdit(row) {
-      const data = JSON.stringify(row)
-      this.$router.push({ name: 'Addsprint', query: { info: data } })
+      this.$router.push({ name: 'Addsprint', query: { id: row.id } })
     },
-    // 表格行点击
-    switcproject(row) {
-      this.sprintBody.scope = row.scope
-      this.sprintBody.projectId = row.id
-      this.getqueryViews()
-    },
+
     /**项目列表表格结束 */
 
   }

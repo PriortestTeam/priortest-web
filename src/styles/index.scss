@@ -162,6 +162,13 @@ div:focus {
 .el-checkbox__input.is-focus .el-checkbox__inner {
   border-color: $btnbgcolor;
 }
+//日期范围选择器
+.el-date-table td.today span {
+  color: $btnbgcolor;
+}
+.el-date-table td.end-date span, .el-date-table td.start-date span {
+  background-color: $btnbgcolor;
+}
 //表格高度
 .el-table td, .el-table th {
   padding: 8px 0;
