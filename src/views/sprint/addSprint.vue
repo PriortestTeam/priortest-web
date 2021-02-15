@@ -1,46 +1,46 @@
 <template>
   <div class="app-container add-form add-project">
     <el-form
-      ref="projectFrom"
-      :model="projectFrom"
-      :rules="Projectrules"
+      ref="sprintFrom"
+      :model="sprintFrom"
+      :rules="sprintrules"
       label-width="120px"
       class="demo-ruleForm"
     >
       <div>
         <el-button
-          v-if="!projectFrom.id"
+          v-if="!sprintFrom.id"
           type="primary"
           round
-          @click="submitForm('projectFrom', false)"
+          @click="submitForm('sprintFrom', false)"
           >保存并新建</el-button
         >
         <el-button
-          v-if="!projectFrom.id"
+          v-if="!sprintFrom.id"
           type="primary"
           round
-          @click="submitForm('projectFrom', true)"
+          @click="submitForm('sprintFrom', true)"
           >保存并返回</el-button
         >
         <el-button
-          v-if="projectFrom.id"
+          v-if="sprintFrom.id"
           type="primary"
           round
-          @click="submitForm('projectFrom')"
+          @click="submitForm('sprintFrom')"
           >确认修改</el-button
         >
-        <el-button type="primary" round @click="giveupBack('projectFrom')"
+        <el-button type="primary" round @click="giveupBack('sprintFrom')"
           >放弃</el-button
         >
-        <router-link v-if="!projectFrom.id" to="/admincenter/admincenter">
+        <router-link v-if="!sprintFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
         </router-link>
       </div>
       <div class="form-box">
-        <el-form-item :label="$t('lang.Project.ProjectTitle')" prop="title">
-          <el-input v-model="projectFrom.title" size="small" maxlength="15" />
+        <el-form-item label="迭代标题" prop="title">
+          <el-input v-model="sprintFrom.title" size="small" maxlength="15" />
         </el-form-item>
         <el-row>
           <el-col :span="8">
@@ -50,39 +50,27 @@
               prop="status"
             >
               <el-select
-                v-model="projectFrom.status"
-                placeholder="请选择项目状态"
-                clearable
+                v-model="sprintFrom.status"
+                placeholder="请选择迭代状态"
               >
-                <el-option :label="$t('lang.Project.Progress')" value="1" />
-                <el-option :label="$t('lang.Project.Closed')" value="0" />
-                <el-option :label="$t('lang.Project.Plan')" value="2" />
+                <el-option :label="$t('lang.Project.Progress')" :value="1" />
+                <el-option :label="$t('lang.Project.Closed')" :value="0" />
+                <el-option :label="$t('lang.Project.Plan')" :value="2" />
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="8">
-            <el-form-item
-              :label="$t('lang.Project.ReportTo')"
-              size="small"
-              prop="reportToName"
-            >
-              <el-input
-                v-model="projectFrom.reportToName"
-                maxlength="15"
-              /> </el-form-item
-          ></el-col>
-          <el-col :span="8">
-            <el-form-item
-              size="small"
-              :label="$t('lang.Project.Customer')"
-              prop="customer"
-            >
-              <el-select
-                v-model="projectFrom.customer"
-                placeholder="请选择"
-                clearable
+            <el-form-item label="起止日期" size="small" prop="timeArr">
+              <el-date-picker
+                v-model="sprintFrom.timeArr"
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                unlink-panels
               >
-                <el-option label="暂无" value="" />
-              </el-select> </el-form-item
+              </el-date-picker></el-form-item
           ></el-col>
         </el-row>
         <el-form-item
@@ -91,7 +79,7 @@
           size="small"
         >
           <el-input
-            v-model="projectFrom.description"
+            v-model="sprintFrom.description"
             type="textarea"
             maxlength="100"
             show-word-limit
@@ -108,7 +96,7 @@
           multiple
           :limit="3"
           :on-exceed="handleExceed"
-          :file-list="projectFrom.fileList"
+          :file-list="sprintFrom.fileList"
         >
           <el-button size="small" type="primary">{{
             $t("lang.Project.Attachment")
@@ -123,23 +111,27 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { addProjects, editProjects } from '@/api/project'
-import { message, returntomenu } from '@/utils/common'
+import { addSprint, editSprint, detailSprint } from '@/api/sprint'
+import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addsprint',
   data() {
     return {
-      projectFrom: {},
-      Projectrules: {
+
+      sprintFrom: {
+        status: 1
+      },
+      sprintFromTem: {},
+      sprintrules: {
         title: [
-          { required: true, message: '请输入项目标题', trigger: 'blur' }
-        ],
-        reportToName: [
-          { required: true, message: '请输入负责人', trigger: 'blur' }
+          { required: true, message: '请输入迭代标题', trigger: 'blur' }
         ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
-        ]
+        ],
+        timeArr: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
       },
 
     }
@@ -149,33 +141,52 @@ export default {
       {
         lang: state => state.header.lang
       }
-    )
+    ),
+    projectInfo() {
+      return this.$store.state.user.userinfo
+    }
   },
   created() {
+    if (this.$route.query.id) {
+      detailSprint(this.$route.query.id).then(res => {
+        this.sprintFrom = res.data
+        this.$set(this.sprintFrom, 'timeArr', [this.sprintFrom.startDate, this.sprintFrom.endDate])
+        this.sprintFromTem = Object.assign({}, this.sprintFrom)
+      })
+    } else {
+      this.sprintFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+    }
   },
-  mounted() {
-    this.projectFrom = JSON.parse(this.$route.query.info)
-  },
+
   methods: {
     // 重置表单
     resetFields() {
-      this.projectFrom = {
+      this.sprintFrom = {
         id: undefined,
+        projectId: this.projectInfo.userUseOpenProject.projectId,
         title: undefined,
+        status: 1,
         description: undefined,
-        report: undefined,
-        customer: undefined,
-        status: '3',
+        startDate: undefined,
+        endDate: undefined,
+
+        timeArr: '',
         fileList: []
       }
-      this.$refs['projectFrom'].resetFields();
+      this.$refs['sprintFrom'].resetFields();
     },
     // 提交
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.projectFrom.id) {
-            editProjects(this.projectFrom).then(res => {
+
+          if (this.sprintFrom.id) {
+            const param = formatChangedPara(this.sprintFromTem, this.sprintFrom)
+            param.projectId = this.sprintFrom.projectId
+            param.startDate = this.sprintFrom.timeArr[0]
+            param.endDate = this.sprintFrom.timeArr[1]
+
+            editSprint(param).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 returntomenu(this, 1000)
@@ -184,7 +195,10 @@ export default {
               console.log(error)
             })
           } else {
-            addProjects(this.projectFrom).then(res => {
+            this.sprintFrom.startDate = this.sprintFrom.timeArr[0]
+            this.sprintFrom.endDate = this.sprintFrom.timeArr[1]
+            delete this.sprintFrom.timeArr
+            addSprint(this.sprintFrom).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 this.resetFields()
@@ -204,7 +218,7 @@ export default {
     },
     // 放弃并且返回
     giveupBack() {
-      if (!this.projectFrom.id) {
+      if (!this.sprintFrom.id) {
         this.resetFields()
       }
       this.returntomenu(this)

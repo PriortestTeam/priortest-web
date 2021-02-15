@@ -60,7 +60,6 @@
               :header-cell-style="tableHeader"
               stripe
               style="width: 100%"
-              @row-click="switcproject"
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="55" />
@@ -165,7 +164,6 @@ import { message } from '@/utils/common'
 import { featureList, delFeature, closeUpdate } from '@/api/feature'
 import { queryViews } from '@/api/project'
 
-import { mapGetters } from 'vuex'
 export default {
   name: 'Feature',
   data() {
@@ -198,9 +196,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'name'
-    ]),
     projectInfo() {
       return this.$store.state.user.userinfo
     }
@@ -237,11 +232,12 @@ export default {
             this.featureData = res.data
             this.featureTotal = res.total
             // 默认取第一条
+            if (res.total > 0) {
+              this.featureBody.scope = res.data[0].scope
+              this.featureBody.projectId = this.projectInfo.userUseOpenProject.projectId
+              this.getqueryViews()
+            }
 
-            this.featureBody.scope = res.data[0].scope
-            this.featureBody.projectId = this.projectInfo.userUseOpenProject.projectId
-
-            this.getqueryViews()
             resolve(res)
           }
         })
@@ -289,13 +285,7 @@ export default {
 
       this.$router.push({ name: 'Addfeature', query: { id: row.id } })
     },
-    // 表格行点击
-    switcproject(row) {
-      this.featureBody.scope = row.scope
-      this.featureBody.projectId = this.projectInfo.userUseOpenProject.projectId
 
-      this.getqueryViews()
-    },
     //关闭
     closeEdit(row) {
       let param = {

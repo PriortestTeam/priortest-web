@@ -18,48 +18,35 @@ export function sprintList(params, data) {
   })
 }
 // 添加项目
-export function addFeature(data) {
+export function addSprint(data) {
   return request({
-    url: '/feature/insert',
+    url: '/sprint/insert',
     method: 'post',
     data
   })
 }
 // 获取详情
-export function detailFeature(id) {
+export function detailSprint(id) {
   return request({
-    url: '/feature/queryById/' + id,
+    url: '/sprint/queryById/' + id,
     method: 'get',
   })
 }
 // 删除项目
-export function delFeature(id) {
+export function delSprint(id) {
   return request({
-    url: '/feature/delete/' + id,
+    url: '/sprint/delete/' + id,
     method: 'delete'
   })
 }
 
 // 修改项目
-export function editFeature(data) {
+export function editSprint(data) {
   return request({
-    url: '/feature/update',
+    url: '/sprint/update',
     method: 'post',
     data
   })
 }
-//列表操作切换项目
-export function closeUpdate(data) {
-  return request({
-    url: '/feature/closeUpdate',
-    method: 'post',
-    params: data
-  })
-}
-// 切换项目
-export function checkProject(id) {
-  return request({
-    url: '/project/checkProject/' + id,
-    method: 'get'
-  })
-}
+
+

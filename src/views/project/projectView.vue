@@ -260,6 +260,7 @@ export default {
           } else {
             const param = formatChangedPara(this.fromTemp, this.from)
             param.oneFilters = this.from.oneFilters
+            param.scope = this.from.scope
             updateView(param).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
