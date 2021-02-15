@@ -32,7 +32,7 @@ service.interceptors.response.use(
     const res = response.data
     if (res.code !== '200') {
       Message({
-        message: res.message || 'Error',
+        message: res.message || res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       })

@@ -12,7 +12,6 @@
           v-if="!projectFrom.id"
           type="primary"
           round
-          :disabled="!proUpdate"
           @click="submitForm('projectFrom', false)"
           >保存并新建</el-button
         >
@@ -20,7 +19,6 @@
           v-if="!projectFrom.id"
           type="primary"
           round
-          :disabled="!proUpdate"
           @click="submitForm('projectFrom', true)"
           >保存并返回</el-button
         >
@@ -34,7 +32,7 @@
         <el-button type="primary" round @click="giveupBack('projectFrom')"
           >放弃</el-button
         >
-        <router-link v-if="!projectFrom.id" to="/publicview/customfiled">
+        <router-link v-if="!projectFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
@@ -42,7 +40,7 @@
       </div>
       <div class="form-box">
         <el-form-item :label="$t('lang.Project.ProjectTitle')" prop="title">
-          <el-input v-model="projectFrom.title" size="small" />
+          <el-input v-model="projectFrom.title" size="small" maxlength="15" />
         </el-form-item>
         <el-row>
           <el-col :span="8">
@@ -56,8 +54,8 @@
                 placeholder="请选择项目状态"
                 clearable
               >
-                <el-option :label="$t('lang.Project.Progress')" value="3" />
-                <el-option :label="$t('lang.Project.Closed')" value="1" />
+                <el-option :label="$t('lang.Project.Progress')" value="1" />
+                <el-option :label="$t('lang.Project.Closed')" value="0" />
                 <el-option :label="$t('lang.Project.Plan')" value="2" />
               </el-select> </el-form-item
           ></el-col>
@@ -67,7 +65,10 @@
               size="small"
               prop="reportToName"
             >
-              <el-input v-model="projectFrom.reportToName" /> </el-form-item
+              <el-input
+                v-model="projectFrom.reportToName"
+                maxlength="15"
+              /> </el-form-item
           ></el-col>
           <el-col :span="8">
             <el-form-item
@@ -97,25 +98,7 @@
             :autosize="{ minRows: 3, maxRows: 5 }"
           />
         </el-form-item>
-        <el-form-item
-          v-for="domain in projectFrom.domains"
-          :key="domain.key"
-          class="dele-input"
-          size="small"
-          :label="domain.lable"
-          :prop="domain.lable"
-          :rules="{
-            required: true,
-            message: domain.lable + '不能为空',
-            trigger: 'blur',
-          }"
-        >
-          <el-input v-model="domain.value" width="70%" /><el-button
-            type="text"
-            @click.prevent="removeFiled(domain)"
-            >删除</el-button
-          >
-        </el-form-item>
+
         <el-upload
           class="upload-demo"
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -158,8 +141,6 @@ export default {
           { required: true, message: '请选择状态', trigger: 'change' }
         ]
       },
-      prijectId: '',
-      proUpdate: true
 
     }
   },
@@ -177,7 +158,7 @@ export default {
   },
   methods: {
     // 重置表单
-    resetFields(formName) {
+    resetFields() {
       this.projectFrom = {
         id: undefined,
         title: undefined,
@@ -187,6 +168,7 @@ export default {
         status: '3',
         fileList: []
       }
+      this.$refs['projectFrom'].resetFields();
     },
     // 提交
     submitForm(formName, type) {
@@ -221,8 +203,10 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack(formName) {
-      this.resetFields()
+    giveupBack() {
+      if (!this.projectFrom.id) {
+        this.resetFields()
+      }
       this.returntomenu(this)
     },
     // 上传

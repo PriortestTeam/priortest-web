@@ -166,7 +166,10 @@ div:focus {
 .el-table td, .el-table th {
   padding: 8px 0;
 }
-
+//loading
+.el-loading-spinner .path {
+  stroke:  $btnbgcolor;
+}
 
 //新增页面 占屏幕宽度的60%
 .form-box{

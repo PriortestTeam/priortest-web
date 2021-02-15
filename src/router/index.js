@@ -59,12 +59,22 @@ export const constantRoutes = [
     path: '/feature',
     component: Layout,
     redirect: '/feature',
-    children: [{
-      path: 'feature',
-      name: 'Feature',
-      component: () => import('@/views/feature/index'),
-      meta: { title: 'Feature', icon: 'Feature' }
-    }]
+    children: [
+      {
+        path: 'feature',
+        name: 'Feature',
+        component: () => import('@/views/feature/index'),
+        meta: { title: 'Feature', icon: 'Feature' }
+      },
+      {
+        path: 'addfeature',
+        name: 'Addfeature',
+        component: () => import('@/views/feature/addFeature'),
+        meta: {
+          title: 'Project', icon: 'Project'
+        }
+      }
+    ]
   },
   {
     path: '/sprint',
@@ -75,7 +85,18 @@ export const constantRoutes = [
       name: 'Sprint',
       component: () => import('@/views/sprint/index'),
       meta: { title: 'Sprint', icon: 'Sprint' }
-    }]
+    },
+    {
+      path: 'addsprint',
+      name: 'Addsprint',
+      component: () => import('@/views/sprint/addSprint'),
+      meta: {
+        title: 'Project', icon: 'Project'
+      }
+    }
+
+
+    ]
   },
   // 注册
   {
@@ -164,17 +185,9 @@ export const constantRoutes = [
         meta: { title: 'Project', icon: 'Project' }
       },
       {
-        path: 'manageproject',
-        name: 'Manageproject',
-        component: () => import('@/views/project/manageProject'),
-        meta: {
-          title: 'Project', icon: 'Project'
-        }
-      },
-      {
-        path: 'manageview',
-        name: 'Manageview',
-        component: () => import('@/views/project/manageView'),
+        path: 'projectview',
+        name: 'Projectview',
+        component: () => import('@/views/project/projectView'),
         meta: {
           title: 'Project', icon: 'Project'
         }
@@ -185,10 +198,8 @@ export const constantRoutes = [
         component: () => import('@/views/project/addProject'),
         meta: {
           title: 'Project', icon: 'Project'
-          // noCache: true // 会被缓存
         }
       }
-
     ]
   },
   {
@@ -212,17 +223,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/publicview',
-    component: Layout,
-    redirect: '/publicview',
-    children: [{
-      path: 'customfiled',
-      name: 'Customfiled',
-      component: () => import('@/views/publicView/customFiled'),
-      meta: { title: 'customfiled', icon: 'SignOff' }
-    }]
-  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -155,19 +155,19 @@
         <div class="manage-view">
           <!-- 自定义字段 -->
           <Radioindex
-            v-if="customType=='radio'"
+            v-if="customType === 'radio'"
             :customname="fieldsfrom"
             @PleaseType="chType"
           />
 
           <Textindex
-            v-else-if="customType=='text'"
+            v-else-if="customType === 'text'"
             :customname="fieldsfrom"
             @PleaseType="chType"
           />
 
           <Memoindex
-            v-else-if="customType=='memo'"
+            v-else-if="customType === 'memo'"
             :customname="fieldsfrom"
             @PleaseType="chType"
           />
@@ -290,7 +290,16 @@ export default {
       dbfields: true // 非多个禁用
     }
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      // 新增项目到自定义字段
+      if (from.name === 'Addproject' || from.name === 'Addfeature') {
+        vm.activeName = '3'
+      }
+    })
+  },
   watch: {
+
     'fieldsfrom.type': function(val) {
       this.PleaseType(val)
     },
