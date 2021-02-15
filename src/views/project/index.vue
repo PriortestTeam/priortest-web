@@ -227,16 +227,19 @@ export default {
     getqueryForProjects() {
       this.isLoading = true
       return new Promise((resolve, reject) => {
-        queryForProjects(this.projectQuery).then(res => {
+        queryForProjects(this.projectQuery).then(async res => {
           if (res.code === '200') {
+            // 默认取第一条
+            if (res.total > 0) {
+              this.projectBody.scope = res.data[0].scope
+              this.projectBody.projectId = res.data[0].id
+              await this.getqueryViews()
+            }
+
             this.isLoading = false
             this.projecttableData = res.data
             this.projectTotal = res.total
-            // 默认取第一条
-            this.projectBody.scope = res.data[0].scope
-            this.projectBody.projectId = res.data[0].id
 
-            this.getqueryViews()
             resolve(res)
           }
         })

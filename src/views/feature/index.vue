@@ -226,18 +226,18 @@ export default {
     getfeatureList() {
       // this.isLoading = true
       return new Promise((resolve, reject) => {
-        featureList(this.featureQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(res => {
+        featureList(this.featureQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(async res => {
           if (res.code === '200') {
-            this.isLoading = false
-            this.featureData = res.data
-            this.featureTotal = res.total
+
             // 默认取第一条
             if (res.total > 0) {
               this.featureBody.scope = res.data[0].scope
               this.featureBody.projectId = this.projectInfo.userUseOpenProject.projectId
-              this.getqueryViews()
+              await this.getqueryViews()
             }
-
+            this.isLoading = false
+            this.featureData = res.data
+            this.featureTotal = res.total
             resolve(res)
           }
         })
