@@ -16,22 +16,19 @@
                 round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-                >新建账户</el-button
-              >
+              >新建账户</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="submitForm('accountForm')"
-                >确认修改</el-button
-              >
+              >确认修改</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="cancelUpdate('accountForm')"
-                >取消修改</el-button
-              >
+              >取消修改</el-button>
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -96,8 +93,7 @@
                 type="text"
                 :disabled="accountSingle"
                 @click="accountJurisdiction"
-                >权限</el-button
-              >
+              >权限</el-button>
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -130,9 +126,10 @@
                 <el-table-column prop="roleName" align="center" label="角色" />
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <span class="table-btn" @click.stop="accountDel(scope.row)"
-                      >删除</span
-                    >
+                    <span
+                      class="table-btn"
+                      @click.stop="accountDel(scope.row)"
+                    >删除</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -207,8 +204,7 @@
                     type="text"
                     class="table-btn"
                     @click.stop="delfield(scope.row)"
-                    >删除</el-button
-                  >
+                  >删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -304,10 +300,10 @@ export default {
   },
   watch: {
 
-    'fieldsfrom.type': function (val) {
+    'fieldsfrom.type': function(val) {
       this.PleaseType(val)
     },
-    'fieldsfrom.fieldName': function (val) {
+    'fieldsfrom.fieldName': function(val) {
       if (val) {
         this.fielddisabled = false
       } else {
@@ -446,7 +442,7 @@ export default {
             message('success', '删除成功')
           }
         })
-      }).catch(function () { })
+      }).catch(function() { })
     },
     // 权限
     accountJurisdiction() {
