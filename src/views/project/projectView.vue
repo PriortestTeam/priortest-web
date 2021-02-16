@@ -9,34 +9,30 @@
     >
       <div class="new_project">
         <el-button
-          type="primary"
           v-if="!from.id"
+          type="primary"
           :disabled="savedisabled"
           round
           @click.stop="submitForm('from')"
-          >新增</el-button
-        >
+        >新增</el-button>
         <el-button
-          type="primary"
           v-if="!from.id"
+          type="primary"
           round
           @click.stop="waiveForm('from')"
-          >取消</el-button
-        >
+        >取消</el-button>
         <el-button
-          type="primary"
           v-if="from.id"
+          type="primary"
           round
           @click.stop="submitForm('from')"
-          >确定修改</el-button
-        >
+        >确定修改</el-button>
         <el-button
-          type="primary"
           v-if="from.id"
+          type="primary"
           round
           @click.stop="cancelUpdate('from')"
-          >取消修改</el-button
-        >
+        >取消修改</el-button>
       </div>
       <el-form-item label="New View" prop="title" class="form-small">
         <el-input v-model="from.title" size="small" />
@@ -139,9 +135,11 @@
     </el-form>
     <div class="table">
       <el-button type="text" @click="viewjectRefresh">刷新</el-button>
-      <el-button type="text" :disabled="multiple" @click="delview('all')"
-        >批量删除</el-button
-      >
+      <el-button
+        type="text"
+        :disabled="multiple"
+        @click="delview('all')"
+      >批量删除</el-button>
 
       <el-table
         ref="viewData"
@@ -165,14 +163,12 @@
               type="text"
               class="table-btn"
               @click.stop="toEdit(scope.row)"
-              >编辑</el-button
-            >
+            >编辑</el-button>
             <el-button
               type="text"
               class="table-btn"
               @click.stop="delview(scope.row.id)"
-              >删除</el-button
-            >
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -230,19 +226,19 @@ export default {
       return this.$store.state.user.userinfo
     }
   },
-  created() {
-    this.viewBody.scope = this.$route.query.scope
-    this.viewBody.projectId = this.projectInfo.userUseOpenProject.projectId
-    this.getqueryViews() // 获取视图
-  },
   watch: {
-    'from.title': function (val) {
+    'from.title': function(val) {
       if (val) {
         this.savedisabled = false
       } else {
         this.savedisabled = true
       }
     }
+  },
+  created() {
+    this.viewBody.scope = this.$route.query.scope
+    this.viewBody.projectId = this.projectInfo.userUseOpenProject.projectId
+    this.getqueryViews() // 获取视图
   },
   methods: {
     // 新增和修改确定表单
@@ -279,13 +275,13 @@ export default {
     waiveForm() {
       returntomenu(this, 1000)
     },
-    //取消修改
+    // 取消修改
     cancelUpdate() {
-      this.$refs.viewData.clearSelection();
+      this.$refs.viewData.clearSelection()
       this.resetForm()
-      this.viewId = ""
+      this.viewId = ''
     },
-    //重置表单
+    // 重置表单
     resetForm() {
       this.from = {
         id: undefined,
@@ -294,18 +290,18 @@ export default {
         title: ''
       }
       this.scopeDis = false
-      this.$refs['from'].resetFields();
+      this.$refs['from'].resetFields()
     },
-    //表格多选
+    // 表格多选
     handleSelectionChange(val) {
       this.multipleSelection = val
       this.multiple = !val.length
     },
     toEdit(row) {
-      this.$refs.viewData.clearSelection();
+      this.$refs.viewData.clearSelection()
       this.viewId = row.id
 
-      this.$refs.viewData.toggleRowSelection(row);
+      this.$refs.viewData.toggleRowSelection(row)
       this.searchViewInfo()
     },
     // 查询view信息
@@ -380,7 +376,7 @@ export default {
       } else {
         this.from.oneFilters[index].type = 'fString'
       }
-    },
+    }
 
   }
 }

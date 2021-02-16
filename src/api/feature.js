@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 16:38:28
- * @LastEditTime: 2021-01-28 15:01:09
+ * @LastEditTime: 2021-02-16 13:51:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \oneclick-web\src\api\project.js
@@ -29,7 +29,7 @@ export function addFeature(data) {
 export function detailFeature(id) {
   return request({
     url: '/feature/queryById/' + id,
-    method: 'get',
+    method: 'get'
   })
 }
 // 删除项目
@@ -48,7 +48,7 @@ export function editFeature(data) {
     data
   })
 }
-//列表操作切换项目
+// 列表操作切换项目
 export function closeUpdate(data) {
   return request({
     url: '/feature/closeUpdate',
