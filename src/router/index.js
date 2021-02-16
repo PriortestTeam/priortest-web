@@ -135,9 +135,18 @@ export const constantRoutes = [
     redirect: '/testcase',
     children: [{
       path: 'testcase',
-      name: 'TestCase',
+      name: 'Testcase',
       component: () => import('@/views/testcase/index'),
       meta: { title: 'TestCase', icon: 'TestCase' }
+    }
+      ,
+    {
+      path: 'addtestcase',
+      name: 'Addtestcase',
+      component: () => import('@/views/testcase/addTestCase'),
+      meta: {
+        title: 'Project', icon: 'Project'
+      }
     }]
   },
   {
@@ -146,9 +155,17 @@ export const constantRoutes = [
     redirect: '/testcycle',
     children: [{
       path: 'testcycle',
-      name: 'TestCycle',
+      name: 'Testcycle',
       component: () => import('@/views/testcycle/index'),
       meta: { title: 'TestCycle', icon: 'TestCycle' }
+    },
+    {
+      path: 'addtestcycle',
+      name: 'Addtestcycle',
+      component: () => import('@/views/testcycle/addTestCycle'),
+      meta: {
+        title: 'Project', icon: 'Project'
+      }
     }]
   },
   {
@@ -160,6 +177,13 @@ export const constantRoutes = [
       name: 'Issue',
       component: () => import('@/views/issue/index'),
       meta: { title: 'Issue', icon: 'Issue' }
+    }, {
+      path: 'addissue',
+      name: 'Addissue',
+      component: () => import('@/views/issue/addIssue'),
+      meta: {
+        title: 'Project', icon: 'Project'
+      }
     }]
   },
   {
@@ -168,7 +192,7 @@ export const constantRoutes = [
     redirect: '/signoff',
     children: [{
       path: 'signoff',
-      name: 'SignOff',
+      name: 'Signoff',
       component: () => import('@/views/signoff/index'),
       meta: { title: 'SignOff', icon: 'SignOff' }
     }]

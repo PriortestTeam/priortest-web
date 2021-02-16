@@ -79,7 +79,7 @@ export default {
       Idsearch: '',
       projectName: '项目',
       userinfo: {},
-      clickItem: ['Feature', 'Sprint', 'TestCase', 'TestCycle', 'Issue', 'SignOff']
+      clickItem: ['Feature', 'Sprint', 'Testcase', 'Testcycle', 'Issue', 'Signoff']
     }
   },
   computed: {

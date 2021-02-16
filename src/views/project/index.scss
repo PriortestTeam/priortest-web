@@ -3,7 +3,7 @@
 .new_project{
   margin-bottom:  $spacing;
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
 }
 //表格操作的样式
 .table{
@@ -32,6 +32,9 @@
     padding: $spacing;
     box-sizing: border-box;
     margin-right: 20px;
+    .new_project{
+      justify-content: space-between;
+    }
     ::v-deep .el-collapse-item__content {
       padding-bottom: 0px;
     }
@@ -116,6 +119,11 @@
   .el-button{
     margin-bottom: $spacing;
   }
+  .table{
+    .el-button{
+      margin-bottom:0px;
+    }
+  }
   .dele-input{
     .el-input{
       width:90%;
@@ -138,6 +146,12 @@
     font-size: 16px;
   }
 }
+}
+//弹框选择器大小
+::v-deep .el-dialog__body{
+  .el-date-editor,.el-select{
+    width:100%
+  }
 }
 
 
