@@ -210,6 +210,7 @@ export default {
     /** 左侧视图*/
     // view视图列表
     getqueryViews() {
+
       return new Promise((resolve, reject) => {
         queryViews(this.projectBody, this.projectQuery).then(res => {
           if (res.code === '200') {

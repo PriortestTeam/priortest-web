@@ -201,7 +201,6 @@ export default {
     /** 左侧视图*/
     // view视图列表
     getqueryViews() {
-      console.log("12")
       return new Promise((resolve, reject) => {
         queryViews(this.sprintBody, this.sprintQuery).then(res => {
           if (res.code === '200') {
@@ -219,6 +218,7 @@ export default {
         sprintList(this.sprintQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(async res => {
           if (res.code === '200') {
             if (res.total > 0) {
+              // 默认取第一条
               this.sprintBody.scope = res.data[0].scope
               this.sprintBody.projectId = this.projectInfo.userUseOpenProject.projectId
               await this.getqueryViews()
@@ -226,9 +226,6 @@ export default {
             this.isLoading = false
             this.sprinttableData = res.data
             this.sprintTotal = res.total
-            // 默认取第一条
-
-
             resolve(res)
           }
         })
