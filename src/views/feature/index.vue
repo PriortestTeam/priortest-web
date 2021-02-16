@@ -224,11 +224,10 @@ export default {
 
     /**项目列表表格开始 */
     getfeatureList() {
-      // this.isLoading = true
+      this.isLoading = true
       return new Promise((resolve, reject) => {
         featureList(this.featureQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(async res => {
           if (res.code === '200') {
-
             // 默认取第一条
             if (res.total > 0) {
               this.featureBody.scope = res.data[0].scope
