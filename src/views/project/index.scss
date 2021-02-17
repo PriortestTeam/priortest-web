@@ -125,7 +125,12 @@
       text-align: center;
     }
   }
- 
+  // 隐藏上传列表
+  .upload-demo{
+    ::v-deep .el-upload-list{
+      display: none;
+    }
+  }
 }
 //管理试图
 .manage-view{
