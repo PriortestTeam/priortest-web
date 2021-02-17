@@ -179,7 +179,7 @@
           /> -->
 
           <Dropdown
-            v-else-if="customType==='DropDown' || customType==='dropDown'"
+            v-else-if="customType === 'DropDown' || customType === 'dropDown'"
             :customname="fieldsfrom"
             @PleaseType="chType"
           />
@@ -208,6 +208,13 @@
                 </template>
               </el-table-column>
             </el-table>
+            <pagination
+              v-show="fieldsTotal > 0"
+              :total="fieldsTotal"
+              :page.sync="fieldsQuery.pageNum"
+              :limit.sync="fieldsQuery.pageSize"
+              @pagination="getqueryCustomList"
+            />
           </div>
         </div>
         <!-- 自定义字段 -->
@@ -286,17 +293,30 @@ export default {
 
       // 自定义字段表格数据
       fieldsData: [],
+      fieldsTotal: 0,
       fieldsSelection: [], // 选择的表格
-      dbfields: true // 非多个禁用
+      dbfields: true, // 非多个禁用
+      fieldsQuery: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      fieldsId: {
+        projectId: ''
+      }
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       // 新增项目到自定义字段
-      if (from.name === 'Addproject' || from.name === 'Addfeature') {
+      if (from.name === 'Addproject' || from.name === 'Addfeature' || from.name === 'Addsprint') {
         vm.activeName = '3'
       }
     })
+  },
+  computed: {
+    projectInfo() {
+      return this.$store.state.user.userinfo
+    }
   },
   watch: {
 
@@ -312,6 +332,7 @@ export default {
     }
   },
   created() {
+    this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId
     queryRoles().then(res => {
       this.accountRoleOption = res.data
     })
@@ -461,17 +482,10 @@ export default {
 
     // 获取自定义字段列表
     getqueryCustomList() {
-      console.log('出发了001')
-      const obj = {
-        projectId: '361971315692802048'
-      }
-      const page = {
-        pageNum: 1,
-        pageSize: 10
-      }
-      queryCustomList(obj, page).then(res => {
+      queryCustomList(this.fieldsId, this.fieldsQuery).then(res => {
         if (res.code === '200') {
           this.fieldsData = res.data
+          this.fieldsTotal = res.total
         }
       })
     },

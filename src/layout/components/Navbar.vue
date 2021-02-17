@@ -9,7 +9,7 @@
           alt=""
           srcset=""
           @click="gohome"
-        />
+        >
       </el-col>
       <el-col :span="17">
         <div class="one_title">
@@ -24,29 +24,30 @@
               index === 0
                 ? $t("lang.menuTitle.Feature")
                 : index === 1
-                ? $t("lang.menuTitle.Sprint")
-                : index === 2
-                ? $t("lang.menuTitle.TestCase")
-                : index === 3
-                ? $t("lang.menuTitle.TestCycle")
-                : index === 4
-                ? $t("lang.menuTitle.Issue")
-                : index === 5
-                ? $t("lang.menuTitle.SignOff")
-                : ""
+                  ? $t("lang.menuTitle.Sprint")
+                  : index === 2
+                    ? $t("lang.menuTitle.TestCase")
+                    : index === 3
+                      ? $t("lang.menuTitle.TestCycle")
+                      : index === 4
+                        ? $t("lang.menuTitle.Issue")
+                        : index === 5
+                          ? $t("lang.menuTitle.SignOff")
+                          : ""
             }}
           </div>
           <el-input v-model="Idsearch" size="mini" placeholder="id/text">
             <i slot="prefix" class="el-input__icon el-icon-search" />
-          </el-input></div
-      ></el-col>
+          </el-input></div></el-col>
       <el-col :span="4">
         <div class="right-menu">
           <div v-if="false" class="lang">
             <el-dropdown :hide-on-click="false" @command="changeLang">
-              <span class="el-dropdown-link"
-                >{{ $t("lang.custom.name")
-                }}<i class="el-icon-arrow-down el-icon--right"
+              <span
+                class="el-dropdown-link"
+              >{{ $t("lang.custom.name")
+              }}<i
+                class="el-icon-arrow-down el-icon--right"
               /></span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="zh-CN">{{
@@ -59,7 +60,7 @@
             </el-dropdown>
           </div>
           <router-link to="/admincenter/admincenter">
-            <img class="user-avatar" :src="userInfo.photo" />
+            <img class="user-avatar" :src="userInfo.photo">
           </router-link>
 
           <svg-icon icon-class="tuichu" class="tuichu" @click.native="logout" />
@@ -79,7 +80,7 @@ export default {
       Idsearch: '',
       projectName: '项目',
       userinfo: {},
-      clickItem: ['Feature', 'Sprint', 'TestCase', 'TestCycle', 'Issue', 'SignOff']
+      clickItem: ['Feature', 'Sprint', 'Testcase', 'Testcycle', 'Issue', 'Signoff']
     }
   },
   computed: {
@@ -95,7 +96,7 @@ export default {
     }
   },
   watch: {
-    'userInfo': function (newVal, oldVal) {
+    'userInfo': function(newVal, oldVal) {
       this.projectName = newVal.userUseOpenProject.title
     }
   },

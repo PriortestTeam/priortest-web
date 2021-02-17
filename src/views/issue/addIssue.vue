@@ -131,7 +131,7 @@ import { mapGetters } from 'vuex'
 import { addFeature, detailFeature, editFeature } from '@/api/feature'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
-  name: 'Addfeature',
+  name: 'Addissue',
   data() {
     return {
       featureFrom: {
