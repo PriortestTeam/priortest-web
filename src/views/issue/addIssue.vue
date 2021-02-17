@@ -1,47 +1,45 @@
 <template>
   <div class="app-container add-form add-project">
     <el-form
-      ref="projectFrom"
-      :model="projectFrom"
+      ref="featureFrom"
+      :model="featureFrom"
       :rules="Projectrules"
       label-width="120px"
       class="demo-ruleForm"
     >
       <div>
         <el-button
-          v-if="!projectFrom.id"
+          v-if="!featureFrom.id"
           type="primary"
           round
-          :disabled="!proUpdate"
-          @click="submitForm('projectFrom', false)"
+          @click="submitForm('featureFrom', false)"
         >保存并新建</el-button>
         <el-button
-          v-if="!projectFrom.id"
+          v-if="!featureFrom.id"
           type="primary"
           round
-          :disabled="!proUpdate"
-          @click="submitForm('projectFrom', true)"
+          @click="submitForm('featureFrom', true)"
         >保存并返回</el-button>
         <el-button
-          v-if="projectFrom.id"
+          v-if="featureFrom.id"
           type="primary"
           round
-          @click="submitForm('projectFrom')"
+          @click="submitForm('featureFrom')"
         >确认修改</el-button>
         <el-button
           type="primary"
           round
-          @click="giveupBack('projectFrom')"
+          @click="giveupBack('featureFrom')"
         >放弃</el-button>
-        <router-link v-if="!projectFrom.id" to="/publicview/customfiled">
+        <router-link v-if="!featureFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
         </router-link>
       </div>
       <div class="form-box">
-        <el-form-item :label="$t('lang.Project.ProjectTitle')" prop="title">
-          <el-input v-model="projectFrom.title" size="small" />
+        <el-form-item label="故事标题" prop="title">
+          <el-input v-model="featureFrom.title" maxlength="30" size="small" />
         </el-form-item>
         <el-row>
           <el-col :span="8">
@@ -51,34 +49,47 @@
               prop="status"
             >
               <el-select
-                v-model="projectFrom.status"
-                placeholder="请选择项目状态"
+                v-model="featureFrom.status"
+                placeholder="请选择状态"
                 clearable
               >
-                <el-option :label="$t('lang.Project.Progress')" value="3" />
-                <el-option :label="$t('lang.Project.Closed')" value="1" />
-                <el-option :label="$t('lang.Project.Plan')" value="2" />
+                <el-option :label="$t('lang.Project.Progress')" :value="1" />
+                <el-option
+                  :label="$t('lang.Project.Closed')"
+                  :disabled="true"
+                  :value="0"
+                />
+                <el-option :label="$t('lang.Project.Plan')" :value="2" />
               </el-select> </el-form-item></el-col>
           <el-col :span="8">
-            <el-form-item
-              :label="$t('lang.Project.ReportTo')"
-              size="small"
-              prop="reportToName"
-            >
-              <el-input v-model="projectFrom.reportToName" /> </el-form-item></el-col>
+            <el-form-item size="small" label="开发周期" prop="sprintId">
+              <el-input
+                v-model="featureFrom.sprintId"
+                placeholder="纯数字"
+                oninput="value=value.replace(/[^\d]/g,'')"
+                maxlength="30"
+                size="small"
+              /></el-form-item></el-col>
           <el-col :span="8">
-            <el-form-item
-              size="small"
-              :label="$t('lang.Project.Customer')"
-              prop="customer"
-            >
-              <el-select
-                v-model="projectFrom.customer"
-                placeholder="请选择"
-                clearable
-              >
-                <el-option label="暂无" value="" />
-              </el-select> </el-form-item></el-col>
+            <el-form-item label="负责人" size="small" prop="reportTo">
+              <el-input
+                v-model="featureFrom.reportTo"
+                maxlength="15"
+              /> </el-form-item></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item size="small" label="EPIC" prop="epic">
+              <el-input
+                v-model="featureFrom.epic"
+                maxlength="15"
+              /> </el-form-item></el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="版本" prop="version">
+              <el-input
+                v-model="featureFrom.version"
+                maxlength="15"
+              /> </el-form-item></el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -86,30 +97,12 @@
           size="small"
         >
           <el-input
-            v-model="projectFrom.description"
+            v-model="featureFrom.description"
             type="textarea"
-            maxlength="100"
+            maxlength="300"
             show-word-limit
             :autosize="{ minRows: 3, maxRows: 5 }"
           />
-        </el-form-item>
-        <el-form-item
-          v-for="domain in projectFrom.domains"
-          :key="domain.key"
-          class="dele-input"
-          size="small"
-          :label="domain.lable"
-          :prop="domain.lable"
-          :rules="{
-            required: true,
-            message: domain.lable + '不能为空',
-            trigger: 'blur',
-          }"
-        >
-          <el-input v-model="domain.value" width="70%" /><el-button
-            type="text"
-            @click.prevent="removeFiled(domain)"
-          >删除</el-button>
         </el-form-item>
         <el-upload
           class="upload-demo"
@@ -120,7 +113,7 @@
           multiple
           :limit="3"
           :on-exceed="handleExceed"
-          :file-list="projectFrom.fileList"
+          :file-list="featureFrom.fileList"
         >
           <el-button size="small" type="primary">{{
             $t("lang.Project.Attachment")
@@ -135,26 +128,27 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { addProjects, editProjects } from '@/api/project'
-import { message, returntomenu } from '@/utils/common'
+import { addFeature, detailFeature, editFeature } from '@/api/feature'
+import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
-  name: 'Addproject',
+  name: 'Addissue',
   data() {
     return {
-      projectFrom: {},
+      featureFrom: {
+        status: 1
+      },
+      featureFromTemp: {},
       Projectrules: {
         title: [
-          { required: true, message: '请输入项目标题', trigger: 'blur' }
+          { required: true, message: '请输入故事标题', trigger: 'blur' }
         ],
-        reportToName: [
+        reportTo: [
           { required: true, message: '请输入负责人', trigger: 'blur' }
         ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
         ]
-      },
-      prijectId: '',
-      proUpdate: true
+      }
 
     }
   },
@@ -163,32 +157,50 @@ export default {
       {
         lang: state => state.header.lang
       }
-    )
+    ),
+    projectInfo() {
+      return this.$store.state.user.userinfo
+    }
   },
   created() {
+    if (this.$route.query.id) {
+      detailFeature(this.$route.query.id).then(res => {
+        this.featureFrom = res.data
+        this.featureFromTemp = Object.assign({}, this.featureFrom)
+      })
+    } else {
+      this.featureFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+    }
   },
   mounted() {
-    this.projectFrom = JSON.parse(this.$route.query.info)
   },
   methods: {
     // 重置表单
-    resetFields(formName) {
-      this.projectFrom = {
+    resetFields() {
+      this.featureFrom = {
         id: undefined,
+
+        projectId: this.projectInfo.userUseOpenProject.projectId,
         title: undefined,
         description: undefined,
-        report: undefined,
-        customer: undefined,
-        status: '3',
-        fileList: []
+        status: 1,
+        sprintId: undefined,
+        reportTo: undefined,
+        epic: undefined,
+        version: undefined
+        // fileList: []
       }
+      this.$refs['featureFrom'].resetFields()
     },
+
     // 提交
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.projectFrom.id) {
-            editProjects(this.projectFrom).then(res => {
+          if (this.featureFrom.id) {
+            const param = formatChangedPara(this.featureFromTemp, this.featureFrom)
+            param.projectId = this.featureFromTemp.projectId
+            editFeature(param).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 returntomenu(this, 1000)
@@ -197,13 +209,15 @@ export default {
               console.log(error)
             })
           } else {
-            addProjects(this.projectFrom).then(res => {
+            addFeature(this.featureFrom).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 this.resetFields()
                 if (type) {
                   returntomenu(this, 1000)
                 }
+              } else {
+                message('error', res.msg)
               }
             }).catch(error => {
               console.log(error)
@@ -216,8 +230,10 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack(formName) {
-      this.resetFields()
+    giveupBack() {
+      if (!this.featureFrom.id) {
+        this.resetFields()
+      }
       this.returntomenu(this)
     },
     // 上传
