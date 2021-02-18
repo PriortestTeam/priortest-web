@@ -78,7 +78,12 @@
                 label="标题"
               />
               <el-table-column prop="priority" align="center" label="优先级" />
-              <el-table-column prop="feature" align="center" label="需求" />
+              <el-table-column
+                prop="featureTitle"
+                align="center"
+                :show-overflow-tooltip="true"
+                label="需求"
+              />
               <el-table-column
                 prop="lastRunStatus"
                 align="center"

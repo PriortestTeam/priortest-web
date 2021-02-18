@@ -17,6 +17,14 @@ export function featureList(params, data) {
     data: data
   })
 }
+//没有分页的
+export function featureListAll(data) {
+  return request({
+    url: '/leftJoin/queryFeatureTitles',
+    method: 'get',
+    params: data
+  })
+}
 // 添加项目
 export function addFeature(data) {
   return request({

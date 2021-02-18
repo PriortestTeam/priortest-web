@@ -77,20 +77,34 @@
                 label="标题"
               />
               <el-table-column
-                prop="epic"
-                :show-overflow-tooltip="true"
+                prop="status"
+                min-width="100"
                 align="center"
-                label="epic"
-              />
-              <el-table-column prop="reportTo" align="center" label="负责人" />
-              <el-table-column prop="status" align="center" label="状态">
+                label="状态"
+              >
                 <template slot-scope="scope">
                   <span>{{
                     scope.row.status === 1
-                      ? "开发中"
+                      ? "completed"
                       : scope.row.status === 2
-                      ? "计划中"
-                      : "关闭"
+                      ? "uncompleted"
+                      : ""
+                  }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="runStatus"
+                min-width="100"
+                align="center"
+                label="运行状态"
+              >
+                <template slot-scope="scope">
+                  <span>{{
+                    scope.row.runStatus === 1
+                      ? "passed"
+                      : scope.row.runStatus === 2
+                      ? "failed"
+                      : ""
                   }}</span>
                 </template>
               </el-table-column>
@@ -102,29 +116,8 @@
                 min-width="120"
                 :show-overflow-tooltip="true"
               />
-              <el-table-column
-                prop="version"
-                align="center"
-                label="发行版本"
-                min-width="120"
-                :show-overflow-tooltip="true"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="closeDate"
-                align="center"
-                label="关闭日期"
-                min-width="120"
-                :show-overflow-tooltip="true"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.closeDate || "-" }}</span>
-                </template>
-              </el-table-column>
               <el-table-column label="操作" min-width="160" align="center">
                 <template slot-scope="scope">
-                  <!-- <el-button type="text" class="table-btn">克隆</el-button>
-                <span class="line">|</span> -->
                   <el-button
                     type="text"
                     class="table-btn"
@@ -136,13 +129,6 @@
                     class="table-btn"
                     @click.stop="delproject(scope.row.id)"
                     >删除</el-button
-                  >
-                  <el-button
-                    v-if="scope.row.status !== 0"
-                    type="text"
-                    class="table-btn"
-                    @click.stop="closeEdit(scope.row)"
-                    >关闭</el-button
                   >
                 </template>
               </el-table-column>
