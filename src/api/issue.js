@@ -8,53 +8,46 @@
  */
 import request from '@/utils/request'
 
-export function sprintList(params, data) {
+export function issueList(params, data) {
   return request({
-    url: '/sprint/queryList',
+    url: '/issue/queryList',
     method: 'post',
     // post拼接路由参数
     params: params,
     data: data
   })
 }
-//没有分页的
-export function sprintListAll(data) {
-  return request({
-    url: '/leftJoin/querySprintTitles',
-    method: 'get',
-    params: data
-  })
-}
 // 添加项目
-export function addSprint(data) {
+export function addIssue(data) {
   return request({
-    url: '/sprint/insert',
+    url: '/issue/insert',
     method: 'post',
     data
   })
 }
 // 获取详情
-export function detailSprint(id) {
+export function detailIssue(id) {
   return request({
-    url: '/sprint/queryById/' + id,
+    url: '/issue/queryById/' + id,
     method: 'get',
   })
 }
 // 删除项目
-export function delSprint(id) {
+export function delIssue(id) {
   return request({
-    url: '/sprint/delete/' + id,
+    url: '/issue/delete/' + id,
     method: 'delete'
   })
 }
 
 // 修改项目
-export function editSprint(data) {
+export function editIssue(data) {
   return request({
-    url: '/sprint/update',
+    url: '/issue/update',
     method: 'post',
     data
   })
 }
-
-
+/***弹框 新增步骤
+ *
+ */

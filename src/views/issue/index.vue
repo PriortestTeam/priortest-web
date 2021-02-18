@@ -1,7 +1,7 @@
 <template>
   <div class="project-container app-container">
     <div class="new_project">
-      <el-button type="primary" round @click="newproject"> 新建故事 </el-button>
+      <el-button type="primary" round @click="newproject"> 新建缺陷 </el-button>
     </div>
     <el-row>
       <el-col :span="5">
@@ -55,8 +55,8 @@
           </div>
           <div class="protable table" v-loading="isLoading">
             <el-table
-              ref="featureData"
-              :data="featureData"
+              ref="issueData"
+              :data="issueData"
               :header-cell-style="tableHeader"
               stripe
               style="width: 100%"
@@ -74,24 +74,23 @@
                 align="center"
                 label="标题"
               />
-              <el-table-column
-                prop="epic"
-                :show-overflow-tooltip="true"
-                align="center"
-                label="epic"
-              />
-              <el-table-column prop="reportTo" align="center" label="负责人" />
               <el-table-column prop="status" align="center" label="状态">
                 <template slot-scope="scope">
                   <span>{{
                     scope.row.status === 1
-                      ? "开发中"
+                      ? "open"
                       : scope.row.status === 2
-                      ? "计划中"
-                      : "关闭"
+                      ? "assigned"
+                      : scope.row.status === 3
+                      ? "fixed"
+                      : scope.row.status === 4
+                      ? "closed"
+                      : ""
                   }}</span>
                 </template>
               </el-table-column>
+
+              <el-table-column prop="version" align="center" label="版本" />
 
               <el-table-column
                 prop="createTime"
@@ -101,24 +100,14 @@
                 :show-overflow-tooltip="true"
               />
               <el-table-column
-                prop="version"
+                prop="plannedReleaseDate"
                 align="center"
-                label="发行版本"
+                label="计划发型日期"
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
               </el-table-column>
-              <el-table-column
-                prop="closeDate"
-                align="center"
-                label="关闭日期"
-                min-width="120"
-                :show-overflow-tooltip="true"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.closeDate || "-" }}</span>
-                </template>
-              </el-table-column>
+
               <el-table-column label="操作" min-width="160" align="center">
                 <template slot-scope="scope">
                   <!-- <el-button type="text" class="table-btn">克隆</el-button>
@@ -135,23 +124,16 @@
                     @click.stop="delproject(scope.row.id)"
                     >删除</el-button
                   >
-                  <el-button
-                    v-if="scope.row.status !== 0"
-                    type="text"
-                    class="table-btn"
-                    @click.stop="closeEdit(scope.row)"
-                    >关闭</el-button
-                  >
                 </template>
               </el-table-column>
             </el-table>
 
             <pagination
-              v-show="featureTotal > 0"
-              :total="featureTotal"
-              :page.sync="featureQuery.pageNum"
-              :limit.sync="featureQuery.pageSize"
-              @pagination="getfeatureList"
+              v-show="issueTotal > 0"
+              :total="issueTotal"
+              :page.sync="issueQuery.pageNum"
+              :limit.sync="issueQuery.pageSize"
+              @pagination="getIssueList"
             />
           </div></div
       ></el-col>
@@ -161,7 +143,7 @@
 
 <script>
 import { message } from '@/utils/common'
-import { featureList, delFeature, closeUpdate } from '@/api/feature'
+import { issueList, delIssue } from '@/api/issue'
 import { queryViews } from '@/api/project'
 
 export default {
@@ -177,19 +159,19 @@ export default {
 
 
 
-      featureQuery: {
+      issueQuery: {
         pageNum: 1,
         pageSize: 10,
       },
-      featureTotal: 0,
-      featureData: [],
+      issueTotal: 0,
+      issueData: [],
       multipleSelection: [],//多选
       single: true, // 非单个禁用
       multiple: true, // 非多个禁用
-      featureIds: '',
+      issueIds: '',
 
       setTree: [], // tree数据
-      featureBody: {
+      issueBody: {
         scope: '',
         projectId: ''
       },//tree的参数
@@ -202,7 +184,7 @@ export default {
   },
 
   created() {
-    this.getfeatureList()// 获取管理项目列表
+    this.getIssueList()// 获取管理项目列表
   },
   methods: {
     // 新建项目
@@ -213,7 +195,7 @@ export default {
     // view视图列表 
     getqueryViews() {
       return new Promise((resolve, reject) => {
-        queryViews(this.featureBody, this.featureQuery).then(res => {
+        queryViews(this.issueBody, this.issueQuery).then(res => {
           if (res.code === '200') {
             this.setTree = res.data
             resolve(res)
@@ -223,20 +205,20 @@ export default {
     },
 
     /**项目列表表格开始 */
-    getfeatureList() {
+    getIssueList() {
       this.isLoading = true
       return new Promise((resolve, reject) => {
-        featureList(this.featureQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(async res => {
+        issueList(this.issueQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(async res => {
           if (res.code === '200') {
             // 默认取第一条
             if (res.total > 0) {
-              this.featureBody.scope = res.data[0].scope
-              this.featureBody.projectId = this.projectInfo.userUseOpenProject.projectId
+              this.issueBody.scope = res.data[0].scope
+              this.issueBody.projectId = this.projectInfo.userUseOpenProject.projectId
               await this.getqueryViews()
             }
             this.isLoading = false
-            this.featureData = res.data
-            this.featureTotal = res.total
+            this.issueData = res.data
+            this.issueTotal = res.total
             resolve(res)
           }
         })
@@ -244,7 +226,7 @@ export default {
     },
     // 刷新
     async projectRefresh() {
-      const res = await this.getfeatureList()
+      const res = await this.getIssueList()
       if (res.code === '200') {
         message('success', '刷新成功')
       }
@@ -260,10 +242,10 @@ export default {
         message('error', '暂未开发')
         return
       }
-      delFeature(id).then(res => {
+      delIssue(id).then(res => {
         if (res.code === '200') {
           message('success', res.msg)
-          this.getfeatureList()
+          this.getIssueList()
         }
       })
     },
@@ -271,11 +253,11 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
       // 暂时不实现批量删除
-      this.featureIds = ''
+      this.issueIds = ''
       for (let i = 0; i < val.length; i++) {
-        this.featureIds += val[i].id + ','
+        this.issueIds += val[i].id + ','
       }
-      this.featureIds = this.featureIds.slice(0, this.featureIds.length - 1)
+      this.issueIds = this.issueIds.slice(0, this.issueIds.length - 1)
       this.multiple = !val.length
       this.single = val.length !== 1
     },
@@ -285,20 +267,6 @@ export default {
       this.$router.push({ name: 'Addissue', query: { id: row.id } })
     },
 
-    //关闭
-    closeEdit(row) {
-      let param = {
-        id: row.id,
-      }
-      closeUpdate(param).then(res => {
-        if (res.code === '200') {
-          message('success', res.msg)
-          this.getfeatureList()
-        }
-      }).catch(error => {
-        console.log(error)
-      })
-    }
     /**项目列表表格结束 */
 
   }

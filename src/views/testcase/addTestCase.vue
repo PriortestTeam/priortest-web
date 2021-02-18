@@ -427,12 +427,11 @@ export default {
               }
             })
           }
-
-
         }
       })
     },
     cancelStepFrom() {
+      this.resetStepFrom()
       this.openDia = false
     },
     toEdit(row) {
