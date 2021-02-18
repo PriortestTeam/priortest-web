@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-16 13:51:31
- * @LastEditTime: 2021-02-16 14:51:00
+ * @LastEditTime: 2021-02-17 16:02:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \oneclick-web\src\api\fileUpload.js
@@ -34,9 +34,10 @@ export function deleteAttachment(id) {
 }
 
 // 修改文件
-export function updateAttachment(id) {
+export function updateAttachment(id, data) {
   return request({
     url: '/attachment/updateAttachment/' + id,
-    method: 'post'
+    method: 'post',
+    data: data
   })
 }

@@ -98,11 +98,7 @@
           class="upload-demo"
           action
           :http-request="HandleUploadSelf"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
           multiple
-          :on-exceed="handleExceed"
           :file-list="allfileList"
         >
           <el-button size="small" type="primary">附件</el-button>
@@ -110,22 +106,118 @@
             只能上传jpg/png文件，且不超过500kb
           </div> -->
         </el-upload>
+
+        <el-table
+          ref="allfileList"
+          :data="allfileList"
+          :header-cell-style="tableHeader"
+          stripe
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="fileName"
+            :show-overflow-tooltip="true"
+            align="center"
+            label="文件名称"
+          />
+          <el-table-column
+            prop="uploader"
+            align="center"
+            label="上传者"
+          />
+
+          <el-table-column
+            prop="modifyTime"
+            align="center"
+            label="更新时间"
+            min-width="120"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column label="操作" min-width="120" align="center">
+            <template slot-scope="scope">
+              <el-button
+                type="text"
+                class="table-btn"
+                @click.stop="openfildEdit(scope.row.id)"
+              >编辑</el-button>
+              <el-button
+                type="text"
+                class="table-btn"
+                @click.stop="openfildDel(scope.row.id)"
+              >编辑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <pagination
+          v-show="fileTotal > 0"
+          :total="fileTotal"
+          :page.sync="fileParams.pageNum"
+          :limit.sync="fileParams.pageSize"
+          @pagination="getfileList"
+        />
       </div>
     </el-form>
+    <el-dialog
+      title="修改附件"
+      :visible.sync="profileOpen"
+      width="500px"
+      append-to-body
+    >
+      <div>
+        <el-upload
+          class="editupload-demo"
+          action
+          :http-request="editUploadSelf"
+          :on-remove="editRemove"
+          :before-remove="editbeforeRemove"
+          multiple
+          :limit="1"
+          :on-exceed="editExceed"
+          :file-list="editfileList"
+        >
+          <el-button size="small" type="primary">附件</el-button>
+          <!-- <div slot="tip" class="el-upload__tip">
+            只能上传jpg/png文件，且不超过500kb
+          </div> -->
+        </el-upload>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="fileSubForm">确 定</el-button>
+        <el-button @click="calloff">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { addProjects, editProjects } from '@/api/project'
 import { message, returntomenu, formData } from '@/utils/common'
-import { addAttachment, fileList, deleteAttachment } from '@/api/fileUpload'
+import { addAttachment, fileList, deleteAttachment, updateAttachment } from '@/api/fileUpload'
 
 export default {
   name: 'Addproject',
   data() {
     return {
+      profileOpen: false,
+      tableHeader: {
+        color: '#d4dce3',
+        background: '#003d79'
+      }, // 表头颜色加粗设置
       disabled: false,
+      // 修改文件
+      editfileList: [],
+      onefileList: [],
+      onefileId: '',
       allfileList: [],
+      fileTotal: 0,
+      // 获取文件列表
+      fileParams: {
+        pageNum: 1,
+        pageSize: 10,
+        type: 'Project',
+        linkId: ''
+      },
       projectFrom: {},
       Projectrules: {
         title: [
@@ -146,12 +238,21 @@ export default {
       {
         lang: state => state.header.lang
       }
-    )
+    ),
+    projectInfo() {
+      return this.$store.state.user.userinfo
+    }
   },
   created() {
+    this.projectFrom = JSON.parse(this.$route.query.info)
+    if (this.projectFrom.id) {
+      this.fileParams.type = this.projectFrom.scope
+      this.fileParams.linkId = this.projectFrom.id
+    } else {
+      this.fileParams.linkId = this.projectInfo.userUseOpenProject.projectId
+    }
   },
   mounted() {
-    this.projectFrom = JSON.parse(this.$route.query.info)
     this.getfileList()
   },
   methods: {
@@ -207,60 +308,77 @@ export default {
       }
       this.returntomenu(this)
     },
-    // 移除文件
-    handleRemove(file, fileList) {
-      console.log('1', file, fileList)
-      deleteAttachment(file.id).then(res => {
-        if (res.code === '200') {
-          message('success', res.msg)
-        }
-      })
-    },
-    // 点击文件
-    handlePreview(file) {
-      console.log('2', file)
-    },
-    handleExceed(files, fileList) {
-      console.log('3')
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
-    },
+    // 新增file
     HandleUploadSelf(file) {
       const params = {
-        type: 'Project',
-        linkId: '361971315692802048'
+        type: this.fileParams.type,
+        linkId: this.fileParams.linkId
       }
-      console.log(file.file)
       addAttachment(params, formData({ file: file.file })).then(res => {
         if (res.code === '200') {
           message('success', res.msg)
+          this.getfileList()
         }
       })
     },
     // 获取文件列表
     getfileList() {
-      const page = {
-        pageNum: 1,
-        pageSize: 10,
-        type: 'Project',
-        linkId: '361971315692802048'
-      }
-      fileList(page).then(res => {
+      fileList(this.fileParams).then(res => {
         if (res.code === '200') {
           res.data.filter(item => {
             item['name'] = item.fileName
           })
           this.allfileList = res.data
+          this.fileTotal = res.total
+        }
+      })
+    },
+    // 修改文件
+    openfildEdit(id) {
+      this.profileOpen = true
+      this.onefileId = id
+    },
+    // 修改文件上传
+    editRemove(file, fileList) {
+      console.log('')
+    },
+    editExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    editbeforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    editUploadSelf(file, fileList) {
+      this.onefileList = file
+    },
+    // 确认修改file
+    fileSubForm() {
+      this.profileOpen = false
+      updateAttachment(this.onefileId, formData({ file: this.onefileList.file })).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)
+          this.getfileList()
+        }
+      })
+    },
+    // 确认修改
+    calloff() {
+      this.profileOpen = false
+    },
+    // 删除文件
+    openfildDel(id) {
+      deleteAttachment(id).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)
+          this.getfileList()
         }
       })
     }
-
   }
 
 }
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
+
 </style>

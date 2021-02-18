@@ -238,7 +238,7 @@ export default {
         scope: [false, false, false, false, false],
         defaultValue: [false, false, false, false, false],
         mandatory: [false, false, false, false, false],
-        projectId: '361971315692802048'
+        projectId: ''
       },
       fieldsrules: {
         fieldName: [{ required: true, message: '请输入字段名称', trigger: 'blur' }],
@@ -259,12 +259,18 @@ export default {
       // 自定义字段 结束
     }
   },
+  computed: {
+    projectInfo() {
+      return this.$store.state.user.userinfo
+    }
+  },
   watch: {
     'customname': function(val) {
       this.fieldsfrom = val
     }
   },
   created() {
+    this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
   },
   mounted() {
     console.log(this.customname, '父传的值')

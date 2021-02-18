@@ -241,7 +241,6 @@ export default {
         this.issueFrom.testCycle = Number(this.issueFrom.testCycle)
         this.issueFromTemp = Object.assign({}, this.issueFrom)
       })
-
     } else {
       this.issueFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
@@ -294,7 +293,6 @@ export default {
 
     // 提交
     submitForm(formName, type) {
-
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.issueFrom.id) {
