@@ -95,7 +95,6 @@ export const constantRoutes = [
       }
     }
 
-
     ]
   },
   // 注册
@@ -138,8 +137,7 @@ export const constantRoutes = [
       name: 'Testcase',
       component: () => import('@/views/testcase/index'),
       meta: { title: 'TestCase', icon: 'TestCase' }
-    }
-      ,
+    },
     {
       path: 'addtestcase',
       name: 'Addtestcase',

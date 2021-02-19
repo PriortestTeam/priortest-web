@@ -144,7 +144,7 @@
                 type="text"
                 class="table-btn"
                 @click.stop="openfildDel(scope.row.id)"
-              >编辑</el-button>
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>

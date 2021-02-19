@@ -13,25 +13,24 @@
           type="primary"
           round
           @click="submitForm('sprintFrom', false)"
-          >保存并新建</el-button
-        >
+        >保存并新建</el-button>
         <el-button
           v-if="!sprintFrom.id"
           type="primary"
           round
           @click="submitForm('sprintFrom', true)"
-          >保存并返回</el-button
-        >
+        >保存并返回</el-button>
         <el-button
           v-if="sprintFrom.id"
           type="primary"
           round
           @click="submitForm('sprintFrom')"
-          >确认修改</el-button
-        >
-        <el-button type="primary" round @click="giveupBack('sprintFrom')"
-          >放弃</el-button
-        >
+        >确认修改</el-button>
+        <el-button
+          type="primary"
+          round
+          @click="giveupBack('sprintFrom')"
+        >放弃</el-button>
         <router-link v-if="!sprintFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
@@ -56,8 +55,7 @@
                 <el-option :label="$t('lang.Project.Progress')" :value="1" />
                 <el-option :label="$t('lang.Project.Closed')" :value="0" />
                 <el-option :label="$t('lang.Project.Plan')" :value="2" />
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item label="起止日期" size="small" prop="timeArr">
               <el-date-picker
@@ -69,9 +67,7 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 unlink-panels
-              >
-              </el-date-picker></el-form-item
-          ></el-col>
+              /></el-form-item></el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -86,25 +82,6 @@
             :autosize="{ minRows: 3, maxRows: 5 }"
           />
         </el-form-item>
-
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :file-list="sprintFrom.fileList"
-        >
-          <el-button size="small" type="primary">{{
-            $t("lang.Project.Attachment")
-          }}</el-button>
-          <!-- <div slot="tip" class="el-upload__tip">
-            只能上传jpg/png文件，且不超过500kb
-          </div> -->
-        </el-upload>
       </div>
     </el-form>
   </div>
@@ -131,8 +108,8 @@ export default {
         ],
         timeArr: [
           { required: true, message: '请选择日期', trigger: 'change' }
-        ],
-      },
+        ]
+      }
 
     }
   },
@@ -173,13 +150,12 @@ export default {
         timeArr: '',
         fileList: []
       }
-      this.$refs['sprintFrom'].resetFields();
+      this.$refs['sprintFrom'].resetFields()
     },
     // 提交
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
           if (this.sprintFrom.id) {
             const param = formatChangedPara(this.sprintFromTem, this.sprintFrom)
             param.projectId = this.sprintFrom.projectId
@@ -222,21 +198,7 @@ export default {
         this.resetFields()
       }
       this.returntomenu(this)
-    },
-    // 上传
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
     }
-
   }
 
 }
