@@ -13,24 +13,25 @@
           type="primary"
           round
           @click="submitForm('projectFrom', false)"
-        >保存并新建</el-button>
+          >保存并新建</el-button
+        >
         <el-button
           v-if="!projectFrom.id"
           type="primary"
           round
           @click="submitForm('projectFrom', true)"
-        >保存并返回</el-button>
+          >保存并返回</el-button
+        >
         <el-button
           v-if="projectFrom.id"
           type="primary"
           round
           @click="submitForm('projectFrom')"
-        >确认修改</el-button>
-        <el-button
-          type="primary"
-          round
-          @click="giveupBack('projectFrom')"
-        >放弃</el-button>
+          >确认修改</el-button
+        >
+        <el-button type="primary" round @click="giveupBack('projectFrom')"
+          >放弃</el-button
+        >
         <router-link v-if="!projectFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
@@ -43,20 +44,17 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item
-              size="small"
-              :label="$t('lang.Project.Status')"
-              prop="status"
-            >
+            <el-form-item size="small" label="状态" prop="status">
               <el-select
                 v-model="projectFrom.status"
                 placeholder="请选择项目状态"
                 clearable
               >
-                <el-option :label="$t('lang.Project.Progress')" value="1" />
-                <el-option :label="$t('lang.Project.Closed')" value="0" />
-                <el-option :label="$t('lang.Project.Plan')" value="2" />
-              </el-select> </el-form-item></el-col>
+                <el-option label="Progress" :value="1" />
+                <el-option label="Closed" :value="0" />
+                <el-option label="Plan" :value="2" />
+              </el-select> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item
               :label="$t('lang.Project.ReportTo')"
@@ -66,7 +64,8 @@
               <el-input
                 v-model="projectFrom.reportToName"
                 maxlength="15"
-              /> </el-form-item></el-col>
+              /> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item
               size="small"
@@ -79,7 +78,8 @@
                 clearable
               >
                 <el-option label="暂无" value="" />
-              </el-select> </el-form-item></el-col>
+              </el-select> </el-form-item
+          ></el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -94,70 +94,67 @@
             :autosize="{ minRows: 3, maxRows: 5 }"
           />
         </el-form-item>
-        <el-upload
-          class="upload-demo"
-          action
-          :http-request="HandleUploadSelf"
-          multiple
-          :file-list="allfileList"
-        >
-          <el-button size="small" type="primary">附件</el-button>
-          <!-- <div slot="tip" class="el-upload__tip">
-            只能上传jpg/png文件，且不超过500kb
-          </div> -->
-        </el-upload>
-
-        <el-table
-          ref="allfileList"
-          :data="allfileList"
-          :header-cell-style="tableHeader"
-          stripe
-          style="width: 100%"
-        >
-          <el-table-column
-            prop="fileName"
-            :show-overflow-tooltip="true"
-            align="center"
-            label="文件名称"
-          />
-          <el-table-column
-            prop="uploader"
-            align="center"
-            label="上传者"
-          />
-
-          <el-table-column
-            prop="modifyTime"
-            align="center"
-            label="更新时间"
-            min-width="120"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column label="操作" min-width="120" align="center">
-            <template slot-scope="scope">
-              <el-button
-                type="text"
-                class="table-btn"
-                @click.stop="openfildEdit(scope.row.id)"
-              >编辑</el-button>
-              <el-button
-                type="text"
-                class="table-btn"
-                @click.stop="openfildDel(scope.row.id)"
-              >编辑</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <pagination
-          v-show="fileTotal > 0"
-          :total="fileTotal"
-          :page.sync="fileParams.pageNum"
-          :limit.sync="fileParams.pageSize"
-          @pagination="getfileList"
-        />
       </div>
     </el-form>
+    <div class="table" v-if="projectFrom.id">
+      <el-upload
+        class="upload-demo"
+        action
+        :http-request="HandleUploadSelf"
+        multiple
+        :file-list="allfileList"
+      >
+        <el-button size="small" type="primary">附件</el-button>
+      </el-upload>
+      <el-table
+        ref="allfileList"
+        :data="allfileList"
+        :header-cell-style="tableHeader"
+        stripe
+        style="width: 100%; margin-top: 10px"
+      >
+        <el-table-column
+          prop="fileName"
+          :show-overflow-tooltip="true"
+          align="center"
+          label="文件名称"
+        />
+        <el-table-column prop="uploader" align="center" label="上传者" />
+
+        <el-table-column
+          prop="modifyTime"
+          align="center"
+          label="更新时间"
+          min-width="120"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column label="操作" min-width="120" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              class="table-btn"
+              @click.stop="openfildEdit(scope.row.id)"
+              >编辑</el-button
+            >
+            <el-button
+              type="text"
+              class="table-btn"
+              @click.stop="openfildDel(scope.row.id)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination
+        v-show="fileTotal > 0"
+        :total="fileTotal"
+        :page.sync="fileParams.pageNum"
+        :limit.sync="fileParams.pageSize"
+        @pagination="getfileList"
+      />
+    </div>
+
     <el-dialog
       title="修改附件"
       :visible.sync="profileOpen"
@@ -169,17 +166,13 @@
           class="editupload-demo"
           action
           :http-request="editUploadSelf"
-          :on-remove="editRemove"
           :before-remove="editbeforeRemove"
           multiple
           :limit="1"
           :on-exceed="editExceed"
           :file-list="editfileList"
         >
-          <el-button size="small" type="primary">附件</el-button>
-          <!-- <div slot="tip" class="el-upload__tip">
-            只能上传jpg/png文件，且不超过500kb
-          </div> -->
+          <el-button size="small" type="primary">重新上传</el-button>
         </el-upload>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -192,7 +185,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { addProjects, editProjects } from '@/api/project'
-import { message, returntomenu, formData } from '@/utils/common'
+import { message, returntomenu, formData, formatChangedPara } from '@/utils/common'
 import { addAttachment, fileList, deleteAttachment, updateAttachment } from '@/api/fileUpload'
 
 export default {
@@ -219,6 +212,7 @@ export default {
         linkId: ''
       },
       projectFrom: {},
+      projectFromTem: {},
       Projectrules: {
         title: [
           { required: true, message: '请输入项目标题', trigger: 'blur' }
@@ -248,12 +242,11 @@ export default {
     if (this.projectFrom.id) {
       this.fileParams.type = this.projectFrom.scope
       this.fileParams.linkId = this.projectFrom.id
-    } else {
-      this.fileParams.linkId = this.projectInfo.userUseOpenProject.projectId
+      this.projectFromTem = Object.assign({}, this.projectFrom)
+      this.getfileList()
     }
   },
   mounted() {
-    this.getfileList()
   },
   methods: {
     // 重置表单
@@ -264,7 +257,7 @@ export default {
         description: undefined,
         report: undefined,
         customer: undefined,
-        status: '3',
+        status: undefined,
         fileList: []
       }
       this.$refs['projectFrom'].resetFields()
@@ -274,7 +267,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.projectFrom.id) {
-            editProjects(this.projectFrom).then(res => {
+            const param = formatChangedPara(this.projectFromTem, this.projectFrom)
+            editProjects(param).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 returntomenu(this, 1000)
@@ -338,10 +332,7 @@ export default {
       this.profileOpen = true
       this.onefileId = id
     },
-    // 修改文件上传
-    editRemove(file, fileList) {
-      console.log('')
-    },
+
     editExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
@@ -357,6 +348,8 @@ export default {
       updateAttachment(this.onefileId, formData({ file: this.onefileList.file })).then(res => {
         if (res.code === '200') {
           message('success', res.msg)
+          this.onefileList = []
+          this.editfileList = []
           this.getfileList()
         }
       })
@@ -380,5 +373,4 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
-
 </style>

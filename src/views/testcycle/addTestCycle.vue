@@ -111,8 +111,8 @@
     <div class="table" v-if="this.testCycleFrom.id">
       <el-button type="text" @click="newStep">添加测试用例</el-button>
       <el-table
-        ref="caseData"
-        :data="caseData"
+        ref="testCaseData"
+        :data="testCaseData"
         :header-cell-style="tableHeader"
         stripe
         style="width: 100%"
@@ -123,15 +123,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="step"
-          label="步骤"
+          prop="title"
+          label="标题"
           :show-overflow-tooltip="true"
           align="center"
         />
-        <el-table-column prop="testDate" label="测试时间" align="center" />
         <el-table-column
-          prop="expectedResult"
-          label="预计结果"
+          prop="lastRunStatus"
+          label="末次运行状态"
           :show-overflow-tooltip="true"
           align="center"
         />
@@ -210,7 +209,6 @@ export default {
         color: '#d4dce3',
         background: '#003d79'
       },
-      caseData: [],
 
       openDia: false,
       testCaseFrom: {
