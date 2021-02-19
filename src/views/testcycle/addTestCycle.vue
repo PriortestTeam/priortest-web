@@ -45,28 +45,25 @@
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="关联故事" prop="feature">
-              <el-select
-                v-model="testCycleFrom.status"
-                placeholder="请选择状态"
-                clearable
-              >
-                <el-option :label="$t('lang.Project.Progress')" :value="1" />
+              <el-select v-model="testCycleFrom.feature" placeholder="关联故事">
                 <el-option
-                  :label="$t('lang.Project.Closed')"
-                  :disabled="true"
-                  :value="0"
-                />
-                <el-option :label="$t('lang.Project.Plan')" :value="2" />
-              </el-select> </el-form-item
+                  v-for="item in featueData"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                >
+                </el-option> </el-select></el-form-item
           ></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="关联迭代" prop="sprint">
-              <el-input
-                placeholder="纯数字"
-                oninput="value=value.replace(/[^\d]/g,'')"
-                v-model="testCycleFrom.sprintId"
-                maxlength="30"
-                size="small" /></el-form-item
+              <el-select v-model="testCycleFrom.sprint" placeholder="关联迭代">
+                <el-option
+                  v-for="item in sprintData"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                >
+                </el-option> </el-select></el-form-item
           ></el-col>
           <el-col :span="8">
             <el-form-item label="版本" size="small" prop="version">
@@ -74,6 +71,26 @@
                 v-model="testCycleFrom.version"
                 maxlength="15"
               /> </el-form-item
+          ></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item size="small" label="状态" prop="status">
+              <el-select v-model="testCycleFrom.status" placeholder="状态">
+                <el-option label="completed" :value="1" />
+                <el-option
+                  label="uncompleted"
+                  :value="2"
+                /> </el-select></el-form-item
+          ></el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="运行状态" prop="runStatus">
+              <el-select v-model="testCycleFrom.runStatus" placeholder="状态">
+                <el-option label="passed" :value="1" />
+                <el-option
+                  label="failed"
+                  :value="2"
+                /> </el-select></el-form-item
           ></el-col>
         </el-row>
         <el-form-item
@@ -91,12 +108,81 @@
         </el-form-item>
       </div>
     </el-form>
+    <div class="table" v-if="this.testCycleFrom.id">
+      <el-button type="text" @click="newStep">添加测试用例</el-button>
+      <el-table
+        ref="testCaseData"
+        :data="testCaseData"
+        :header-cell-style="tableHeader"
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column type="index" align="center" label="序号">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="title"
+          label="标题"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
+        <el-table-column
+          prop="lastRunStatus"
+          label="末次运行状态"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              class="table-btn"
+              @click.stop="delview(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-dialog
+      title="添加测试用例"
+      :visible.sync="openDia"
+      width="500px"
+      append-to-body
+    >
+      <el-form
+        ref="testCaseFrom"
+        :model="testCaseFrom"
+        :rules="testCaseFromRules"
+        label-width="120px"
+      >
+        <el-form-item label="选择测试用例" prop="testCaseId" size="small">
+          <el-select v-model="testCaseFrom.testCaseId" placeholder="请选择状态">
+            <el-option
+              v-for="item in testCaseDataSelect"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submittestCaseFrom">确 定</el-button>
+        <el-button @click="canceltestCaseFrom">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { detailTestCycle, addTestCycle, editTestCycle } from '@/api/testcycle'
-
+import { detailTestCycle, addTestCycle, editTestCycle, testCycleCase, addtestCycle, bindCaseDelete } from '@/api/testcycle'
+import { featureListAll } from '@/api/feature'
+import { testCaseListAll } from '@/api/testcase'
+import { sprintListAll } from '@/api/sprint'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addtestcycle',
@@ -116,6 +202,27 @@ export default {
           { required: true, message: '请选择状态', trigger: 'change' }
         ]
       },
+      featueData: [],
+      sprintData: [],
+
+      tableHeader: {
+        color: '#d4dce3',
+        background: '#003d79'
+      },
+
+      openDia: false,
+      testCaseFrom: {
+        testCycleId: undefined,
+        testCaseId: undefined,
+      },
+      testCaseData: [],
+      testCaseDataSelect: [],
+      testCaseFromRules: {
+        testCaseId: [
+          { required: true, message: '请选择测试用例', trigger: 'change' }
+        ],
+
+      }
 
     }
   },
@@ -131,15 +238,20 @@ export default {
   },
   created() {
     if (this.$route.query.id) {
+      this.testCaseFrom.testCycleId = this.$route.query.id
       detailTestCycle(this.$route.query.id).then(res => {
         this.testCycleFrom = res.data
         this.testCycleFromTemp = Object.assign({}, this.testCycleFrom)
       })
-
+      this.gettestCycleCase()
+      testCaseListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
+        this.testCaseDataSelect = res.data
+      })
     } else {
       this.testCycleFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
-
+    this.getfeatureListAll()
+    this.getsprintListAll()
   },
   mounted() {
   },
@@ -149,17 +261,26 @@ export default {
       this.testCycleFrom = {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
-
         title: undefined,
-        description: undefined,
-        status: 1,
-        sprintId: undefined,
-        reportTo: undefined,
-        epic: undefined,
+        status: undefined,
+        runStatus: undefined,
+        feature: undefined,
+        sprint: undefined,
         version: undefined,
-        // fileList: []
+        description: undefined,
       }
       this.$refs['testCycleFrom'].resetFields();
+    },
+    //得到所有故事
+    getfeatureListAll() {
+      featureListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
+        this.featueData = res.data
+      })
+    },
+    getsprintListAll() {
+      sprintListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
+        this.sprintData = res.data
+      })
     },
 
     // 提交
@@ -207,6 +328,50 @@ export default {
       this.returntomenu(this)
     },
 
+    /***编辑的表格 */
+    resettestCaseFrom() {
+      this.testCaseFrom = {
+        testCycleId: this.testCycleFrom.id,
+        testCaseId: undefined,
+      }
+      this.$refs['testCaseFrom'].resetFields();
+    },
+    gettestCycleCase() {
+      testCycleCase({ pageNum: 1, pageSize: 10, testCycleId: this.testCaseFrom.testCycleId }, {
+      }).then(res => {
+        this.testCaseData = res.data
+        console.log(res, 123)
+      })
+    },
+    newStep() {
+      this.openDia = true
+    },
+    submittestCaseFrom() {
+      this.$refs['testCaseFrom'].validate((valid) => {
+        if (valid) {
+          addtestCycle(this.testCaseFrom).then(res => {
+            if (res.code === "200") {
+              this.gettestCycleCase()
+              message('success', res.msg)
+              this.openDia = false
+              this.resettestCaseFrom()
+            }
+          })
+        }
+      })
+    },
+    canceltestCaseFrom() {
+      this.resettestCaseFrom()
+      this.openDia = false
+    },
+    delview(row) {
+      bindCaseDelete(row.id).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)
+          this.gettestCycleCase()
+        }
+      })
+    }
 
   }
 

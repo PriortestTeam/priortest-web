@@ -1,37 +1,38 @@
 <template>
   <div class="app-container add-form add-project">
     <el-form
-      ref="featureFrom"
-      :model="featureFrom"
-      :rules="Projectrules"
+      ref="issueFrom"
+      :model="issueFrom"
+      :rules="issuerules"
       label-width="120px"
       class="demo-ruleForm"
     >
       <div>
         <el-button
-          v-if="!featureFrom.id"
+          v-if="!issueFrom.id"
           type="primary"
           round
-          @click="submitForm('featureFrom', false)"
-        >保存并新建</el-button>
+          @click="submitForm('issueFrom', false)"
+          >保存并新建</el-button
+        >
         <el-button
-          v-if="!featureFrom.id"
+          v-if="!issueFrom.id"
           type="primary"
           round
-          @click="submitForm('featureFrom', true)"
-        >保存并返回</el-button>
+          @click="submitForm('issueFrom', true)"
+          >保存并返回</el-button
+        >
         <el-button
-          v-if="featureFrom.id"
+          v-if="issueFrom.id"
           type="primary"
           round
-          @click="submitForm('featureFrom')"
-        >确认修改</el-button>
-        <el-button
-          type="primary"
-          round
-          @click="giveupBack('featureFrom')"
-        >放弃</el-button>
-        <router-link v-if="!featureFrom.id" to="/admincenter/admincenter">
+          @click="submitForm('issueFrom')"
+          >确认修改</el-button
+        >
+        <el-button type="primary" round @click="giveupBack('issueFrom')"
+          >放弃</el-button
+        >
+        <router-link v-if="!issueFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
@@ -39,57 +40,122 @@
       </div>
       <div class="form-box">
         <el-form-item label="故事标题" prop="title">
-          <el-input v-model="featureFrom.title" maxlength="30" size="small" />
+          <el-input v-model="issueFrom.title" maxlength="30" size="small" />
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item
-              size="small"
-              :label="$t('lang.Project.Status')"
-              prop="status"
-            >
+            <el-form-item size="small" label="测试用例" prop="testCase">
               <el-select
-                v-model="featureFrom.status"
-                placeholder="请选择状态"
-                clearable
+                v-model="issueFrom.testCase"
+                placeholder="关联测试用例"
               >
-                <el-option :label="$t('lang.Project.Progress')" :value="1" />
                 <el-option
-                  :label="$t('lang.Project.Closed')"
-                  :disabled="true"
-                  :value="0"
-                />
-                <el-option :label="$t('lang.Project.Plan')" :value="2" />
-              </el-select> </el-form-item></el-col>
+                  v-for="item in testCaseData"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                >
+                </el-option> </el-select></el-form-item
+          ></el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="开发周期" prop="sprintId">
-              <el-input
-                v-model="featureFrom.sprintId"
-                placeholder="纯数字"
-                oninput="value=value.replace(/[^\d]/g,'')"
-                maxlength="30"
-                size="small"
-              /></el-form-item></el-col>
+            <el-form-item size="small" label="测试周期" prop="testCycle">
+              <el-select
+                v-model="issueFrom.testCycle"
+                placeholder="关联测试周期"
+              >
+                <el-option
+                  v-for="item in testCycleData"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select> </el-form-item
+          ></el-col>
           <el-col :span="8">
-            <el-form-item label="负责人" size="small" prop="reportTo">
-              <el-input
-                v-model="featureFrom.reportTo"
-                maxlength="15"
-              /> </el-form-item></el-col>
+            <el-form-item label="故事" size="small" prop="feature">
+              <el-select v-model="issueFrom.feature" placeholder="关联故事">
+                <el-option
+                  v-for="item in featueData"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                >
+                </el-option> </el-select></el-form-item
+          ></el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="EPIC" prop="epic">
-              <el-input
-                v-model="featureFrom.epic"
-                maxlength="15"
-              /> </el-form-item></el-col>
+            <el-form-item size="small" label="优先级" prop="priority">
+              <el-select
+                v-model="issueFrom.priority"
+                placeholder="请选择优先级"
+              >
+                <el-option label="高" value="高" />
+                <el-option label="中" value="中" />
+                <el-option label="低" value="低" />
+              </el-select> </el-form-item
+          ></el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="状态" prop="status">
+              <el-select
+                v-model="issueFrom.status"
+                placeholder="请选择"
+                clearable
+              >
+                <el-option label="open" :value="1" />
+                <el-option label="assigned" :value="2" />
+                <el-option label="closed" :value="4" />
+                <el-option label="fixed" :value="3" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="环境" prop="env">
+              <el-input v-model="issueFrom.env" /> </el-form-item
+          ></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item size="small" label="浏览器" prop="browser">
+              <el-select v-model="issueFrom.browser" placeholder="请选择浏览器">
+                <el-option label="Google Chrome" value="Google Chrome" />
+                <el-option label="Fire Fox" value="Fire Fox" />
+                <el-option label="IE" value="IE" />
+              </el-select> </el-form-item
+          ></el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="平台" prop="platform">
+              <el-select v-model="issueFrom.platform" placeholder="请选择需求">
+                <el-option label="window" value="window" />
+                <el-option label="mac" value="mac" />
+              </el-select> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="版本" prop="version">
-              <el-input
-                v-model="featureFrom.version"
-                maxlength="15"
-              /> </el-form-item></el-col>
+              <el-input v-model="issueFrom.version" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item size="small" label="CaseCategory" prop="caseCategory">
+              <el-input v-model="issueFrom.caseCategory" /> </el-form-item
+          ></el-col>
+          <el-col :span="8">
+            <el-form-item
+              size="small"
+              label="计划发行日期"
+              prop="plannedReleaseDate"
+            >
+              <el-date-picker
+                v-model="issueFrom.plannedReleaseDate"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="date"
+                placeholder="选择计划发行日期"
+              >
+              </el-date-picker> </el-form-item
+          ></el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -97,58 +163,61 @@
           size="small"
         >
           <el-input
-            v-model="featureFrom.description"
+            v-model="issueFrom.description"
             type="textarea"
             maxlength="300"
             show-word-limit
             :autosize="{ minRows: 3, maxRows: 5 }"
           />
         </el-form-item>
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :file-list="featureFrom.fileList"
-        >
-          <el-button size="small" type="primary">{{
-            $t("lang.Project.Attachment")
-          }}</el-button>
-          <!-- <div slot="tip" class="el-upload__tip">
-            只能上传jpg/png文件，且不超过500kb
-          </div> -->
-        </el-upload>
       </div>
     </el-form>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { addFeature, detailFeature, editFeature } from '@/api/feature'
+import { addIssue, detailIssue, editIssue } from '@/api/issue'
+import { testCaseListAll } from '@/api/testcase'
+import { testCycleListAll } from '@/api/testcycle'
+import { featureListAll } from '@/api/feature'
+
+
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addissue',
   data() {
     return {
-      featureFrom: {
-        status: 1
+      issueFrom: {
       },
-      featureFromTemp: {},
-      Projectrules: {
+      issueFromTemp: {},
+      issuerules: {
         title: [
           { required: true, message: '请输入故事标题', trigger: 'blur' }
         ],
-        reportTo: [
-          { required: true, message: '请输入负责人', trigger: 'blur' }
-        ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
-        ]
-      }
+        ],
+
+        plannedReleaseDate: [
+          { required: true, message: '请选择发行日期', trigger: 'change' }
+        ],
+        testCase: [
+          { required: true, message: '请选择关联测试案例', trigger: 'change' }
+        ],
+        testCycle: [
+          { required: true, message: '请选择关联测试周期', trigger: 'change' }
+        ],
+        feature: [
+          { required: true, message: '请选择关联故事', trigger: 'change' }
+        ],
+        priority: [
+          { required: true, message: '请选择优先级', trigger: 'change' }
+        ],
+
+      },
+      testCaseData: [],
+      testCycleData: [],
+      featueData: [],
 
     }
   },
@@ -163,44 +232,73 @@ export default {
     }
   },
   created() {
+
     if (this.$route.query.id) {
-      detailFeature(this.$route.query.id).then(res => {
-        this.featureFrom = res.data
-        this.featureFromTemp = Object.assign({}, this.featureFrom)
+      detailIssue(this.$route.query.id).then(res => {
+        this.issueFrom = res.data
+        this.issueFrom.feature = Number(this.issueFrom.feature)
+        this.issueFrom.testCase = Number(this.issueFrom.testCase)
+        this.issueFrom.testCycle = Number(this.issueFrom.testCycle)
+        this.issueFromTemp = Object.assign({}, this.issueFrom)
       })
     } else {
-      this.featureFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+      this.issueFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
+    this.gettestCaseListAll()
+    this.gettestCycleListAll()
+    this.getfeatureListAll()
   },
   mounted() {
   },
   methods: {
     // 重置表单
     resetFields() {
-      this.featureFrom = {
+      this.issueFrom = {
         id: undefined,
-
         projectId: this.projectInfo.userUseOpenProject.projectId,
         title: undefined,
-        description: undefined,
-        status: 1,
-        sprintId: undefined,
-        reportTo: undefined,
-        epic: undefined,
-        version: undefined
-        // fileList: []
+        status: undefined,
+        plannedReleaseDate: undefined,
+        testCase: undefined,
+        testCycle: undefined,
+        feature: undefined,
+        priority: undefined,
+        env: undefined,
+        browser: undefined,
+        platform: undefined,
+        version: undefined,
+        caseCategory: undefined,
       }
-      this.$refs['featureFrom'].resetFields()
+      this.$refs['issueFrom'].resetFields();
     },
+    //得到所有测试案例
+    gettestCaseListAll() {
+      testCaseListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
+        this.testCaseData = res.data
+      })
+    },
+    //得到所有测试周期
+    gettestCycleListAll() {
+      testCycleListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
+        this.testCycleData = res.data
+      })
+    },
+    //得到所有故事
+    getfeatureListAll() {
+      featureListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
+        this.featueData = res.data
+      })
+    },
+
 
     // 提交
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.featureFrom.id) {
-            const param = formatChangedPara(this.featureFromTemp, this.featureFrom)
-            param.projectId = this.featureFromTemp.projectId
-            editFeature(param).then(res => {
+          if (this.issueFrom.id) {
+            const param = formatChangedPara(this.issueFromTemp, this.issueFrom)
+            param.projectId = this.issueFromTemp.projectId
+            editIssue(param).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 returntomenu(this, 1000)
@@ -209,7 +307,7 @@ export default {
               console.log(error)
             })
           } else {
-            addFeature(this.featureFrom).then(res => {
+            addIssue(this.issueFrom).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 this.resetFields()
@@ -231,24 +329,12 @@ export default {
     },
     // 放弃并且返回
     giveupBack() {
-      if (!this.featureFrom.id) {
+      if (!this.issueFrom.id) {
         this.resetFields()
       }
       this.returntomenu(this)
     },
-    // 上传
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
-    }
+
 
   }
 

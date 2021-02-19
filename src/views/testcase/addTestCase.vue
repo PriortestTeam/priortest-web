@@ -53,13 +53,15 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="需求" prop="feature">
-              <el-select
-                v-model="testCaseFrom.feature"
-                placeholder="请选择需求"
-              >
-                <el-option label="none" value="none" />
-              </el-select> </el-form-item
+            <el-form-item size="small" label="feature" prop="feature">
+              <el-select v-model="testCaseFrom.feature" placeholder="关联故事">
+                <el-option
+                  v-for="item in featueData"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                >
+                </el-option> </el-select></el-form-item
           ></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="优先级" prop="priority">
@@ -236,13 +238,15 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { featureListAll } from '@/api/feature'
+
 import { addTestCase, editTestCase, detailTestCase, addTestCaseStep, testCaseStep, delTestCaseStep, editTestCaseStep } from '@/api/testcase'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addtestcase',
   data() {
     return {
-
+      featueData: [],
       testCaseFrom: {
         status: 1
       },
@@ -314,6 +318,9 @@ export default {
     } else {
       this.testCaseFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
+    featureListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
+      this.featueData = res.data
+    })
   },
 
   methods: {
@@ -427,12 +434,11 @@ export default {
               }
             })
           }
-
-
         }
       })
     },
     cancelStepFrom() {
+      this.resetStepFrom()
       this.openDia = false
     },
     toEdit(row) {

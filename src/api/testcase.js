@@ -17,6 +17,14 @@ export function testCaseList(params, data) {
     data: data
   })
 }
+//没有分页的
+export function testCaseListAll(data) {
+  return request({
+    url: '/leftJoin/queryFestCaseTitles',
+    method: 'get',
+    params: data
+  })
+}
 // 添加项目
 export function addTestCase(data) {
   return request({
