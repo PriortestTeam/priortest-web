@@ -88,11 +88,17 @@
                 prop="lastRunStatus"
                 align="center"
                 label="末次运行状态"
-              />
+              >
+              <template slot-scope="scope">
+                  {{ scope.row.lastRunStatus===1?'失败':"成功"}}
+                </template>
+              </el-table-column>
               <el-table-column
                 prop="executedDate"
                 align="center"
                 label="执行时间"
+                min-width="120"
+                :show-overflow-tooltip="true"
               />
 
               <el-table-column

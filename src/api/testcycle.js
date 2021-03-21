@@ -83,3 +83,11 @@ export function bindCaseDelete(id) {
     method: 'delete'
   })
 }
+//执行测试力
+export function executeTestCase(data) {
+  return request({
+    url: '/testCycle/executeTestCase',
+    method: 'post',
+    data
+  })
+}

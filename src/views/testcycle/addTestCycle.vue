@@ -101,9 +101,9 @@
           <el-input
             v-model="testCycleFrom.description"
             type="textarea"
-            maxlength="300"
+            maxlength="1000"
             show-word-limit
-            :autosize="{ minRows: 3, maxRows: 5 }"
+            :autosize="{ minRows: 3, maxRows: 8 }"
           />
         </el-form-item>
       </div>
@@ -133,7 +133,11 @@
           label="末次运行状态"
           :show-overflow-tooltip="true"
           align="center"
-        />
+        >
+          <template slot-scope="scope">
+            {{ scope.row.lastRunStatus === 1 ? "失败" : "成功" }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -141,6 +145,12 @@
               class="table-btn"
               @click.stop="delview(scope.row)"
               >删除</el-button
+            >
+            <el-button
+              type="text"
+              class="table-btn"
+              @click.stop="runview(scope.row)"
+              >运行</el-button
             >
           </template>
         </el-table-column>
@@ -340,7 +350,6 @@ export default {
       testCycleCase({ pageNum: 1, pageSize: 10, testCycleId: this.testCaseFrom.testCycleId }, {
       }).then(res => {
         this.testCaseData = res.data
-        console.log(res, 123)
       })
     },
     newStep() {
@@ -363,6 +372,9 @@ export default {
     canceltestCaseFrom() {
       this.resettestCaseFrom()
       this.openDia = false
+    },
+    runview(row) {
+      this.$router.push({ name: 'Execute', query: { id: row.id, testCycleId: this.testCycleFrom.id } })
     },
     delview(row) {
       bindCaseDelete(row.id).then(res => {

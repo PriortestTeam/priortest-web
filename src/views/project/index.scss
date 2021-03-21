@@ -18,6 +18,10 @@
   ::v-deep .el-table__row{
     cursor: pointer;
   }
+  .title{
+    color:$tabcolorBG;
+    cursor: pointer;
+  }
 }
 //列表页面的样式
 .project-container {

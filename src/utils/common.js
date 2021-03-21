@@ -29,7 +29,7 @@ function message(type, msg) {
 function returntomenu(that, time) {
   return setTimeout(() => {
     // console.log(this, '路由')
-    that.$store.dispatch('tagsView/delView', that.$route)
+    // that.$store.dispatch('tagsView/delView', that.$route)
     that.$router.go(-1)
   }, time)
 }

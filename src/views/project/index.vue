@@ -77,7 +77,13 @@
                 :show-overflow-tooltip="true"
                 align="center"
                 label="标题"
-              />
+              >
+                <template slot-scope="scope">
+                  <span class="title" @click="openEdit(scope.row)">
+                    {{ scope.row.title }}
+                  </span>
+                </template>
+              </el-table-column>
               <el-table-column
                 prop="reportToName"
                 align="center"
@@ -86,11 +92,13 @@
               <el-table-column prop="status" align="center" label="状态">
                 <template slot-scope="scope">
                   <span>{{
-                    scope.row.status === 1
+                    scope.row.status === 3
                       ? "开发中"
                       : scope.row.status === 2
                       ? "计划中"
-                      : "关闭"
+                      : scope.row.status === 1
+                      ? "关闭"
+                      : ""
                   }}</span>
                 </template>
               </el-table-column>
@@ -105,7 +113,7 @@
               <el-table-column
                 prop="planReleaseDate"
                 align="center"
-                label="计划上线日期"
+                label="上线日期"
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
@@ -129,10 +137,11 @@
                   <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
                   <el-button
+                    v-if="scope.row.status !== 1"
                     type="text"
                     class="table-btn"
-                    @click.stop="openEdit(scope.row)"
-                    >编辑</el-button
+                    @click.stop="closeAction(scope.row)"
+                    >关闭</el-button
                   >
                   <el-button
                     type="text"
@@ -143,7 +152,6 @@
                 </template>
               </el-table-column>
             </el-table>
-
             <pagination
               v-show="projectTotal > 0"
               :total="projectTotal"
@@ -160,7 +168,7 @@
 <script>
 import { message } from '@/utils/common'
 import store from '@/store'
-import { queryForProjects, delProjects, checkProject, queryViews } from '@/api/project'
+import { queryForProjects, delProjects, checkProject, queryViews, getCloseProject } from '@/api/project'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Project',
@@ -289,15 +297,31 @@ export default {
     },
     // 表格行点击去编辑
     openEdit(row) {
-      const data = JSON.stringify(row)
-      this.$router.push({ name: 'Addproject', query: { info: data } })
+      this.$router.push({ name: 'Addproject', query: { id: row.id } })
     },
     // 表格行点击
     switcproject(row) {
       this.projectBody.scope = row.scope
       this.projectBody.projectId = row.id
       this.getqueryViews()
-    }
+    },
+    closeAction(row) {
+
+      this.$prompt(
+        '请输入关闭理由：',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          showCancelButton: false
+        }
+      ).then(({ value }) => {
+        getCloseProject({ id: row.id, closeDesc: value }).then(res => {
+          this.getqueryForProjects()
+        })
+        // TO DO DO ...
+      }).catch({
+      })
+    },
     /** 项目列表表格结束 */
 
   }

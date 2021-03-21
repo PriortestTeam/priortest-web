@@ -89,3 +89,26 @@ export function deleteView(data) {
   })
 }
 
+//获取负责人
+export function queryByNameSubUsers(data) {
+  return request({
+    url: '/user/queryByNameSubUsers',
+    method: 'post',
+    data
+  })
+}
+//获取详情
+export function getFeature(id) {
+  return request({
+    url: '/project/queryById/' + id,
+    method: 'get'
+  })
+}
+//关闭
+export function getCloseProject(data) {
+  return request({
+    url: '/project/getCloseProject',
+    method: 'get',
+    params: data
+  })
+}

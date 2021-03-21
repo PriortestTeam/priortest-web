@@ -166,6 +166,14 @@ export const constantRoutes = [
       meta: {
         title: 'Project', icon: 'Project'
       }
+    },
+    {
+      path: 'execute',
+      name: 'Execute',
+      component: () => import('@/views/testcycle/execute'),
+      meta: {
+        title: 'Project', icon: 'Project'
+      }
     }]
   },
   {

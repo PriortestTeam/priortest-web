@@ -81,9 +81,9 @@
           <el-input
             v-model="sprintFrom.description"
             type="textarea"
-            maxlength="100"
+            maxlength="1000"
             show-word-limit
-            :autosize="{ minRows: 3, maxRows: 5 }"
+            :autosize="{ minRows: 3, maxRows: 8 }"
           />
         </el-form-item>
       </div>
