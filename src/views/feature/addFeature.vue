@@ -120,7 +120,8 @@
 import { mapGetters } from 'vuex'
 import Upload from '@/components/Upload'
 import { addFeature, detailFeature, editFeature } from '@/api/feature'
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import { message, formData, returntomenu, formatChangedPara } from '@/utils/common'
+import { addAttachment, fileList, deleteAttachment, updateAttachment } from '@/api/fileUpload'
 export default {
   name: 'Addfeature',
   components: {
@@ -142,7 +143,27 @@ export default {
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
         ]
+      },
+
+      // 文件
+      profileOpen: false,
+      tableHeader: {
+        color: '#d4dce3',
+        background: '#003d79'
+      }, // 表头颜色加粗设置
+      editfileList: [],
+      onefileList: [],
+      onefileId: '',
+      allfileList: [],
+      fileTotal: 0,
+      // 获取文件列表
+      fileParams: {
+        pageNum: 1,
+        pageSize: 10,
+        type: 'Project',
+        linkId: ''
       }
+      // 文件
 
     }
   },
@@ -161,9 +182,12 @@ export default {
       detailFeature(this.$route.query.id).then(res => {
         this.featureFrom = res.data
         this.featureFromTemp = Object.assign({}, this.featureFrom)
+        this.fileParams.type = res.data.scope
+        this.fileParams.linkId = res.data.id
       })
     } else {
       this.featureFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+      this.fileParams.linkId = this.projectInfo.userUseOpenProject.projectId
     }
   },
   mounted() {
@@ -230,7 +254,6 @@ export default {
       }
       this.returntomenu(this)
     },
-
 
   }
 
