@@ -13,24 +13,25 @@
           type="primary"
           round
           @click="submitForm('featureFrom', false)"
-        >保存并新建</el-button>
+          >保存并新建</el-button
+        >
         <el-button
           v-if="!featureFrom.id"
           type="primary"
           round
           @click="submitForm('featureFrom', true)"
-        >保存并返回</el-button>
+          >保存并返回</el-button
+        >
         <el-button
           v-if="featureFrom.id"
           type="primary"
           round
           @click="submitForm('featureFrom')"
-        >确认修改</el-button>
-        <el-button
-          type="primary"
-          round
-          @click="giveupBack('featureFrom')"
-        >放弃</el-button>
+          >确认修改</el-button
+        >
+        <el-button type="primary" round @click="giveupBack('featureFrom')"
+          >放弃</el-button
+        >
         <router-link v-if="!featureFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
@@ -60,7 +61,8 @@
                   :value="0"
                 />
                 <el-option :label="$t('lang.Project.Plan')" :value="2" />
-              </el-select> </el-form-item></el-col>
+              </el-select> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="开发周期" prop="sprintId">
               <el-input
@@ -68,14 +70,15 @@
                 placeholder="纯数字"
                 oninput="value=value.replace(/[^\d]/g,'')"
                 maxlength="30"
-                size="small"
-              /></el-form-item></el-col>
+                size="small" /></el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item label="负责人" size="small" prop="reportTo">
               <el-input
                 v-model="featureFrom.reportTo"
                 maxlength="15"
-              /> </el-form-item></el-col>
+              /> </el-form-item
+          ></el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
@@ -83,13 +86,15 @@
               <el-input
                 v-model="featureFrom.epic"
                 maxlength="15"
-              /> </el-form-item></el-col>
+              /> </el-form-item
+          ></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="版本" prop="version">
               <el-input
                 v-model="featureFrom.version"
                 maxlength="15"
-              /> </el-form-item></el-col>
+              /> </el-form-item
+          ></el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -99,39 +104,29 @@
           <el-input
             v-model="featureFrom.description"
             type="textarea"
-            maxlength="300"
+            maxlength="1000"
             show-word-limit
-            :autosize="{ minRows: 3, maxRows: 5 }"
+            :autosize="{ minRows: 3, maxRows: 8 }"
           />
         </el-form-item>
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :file-list="featureFrom.fileList"
-        >
-          <el-button size="small" type="primary">{{
-            $t("lang.Project.Attachment")
-          }}</el-button>
-          <!-- <div slot="tip" class="el-upload__tip">
-            只能上传jpg/png文件，且不超过500kb
-          </div> -->
-        </el-upload>
       </div>
     </el-form>
+    <div class="table" v-if="featureFrom.id">
+      <Upload :linkId="featureFrom.id" :type="featureFrom.scope" />
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import Upload from '@/components/Upload'
 import { addFeature, detailFeature, editFeature } from '@/api/feature'
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import { message, formData, returntomenu, formatChangedPara } from '@/utils/common'
+import { addAttachment, fileList, deleteAttachment, updateAttachment } from '@/api/fileUpload'
 export default {
   name: 'Addfeature',
+  components: {
+    Upload
+  },
   data() {
     return {
       featureFrom: {
@@ -148,7 +143,27 @@ export default {
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
         ]
+      },
+
+      // 文件
+      profileOpen: false,
+      tableHeader: {
+        color: '#d4dce3',
+        background: '#003d79'
+      }, // 表头颜色加粗设置
+      editfileList: [],
+      onefileList: [],
+      onefileId: '',
+      allfileList: [],
+      fileTotal: 0,
+      // 获取文件列表
+      fileParams: {
+        pageNum: 1,
+        pageSize: 10,
+        type: 'Project',
+        linkId: ''
       }
+      // 文件
 
     }
   },
@@ -167,9 +182,12 @@ export default {
       detailFeature(this.$route.query.id).then(res => {
         this.featureFrom = res.data
         this.featureFromTemp = Object.assign({}, this.featureFrom)
+        this.fileParams.type = res.data.scope
+        this.fileParams.linkId = res.data.id
       })
     } else {
       this.featureFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+      this.fileParams.linkId = this.projectInfo.userUseOpenProject.projectId
     }
   },
   mounted() {
@@ -236,19 +254,6 @@ export default {
       }
       this.returntomenu(this)
     },
-    // 上传
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview(file) {
-      console.log(file)
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
-    }
 
   }
 

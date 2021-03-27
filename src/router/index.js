@@ -95,7 +95,6 @@ export const constantRoutes = [
       }
     }
 
-
     ]
   },
   // 注册
@@ -138,8 +137,7 @@ export const constantRoutes = [
       name: 'Testcase',
       component: () => import('@/views/testcase/index'),
       meta: { title: 'TestCase', icon: 'TestCase' }
-    }
-      ,
+    },
     {
       path: 'addtestcase',
       name: 'Addtestcase',
@@ -163,6 +161,14 @@ export const constantRoutes = [
       path: 'addtestcycle',
       name: 'Addtestcycle',
       component: () => import('@/views/testcycle/addTestCycle'),
+      meta: {
+        title: 'Project', icon: 'Project'
+      }
+    },
+    {
+      path: 'execute',
+      name: 'Execute',
+      component: () => import('@/views/testcycle/execute'),
       meta: {
         title: 'Project', icon: 'Project'
       }

@@ -22,7 +22,7 @@ const mutations = {
     state.userinfo = userinfo
   },
 }
-
+  
 const actions = {
   // user login
   login({ commit }, userInfo) {
