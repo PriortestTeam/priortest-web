@@ -94,7 +94,7 @@ export function queryByNameSubUsers(data) {
   return request({
     url: '/user/queryByNameSubUsers',
     method: 'post',
-    data
+    params: data
   })
 }
 //获取详情

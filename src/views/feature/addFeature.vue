@@ -40,61 +40,88 @@
       </div>
       <div class="form-box">
         <el-form-item label="故事标题" prop="title">
-          <el-input v-model="featureFrom.title" maxlength="30" size="small" />
+          <el-input v-model="featureFrom.title" maxlength="50" size="small" />
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item
-              size="small"
-              :label="$t('lang.Project.Status')"
-              prop="status"
-            >
+            <el-form-item size="small" label="开发周期" prop="sprintId">
               <el-select
-                v-model="featureFrom.status"
-                placeholder="请选择状态"
+                v-model="featureFrom.sprintId"
+                filterable
                 clearable
+                multiple
+                remote
+                reserve-keyword
+                placeholder="请选择开发周期"
+                :remote-method="remoteMethod"
+                :loading="loading"
               >
-                <el-option :label="$t('lang.Project.Progress')" :value="1" />
                 <el-option
-                  :label="$t('lang.Project.Closed')"
-                  :disabled="true"
-                  :value="0"
-                />
-                <el-option :label="$t('lang.Project.Plan')" :value="2" />
+                  v-for="item in sprintArr"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                >
+                </el-option>
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="开发周期" prop="sprintId">
-              <el-input
-                v-model="featureFrom.sprintId"
-                placeholder="纯数字"
-                oninput="value=value.replace(/[^\d]/g,'')"
-                maxlength="30"
-                size="small" /></el-form-item
-          ></el-col>
+            <el-form-item size="small" label="版本" prop="version">
+              <el-select
+                v-model="featureFrom.version"
+                placeholder="请选择版本"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="负责人" size="small" prop="reportTo">
-              <el-input
+              <el-select
                 v-model="featureFrom.reportTo"
-                maxlength="15"
-              /> </el-form-item
-          ></el-col>
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请选择负责人"
+                clearable
+                :remote-method="remoteReport"
+                :loading="loading"
+              >
+                <el-option
+                  v-for="item in optionsArr"
+                  :key="item.id"
+                  :label="item.userName"
+                  :value="item.userName"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="EPIC" prop="epic">
-              <el-input
+              <el-select
                 v-model="featureFrom.epic"
-                maxlength="15"
-              /> </el-form-item
-          ></el-col>
+                placeholder="请选择epic"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="版本" prop="version">
-              <el-input
-                v-model="featureFrom.version"
-                maxlength="15"
-              /> </el-form-item
-          ></el-col>
+            <el-form-item size="small" label="模版" prop="moudle">
+              <el-select
+                v-model="featureFrom.moudle"
+                placeholder="请选择模版"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -119,9 +146,10 @@
 <script>
 import { mapGetters } from 'vuex'
 import Upload from '@/components/Upload'
-import { addFeature, detailFeature, editFeature } from '@/api/feature'
-import { message, formData, returntomenu, formatChangedPara } from '@/utils/common'
-import { addAttachment, fileList, deleteAttachment, updateAttachment } from '@/api/fileUpload'
+import { queryByNameSubUsers } from '@/api/project'
+import { addFeature, detailFeature, editFeature, querySprintList } from '@/api/feature'
+import { message, returntomenu, formatChangedPara } from '@/utils/common'
+
 export default {
   name: 'Addfeature',
   components: {
@@ -129,10 +157,15 @@ export default {
   },
   data() {
     return {
+      optionsArr: [],
+      loading: false,
+      sprintArr: [],
       featureFrom: {
-        status: 1
+        sprintId: [],
+        sprints: []
       },
-      featureFromTemp: {},
+      featureFromTemp: {
+      },
       Projectrules: {
         title: [
           { required: true, message: '请输入故事标题', trigger: 'blur' }
@@ -140,9 +173,6 @@ export default {
         reportTo: [
           { required: true, message: '请输入负责人', trigger: 'blur' }
         ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ]
       },
 
       // 文件
@@ -180,11 +210,16 @@ export default {
   created() {
     if (this.$route.query.id) {
       detailFeature(this.$route.query.id).then(res => {
+        this.featureFrom.sprintId.filter(item => {
+          this.featureFrom.sprints.push({ id: item })
+        })
         this.featureFrom = res.data
+        this.featureFrom.sprintId = res.data.sprints.map(item => item.id)
         this.featureFromTemp = Object.assign({}, this.featureFrom)
         this.fileParams.type = res.data.scope
         this.fileParams.linkId = res.data.id
       })
+
     } else {
       this.featureFrom.projectId = this.projectInfo.userUseOpenProject.projectId
       this.fileParams.linkId = this.projectInfo.userUseOpenProject.projectId
@@ -201,8 +236,9 @@ export default {
         projectId: this.projectInfo.userUseOpenProject.projectId,
         title: undefined,
         description: undefined,
-        status: 1,
-        sprintId: undefined,
+        moudle: undefined,
+        sprintId: [],
+        sprints: [],
         reportTo: undefined,
         epic: undefined,
         version: undefined
@@ -210,14 +246,45 @@ export default {
       }
       this.$refs['featureFrom'].resetFields()
     },
-
+    remoteMethod(query) {
+      if (query !== '') {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          querySprintList({ title: query }).then(res => {
+            this.sprintArr = res.data
+          })
+        }, 200);
+      } else {
+        this.sprintArr = [];
+      }
+    },
+    remoteReport(query) {
+      if (query !== '') {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          queryByNameSubUsers({ subUserName: query }).then(res => {
+            this.optionsArr = res.data
+          })
+        }, 200);
+      } else {
+        this.optionsArr = [];
+      }
+    },
     // 提交
     submitForm(formName, type) {
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.featureFrom.sprintId.filter(item => {
+            this.featureFrom.sprints.push({ id: item })
+          })
+          delete this.featureFrom.sprintId
           if (this.featureFrom.id) {
             const param = formatChangedPara(this.featureFromTemp, this.featureFrom)
-            param.projectId = this.featureFromTemp.projectId
+            param.projectId = this.featureFrom.projectId
+            param.sprints = this.featureFrom.sprints
             editFeature(param).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)

@@ -71,3 +71,11 @@ export function checkProject(id) {
     method: 'get'
   })
 }
+//获取开发周期
+export function querySprintList(data) {
+  return request({
+    url: '/feature/querySprintList',
+    method: 'post',
+    params: data
+  })
+}

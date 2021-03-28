@@ -59,7 +59,13 @@
             <el-form-item label="负责人" size="small" prop="reportToName">
               <el-select
                 v-model="projectFrom.reportToName"
-                placeholder="请选择"
+                filterable
+                clearable
+                remote
+                reserve-keyword
+                placeholder="请选择负责人"
+                :remote-method="remoteReport"
+                :loading="loading"
               >
                 <el-option
                   v-for="item in optionsArr"
@@ -124,6 +130,18 @@
               </el-date-picker> </el-form-item
           ></el-col>
         </el-row>
+        <el-row v-if="projectFrom.id">
+          <el-col :span="8">
+            <el-form-item label="key" prop="key">
+              <el-input
+                :disabled="true"
+                v-model="projectFrom.foreignId"
+                size="small"
+                maxlength="20"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
           prop="description"
@@ -159,6 +177,7 @@ export default {
     return {
       disabled: false,
       optionsArr: [],
+      loading: false,
       projectFrom: {},
       projectFromTem: {},
       Projectrules: {
@@ -189,8 +208,8 @@ export default {
     if (this.$route.query.id) {
       getFeature(this.$route.query.id).then(res => {
         this.projectFrom = res.data
+        this.projectFromTem = Object.assign({}, this.projectFrom)
       })
-      this.projectFromTem = Object.assign({}, this.projectFrom)
     }
     queryByNameSubUsers({ subUserName: '' }).then(res => {
       this.optionsArr = res.data
@@ -199,6 +218,19 @@ export default {
   mounted() {
   },
   methods: {
+    remoteReport(query) {
+      if (query !== '') {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          queryByNameSubUsers({ subUserName: query }).then(res => {
+            this.optionsArr = res.data
+          })
+        }, 200);
+      } else {
+        this.optionsArr = [];
+      }
+    },
     // 重置表单
     resetFields() {
       this.projectFrom = {
