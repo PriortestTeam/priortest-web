@@ -315,9 +315,14 @@ export default {
           showCancelButton: false
         }
       ).then(({ value }) => {
-        getCloseProject({ id: row.id, closeDesc: value }).then(res => {
-          this.getqueryForProjects()
-        })
+        if (value) {
+          getCloseProject({ id: row.id, closeDesc: value }).then(res => {
+            this.getqueryForProjects()
+          })
+        } else {
+
+        }
+
         // TO DO DO ...
       }).catch({
       })

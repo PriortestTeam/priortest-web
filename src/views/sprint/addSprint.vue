@@ -13,24 +13,25 @@
           type="primary"
           round
           @click="submitForm('sprintFrom', false)"
-        >保存并新建</el-button>
+          >保存并新建</el-button
+        >
         <el-button
           v-if="!sprintFrom.id"
           type="primary"
           round
           @click="submitForm('sprintFrom', true)"
-        >保存并返回</el-button>
+          >保存并返回</el-button
+        >
         <el-button
           v-if="sprintFrom.id"
           type="primary"
           round
           @click="submitForm('sprintFrom')"
-        >确认修改</el-button>
-        <el-button
-          type="primary"
-          round
-          @click="giveupBack('sprintFrom')"
-        >放弃</el-button>
+          >确认修改</el-button
+        >
+        <el-button type="primary" round @click="giveupBack('sprintFrom')"
+          >放弃</el-button
+        >
         <router-link v-if="!sprintFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
@@ -43,19 +44,16 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item
-              size="small"
-              :label="$t('lang.Project.Status')"
-              prop="status"
-            >
+            <el-form-item size="small" label="EPIC" prop="epic">
               <el-select
-                v-model="sprintFrom.status"
-                placeholder="请选择迭代状态"
+                v-model="sprintFrom.epic"
+                placeholder="请选择epic"
+                clearable
               >
-                <el-option :label="$t('lang.Project.Progress')" :value="1" />
-                <el-option :label="$t('lang.Project.Closed')" :value="0" />
-                <el-option :label="$t('lang.Project.Plan')" :value="2" />
-              </el-select> </el-form-item></el-col>
+                <el-option label="暂无" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="起止日期" size="small" prop="timeArr">
               <el-date-picker
@@ -63,12 +61,28 @@
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 type="datetimerange"
+                :picker-options="pickerOptions"
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 unlink-panels
-              /></el-form-item></el-col>
+                :default-time="['00:00:00', '23:59:00']"
+              >
+              </el-date-picker>
+              <!-- <el-date-picker
+                v-model="sprintFrom.timeArr"
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:00']"
+                unlink-panels /> -->
+            </el-form-item></el-col
+          >
         </el-row>
+
         <el-form-item
           :label="$t('lang.Project.Description')"
           prop="description"
@@ -94,18 +108,45 @@ export default {
   name: 'Addsprint',
   data() {
     return {
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;//如果没有后面的-8.64e7就是不可以选择今天的 
+        },
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }],
 
+      },
       sprintFrom: {
-        status: 1
       },
       sprintFromTem: {},
       sprintrules: {
         title: [
           { required: true, message: '请输入迭代标题', trigger: 'blur' }
         ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ],
+
         timeArr: [
           { required: true, message: '请选择日期', trigger: 'change' }
         ]
@@ -142,11 +183,10 @@ export default {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
         title: undefined,
-        status: 1,
         description: undefined,
         startDate: undefined,
         endDate: undefined,
-
+        epic: undefined,
         timeArr: '',
         fileList: []
       }
