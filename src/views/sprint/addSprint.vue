@@ -68,19 +68,8 @@
                 unlink-panels
                 :default-time="['00:00:00', '23:59:00']"
               >
-              </el-date-picker>
-              <!-- <el-date-picker
-                v-model="sprintFrom.timeArr"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :default-time="['00:00:00', '23:59:00']"
-                unlink-panels /> -->
-            </el-form-item></el-col
-          >
+              </el-date-picker> </el-form-item
+          ></el-col>
         </el-row>
 
         <el-form-item
@@ -120,20 +109,21 @@ export default {
             start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
             picker.$emit('pick', [start, end]);
           }
+        },
+        {
+          text: '最近半个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 14);
+            picker.$emit('pick', [start, end]);
+          }
         }, {
           text: '最近一个月',
           onClick(picker) {
             const end = new Date();
             const start = new Date();
             start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
             picker.$emit('pick', [start, end]);
           }
         }],

@@ -26,6 +26,11 @@ import { resetForm, handleTree, returntomenu } from '@/utils/jeethink'
 Vue.prototype.resetForm = resetForm
 Vue.prototype.handleTree = handleTree
 Vue.prototype.returntomenu = returntomenu
+import storage from '@/utils/localStorage'
+Vue.prototype.set = storage.set
+Vue.prototype.get = storage.get
+Vue.prototype.remove = storage.remove
+
 import VueI18n from 'vue-i18n'
 
 Vue.use(VueI18n)

@@ -21,9 +21,11 @@ const mutations = {
   SET_USERINFO: (state, userinfo) => {
     state.userinfo = userinfo
   },
+
 }
-  
+
 const actions = {
+
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo

@@ -101,19 +101,37 @@
           ></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="版本" prop="version">
-              <el-input v-model="testCaseFrom.version" />
+              <el-select
+                v-model="testCaseFrom.version"
+                placeholder="请选择版本"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="CaseCategory" prop="caseCategory">
-              <el-input v-model="testCaseFrom.caseCategory" />
+            <el-form-item size="small" label="测试分类" prop="caseCategory">
+              <el-select
+                v-model="testCaseFrom.caseCategory"
+                placeholder="请选择测试分类"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="casetype" prop="caseType">
-              <el-input v-model="testCaseFrom.caseType" />
+            <el-form-item size="small" label="测试类型" prop="caseType">
+              <el-select
+                v-model="testCaseFrom.测试类型"
+                placeholder="请选择测试类型"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -122,16 +140,66 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="环境" prop="env">
-              <el-input v-model="testCaseFrom.env" />
+            <el-form-item size="small" label="测试环境" prop="env">
+              <el-select
+                v-model="testCaseFrom.env"
+                placeholder="请选择测试环境"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="前言" prop="preCondition" size="small">
+        <el-row>
+          <el-col :span="8">
+            <el-form-item size="small" label="模块" prop="module">
+              <el-select
+                v-model="testCaseFrom.module"
+                placeholder="请选择模块"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="测试设备" prop="testDevice">
+              <el-select
+                v-model="testCaseFrom.testDevice"
+                placeholder="请选择测试设备"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="测试方法" prop="testMethod">
+              <el-select
+                v-model="testCaseFrom.testMethod"
+                placeholder="请选择测试方法"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="测试数据" prop="testData" size="small">
+          <el-input
+            v-model="testCaseFrom.testData"
+            type="textarea"
+            maxlength="1000"
+            show-word-limit
+            :autosize="{ minRows: 3, maxRows: 5 }"
+          />
+        </el-form-item>
+        <el-form-item label="测试条件" prop="preCondition" size="small">
           <el-input
             v-model="testCaseFrom.preCondition"
             type="textarea"
-            maxlength="100"
+            maxlength="1000"
             show-word-limit
             :autosize="{ minRows: 3, maxRows: 5 }"
           />
@@ -338,11 +406,10 @@ export default {
       this.testCaseFrom = {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
-
         title: undefined,
+        description: undefined,
         priority: undefined,
         feature: undefined,
-        description: undefined,
         browser: undefined,
         platform: undefined,
         version: undefined,
@@ -350,6 +417,10 @@ export default {
         caseType: undefined,
         externaId: undefined,
         env: undefined,
+        module: undefined,
+        testDevice: undefined,
+        testMethod: undefined,
+        testData: undefined,
         preCondition: undefined,
       }
       this.$refs['testCaseFrom'].resetFields();

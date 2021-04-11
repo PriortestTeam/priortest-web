@@ -44,39 +44,6 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="开发周期" prop="sprintId">
-              <el-select
-                v-model="featureFrom.sprintId"
-                filterable
-                clearable
-                multiple
-                remote
-                reserve-keyword
-                placeholder="请选择开发周期"
-                :remote-method="remoteMethod"
-                :loading="loading"
-              >
-                <el-option
-                  v-for="item in sprintArr"
-                  :key="item.id"
-                  :label="item.title"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select> </el-form-item
-          ></el-col>
-          <el-col :span="8">
-            <el-form-item size="small" label="版本" prop="version">
-              <el-select
-                v-model="featureFrom.version"
-                placeholder="请选择版本"
-                clearable
-              >
-                <el-option label="Add New Value" value="" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
             <el-form-item label="负责人" size="small" prop="reportTo">
               <el-select
                 v-model="featureFrom.reportTo"
@@ -93,6 +60,40 @@
                   :key="item.id"
                   :label="item.userName"
                   :value="item.userName"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="版本" prop="version">
+              <el-select
+                v-model="featureFrom.version"
+                placeholder="请选择版本"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="迭代周期" prop="sprintId">
+              <el-select
+                v-model="featureFrom.sprintId"
+                filterable
+                clearable
+                remote
+                reserve-keyword
+                @change="getTag"
+                placeholder="请选择迭代周期"
+                :remote-method="remoteMethod"
+                :loading="loading"
+              >
+                <el-option
+                  v-for="item in sprintArr"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
                 >
                 </el-option>
               </el-select>
@@ -137,6 +138,21 @@
           />
         </el-form-item>
       </div>
+      <div class="tag-box">
+        <b>关联迭代周期列表</b>
+        <el-tag
+          v-for="tag in featureFrom.sprints"
+          :key="tag.id"
+          closable
+          @close="removeTag(tag.id)"
+          type="success"
+        >
+          {{ tag.title }}
+        </el-tag>
+        <div v-if="featureFrom.sprints.length === 0" class="nodata">
+          暂无关联！
+        </div>
+      </div>
     </el-form>
     <div class="table" v-if="featureFrom.id">
       <Upload :linkId="featureFrom.id" :type="featureFrom.scope" />
@@ -161,7 +177,7 @@ export default {
       loading: false,
       sprintArr: [],
       featureFrom: {
-        sprintId: [],
+        sprintId: '',
         sprints: []
       },
       featureFromTemp: {
@@ -210,11 +226,7 @@ export default {
   created() {
     if (this.$route.query.id) {
       detailFeature(this.$route.query.id).then(res => {
-        this.featureFrom.sprintId.filter(item => {
-          this.featureFrom.sprints.push({ id: item })
-        })
         this.featureFrom = res.data
-        this.featureFrom.sprintId = res.data.sprints.map(item => item.id)
         this.featureFromTemp = Object.assign({}, this.featureFrom)
         this.fileParams.type = res.data.scope
         this.fileParams.linkId = res.data.id
@@ -272,14 +284,26 @@ export default {
         this.optionsArr = [];
       }
     },
+    getTag() {
+      //先看下标签sprints里面是否存在
+      let haveIndex = this.featureFrom.sprints.findIndex(item => item.id === this.featureFrom.sprintId)
+      if (haveIndex === -1) {
+        let item = this.sprintArr.findIndex(item => item.id === this.featureFrom.sprintId)
+        this.featureFrom.sprints.push(this.sprintArr[item])
+      } else {
+        message('error', '该迭代周期已选择')
+      }
+      this.featureFrom.sprintId = ''
+
+    },
+    removeTag(id) {
+      let index = this.sprintArr.findIndex(item => item.id === id)
+      this.featureFrom.sprints.splice(index, 1)
+    },
     // 提交
     submitForm(formName, type) {
-
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.featureFrom.sprintId.filter(item => {
-            this.featureFrom.sprints.push({ id: item })
-          })
           delete this.featureFrom.sprintId
           if (this.featureFrom.id) {
             const param = formatChangedPara(this.featureFromTemp, this.featureFrom)
@@ -328,4 +352,27 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
+.el-form {
+  overflow: hidden;
+  .form-box {
+    float: left;
+  }
+  .tag-box {
+    margin-left: 80px;
+    float: left;
+    .el-tag {
+      margin-right: 20px;
+    }
+    .nodata {
+      color: red;
+      text-align: center;
+    }
+    b {
+      margin-bottom: 20px;
+      display: block;
+      font-size: 12px;
+      color: #003d79;
+    }
+  }
+}
 </style>
