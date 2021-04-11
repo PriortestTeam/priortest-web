@@ -39,7 +39,7 @@
         </router-link>
       </div>
       <div class="form-box">
-        <el-form-item label="故事标题" prop="title">
+        <el-form-item label="缺陷标题" prop="title">
           <el-input v-model="issueFrom.title" maxlength="30" size="small" />
         </el-form-item>
         <el-row>
@@ -58,30 +58,19 @@
                 </el-option> </el-select></el-form-item
           ></el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="测试周期" prop="testCycle">
+            <el-form-item size="small" label="开发人员" prop="developer">
               <el-select
-                v-model="issueFrom.testCycle"
-                placeholder="关联测试周期"
+                v-model="issueFrom.developer"
+                placeholder="请选择开发人员"
+                clearable
               >
-                <el-option
-                  v-for="item in testCycleData"
-                  :key="item.id"
-                  :label="item.title"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select> </el-form-item
-          ></el-col>
+                <el-option label="Add New Value" value="" />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
-            <el-form-item label="故事" size="small" prop="feature">
-              <el-select v-model="issueFrom.feature" placeholder="关联故事">
-                <el-option
-                  v-for="item in featueData"
-                  :key="item.id"
-                  :label="item.title"
-                  :value="item.id"
-                >
-                </el-option> </el-select></el-form-item
+            <el-form-item size="small" label="测试分类" prop="caseCategory">
+              <el-input v-model="issueFrom.caseCategory" /> </el-form-item
           ></el-col>
         </el-row>
         <el-row>
@@ -137,26 +126,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item size="small" label="CaseCategory" prop="caseCategory">
-              <el-input v-model="issueFrom.caseCategory" /> </el-form-item
-          ></el-col>
-          <el-col :span="8">
-            <el-form-item
-              size="small"
-              label="计划发行日期"
-              prop="plannedReleaseDate"
-            >
-              <el-date-picker
-                v-model="issueFrom.plannedReleaseDate"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                type="date"
-                placeholder="选择计划发行日期"
-              >
-              </el-date-picker> </el-form-item
-          ></el-col>
-        </el-row>
+        <el-row> </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
           prop="description"
@@ -165,9 +135,9 @@
           <el-input
             v-model="issueFrom.description"
             type="textarea"
-            maxlength="1000"
+            maxlength="2000"
             show-word-limit
-            :autosize="{ minRows: 3, maxRows: 8 }"
+            :autosize="{ minRows: 4, maxRows: 8 }"
           />
         </el-form-item>
       </div>
@@ -178,8 +148,7 @@
 import { mapGetters } from 'vuex'
 import { addIssue, detailIssue, editIssue } from '@/api/issue'
 import { testCaseListAll } from '@/api/testcase'
-import { testCycleListAll } from '@/api/testcycle'
-import { featureListAll } from '@/api/feature'
+
 
 
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
@@ -198,26 +167,18 @@ export default {
           { required: true, message: '请选择状态', trigger: 'change' }
         ],
 
-        plannedReleaseDate: [
-          { required: true, message: '请选择发行日期', trigger: 'change' }
-        ],
+
         testCase: [
           { required: true, message: '请选择关联测试案例', trigger: 'change' }
         ],
-        testCycle: [
-          { required: true, message: '请选择关联测试周期', trigger: 'change' }
-        ],
-        feature: [
-          { required: true, message: '请选择关联故事', trigger: 'change' }
-        ],
+
         priority: [
           { required: true, message: '请选择优先级', trigger: 'change' }
         ],
 
       },
       testCaseData: [],
-      testCycleData: [],
-      featueData: [],
+
 
     }
   },
@@ -236,17 +197,17 @@ export default {
     if (this.$route.query.id) {
       detailIssue(this.$route.query.id).then(res => {
         this.issueFrom = res.data
-        this.issueFrom.feature = Number(this.issueFrom.feature)
+
+
         this.issueFrom.testCase = Number(this.issueFrom.testCase)
-        this.issueFrom.testCycle = Number(this.issueFrom.testCycle)
         this.issueFromTemp = Object.assign({}, this.issueFrom)
       })
     } else {
       this.issueFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
     this.gettestCaseListAll()
-    this.gettestCycleListAll()
-    this.getfeatureListAll()
+
+
   },
   mounted() {
   },
@@ -258,10 +219,8 @@ export default {
         projectId: this.projectInfo.userUseOpenProject.projectId,
         title: undefined,
         status: undefined,
-        plannedReleaseDate: undefined,
         testCase: undefined,
-        testCycle: undefined,
-        feature: undefined,
+        developer: undefined,
         priority: undefined,
         env: undefined,
         browser: undefined,
@@ -277,18 +236,7 @@ export default {
         this.testCaseData = res.data
       })
     },
-    //得到所有测试周期
-    gettestCycleListAll() {
-      testCycleListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
-        this.testCycleData = res.data
-      })
-    },
-    //得到所有故事
-    getfeatureListAll() {
-      featureListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
-        this.featueData = res.data
-      })
-    },
+
 
 
     // 提交

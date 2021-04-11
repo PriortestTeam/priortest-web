@@ -44,54 +44,96 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="关联故事" prop="feature">
-              <el-select v-model="testCycleFrom.feature" placeholder="关联故事">
-                <el-option
-                  v-for="item in featueData"
-                  :key="item.id"
-                  :label="item.title"
-                  :value="item.id"
-                >
-                </el-option> </el-select></el-form-item
-          ></el-col>
-          <el-col :span="8">
-            <el-form-item size="small" label="关联迭代" prop="sprint">
-              <el-select v-model="testCycleFrom.sprint" placeholder="关联迭代">
-                <el-option
-                  v-for="item in sprintData"
-                  :key="item.id"
-                  :label="item.title"
-                  :value="item.id"
-                >
-                </el-option> </el-select></el-form-item
-          ></el-col>
+            <el-form-item label="当前版本" size="small" prop="currentVersion">
+              <el-radio-group v-model="testCycleFrom.currentVersion">
+                <el-radio :label="0">否</el-radio>
+                <el-radio :label="1">是</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="版本" size="small" prop="version">
-              <el-input
+              <el-select
+                :disabled="testCycleFrom.currentVersion === 1"
                 v-model="testCycleFrom.version"
-                maxlength="15"
-              /> </el-form-item
+                placeholder="请选择版本"
+                clearable
+              >
+                <el-option label="Add New Value" value="" />
+              </el-select> </el-form-item
           ></el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="状态" prop="status">
-              <el-select v-model="testCycleFrom.status" placeholder="状态">
+              <el-select
+                :disabled="true"
+                v-model="testCycleFrom.status"
+                placeholder="状态"
+              >
                 <el-option label="completed" :value="1" />
                 <el-option
                   label="uncompleted"
                   :value="2"
                 /> </el-select></el-form-item
           ></el-col>
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="运行状态" prop="runStatus">
-              <el-select v-model="testCycleFrom.runStatus" placeholder="状态">
+              <el-select
+                :disabled="true"
+                v-model="testCycleFrom.runStatus"
+                placeholder="状态"
+              >
                 <el-option label="passed" :value="1" />
                 <el-option
                   label="failed"
                   :value="2"
                 /> </el-select></el-form-item
           ></el-col>
+          <el-col :span="8">
+            <el-form-item label="用例执行人" size="small" prop="assignTo">
+              <el-select
+                v-model="testCycleFrom.assignTo"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请选择用例执行人"
+                clearable
+                :remote-method="remoteReport"
+                :loading="loading"
+              >
+                <el-option
+                  v-for="item in optionsArr"
+                  :key="item.id"
+                  :label="item.userName"
+                  :value="item.userName"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="关注者" size="small" prop="notifiyList ">
+              <el-select
+                v-model="testCycleFrom.notifiyList"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请选择关注者"
+                clearable
+                :remote-method="remoteReport"
+                :loading="loading"
+              >
+                <el-option
+                  v-for="item in optionsArr"
+                  :key="item.id"
+                  :label="item.userName"
+                  :value="item.userName"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -169,7 +211,10 @@
         label-width="120px"
       >
         <el-form-item label="选择测试用例" prop="testCaseId" size="small">
-          <el-select v-model="testCaseFrom.testCaseId" placeholder="请选择状态">
+          <el-select
+            v-model="testCaseFrom.testCaseId"
+            placeholder="请选择测试用例"
+          >
             <el-option
               v-for="item in testCaseDataSelect"
               :key="item.id"
@@ -190,30 +235,32 @@
 <script>
 import { mapGetters } from 'vuex'
 import { detailTestCycle, addTestCycle, editTestCycle, testCycleCase, addtestCycle, bindCaseDelete } from '@/api/testcycle'
-import { featureListAll } from '@/api/feature'
+
 import { testCaseListAll } from '@/api/testcase'
-import { sprintListAll } from '@/api/sprint'
+
+
+import { queryByNameSubUsers } from '@/api/project'
+
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addtestcycle',
   data() {
     return {
+      optionsArr: [],
+      loading: false,
       testCycleFrom: {
+        currentVersion: 0
+
       },
-      testCycleFromTemp: {},
+      testCycleFromTemp: {
+      },
       testCyclerules: {
         title: [
           { required: true, message: '请输入故事标题', trigger: 'blur' }
         ],
-        reportTo: [
-          { required: true, message: '请输入负责人', trigger: 'blur' }
-        ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ]
       },
-      featueData: [],
-      sprintData: [],
+
+
 
       tableHeader: {
         color: '#d4dce3',
@@ -260,12 +307,26 @@ export default {
     } else {
       this.testCycleFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
-    this.getfeatureListAll()
-    this.getsprintListAll()
+
+
+
   },
   mounted() {
   },
   methods: {
+    remoteReport(query) {
+      if (query !== '') {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          queryByNameSubUsers({ subUserName: query }).then(res => {
+            this.optionsArr = res.data
+          })
+        }, 200);
+      } else {
+        this.optionsArr = [];
+      }
+    },
     // 重置表单
     resetFields() {
       this.testCycleFrom = {
@@ -274,24 +335,15 @@ export default {
         title: undefined,
         status: undefined,
         runStatus: undefined,
-        feature: undefined,
-        sprint: undefined,
+        currentVersion: 0,
         version: undefined,
+        assignTo: undefined,
+        notifiyList: undefined,
         description: undefined,
       }
       this.$refs['testCycleFrom'].resetFields();
     },
-    //得到所有故事
-    getfeatureListAll() {
-      featureListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
-        this.featueData = res.data
-      })
-    },
-    getsprintListAll() {
-      sprintListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
-        this.sprintData = res.data
-      })
-    },
+
 
     // 提交
     submitForm(formName, type) {

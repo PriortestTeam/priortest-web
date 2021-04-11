@@ -13,25 +13,26 @@
       </el-col>
       <el-col :span="17">
         <div class="one_title">
-          <div class="item" @click="goProject">{{ projectName }}</div>
           <div
             v-for="(item, index) in clickItem"
             :key="index"
-            class="item"
-            @click="goOther(item)"
+            :class="['item', index == activeIndex ? 'active' : '']"
+            @click="goOther(item, index)"
           >
             {{
               index === 0
-                ? $t("lang.menuTitle.Feature")
+                ? item
                 : index === 1
-                ? $t("lang.menuTitle.Sprint")
+                ? $t("lang.menuTitle.Feature")
                 : index === 2
-                ? $t("lang.menuTitle.TestCase")
+                ? $t("lang.menuTitle.Sprint")
                 : index === 3
-                ? $t("lang.menuTitle.TestCycle")
+                ? $t("lang.menuTitle.TestCase")
                 : index === 4
-                ? $t("lang.menuTitle.Issue")
+                ? $t("lang.menuTitle.TestCycle")
                 : index === 5
+                ? $t("lang.menuTitle.Issue")
+                : index === 6
                 ? $t("lang.menuTitle.SignOff")
                 : ""
             }}
@@ -72,15 +73,17 @@
 <script>
 import { mapGetters } from 'vuex'
 import { message } from '@/utils/common'
+import store from '@/store'
 
 export default {
 
   data() {
     return {
       Idsearch: '',
-      projectName: '项目',
+      projectName: '',
+      activeIndex: 99,
       userinfo: {},
-      clickItem: ['Feature', 'Sprint', 'Testcase', 'Testcycle', 'Issue', 'Signoff']
+      clickItem: ['项目', 'Feature', 'Sprint', 'Testcase', 'Testcycle', 'Issue', 'Signoff']
     }
   },
   computed: {
@@ -93,18 +96,23 @@ export default {
     ),
     userInfo() {
       return this.$store.state.user.userinfo
-    }
+    },
   },
   watch: {
     'userInfo': function (newVal, oldVal) {
-      this.projectName = newVal.userUseOpenProject.title
+      if (newVal.userUseOpenProject) {
+        this.clickItem[0] = newVal.userUseOpenProject.title
+      }
     }
   },
   created() {
-  },
-  mounted() {
     if (this.userInfo.userUseOpenProject.title) {
-      this.projectName = this.userInfo.userUseOpenProject.title
+      this.clickItem[0] = this.userInfo.userUseOpenProject.title
+    }
+    if (this.get('activeIndex')) {
+      this.activeIndex = this.get('activeIndex')
+    } else {
+      this.activeIndex == 99
     }
   },
   methods: {
@@ -112,14 +120,16 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
+      this.remove('activeIndex')
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
-    goProject() {
-      this.$router.push({ name: 'Project' })
-    },
-    goOther(item) {
-      if (!this.userInfo.userUseOpenProject.title) {
+    goOther(item, index) {
+      this.activeIndex = index
+      this.set('activeIndex', index)
+      if (index === 0) {
+        this.$router.push({ name: 'Project' })
+      } else if (!this.userInfo.userUseOpenProject.title) {
         message('error', '请选择项目')
       } else {
         this.$router.push({ name: item })
@@ -195,7 +205,12 @@ export default {
       cursor: pointer;
       font-size: 14px;
     }
-
+    .active {
+      background: #fff;
+      color: $tabcolorBG;
+      border-radius: 23px;
+      margin: 5px 0;
+    }
     ::v-deep .el-input {
       width: 25%;
       margin-left: 30px;
