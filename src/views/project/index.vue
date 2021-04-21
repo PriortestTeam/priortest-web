@@ -4,40 +4,10 @@
       <el-button type="primary" round @click="newproject"> 新建项目 </el-button>
     </div>
     <el-row>
-      <el-col :span="5">
-        <div class="comp-tree">
-          <div class="new_project">
-            <el-button type="primary" round>
-              <router-link to="/project/projectview?scope=Project">
-                新建视图
-              </router-link>
-            </el-button>
-            <el-button type="primary" round>
-              <router-link to="/project/projectview?scope=Project">
-                管理视图
-              </router-link>
-            </el-button>
-          </div>
-          <!-- 折叠面板 -->
-          <el-collapse v-model="activeNames">
-            <el-collapse-item
-              v-for="(item, index) in setTree"
-              :key="index"
-              :title="item.scope"
-              :name="index"
-            >
-              <div
-                v-for="(item1, index1) in item.oneFilters"
-                :key="index1"
-                class="viewtext"
-              >
-                {{ item1.fieldName }}
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-          <div v-if="setTree.length === 0" class="nodata">暂无数据</div>
-        </div>
-      </el-col>
+
+      <view-tree :childScope="currentScope"></view-tree>
+
+
       <el-col :span="19"
         ><div class="project_table">
           <div class="oprate_btn">
@@ -166,14 +136,17 @@
 </template>
 
 <script>
+import viewTree from './viewTree.vue'
 import { message } from '@/utils/common'
 import store from '@/store'
-import { queryForProjects, delProjects, checkProject, queryViews, getCloseProject } from '@/api/project'
+import { queryForProjects, delProjects, checkProject, getCloseProject} from '@/api/project'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Project',
+
   data() {
     return {
+      currentScope: 'Project',
       tableHeader: {
         color: '#d4dce3',
         background: '#003d79'
@@ -199,6 +172,7 @@ export default {
       }
     }
   },
+  components: {viewTree},
   computed: {
     ...mapGetters([
       'name'
@@ -214,18 +188,7 @@ export default {
       const data = JSON.stringify({})
       this.$router.push({ name: 'Addproject', query: { info: data } })
     },
-    /** 左侧视图*/
-    // view视图列表
-    getqueryViews() {
-      return new Promise((resolve, reject) => {
-        queryViews(this.projectBody, this.projectQuery).then(res => {
-          if (res.code === '200') {
-            this.setTree = res.data
-            resolve(res)
-          }
-        })
-      })
-    },
+
 
     /** 项目列表表格开始 */
     getqueryForProjects() {
@@ -237,7 +200,6 @@ export default {
             if (res.total > 0) {
               this.projectBody.scope = res.data[0].scope
               this.projectBody.projectId = res.data[0].id
-              await this.getqueryViews()
             }
 
             this.isLoading = false

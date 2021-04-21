@@ -112,3 +112,47 @@ export function getCloseProject(data) {
     params: data
   })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//获取view 创建是的下拉框
+export function getViewScopeChildParams(scope) {
+  return request({
+    url: '/view/getViewScopeChildParams',
+    method: 'get',
+    params: scope
+  })
+}
+
+
+//查询父view
+export function queryViewParents(params) {
+  return request({
+    url: '/view/queryViewParents',
+    method: 'get',
+    params: params
+  })
+}
+
+
+//查询view 树状结构
+export function queryViewTrees(params) {
+  return request({
+    url: '/view/queryViewTrees',
+    method: 'get',
+    params: params
+  })
+}
