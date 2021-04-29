@@ -273,7 +273,6 @@ export default {
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
   },
   mounted() {
-    console.log(this.customname, '父传的值')
   },
   methods: {
     // 字段表单提交

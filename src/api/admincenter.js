@@ -79,3 +79,21 @@ export function updatePermissions(query) {
     data: query
   })
 }
+
+/***系统字段 */
+export function querySysCustomFields() {
+  return request({
+    url: '/sysCustomField/querySysCustomFields',
+    method: 'get',
+  })
+}
+export function updateSysCustomFields(query) {
+  return request({
+    url: '/sysCustomField/updateSysCustomFields',
+    method: 'post',
+    data: query
+
+
+  })
+}
+

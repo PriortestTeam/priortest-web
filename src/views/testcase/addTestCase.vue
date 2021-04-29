@@ -106,7 +106,11 @@
                 placeholder="请选择版本"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+                <router-link
+                  to="/admincenter/admincenter?par=versions"
+                >
+                <el-option label="Add New Value" value='' />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -117,7 +121,11 @@
                 placeholder="请选择测试分类"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+               <router-link
+                  to="/admincenter/admincenter?par=test_category"
+                >
+                <el-option label="Add New Value" value='' />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -130,7 +138,11 @@
                 placeholder="请选择测试类型"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+              <router-link
+                  to="/admincenter/admincenter?par=test_type"
+                >
+                <el-option label="Add New Value" value='' />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -146,7 +158,11 @@
                 placeholder="请选择测试环境"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+                 <router-link
+                  to="/admincenter/admincenter?par=test_env"
+                >
+                <el-option label="Add New Value" value='' />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -159,7 +175,11 @@
                 placeholder="请选择模块"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+                <router-link
+                  to="/admincenter/admincenter?par=moudle"
+                >
+                <el-option label="Add New Value"  value=''/>
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -170,7 +190,11 @@
                 placeholder="请选择测试设备"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+                 <router-link
+                  to="/admincenter/admincenter?par=test_device"
+                >
+                <el-option label="Add New Value"  value=''/>
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -181,7 +205,11 @@
                 placeholder="请选择测试方法"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+                <router-link
+                  to="/admincenter/admincenter?par=test_method"
+                >
+                <el-option label="Add New Value"  value=''/>
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>

@@ -1,6 +1,6 @@
 <template>
   <div class="admin-center app-container">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName" :before-leave="handleClick">
       <el-tab-pane label="用户管理" name="0">
         <div class="tab-box">
           <el-form
@@ -223,27 +223,31 @@
         </div>
         <!-- 自定义字段 -->
       </el-tab-pane>
+      <el-tab-pane label="系统字段" name="4">
+        <System :paramValue="propSystem"></System>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
 import { message, formatChangedPara, customradioData, customtextData } from '@/utils/common'
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
+import System from '@/views/adminCenter/system'
 import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
 import Memoindex from '@/views/adminCenter/memo'
-// import Chackbox from '@/views/adminCenter/chackbox'
 import Dropdown from '@/views/adminCenter/dropDown'
 import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
 import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Radioindex, Textindex, Memoindex, Dropdown
+    Jurisdiction, Radioindex, Textindex, Memoindex, Dropdown,System
   },
   data() {
     return {
       activeName: '0',
+      propSystem:'',
       tableHeader: {
         color: '#d4dce3',
         background: '#003d79'
@@ -312,10 +316,19 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       // 新增项目到自定义字段
-      if (from.name === 'Addproject' || from.name === 'Addfeature' || from.name === 'Addsprint' ||
-        from.name === 'Addtestcycle' || from.name === 'Addissue' || from.name === 'Addtestcase') {
-        vm.activeName = '3'
-      }
+
+      if(to.query.par){
+         if ((from.name === 'Addproject')|| from.name === 'Addfeature' || from.name === 'Addsprint' ||
+          from.name === 'Addtestcycle' || from.name === 'Addissue' || from.name === 'Addtestcase') {
+          vm.activeName = '4'
+          vm.propSystem=to.query.par
+          }
+        }else{
+            if ((from.name === 'Addproject')|| from.name === 'Addfeature' || from.name === 'Addsprint' ||
+          from.name === 'Addtestcycle' || from.name === 'Addissue' || from.name === 'Addtestcase') {
+          vm.activeName = '3'
+          }
+        }
     })
   },
   computed: {
@@ -349,6 +362,12 @@ export default {
   },
   methods: {
     handleClick(val) {
+      if(val==='4'){
+        if (!this.projectInfo.userUseOpenProject.projectId) {
+          message('error', '请先选择项目')
+           throw new Error("");
+        }
+      }
     },
     /** ˙账户开始 */
     // 得到项目
@@ -481,7 +500,6 @@ export default {
     // 获取子类的传值
     chType(type) {
       this.customType = type
-      console.log('出发了', type)
     },
 
     // 获取自定义字段列表

@@ -100,7 +100,11 @@
                 clearable
               >
                 <el-option label="Java+TestNg" value="1" />
-                <el-option label="Add New Value" value="0" />
+                <router-link
+                  to="/admincenter/admincenter?par=test_frame"
+                >
+                  <el-option label="Add New Value" value="0" />
+                </router-link>
               </el-select> </el-form-item
           ></el-col>
 
@@ -115,7 +119,11 @@
                 <el-option label="手机应用" value="2" />
                 <el-option label="桌面软件" value="3" />
                 <el-option label="自由" value="4" />
+                   <router-link
+                  to="/admincenter/admincenter?par=project_category"
+                >
                 <el-option label="Add New Value" :value="0" />
+                    </router-link>
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="8">
@@ -163,15 +171,20 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import { addProjects, editProjects, queryByNameSubUsers, getFeature } from '@/api/project'
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import Upload from '@/components/Upload'
+import { mapGetters } from "vuex";
+import {
+  addProjects,
+  editProjects,
+  queryByNameSubUsers,
+  getFeature,
+} from "@/api/project";
+import { message, returntomenu, formatChangedPara } from "@/utils/common";
+import Upload from "@/components/Upload";
 
 export default {
-  name: 'Addproject',
+  name: "Addproject",
   components: {
-    Upload
+    Upload,
   },
   data() {
     return {
@@ -181,51 +194,43 @@ export default {
       projectFrom: {},
       projectFromTem: {},
       Projectrules: {
-        title: [
-          { required: true, message: '请输入项目标题', trigger: 'blur' }
-        ],
+        title: [{ required: true, message: "请输入项目标题", trigger: "blur" }],
         reportToName: [
-          { required: true, message: '请输入负责人', trigger: 'blur' }
+          { required: true, message: "请输入负责人", trigger: "blur" },
         ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ]
-      }
-
-    }
+        status: [{ required: true, message: "请选择状态", trigger: "change" }],
+      },
+    };
   },
   computed: {
-    ...mapGetters(
-      {
-        lang: state => state.header.lang
-      }
-    ),
+    ...mapGetters({
+      lang: (state) => state.header.lang,
+    }),
     projectInfo() {
-      return this.$store.state.user.userinfo
-    }
+      return this.$store.state.user.userinfo;
+    },
   },
   created() {
     if (this.$route.query.id) {
-      getFeature(this.$route.query.id).then(res => {
-        this.projectFrom = res.data
-        this.projectFromTem = Object.assign({}, this.projectFrom)
-      })
+      getFeature(this.$route.query.id).then((res) => {
+        this.projectFrom = res.data;
+        this.projectFromTem = Object.assign({}, this.projectFrom);
+      });
     }
-    queryByNameSubUsers({ subUserName: '' }).then(res => {
-      this.optionsArr = res.data
-    })
+    queryByNameSubUsers({ subUserName: "" }).then((res) => {
+      this.optionsArr = res.data;
+    });
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     remoteReport(query) {
-      if (query !== '') {
+      if (query !== "") {
         this.loading = true;
         setTimeout(() => {
           this.loading = false;
-          queryByNameSubUsers({ subUserName: query }).then(res => {
-            this.optionsArr = res.data
-          })
+          queryByNameSubUsers({ subUserName: query }).then((res) => {
+            this.optionsArr = res.data;
+          });
         }, 200);
       } else {
         this.optionsArr = [];
@@ -242,54 +247,59 @@ export default {
         status: undefined,
         testFrame: undefined,
         projectCategory: undefined,
-        fileList: []
-      }
-      this.$refs['projectFrom'].resetFields()
+        fileList: [],
+      };
+      this.$refs["projectFrom"].resetFields();
     },
     // 提交
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.projectFrom.id) {
-            const param = formatChangedPara(this.projectFromTem, this.projectFrom)
-            editProjects(param).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                returntomenu(this, 1000)
-              }
-            }).catch(error => {
-              console.log(error)
-            })
-          } else {
-            addProjects(this.projectFrom).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                this.resetFields()
-                if (type) {
-                  returntomenu(this, 1000)
+            const param = formatChangedPara(
+              this.projectFromTem,
+              this.projectFrom
+            );
+            editProjects(param)
+              .then((res) => {
+                if (res.code === "200") {
+                  message("success", res.msg);
+                  returntomenu(this, 1000);
                 }
-              }
-            }).catch(error => {
-              console.log(error)
-            })
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            addProjects(this.projectFrom)
+              .then((res) => {
+                if (res.code === "200") {
+                  message("success", res.msg);
+                  this.resetFields();
+                  if (type) {
+                    returntomenu(this, 1000);
+                  }
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     // 放弃并且返回
     giveupBack() {
       if (!this.projectFrom.id) {
-        this.resetFields()
+        this.resetFields();
       }
-      this.returntomenu(this)
+      this.returntomenu(this);
     },
-
-  }
-
-}
+  },
+};
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
