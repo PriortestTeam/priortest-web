@@ -72,7 +72,11 @@
                 placeholder="请选择版本"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+                 <router-link
+                  to="/admincenter/admincenter?par=versions"
+                >
+                <el-option label="Add New Value" :value="0" />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -108,18 +112,26 @@
                 placeholder="请选择epic"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+               <router-link
+                  to="/admincenter/admincenter?par=epic"
+                >
+                <el-option label="Add New Value" :value="0" />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="模版" prop="moudle">
+            <el-form-item size="small" label="模块" prop="moudle">
               <el-select
                 v-model="featureFrom.moudle"
-                placeholder="请选择模版"
+                placeholder="请选择模块"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+                <router-link
+                  to="/admincenter/admincenter?par=moudle"
+                >
+                <el-option label="Add New Value" :value="0" />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>

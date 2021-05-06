@@ -217,7 +217,7 @@ export const constantRoutes = [
       {
         path: 'projectview',
         name: 'Projectview',
-        component: () => import('@/views/project/projectView'),
+        component: () => import('@/views/project/view'),
         meta: {
           title: 'Project', icon: 'Project'
         }

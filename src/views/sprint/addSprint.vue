@@ -50,7 +50,11 @@
                 placeholder="请选择epic"
                 clearable
               >
-                <el-option label="暂无" value="" />
+               <router-link
+                  to="/admincenter/admincenter?par=epic"
+                >
+                <el-option label="Add New Value" :value="0" />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>

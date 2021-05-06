@@ -4,40 +4,10 @@
       <el-button type="primary" round @click="newproject"> 新建迭代 </el-button>
     </div>
     <el-row>
-      <el-col :span="5">
-        <div class="comp-tree">
-          <div class="new_project">
-            <el-button type="primary" round>
-              <router-link to="/project/projectview?scope=Sprint">
-                新建视图
-              </router-link>
-            </el-button>
-            <el-button type="primary" round>
-              <router-link to="/project/projectview?scope=Sprint">
-                管理视图
-              </router-link>
-            </el-button>
-          </div>
-          <!-- 折叠面板 -->
-          <el-collapse v-model="activeNames">
-            <el-collapse-item
-              v-for="(item, index) in setTree"
-              :key="index"
-              :title="item.scope"
-              :name="index"
-            >
-              <div
-                v-for="(item1, index1) in item.oneFilters"
-                :key="index1"
-                class="viewtext"
-              >
-                {{ item1.fieldName }}
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-          <div v-if="setTree.length === 0" class="nodata">暂无数据</div>
-        </div>
-      </el-col>
+  <el-col :span="5">
+      <view-tree :childScope="currentScope"></view-tree>
+  </el-col>
+
       <el-col
         :span="19"
       ><div class="project_table">
@@ -149,6 +119,7 @@
 </template>
 
 <script>
+import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import { sprintList, delSprint } from '@/api/sprint'
 import { queryViews } from '@/api/project'
@@ -157,6 +128,7 @@ export default {
   name: 'Sprint',
   data() {
     return {
+      currentScope: 'Sprint',
       tableHeader: {
         color: '#d4dce3',
         background: '#003d79'
@@ -182,6 +154,7 @@ export default {
       } // tree的body数据
     }
   },
+  components: {viewTree},
   computed: {
     projectInfo() {
       return this.$store.state.user.userinfo
@@ -196,18 +169,7 @@ export default {
     newproject() {
       this.$router.push({ name: 'Addsprint' })
     },
-    /** 左侧视图*/
-    // view视图列表
-    getqueryViews() {
-      return new Promise((resolve, reject) => {
-        queryViews(this.sprintBody, this.sprintQuery).then(res => {
-          if (res.code === '200') {
-            this.setTree = res.data
-            resolve(res)
-          }
-        })
-      })
-    },
+
 
     /** 项目列表表格开始 */
     getqueryForSprint() {
@@ -219,7 +181,6 @@ export default {
               // 默认取第一条
               this.sprintBody.scope = res.data[0].scope
               this.sprintBody.projectId = this.projectInfo.userUseOpenProject.projectId
-              await this.getqueryViews()
             }
             this.isLoading = false
             this.sprinttableData = res.data

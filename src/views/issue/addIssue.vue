@@ -64,7 +64,11 @@
                 placeholder="请选择开发人员"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+                 <router-link
+                  to="/admincenter/admincenter?par=developer"
+                >
+                <el-option label="Add New Value" :value="0" />
+                    </router-link>
               </el-select>
             </el-form-item>
           </el-col>

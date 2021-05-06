@@ -4,40 +4,10 @@
       <el-button type="primary" round @click="newproject"> 新建缺陷 </el-button>
     </div>
     <el-row>
-      <el-col :span="5">
-        <div class="comp-tree">
-          <div class="new_project">
-            <el-button type="primary" round>
-              <router-link to="/project/projectview?scope=Issue">
-                新建视图
-              </router-link>
-            </el-button>
-            <el-button type="primary" round>
-              <router-link to="/project/projectview?scope=Issue">
-                管理视图
-              </router-link>
-            </el-button>
-          </div>
-          <!-- 折叠面板 -->
-          <el-collapse v-model="activeNames">
-            <el-collapse-item
-              v-for="(item, index) in setTree"
-              :key="index"
-              :title="item.scope"
-              :name="index"
-            >
-              <div
-                v-for="(item1, index1) in item.oneFilters"
-                :key="index1"
-                class="viewtext"
-              >
-                {{ item1.fieldName }}
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-          <div v-if="setTree.length === 0" class="nodata">暂无数据</div>
-        </div>
-      </el-col>
+  <el-col :span="5">
+      <view-tree :childScope="currentScope"></view-tree>
+  </el-col>
+
       <el-col :span="19"
         ><div class="project_table">
           <div class="oprate_btn">
@@ -142,6 +112,7 @@
 </template>
 
 <script>
+  import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import { issueList, delIssue } from '@/api/issue'
 import { queryViews } from '@/api/project'
@@ -150,6 +121,7 @@ export default {
   name: 'Issue',
   data() {
     return {
+      currentScope: 'Issue',
       tableHeader: {
         color: '#d4dce3',
         background: '#003d79'
@@ -177,6 +149,7 @@ export default {
       },//tree的参数
     }
   },
+  components: {viewTree},
   computed: {
     projectInfo() {
       return this.$store.state.user.userinfo
@@ -191,18 +164,6 @@ export default {
     newproject() {
       this.$router.push({ name: 'Addissue' })
     },
-    /** 左侧视图*/
-    // view视图列表 
-    getqueryViews() {
-      return new Promise((resolve, reject) => {
-        queryViews(this.issueBody, this.issueQuery).then(res => {
-          if (res.code === '200') {
-            this.setTree = res.data
-            resolve(res)
-          }
-        })
-      })
-    },
 
     /**项目列表表格开始 */
     getIssueList() {
@@ -214,7 +175,6 @@ export default {
             if (res.total > 0) {
               this.issueBody.scope = res.data[0].scope
               this.issueBody.projectId = this.projectInfo.userUseOpenProject.projectId
-              await this.getqueryViews()
             }
             this.isLoading = false
             this.issueData = res.data

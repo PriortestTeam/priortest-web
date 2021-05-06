@@ -34,25 +34,48 @@
           @click.stop="cancelUpdate('from')"
         >取消修改</el-button>
       </div>
-      <el-form-item label="New View" prop="title" class="form-small">
+      <el-form-item label="新视图" prop="title" class="form-small">
         <el-input v-model="from.title" size="small" />
       </el-form-item>
-      <el-form-item label="scope" prop="scope" class="form-small">
-        <el-select
-          v-model="from.scope"
-          size="small"
-          :disabled="scopeDis"
-          placeholder="请选择适用范围"
-        >
-          <el-option label="项目" value="Project" />
-          <el-option label="故事" value="Feature" />
-          <el-option label="迭代" value="Sprint" />
-          <el-option label="测试用例" value="TestCase" />
-          <el-option label="测试周期" value="TestCycle" />
-          <el-option label="缺陷" value="Issue" />
-          <el-option label="验收" value="SignOff" />
-        </el-select>
-      </el-form-item>
+      <div class="scopeView">
+        <el-form-item label="scope" prop="scope" class="form-small">
+          <el-select
+            v-model="from.scope"
+            size="small"
+            :disabled="scopeDis"
+            placeholder="请选择适用范围"
+            @change="viewScopeChildParams"
+          >
+            <el-option
+              v-for= "item in scopeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="父级视图" prop="parent" class="form-small">
+          <el-select
+            v-model="viewParentQuery"
+            size="small"
+            filterable
+            :filter-method="dataFilter"
+            placeholder="请选择适用范围"
+            @keyup.enter.native="queryViewParent"
+            @change="fuzhiFrom"
+          >
+            <el-option
+              v-for="i in viewParents"
+              :label="i.title"
+              :value="i.id"
+            ></el-option>
+            <el-option
+              label="无"
+              value="0"/>
+            </el-select>
+        </el-form-item>
+      </div>
+
       <el-form-item label="Filter" prop="oneFilters">
         <div class="filter-item">
           <el-col v-if="from.oneFilters.length === 0" :span="1">
@@ -64,7 +87,7 @@
             <el-row>
               <el-col :span="2">
                 <span @click="addFliter">
-                  <i class="el-icon-circle-plus circle" />
+                  <i class="el-icon-circle-plus  circle" />
                 </span>
                 <span @click="delRemove(index)">
                   <i class="el-icon-remove circle remove" />
@@ -72,17 +95,16 @@
               </el-col>
               <el-col :span="6">
                 <el-select
+                  ref="selectFiled"
                   v-model="item.fieldName"
                   size="small"
                   placeholder="请选择字段"
-                  @change="getType(item.fieldName, index)"
+                  @change="getType(item.fieldName,index)"
                 >
-                  <el-option label="标题" value="title" />
-                  <el-option label="负责人" value="reportToName" />
-                  <el-option label="状态" value="status" />
-                  <el-option label="创建日期" value="createTime" />
-                  <el-option label="计划上线日期" value="planReleaseDate" />
-                  <el-option label="关闭日期" value="closeDate" />
+                  <el-option
+                    v-for="i in scopeDownChildParams"
+                    :label="i.filedNameCn"
+                    :value="i.filedName"/>
                 </el-select>
               </el-col>
               <!-- input -->
@@ -96,9 +118,10 @@
                   size="small"
                   placeholder="请选择状态"
                 >
-                  <el-option label="关闭" value="1" />
-                  <el-option label="计划" value="2" />
-                  <el-option label="开发中" value="3" />
+                  <el-option
+                    v-for="i in statusDownChildParams"
+                    :label="i.optionValueCn"
+                    :value="i.optionValue"/>
                 </el-select>
               </el-col>
               <!-- date -->
@@ -153,7 +176,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="View Title" align="center" />
         <el-table-column prop="scope" label="Scope" align="center" />
-        <el-table-column prop="parent" label="Parent" align="center" />
+        <el-table-column prop="parentTitle" label="Parent" align="center" />
         <el-table-column prop="owner" label="Owner" align="center" />
         <el-table-column prop="createTime" label="Created" align="center" />
         <el-table-column prop="updateTime" label="Modified" align="center" />
@@ -184,11 +207,40 @@
 </template>
 <script>
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import { queryViews, lookView, addView, updateView, deleteView } from '@/api/project'
+import { queryViews, lookView, addView, updateView, deleteView, getViewScopeChildParams, queryViewParents} from '@/api/project'
+import text from '../adminCenter/text'
 export default {
   name: 'Projectview',
   data() {
     return {
+      scopeOptions: [
+        {
+          value: 'Project',
+          label: '项目'
+        },
+        {
+          value: 'Feature',
+          label: '故事'
+        },
+        {
+          value: 'Sprint',
+          label: '迭代'
+        },
+        {
+          value: 'TestCase',
+          label: '测试用例'
+        },
+        {
+          value: 'TestCycle',
+          label: '测试周期'
+        },
+        {
+          value: 'Issue',
+          label: '缺陷'
+        }
+      ],
+      scopeDownChildParams: [],
+      statusDownChildParams: [],
       savedisabled: true,
       from: {
         isPrivate: '0',
@@ -214,6 +266,8 @@ export default {
         scope: '',
         projectId: ''
       },
+      viewParentQuery: '0',
+      viewParents: [],
       viewTotal: 0,
       viewData: [], // 表格数据
       multipleSelection: [], // 选择的表格
@@ -241,6 +295,7 @@ export default {
     this.getqueryViews() // 获取视图
   },
   methods: {
+
     // 新增和修改确定表单
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -266,7 +321,6 @@ export default {
             })
           }
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -303,6 +357,17 @@ export default {
 
       this.$refs.viewData.toggleRowSelection(row)
       this.searchViewInfo()
+
+      if (row.parentTitle !== undefined && row.parentTitle !== ''){
+        this.viewParentQuery = row.parentTitle
+      }
+
+      const scope = {
+        scope: row.scope
+      }
+      getViewScopeChildParams(scope).then(res => {
+        this.scopeDownChildParams = res.data
+      })
     },
     // 查询view信息
     searchViewInfo() {
@@ -352,6 +417,12 @@ export default {
     },
     // 新增字段
     addFliter() {
+
+      if (this.from.scope === undefined || this.from.scope.trim() === '') {
+        message('success', '请选择作用域')
+        return
+      }
+
       const obj = {
         andOr: 'and',
         beginDate: '',
@@ -368,16 +439,60 @@ export default {
     delRemove(index) {
       this.from.oneFilters.splice(index, 1)
     },
-    getType(fieldName, index) {
-      if (fieldName === 'createTime' || fieldName === 'closeDate' || fieldName === 'planReleaseDate') {
-        this.from.oneFilters[index].type = 'fDateTime'
-      } else if (fieldName === 'status') {
-        this.from.oneFilters[index].type = 'fInteger'
-      } else {
-        this.from.oneFilters[index].type = 'fString'
+    getType: function(fieldName, index) {
+      for (let i = 0; i < this.scopeDownChildParams.length; i++) {
+        const entity = this.scopeDownChildParams[i]
+        if (entity.filedName === fieldName) {
+          //如果是下拉框，赋值
+          if (entity.selectChild !== undefined && entity.selectChild.length > 0) {
+            this.statusDownChildParams = entity.selectChild
+          }
+          this.from.oneFilters[index].type = entity.type
+          return
+        }
       }
+    },
+    viewScopeChildParams() {
+      if (this.from.oneFilters.length > 0) {
+        this.$confirm('重新选择可能会丢失页面内容请确认？', {
+          title: '提示',
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(s => {
+          this.from.oneFilters = []
+        }).catch(e => {
+          this.$router.go(0)
+        })
+      }
+      const scope = {
+        scope: this.from.scope
+      }
+      getViewScopeChildParams(scope).then(res => {
+        this.scopeDownChildParams = res.data
+      })
+    },
+    dataFilter(val) {
+      this.viewParentQuery = val
+    },
+    queryViewParent() {
+      if (this.from.scope === undefined || this.from.scope === '') {
+        message('success', '请选择作用域')
+        this.viewParentQuery = '0'
+        return
+      }
+      const params = {
+        viewTitle: this.viewParentQuery,
+        scope: this.from.scope
+      }
+      queryViewParents(params).then(res => {
+        this.viewParents = res.data
+      })
+    },
+    fuzhiFrom(val) {
+      this.from.parentId = val
     }
-
   }
 }
 </script>

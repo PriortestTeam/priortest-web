@@ -73,10 +73,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { message } from '@/utils/common'
-import store from '@/store'
-
 export default {
-
   data() {
     return {
       Idsearch: '',
