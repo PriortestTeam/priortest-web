@@ -4,9 +4,9 @@
       <el-button type="primary" round @click="newproject"> 新建迭代 </el-button>
     </div>
     <el-row>
-
+  <el-col :span="5">
       <view-tree :childScope="currentScope"></view-tree>
-
+  </el-col>
 
       <el-col
         :span="19"
