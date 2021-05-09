@@ -148,8 +148,6 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then((res) => {
             message('success', res.msg)
             this.$router.push({ path: '/' })
-          }).catch(error => {
-            console.log(error)
           })
         } else {
           console.log('error submit!!')
