@@ -50,11 +50,16 @@
                 placeholder="请选择epic"
                 clearable
               >
-               <router-link
-                  to="/admincenter/admincenter?par=epic"
+                <el-option
+                  v-for="item in epicArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value" :value="0" />
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=epic">
+                  <el-option label="Add New Value" :value="0" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -94,80 +99,84 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import { addSprint, editSprint, detailSprint } from '@/api/sprint'
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import { mapGetters } from "vuex";
+import { sysCustomField } from "@/api/systemArr";
+
+import { addSprint, editSprint, detailSprint } from "@/api/sprint";
+import { message, returntomenu, formatChangedPara } from "@/utils/common";
 export default {
-  name: 'Addsprint',
+  name: "Addsprint",
   data() {
     return {
       pickerOptions: {
         disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7;//如果没有后面的-8.64e7就是不可以选择今天的 
+          return time.getTime() < Date.now() - 8.64e7; //如果没有后面的-8.64e7就是不可以选择今天的
         },
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        },
-        {
-          text: '最近半个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 14);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }],
-
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+          {
+            text: "最近半个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 14);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+        ],
       },
-      sprintFrom: {
-      },
+      epicArr: [],
+      sprintFrom: {},
       sprintFromTem: {},
       sprintrules: {
-        title: [
-          { required: true, message: '请输入迭代标题', trigger: 'blur' }
-        ],
+        title: [{ required: true, message: "请输入迭代标题", trigger: "blur" }],
 
-        timeArr: [
-          { required: true, message: '请选择日期', trigger: 'change' }
-        ]
-      }
-
-    }
+        timeArr: [{ required: true, message: "请选择日期", trigger: "change" }],
+      },
+    };
   },
   computed: {
-    ...mapGetters(
-      {
-        lang: state => state.header.lang
-      }
-    ),
+    ...mapGetters({
+      lang: (state) => state.header.lang,
+    }),
     projectInfo() {
-      return this.$store.state.user.userinfo
-    }
+      return this.$store.state.user.userinfo;
+    },
   },
   created() {
     if (this.$route.query.id) {
-      detailSprint(this.$route.query.id).then(res => {
-        this.sprintFrom = res.data
-        this.$set(this.sprintFrom, 'timeArr', [this.sprintFrom.startDate, this.sprintFrom.endDate])
-        this.sprintFromTem = Object.assign({}, this.sprintFrom)
-      })
+      detailSprint(this.$route.query.id).then((res) => {
+        this.sprintFrom = res.data;
+        this.$set(this.sprintFrom, "timeArr", [
+          this.sprintFrom.startDate,
+          this.sprintFrom.endDate,
+        ]);
+        this.sprintFromTem = Object.assign({}, this.sprintFrom);
+      });
     } else {
-      this.sprintFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+      this.sprintFrom.projectId = this.projectInfo.userUseOpenProject.projectId;
     }
+    sysCustomField({ fieldName: 'epic' }).then((res) => {
+      let data = res.data.mergeValues ? res.data.mergeValues : [];
+      this.epicArr = data;
+    });
   },
 
   methods: {
@@ -181,62 +190,67 @@ export default {
         startDate: undefined,
         endDate: undefined,
         epic: undefined,
-        timeArr: '',
-        fileList: []
-      }
-      this.$refs['sprintFrom'].resetFields()
+        timeArr: "",
+        fileList: [],
+      };
+      this.$refs["sprintFrom"].resetFields();
     },
     // 提交
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.sprintFrom.id) {
-            const param = formatChangedPara(this.sprintFromTem, this.sprintFrom)
-            param.projectId = this.sprintFrom.projectId
-            param.startDate = this.sprintFrom.timeArr[0]
-            param.endDate = this.sprintFrom.timeArr[1]
+            const param = formatChangedPara(
+              this.sprintFromTem,
+              this.sprintFrom
+            );
+            param.projectId = this.sprintFrom.projectId;
+            param.startDate = this.sprintFrom.timeArr[0];
+            param.endDate = this.sprintFrom.timeArr[1];
 
-            editSprint(param).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                returntomenu(this, 1000)
-              }
-            }).catch(error => {
-              console.log(error)
-            })
-          } else {
-            this.sprintFrom.startDate = this.sprintFrom.timeArr[0]
-            this.sprintFrom.endDate = this.sprintFrom.timeArr[1]
-            delete this.sprintFrom.timeArr
-            addSprint(this.sprintFrom).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                this.resetFields()
-                if (type) {
-                  returntomenu(this, 1000)
+            editSprint(param)
+              .then((res) => {
+                if (res.code === "200") {
+                  message("success", res.msg);
+                  returntomenu(this, 1000);
                 }
-              }
-            }).catch(error => {
-              console.log(error)
-            })
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            this.sprintFrom.startDate = this.sprintFrom.timeArr[0];
+            this.sprintFrom.endDate = this.sprintFrom.timeArr[1];
+            delete this.sprintFrom.timeArr;
+            addSprint(this.sprintFrom)
+              .then((res) => {
+                if (res.code === "200") {
+                  message("success", res.msg);
+                  this.resetFields();
+                  if (type) {
+                    returntomenu(this, 1000);
+                  }
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     // 放弃并且返回
     giveupBack() {
       if (!this.sprintFrom.id) {
-        this.resetFields()
+        this.resetFields();
       }
-      this.returntomenu(this)
-    }
-
-  }
-
-}
+      this.returntomenu(this);
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 @import "index.scss";

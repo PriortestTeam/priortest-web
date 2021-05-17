@@ -355,6 +355,8 @@ export default {
       this.$refs.viewData.clearSelection()
       this.viewId = row.id
 
+      this.viewParentQuery = '0'
+
       this.$refs.viewData.toggleRowSelection(row)
       this.searchViewInfo()
 
@@ -417,7 +419,6 @@ export default {
     },
     // 新增字段
     addFliter() {
-
       if (this.from.scope === undefined || this.from.scope.trim() === '') {
         message('success', '请选择作用域')
         return
@@ -433,6 +434,7 @@ export default {
         textVal: '',
         type: 'fString'
       }
+
       this.from.oneFilters.push(obj)
     },
     // 移除字段

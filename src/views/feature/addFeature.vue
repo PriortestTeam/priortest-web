@@ -72,6 +72,13 @@
                 placeholder="请选择版本"
                 clearable
               >
+               <el-option
+                  v-for="item in versionsArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
                  <router-link
                   to="/admincenter/admincenter?par=versions"
                 >
@@ -112,6 +119,13 @@
                 placeholder="请选择epic"
                 clearable
               >
+               <el-option
+                  v-for="item in epicArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
                <router-link
                   to="/admincenter/admincenter?par=epic"
                 >
@@ -127,6 +141,13 @@
                 placeholder="请选择模块"
                 clearable
               >
+               <el-option
+                  v-for="item in moudleArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
                 <router-link
                   to="/admincenter/admincenter?par=moudle"
                 >
@@ -177,6 +198,7 @@ import Upload from '@/components/Upload'
 import { queryByNameSubUsers } from '@/api/project'
 import { addFeature, detailFeature, editFeature, querySprintList } from '@/api/feature'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import { sysCustomField } from "@/api/systemArr";
 
 export default {
   name: 'Addfeature',
@@ -186,6 +208,10 @@ export default {
   data() {
     return {
       optionsArr: [],
+      getOptionsArr:['versions' ,'epic', 'moudle'],
+      versionsArr:[],
+      epicArr:[],
+      moudleArr:[],
       loading: false,
       sprintArr: [],
       featureFrom: {
@@ -248,6 +274,22 @@ export default {
       this.featureFrom.projectId = this.projectInfo.userUseOpenProject.projectId
       this.fileParams.linkId = this.projectInfo.userUseOpenProject.projectId
     }
+    this.getOptionsArr.forEach(element => {
+       sysCustomField({ fieldName: element}).then((res) => {
+        let data=res.data.mergeValues?res.data.mergeValues:[]
+        if(element==='moudle'){
+          this.moudleArr=data
+        }
+         if(element==='epic'){
+          this.epicArr=data
+        }
+         if(element==='versions'){
+          this.versionsArr=data
+        }
+    });
+      
+    });
+   
   },
   mounted() {
   },

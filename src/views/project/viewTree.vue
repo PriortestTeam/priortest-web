@@ -7,12 +7,12 @@
       <el-button type="primary" round>
         <router-link :to="viewUrl"> 管理视图 </router-link>
       </el-button>
+      <span class="icon-box">
+        <i class="el-icon-search"></i>
+        <i class="el-icon-plus"></i>
+      </span>
     </div>
     <div class="comp-data">
-         <span class="icon-box">
-         <i class="el-icon-search"></i>
-         <i class="el-icon-plus" @click="() => append(data)"></i>
-      </span>
       <div class="big-width">
         <el-tree
           :data="setTree"
@@ -21,8 +21,8 @@
           default-expand-all
           :expand-on-click-node="false"
         >
-          <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span>{{ node.label }}</span>
+          <span class="custom-tree-node" slot-scope="{ node }">
+            <span @click="getList(node)">{{ node.label }}</span>
           </span>
         </el-tree>
       </div>
@@ -35,8 +35,10 @@ import { queryViewTrees } from "@/api/project";
 export default {
   name: "ViewTree",
   props: {
-    childScope: String,
-    require: true,
+    childScope: {
+      type: String,
+      require: true,
+    },
   },
   data() {
     return {
@@ -46,6 +48,10 @@ export default {
         label: "title",
       },
       viewUrl: "/project/projectview?scope=" + this.childScope,
+         projectQuery: {
+        pageNum: 1,
+        pageSize: 10
+      },
     };
   },
 
@@ -53,19 +59,8 @@ export default {
     this.queryViewTree();
   },
   methods: {
-    append(data) {
-      const newChild = { id: id++, label: "testtest", children: [] };
-      if (!data.children) {
-        this.$set(data, "children", []);
-      }
-      data.children.push(newChild);
-    },
-
-    remove(node, data) {
-      const parent = node.parent;
-      const children = parent.data.children || parent.data;
-      const index = children.findIndex((d) => d.id === data.id);
-      children.splice(index, 1);
+    getList(node){
+      console.log(node)
     },
     queryViewTree() {
       const params = {
@@ -75,12 +70,21 @@ export default {
         this.setTree = res.data;
         // 先找父节点
       });
+      
     },
   },
 };
 </script>
 <style scoped lang="scss">
 @import "index.scss";
+.comp-tree {
+  overflow: auto;
+  background: #fff;
+  padding: $spacing;
+  box-sizing: border-box;
+  margin-right: 20px;
+
+}
 .comp-data {
   width: 100%;
   overflow: auto;
@@ -90,17 +94,6 @@ export default {
     font-size: 14px;
   }
 
-  .icon-box {
-    color: $btnbgcolor;
-    font-size: 18px;
-    background: #fff;
-    position: absolute;
-    z-index: 100;
-    right: 5%;
-    i {
-      margin-left: 15px;
-    }
-  }
   .el-tree-node__content {
     .custom-tree-node {
       flex: 1;

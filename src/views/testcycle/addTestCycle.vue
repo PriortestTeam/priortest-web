@@ -59,7 +59,19 @@
                 placeholder="请选择版本"
                 clearable
               >
-                <el-option label="Add New Value" value="" />
+               <el-option
+                  v-for="item in versionsArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+                <router-link
+                  to="/admincenter/admincenter?par=versions"
+                >
+                <el-option label="Add New Value" value='' />
+                    </router-link>
+              </el-select>
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="8">
@@ -233,38 +245,40 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import { detailTestCycle, addTestCycle, editTestCycle, testCycleCase, addtestCycle, bindCaseDelete } from '@/api/testcycle'
+import { mapGetters } from "vuex";
+import {
+  detailTestCycle,
+  addTestCycle,
+  editTestCycle,
+  testCycleCase,
+  addtestCycle,
+  bindCaseDelete,
+} from "@/api/testcycle";
 
-import { testCaseListAll } from '@/api/testcase'
+import { testCaseListAll } from "@/api/testcase";
 
+import { queryByNameSubUsers } from "@/api/project";
+import { sysCustomField } from "@/api/systemArr";
 
-import { queryByNameSubUsers } from '@/api/project'
-
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import { message, returntomenu, formatChangedPara } from "@/utils/common";
 export default {
-  name: 'Addtestcycle',
+  name: "Addtestcycle",
   data() {
     return {
       optionsArr: [],
+      versionsArr: [],
       loading: false,
       testCycleFrom: {
-        currentVersion: 0
-
+        currentVersion: 0,
       },
-      testCycleFromTemp: {
-      },
+      testCycleFromTemp: {},
       testCyclerules: {
-        title: [
-          { required: true, message: '请输入故事标题', trigger: 'blur' }
-        ],
+        title: [{ required: true, message: "请输入故事标题", trigger: "blur" }],
       },
-
-
 
       tableHeader: {
-        color: '#d4dce3',
-        background: '#003d79'
+        color: "#d4dce3",
+        background: "#003d79",
       },
 
       openDia: false,
@@ -276,52 +290,52 @@ export default {
       testCaseDataSelect: [],
       testCaseFromRules: {
         testCaseId: [
-          { required: true, message: '请选择测试用例', trigger: 'change' }
+          { required: true, message: "请选择测试用例", trigger: "change" },
         ],
-
-      }
-
-    }
+      },
+    };
   },
   computed: {
-    ...mapGetters(
-      {
-        lang: state => state.header.lang
-      }
-    ),
+    ...mapGetters({
+      lang: (state) => state.header.lang,
+    }),
     projectInfo() {
-      return this.$store.state.user.userinfo
-    }
+      return this.$store.state.user.userinfo;
+    },
   },
   created() {
     if (this.$route.query.id) {
-      this.testCaseFrom.testCycleId = this.$route.query.id
-      detailTestCycle(this.$route.query.id).then(res => {
-        this.testCycleFrom = res.data
-        this.testCycleFromTemp = Object.assign({}, this.testCycleFrom)
-      })
-      this.gettestCycleCase()
-      testCaseListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
-        this.testCaseDataSelect = res.data
-      })
+      this.testCaseFrom.testCycleId = this.$route.query.id;
+      detailTestCycle(this.$route.query.id).then((res) => {
+        this.testCycleFrom = res.data;
+        this.testCycleFromTemp = Object.assign({}, this.testCycleFrom);
+      });
+      this.gettestCycleCase();
+      testCaseListAll({
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        title: "",
+      }).then((res) => {
+        this.testCaseDataSelect = res.data;
+      });
     } else {
-      this.testCycleFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+      this.testCycleFrom.projectId = this.projectInfo.userUseOpenProject.projectId;
     }
 
-
-
+    sysCustomField({ fieldName: "versions" }).then((res) => {
+      let data = res.data.mergeValues ? res.data.mergeValues : [];
+      this.versionsArr = data;
+    });
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     remoteReport(query) {
-      if (query !== '') {
+      if (query !== "") {
         this.loading = true;
         setTimeout(() => {
           this.loading = false;
-          queryByNameSubUsers({ subUserName: query }).then(res => {
-            this.optionsArr = res.data
-          })
+          queryByNameSubUsers({ subUserName: query }).then((res) => {
+            this.optionsArr = res.data;
+          });
         }, 200);
       } else {
         this.optionsArr = [];
@@ -340,54 +354,59 @@ export default {
         assignTo: undefined,
         notifiyList: undefined,
         description: undefined,
-      }
-      this.$refs['testCycleFrom'].resetFields();
+      };
+      this.$refs["testCycleFrom"].resetFields();
     },
-
 
     // 提交
     submitForm(formName, type) {
-
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.testCycleFrom.id) {
-            const param = formatChangedPara(this.testCycleFromTemp, this.testCycleFrom)
-            param.projectId = this.testCycleFromTemp.projectId
-            editTestCycle(param).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                returntomenu(this, 1000)
-              }
-            }).catch(error => {
-              console.log(error)
-            })
-          } else {
-            addTestCycle(this.testCycleFrom).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                this.resetFields()
-                if (type) {
-                  returntomenu(this, 1000)
+            const param = formatChangedPara(
+              this.testCycleFromTemp,
+              this.testCycleFrom
+            );
+            param.projectId = this.testCycleFromTemp.projectId;
+            editTestCycle(param)
+              .then((res) => {
+                if (res.code === "200") {
+                  message("success", res.msg);
+                  returntomenu(this, 1000);
                 }
-              } else {
-                message('error', res.msg)
-              }
-            }).catch(error => {
-              console.log(error)
-            })
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            addTestCycle(this.testCycleFrom)
+              .then((res) => {
+                if (res.code === "200") {
+                  message("success", res.msg);
+                  this.resetFields();
+                  if (type) {
+                    returntomenu(this, 1000);
+                  }
+                } else {
+                  message("error", res.msg);
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     // 放弃并且返回
     giveupBack() {
       if (!this.testCycleFrom.id) {
-        this.resetFields()
+        this.resetFields();
       }
-      this.returntomenu(this)
+      this.returntomenu(this);
     },
 
     /***编辑的表格 */
@@ -395,51 +414,58 @@ export default {
       this.testCaseFrom = {
         testCycleId: this.testCycleFrom.id,
         testCaseId: undefined,
-      }
-      this.$refs['testCaseFrom'].resetFields();
+      };
+      this.$refs["testCaseFrom"].resetFields();
     },
     gettestCycleCase() {
-      testCycleCase({ pageNum: 1, pageSize: 10, testCycleId: this.testCaseFrom.testCycleId }, {
-      }).then(res => {
-        this.testCaseData = res.data
-      })
+      testCycleCase(
+        {
+          pageNum: 1,
+          pageSize: 10,
+          testCycleId: this.testCaseFrom.testCycleId,
+        },
+        {}
+      ).then((res) => {
+        this.testCaseData = res.data;
+      });
     },
     newStep() {
-      this.openDia = true
+      this.openDia = true;
     },
     submittestCaseFrom() {
-      this.$refs['testCaseFrom'].validate((valid) => {
+      this.$refs["testCaseFrom"].validate((valid) => {
         if (valid) {
-          addtestCycle(this.testCaseFrom).then(res => {
+          addtestCycle(this.testCaseFrom).then((res) => {
             if (res.code === "200") {
-              this.gettestCycleCase()
-              message('success', res.msg)
-              this.openDia = false
-              this.resettestCaseFrom()
+              this.gettestCycleCase();
+              message("success", res.msg);
+              this.openDia = false;
+              this.resettestCaseFrom();
             }
-          })
+          });
         }
-      })
+      });
     },
     canceltestCaseFrom() {
-      this.resettestCaseFrom()
-      this.openDia = false
+      this.resettestCaseFrom();
+      this.openDia = false;
     },
     runview(row) {
-      this.$router.push({ name: 'Execute', query: { id: row.id, testCycleId: this.testCycleFrom.id } })
+      this.$router.push({
+        name: "Execute",
+        query: { id: row.id, testCycleId: this.testCycleFrom.id },
+      });
     },
     delview(row) {
-      bindCaseDelete(row.id).then(res => {
-        if (res.code === '200') {
-          message('success', res.msg)
-          this.gettestCycleCase()
+      bindCaseDelete(row.id).then((res) => {
+        if (res.code === "200") {
+          message("success", res.msg);
+          this.gettestCycleCase();
         }
-      })
-    }
-
-  }
-
-}
+      });
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 @import "index.scss";

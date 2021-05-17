@@ -106,11 +106,17 @@
                 placeholder="请选择版本"
                 clearable
               >
-                <router-link
-                  to="/admincenter/admincenter?par=versions"
+              
+               <el-option
+                  v-for="item in getOptionsArrData.versions"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value" value='' />
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=versions">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -121,11 +127,16 @@
                 placeholder="请选择测试分类"
                 clearable
               >
-               <router-link
-                  to="/admincenter/admincenter?par=test_category"
+                <el-option
+                  v-for="item in getOptionsArrData.testCategory"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value" value='' />
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=test_category">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -138,11 +149,16 @@
                 placeholder="请选择测试类型"
                 clearable
               >
-              <router-link
-                  to="/admincenter/admincenter?par=test_type"
+               <el-option
+                  v-for="item in getOptionsArrData.testType"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value" value='' />
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=test_type">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -158,11 +174,16 @@
                 placeholder="请选择测试环境"
                 clearable
               >
-                 <router-link
-                  to="/admincenter/admincenter?par=test_env"
+                 <el-option
+                  v-for="item in getOptionsArrData.testEnv"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value" value='' />
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=test_env">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -175,11 +196,16 @@
                 placeholder="请选择模块"
                 clearable
               >
-                <router-link
-                  to="/admincenter/admincenter?par=moudle"
+               <el-option
+                  v-for="item in getOptionsArrData.module"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value"  value=''/>
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=moudle">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -190,11 +216,16 @@
                 placeholder="请选择测试设备"
                 clearable
               >
-                 <router-link
-                  to="/admincenter/admincenter?par=test_device"
+               <el-option
+                  v-for="item in getOptionsArrData.testDevice"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value"  value=''/>
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=test_device">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -205,11 +236,16 @@
                 placeholder="请选择测试方法"
                 clearable
               >
-                <router-link
-                  to="/admincenter/admincenter?par=test_method"
+              <el-option
+                  v-for="item in getOptionsArrData.testMethod"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value"  value=''/>
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=test_method">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -333,42 +369,65 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import { featureListAll } from '@/api/feature'
+import { mapGetters } from "vuex";
+import { featureListAll } from "@/api/feature";
 
-import { addTestCase, editTestCase, detailTestCase, addTestCaseStep, testCaseStep, delTestCaseStep, editTestCaseStep } from '@/api/testcase'
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import {
+  addTestCase,
+  editTestCase,
+  detailTestCase,
+  addTestCaseStep,
+  testCaseStep,
+  delTestCaseStep,
+  editTestCaseStep,
+} from "@/api/testcase";
+import { sysCustomField } from "@/api/systemArr";
+
+import { message, returntomenu, formatChangedPara } from "@/utils/common";
 export default {
-  name: 'Addtestcase',
+  name: "Addtestcase",
   data() {
     return {
+      getOptionsArr: [
+        "versions",
+        "testCategory",
+        "testType",
+        "testEnv",
+        "moudle",
+        "testDevice",
+        "testMethod",
+      ],
+      getOptionsArrData: {
+        versions: [],
+        testCategory: [],
+        testType: [],
+        testEnv: [],
+        moudle: [],
+        testDevice: [],
+        testMethod: [],
+      },
       featueData: [],
       testCaseFrom: {
-        status: 1
+        status: 1,
       },
       testCaseFromTem: {},
       sprintrules: {
-        title: [
-          { required: true, message: '请输入迭代标题', trigger: 'blur' }
-        ],
-        feature: [
-          { required: true, message: '请选择需求', trigger: 'change' }
-        ],
+        title: [{ required: true, message: "请输入迭代标题", trigger: "blur" }],
+        feature: [{ required: true, message: "请选择需求", trigger: "change" }],
         priority: [
-          { required: true, message: '请选择优先级', trigger: 'change' }
+          { required: true, message: "请选择优先级", trigger: "change" },
         ],
         browser: [
-          { required: true, message: '请选择浏览器', trigger: 'change' }
+          { required: true, message: "请选择浏览器", trigger: "change" },
         ],
         platform: [
-          { required: true, message: '请选择平台', trigger: 'change' }
+          { required: true, message: "请选择平台", trigger: "change" },
         ],
-
       },
 
       tableHeader: {
-        color: '#d4dce3',
-        background: '#003d79'
+        color: "#d4dce3",
+        background: "#003d79",
       },
       stepData: [],
 
@@ -376,57 +435,63 @@ export default {
       stepFrom: {},
       stepFromTemp: {},
       stepFromRules: {
-        step: [
-          { required: true, message: '请输入步骤名称', trigger: 'blur' }
-        ],
+        step: [{ required: true, message: "请输入步骤名称", trigger: "blur" }],
         testDate: [
-          { required: true, message: '请选择测试日期', trigger: 'change' }
+          { required: true, message: "请选择测试日期", trigger: "change" },
         ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ],
+        status: [{ required: true, message: "请选择状态", trigger: "change" }],
         expectedResult: [
-          { required: true, message: '请输入预期结果', trigger: 'blur' }
+          { required: true, message: "请输入预期结果", trigger: "blur" },
         ],
-      }
-
-    }
+      },
+    };
   },
   computed: {
-    ...mapGetters(
-      {
-        lang: state => state.header.lang
-      }
-    ),
+    ...mapGetters({
+      lang: (state) => state.header.lang,
+    }),
     projectInfo() {
-      return this.$store.state.user.userinfo
-    }
+      return this.$store.state.user.userinfo;
+    },
   },
   created() {
     if (this.$route.query.id) {
-      this.stepFrom.testCaseId = this.$route.query.id
-      detailTestCase(this.$route.query.id).then(res => {
-        this.stepFrom.testCaseId = res.data.id
-        this.testCaseFrom = res.data
-        this.testCaseFromTem = Object.assign({}, this.testCaseFrom)
-      })
-      this.getTestStep()
+      this.stepFrom.testCaseId = this.$route.query.id;
+      detailTestCase(this.$route.query.id).then((res) => {
+        this.stepFrom.testCaseId = res.data.id;
+        this.testCaseFrom = res.data;
+        this.testCaseFromTem = Object.assign({}, this.testCaseFrom);
+      });
+      this.getTestStep();
     } else {
-      this.testCaseFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+      this.testCaseFrom.projectId = this.projectInfo.userUseOpenProject.projectId;
     }
-    featureListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
-      this.featueData = res.data
-    })
+    featureListAll({
+      projectId: this.projectInfo.userUseOpenProject.projectId,
+      title: "",
+    }).then((res) => {
+      this.featueData = res.data;
+    });
+    this.getOptionsArr.forEach((element) => {
+      sysCustomField({ fieldName: element }).then((res) => {
+        let data = res.data.mergeValues ? res.data.mergeValues : [];
+        this.getOptionsArrData[element]=data
+       console.log(  this.getOptionsArrData)
+      });
+    });
   },
 
   methods: {
     //编辑获取步骤
     getTestStep() {
-      testCaseStep({ pageNum: 1, pageSize: 10 }, {
-        testCaseId: this.stepFrom.testCaseId
-      }).then(res => {
-        this.stepData = res.data
-      })
+      testCaseStep(
+        { pageNum: 1, pageSize: 10 },
+        {
+          testCaseId: this.stepFrom.testCaseId,
+        }
+      ).then((res) => {
+        this.stepData = res.data;
+      });
     },
 
     // 重置表单
@@ -450,49 +515,56 @@ export default {
         testMethod: undefined,
         testData: undefined,
         preCondition: undefined,
-      }
-      this.$refs['testCaseFrom'].resetFields();
+      };
+      this.$refs["testCaseFrom"].resetFields();
     },
     // 提交
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.testCaseFrom.id) {
-            const param = formatChangedPara(this.testCaseFromTem, this.testCaseFrom)
-            param.projectId = this.testCaseFrom.projectId
-            editTestCase(param).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                returntomenu(this, 1000)
-              }
-            }).catch(error => {
-              console.log(error)
-            })
-          } else {
-            addTestCase(this.testCaseFrom).then(res => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                this.resetFields()
-                if (type) {
-                  returntomenu(this, 1000)
+            const param = formatChangedPara(
+              this.testCaseFromTem,
+              this.testCaseFrom
+            );
+            param.projectId = this.testCaseFrom.projectId;
+            editTestCase(param)
+              .then((res) => {
+                if (res.code === "200") {
+                  message("success", res.msg);
+                  returntomenu(this, 1000);
                 }
-              }
-            }).catch(error => {
-              console.log(error)
-            })
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else {
+            addTestCase(this.testCaseFrom)
+              .then((res) => {
+                if (res.code === "200") {
+                  message("success", res.msg);
+                  this.resetFields();
+                  if (type) {
+                    returntomenu(this, 1000);
+                  }
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     // 放弃并且返回
     giveupBack() {
       if (!this.testCaseFrom.id) {
-        this.resetFields()
+        this.resetFields();
       }
-      this.returntomenu(this)
+      this.returntomenu(this);
     },
     //新建步骤
     resetStepFrom() {
@@ -502,61 +574,59 @@ export default {
         testDate: undefined,
         expectedResult: undefined,
         status: undefined,
-      }
-      this.$refs['stepFrom'].resetFields();
+      };
+      this.$refs["stepFrom"].resetFields();
     },
     newStep() {
-      this.openDia = true
+      this.openDia = true;
     },
     submitStepFrom() {
-      this.$refs['stepFrom'].validate((valid) => {
+      this.$refs["stepFrom"].validate((valid) => {
         if (valid) {
           if (this.stepFrom.id) {
-            const param = formatChangedPara(this.stepFromTemp, this.stepFrom)
-            param.testCaseId = this.stepFrom.testCaseId
-            editTestCaseStep(param).then(res => {
+            const param = formatChangedPara(this.stepFromTemp, this.stepFrom);
+            param.testCaseId = this.stepFrom.testCaseId;
+            editTestCaseStep(param).then((res) => {
               if (res.code === "200") {
-                this.getTestStep()
-                message('success', res.msg)
-                this.openDia = false
-                this.stepFromTemp = {}
-                this.stepFrom = {}
+                this.getTestStep();
+                message("success", res.msg);
+                this.openDia = false;
+                this.stepFromTemp = {};
+                this.stepFrom = {};
               }
-            })
+            });
           } else {
-            addTestCaseStep(this.stepFrom).then(res => {
+            addTestCaseStep(this.stepFrom).then((res) => {
               if (res.code === "200") {
-                this.getTestStep()
-                message('success', res.msg)
-                this.openDia = false
-                this.resetStepFrom()
+                this.getTestStep();
+                message("success", res.msg);
+                this.openDia = false;
+                this.resetStepFrom();
               }
-            })
+            });
           }
         }
-      })
+      });
     },
     cancelStepFrom() {
-      this.resetStepFrom()
-      this.openDia = false
+      this.resetStepFrom();
+      this.openDia = false;
     },
     toEdit(row) {
-      this.stepFrom = Object.assign({}, row)
-      this.openDia = true
-      this.stepFromTemp = Object.assign({}, row)
+      this.stepFrom = Object.assign({}, row);
+      this.openDia = true;
+      this.stepFromTemp = Object.assign({}, row);
     },
     delview(row) {
-      delTestCaseStep(row.id).then(res => {
-        if (res.code === '200') {
-          message('success', res.msg)
-          this.getTestStep()
+      delTestCaseStep(row.id).then((res) => {
+        if (res.code === "200") {
+          message("success", res.msg);
+          this.getTestStep();
         }
-      })
-    }
-
-  }
-
-}
+      });
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
