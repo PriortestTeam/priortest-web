@@ -93,16 +93,21 @@
         </el-row>
         <el-row>
           <el-col :span="8">
+            
             <el-form-item size="small" label="测试框架" prop="testFrame">
               <el-select
                 v-model="projectFrom.testFrame"
                 placeholder="请选择测试框架"
                 clearable
               >
-                <el-option label="Java+TestNg" value="1" />
-                <router-link
-                  to="/admincenter/admincenter?par=test_frame"
+               <el-option
+                  v-for="item in testFrameArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=test_frame">
                   <el-option label="Add New Value" value="0" />
                 </router-link>
               </el-select> </el-form-item
@@ -115,15 +120,16 @@
                 placeholder="请选择项目类别"
                 clearable
               >
-                <el-option label="网页" value="1" />
-                <el-option label="手机应用" value="2" />
-                <el-option label="桌面软件" value="3" />
-                <el-option label="自由" value="4" />
-                   <router-link
-                  to="/admincenter/admincenter?par=project_category"
+                <el-option
+                  v-for="item in projectCategory"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 >
-                <el-option label="Add New Value" :value="0" />
-                    </router-link>
+                </el-option>
+                <router-link to="/admincenter/admincenter?par=project_category">
+                  <el-option label="Add New Value" value=" " />
+                </router-link>
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="8">
@@ -178,6 +184,7 @@ import {
   queryByNameSubUsers,
   getFeature,
 } from "@/api/project";
+import { sysCustomField } from "@/api/systemArr";
 import { message, returntomenu, formatChangedPara } from "@/utils/common";
 import Upload from "@/components/Upload";
 
@@ -190,6 +197,8 @@ export default {
     return {
       disabled: false,
       optionsArr: [],
+      testFrameArr:[],
+      projectCategory: [],
       loading: false,
       projectFrom: {},
       projectFromTem: {},
@@ -219,6 +228,12 @@ export default {
     }
     queryByNameSubUsers({ subUserName: "" }).then((res) => {
       this.optionsArr = res.data;
+    });
+    sysCustomField({ fieldName: "projectCategory" }).then((res) => {
+      this.projectCategory = res.data.mergeValues;
+    });
+      sysCustomField({ fieldName: "testFrame" }).then((res) => {
+      this.testFrameArr = res.data.mergeValues;
     });
   },
   mounted() {},

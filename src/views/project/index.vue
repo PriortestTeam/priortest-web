@@ -265,7 +265,7 @@ export default {
     switcproject(row) {
       this.projectBody.scope = row.scope
       this.projectBody.projectId = row.id
-      this.getqueryViews()
+      // this.getqueryViews()
     },
     closeAction(row) {
 

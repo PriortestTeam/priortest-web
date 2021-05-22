@@ -61,16 +61,24 @@
             <el-form-item size="small" label="开发人员" prop="developer">
               <el-select
                 v-model="issueFrom.developer"
+                filterable
+                remote
+                reserve-keyword
                 placeholder="请选择开发人员"
                 clearable
+                :remote-method="remoteReport"
+                :loading="loading"
               >
-                 <router-link
-                  to="/admincenter/admincenter?par=developer"
+                <el-option
+                  v-for="item in optionsArr"
+                  :key="item.id"
+                  :label="item.userName"
+                  :value="item.userName"
                 >
-                <el-option label="Add New Value" :value="0" />
-                    </router-link>
+                </el-option>
               </el-select>
-            </el-form-item>
+              </el-form-item
+          >
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="测试分类" prop="caseCategory">
@@ -154,12 +162,15 @@ import { addIssue, detailIssue, editIssue } from '@/api/issue'
 import { testCaseListAll } from '@/api/testcase'
 
 
+import { queryByNameSubUsers } from '@/api/project'
 
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addissue',
   data() {
     return {
+        optionsArr: [],
+        loading: false,
       issueFrom: {
       },
       issueFromTemp: {},
@@ -211,11 +222,24 @@ export default {
     }
     this.gettestCaseListAll()
 
-
   },
   mounted() {
+    
   },
   methods: {
+     remoteReport(query) {
+      if (query !== '') {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          queryByNameSubUsers({ subUserName: query }).then(res => {
+            this.optionsArr = res.data
+          })
+        }, 200);
+      } else {
+        this.optionsArr = [];
+      }
+    },
     // 重置表单
     resetFields() {
       this.issueFrom = {

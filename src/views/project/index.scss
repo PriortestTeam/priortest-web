@@ -1,9 +1,20 @@
 @import "@/styles/mixin.scss";//颜色
 @import "@/styles/color.scss";//按钮
-.new_project{
-  margin-bottom:  $spacing;
+.new_project {
+  margin-bottom: 6px;
   display: flex;
-  // justify-content: space-between;
+  align-items: center;
+  .icon-box {
+    color: $btnbgcolor;
+    font-size: 18px;
+    margin-left: auto;
+    i {
+      cursor: pointer;
+    }
+    i:last-child {
+      margin-left: 5px;
+    }
+  }
 }
 //表格操作的样式
 .table{
@@ -30,67 +41,6 @@
      justify-content: space-between;
    }
   /* common end */
-  .comp-tree {
-    overflow: auto;
-    background: #fff;
-    padding: $spacing;
-    box-sizing: border-box;
-    margin-right: 20px;
-    .new_project{
-      justify-content: space-between;
-    }
-    ::v-deep .el-collapse-item__content {
-      padding-bottom: 0px;
-    }
-    // 自定义节点
-    .show-btns {
-      opacity: 1;
-    }
-    .comp-tr-node {
-      ::v-deep .el-input--mini .el-input__inner {
-        height: 18px;
-        line-height: 18px;
-      }
-      // label
-      .comp-tr-node--name {
-        display: inline-block;
-        line-height: 40px;
-        min-height: 40px;
-      }
-      // button
-      .comp-tr-node--btns {
-        margin-left: 10px;
-        opacity: 1;
-        transition: opacity 0.1s;
-        .el-button {
-          transform: scale(0.8); // 缩小按钮
-          & + .el-button {
-            margin-left: -1px;
-          }
-        }
-      }
-    }
-    // 高亮显示按钮
-    .is-current {
-      & > .el-tree-node__content {
-        .comp-tr-node--btns {
-          @extend .show-btns;
-        }
-      }
-    }
-    // 悬浮显示按钮
-    .el-tree-node__content {
-      &:hover {
-        .comp-tr-node--btns {
-          @extend .show-btns;
-        }
-      }
-    }
-    .viewtext{
-      padding:0 0 $spacing $spacing;
-      box-sizing: border-box;
-    }
-  }
   .project_table {
     display: flex;
     flex-direction: column;
@@ -145,16 +95,11 @@
   }
 }
 //管理试图
-.manage-view{
-.new_project{
-  justify-content: flex-start;
-}
 .demo-ruleForm{
   width:80%;
   i{
     font-size: 16px;
   }
-}
 }
 //弹框选择器大小
 ::v-deep .el-dialog__body{
