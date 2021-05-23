@@ -158,7 +158,8 @@ export default {
       featureBody: {
         scope: '',
         projectId: ''
-      } // tree的参数
+      }, // tree的参数
+      viewSearchQueryId: ''
     }
   },
   components: {viewTree},
@@ -181,8 +182,14 @@ export default {
     /** 项目列表表格开始 */
     getfeatureList() {
       this.isLoading = true
+      const query = {
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        viewTreeDto : {
+          id: this.viewSearchQueryId
+        }
+      }
       return new Promise((resolve, reject) => {
-        featureList(this.featureQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(async res => {
+        featureList(this.featureQuery, query).then(async res => {
           if (res.code === '200') {
             // 默认取第一条
             if (res.total > 0) {
@@ -202,6 +209,7 @@ export default {
       const res = await this.getfeatureList()
       if (res.code === '200') {
         message('success', '刷新成功')
+        this.viewSearchQueryId = ''
       }
     },
 
@@ -255,6 +263,7 @@ export default {
     },
     childByValue: function (query) {
       this.isLoading = true
+      this.viewSearchQueryId = query.viewTreeDto.id
       featureList(this.featureQuery, query).then(res => {
         this.featureData = res.data
         this.featureTotal = res.total

@@ -169,7 +169,8 @@ export default {
       projectBody: {
         scope: '',
         projectId: ''
-      }
+      },
+      viewSearchQueryId: ''
     }
   },
   components: {viewTree},
@@ -193,8 +194,13 @@ export default {
     /** 项目列表表格开始 */
     getqueryForProjects() {
       this.isLoading = true
+      const query = {
+        viewTreeDto : {
+          id: this.viewSearchQueryId
+        }
+      }
       return new Promise((resolve, reject) => {
-        queryForProjects(this.projectQuery,{}).then(async res => {
+        queryForProjects(this.projectQuery,query).then(async res => {
           if (res.code === '200') {
             // 默认取第一条
             if (res.total > 0) {
@@ -216,6 +222,7 @@ export default {
       const res = await this.getqueryForProjects()
       if (res.code === '200') {
         message('success', '刷新成功')
+        this.viewSearchQueryId = ''
       }
     },
     // 切换项目
@@ -291,6 +298,7 @@ export default {
     },
     childByValue: function (query) {
       this.isLoading = true
+      this.viewSearchQueryId = query.viewTreeDto.id
       queryForProjects(this.projectQuery, query).then(res => {
         this.projecttableData = res.data
         this.projectTotal = res.total

@@ -8,7 +8,7 @@
     </div>
     <el-row>
         <el-col :span="5">
-      <view-tree :childScope="currentScope"></view-tree>
+      <view-tree :childScope="currentScope" v-on:childByValue="childByValue"></view-tree>
         </el-col >
       <el-col :span="19"
         ><div class="project_table">
@@ -146,6 +146,7 @@ export default {
         scope: '',
         projectId: ''
       },//tree的body数据
+      viewSearchQueryId: ''
     }
   },
   components: {viewTree},
@@ -172,8 +173,14 @@ export default {
     /**项目列表表格开始 */
     getqueryForTestCase() {
       this.isLoading = true
+      const query = {
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        viewTreeDto : {
+          id: this.viewSearchQueryId
+        }
+      }
       return new Promise((resolve, reject) => {
-        testCaseList(this.testCaseQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(async res => {
+        testCaseList(this.testCaseQuery, query).then(async res => {
           if (res.code === '200') {
             if (res.total > 0) {
               // 默认取第一条
@@ -193,6 +200,7 @@ export default {
       const res = await this.getqueryForTestCase()
       if (res.code === '200') {
         message('success', '刷新成功')
+        this.viewSearchQueryId = ''
       }
     },
 
@@ -229,7 +237,15 @@ export default {
     openEdit(row) {
       this.$router.push({ name: 'Addtestcase', query: { id: row.id } })
     },
-
+    childByValue: function (query) {
+      this.isLoading = true
+      this.viewSearchQueryId = query.viewTreeDto.id
+      testCaseList(this.featureQuery, query).then(res => {
+        this.testCasetableData = res.data
+        this.testCaseTotal = res.total
+        this.isLoading = false
+      })
+    }
     /**项目列表表格结束 */
 
   }

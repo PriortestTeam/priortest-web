@@ -5,7 +5,7 @@
     </div>
     <el-row>
       <el-col :span="5">
-        <view-tree :childScope="currentScope"></view-tree>
+        <view-tree :childScope="currentScope"  v-on:childByValue="childByValue"></view-tree>
       </el-col>
 
       <el-col :span="19"
@@ -153,6 +153,7 @@ export default {
         scope: "",
         projectId: "",
       }, // tree的body数据
+      viewSearchQueryId: ''
     };
   },
   components: { viewTree },
@@ -169,15 +170,20 @@ export default {
     // 新建项目
     newproject() {
       this.$router.push({ name: "Addsprint" });
+      this.viewSearchQueryId = ''
     },
 
     /** 项目列表表格开始 */
     getqueryForSprint() {
       this.isLoading = true;
+      const query = {
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        viewTreeDto : {
+          id: this.viewSearchQueryId
+        }
+      }
       return new Promise((resolve, reject) => {
-        sprintList(this.sprintQuery, {
-          projectId: this.projectInfo.userUseOpenProject.projectId,
-        }).then(async (res) => {
+        sprintList(this.sprintQuery, query).then(async (res) => {
           if (res.code === "200") {
             if (res.total > 0) {
               // 默认取第一条
@@ -233,7 +239,15 @@ export default {
     openEdit(row) {
       this.$router.push({ name: "Addsprint", query: { id: row.id } });
     },
-
+  childByValue: function (query) {
+    this.isLoading = true
+    this.viewSearchQueryId = query.viewTreeDto.id
+    sprintList(this.projectQuery, query).then(res => {
+      this.sprinttableData = res.data;
+      this.sprintTotal = res.total;
+      this.isLoading = false
+    })
+  }
     /** 项目列表表格结束 */
   },
 };

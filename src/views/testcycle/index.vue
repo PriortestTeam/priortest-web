@@ -7,7 +7,7 @@
     </div>
     <el-row>
   <el-col :span="5">
-      <view-tree :childScope="currentScope"></view-tree>
+      <view-tree :childScope="currentScope" v-on:childByValue="childByValue"></view-tree>
 
   </el-col>
       <el-col :span="19"
@@ -153,6 +153,7 @@ export default {
         scope: '',
         projectId: ''
       },//tree的参数
+      viewSearchQueryId: ''
     }
   },
   components: {viewTree},
@@ -174,8 +175,14 @@ export default {
     /**项目列表表格开始 */
     getfeatureList() {
       this.isLoading = true
+      const query = {
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        viewTreeDto : {
+          id: this.viewSearchQueryId
+        }
+      }
       return new Promise((resolve, reject) => {
-        testCycleList(this.testCycleQuery, { projectId: this.projectInfo.userUseOpenProject.projectId }).then(async res => {
+        testCycleList(this.testCycleQuery, query).then(async res => {
           if (res.code === '200') {
             // 默认取第一条
             if (res.total > 0) {
@@ -195,6 +202,7 @@ export default {
       const res = await this.getfeatureList()
       if (res.code === '200') {
         message('success', '刷新成功')
+        this.viewSearchQueryId = ''
       }
     },
 
@@ -232,7 +240,15 @@ export default {
 
       this.$router.push({ name: 'Addtestcycle', query: { id: row.id } })
     },
-
+    childByValue: function (query) {
+      this.isLoading = true
+      this.viewSearchQueryId = query.viewTreeDto.id
+      testCycleList(this.featureQuery, query).then(res => {
+        this.featureData = res.data
+        this.featureTotal = res.total
+        this.isLoading = false
+      })
+    }
 
     /**项目列表表格结束 */
 
