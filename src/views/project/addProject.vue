@@ -93,7 +93,7 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            
+
             <el-form-item size="small" label="测试框架" prop="testFrame">
               <el-select
                 v-model="projectFrom.testFrame"

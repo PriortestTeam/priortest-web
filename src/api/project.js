@@ -8,13 +8,13 @@
  */
 import request from '@/utils/request'
 
-export function queryForProjects(data) {
+export function queryForProjects(params ,data) {
   return request({
     url: '/project/queryForProjects',
     method: 'post',
     // post拼接路由参数
-    params: data,
-    data: {}
+    params: params,
+    data: data
   })
 }
 // 添加项目

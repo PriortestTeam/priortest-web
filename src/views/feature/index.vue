@@ -5,7 +5,7 @@
     </div>
     <el-row>
         <el-col :span="5">
-      <view-tree :childScope="currentScope"></view-tree>
+      <view-tree :childScope="currentScope" v-on:childByValue="childByValue"></view-tree>
         </el-col>
       <el-col
         :span="19"
@@ -252,8 +252,15 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    childByValue: function (query) {
+      this.isLoading = true
+      featureList(this.featureQuery, query).then(res => {
+        this.featureData = res.data
+        this.featureTotal = res.total
+        this.isLoading = false
+      })
     }
-    /** 项目列表表格结束 */
 
   }
 }

@@ -8,7 +8,6 @@
         <router-link :to="viewUrl"> 管理视图 </router-link>
       </el-button>
       <span class="icon-box">
-        <i class="el-icon-search"></i>
         <i class="el-icon-plus"></i>
       </span>
     </div>
@@ -22,7 +21,7 @@
           :expand-on-click-node="false"
         >
           <span class="custom-tree-node" slot-scope="{ node }">
-            <span @click="getList(node)">{{ node.label }}</span>
+            <span @click="getList(node.data)">{{ node.label }}</span>
           </span>
         </el-tree>
       </div>
@@ -48,7 +47,7 @@ export default {
         label: "title",
       },
       viewUrl: "/project/projectview?scope=" + this.childScope,
-         projectQuery: {
+        projectQuery: {
         pageNum: 1,
         pageSize: 10
       },
@@ -58,9 +57,20 @@ export default {
   created() {
     this.queryViewTree();
   },
+  computed: {
+    projectInfo() {
+      return this.$store.state.user.userinfo
+    }
+  },
   methods: {
-    getList(node){
-      console.log(node)
+    getList: function (data) {
+      const query = {
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        viewTreeDto : {
+          id: data.id
+        }
+      }
+      this.$emit('childByValue',query)
     },
     queryViewTree() {
       const params = {
@@ -70,7 +80,7 @@ export default {
         this.setTree = res.data;
         // 先找父节点
       });
-      
+
     },
   },
 };

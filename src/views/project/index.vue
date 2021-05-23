@@ -5,7 +5,7 @@
     </div>
     <el-row>
   <el-col :span="5">
-      <view-tree :childScope="currentScope"></view-tree>
+      <view-tree :childScope="currentScope" v-on:childByValue="childByValue"></view-tree>
     </el-col>
 
       <el-col :span="19"
@@ -194,7 +194,7 @@ export default {
     getqueryForProjects() {
       this.isLoading = true
       return new Promise((resolve, reject) => {
-        queryForProjects(this.projectQuery).then(async res => {
+        queryForProjects(this.projectQuery,{}).then(async res => {
           if (res.code === '200') {
             // 默认取第一条
             if (res.total > 0) {
@@ -289,8 +289,14 @@ export default {
       }).catch({
       })
     },
-    /** 项目列表表格结束 */
-
+    childByValue: function (query) {
+      this.isLoading = true
+      queryForProjects(this.projectQuery, query).then(res => {
+        this.projecttableData = res.data
+        this.projectTotal = res.total
+        this.isLoading = false
+      })
+    }
   }
 }
 </script>

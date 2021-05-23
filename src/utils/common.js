@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-02-02 16:43:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \telecom-industry-portal-gw2.0d:\project\oneclick-web\src\utils\common.js
+ * @FilePath: \telecom-industry-portal-gw2.0d:\project\oneclick-web\src\utils\view.js
  */
 
 import { Message } from 'element-ui'
