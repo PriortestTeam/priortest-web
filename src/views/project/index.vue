@@ -5,7 +5,7 @@
     </div>
     <el-row>
   <el-col :span="5">
-      <view-tree :childScope="currentScope" v-on:childByValue="childByValue"></view-tree>
+      <view-tree :key="timer" :childScope="currentScope" v-on:childByValue="childByValue" ></view-tree>
     </el-col>
 
       <el-col :span="19"
@@ -170,7 +170,8 @@ export default {
         scope: '',
         projectId: ''
       },
-      viewSearchQueryId: ''
+      viewSearchQueryId: '',
+      timer: ''
     }
   },
   components: {viewTree},
@@ -231,6 +232,7 @@ export default {
         if (res.code === '200') {
           this.$refs.projecttableData.clearSelection()
           store.dispatch('user/getInfo')
+          this.timer = new Date().getTime()
           message('success', '切换项目成功')
         }
       })

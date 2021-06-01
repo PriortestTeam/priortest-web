@@ -63,6 +63,7 @@ export default {
       item.mergeValues.splice(index, 1);
     },
     addValue(item) {
+      console.log(item)
       this.$prompt("请填写值：", {
         confirmButtonText: "确定",
         showCancelButton: false,

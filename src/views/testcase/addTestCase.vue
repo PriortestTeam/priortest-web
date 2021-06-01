@@ -54,7 +54,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="feature" prop="feature">
-              <el-select v-model="testCaseFrom.feature" placeholder="关联故事">
+              <el-select v-model="testCaseFrom.feature" placeholder="关联故事" @change="getFeatureLikeArgs">
                 <el-option
                   v-for="item in featueData"
                   :key="item.id"
@@ -106,7 +106,7 @@
                 placeholder="请选择版本"
                 clearable
               >
-              
+
                <el-option
                   v-for="item in getOptionsArrData.versions"
                   :key="item"
@@ -476,7 +476,6 @@ export default {
       sysCustomField({ fieldName: element }).then((res) => {
         let data = res.data.mergeValues ? res.data.mergeValues : [];
         this.getOptionsArrData[element]=data
-       console.log(  this.getOptionsArrData)
       });
     });
   },
@@ -625,6 +624,9 @@ export default {
         }
       });
     },
+    getFeatureLikeArgs(row){
+      console.log(row)
+    }
   },
 };
 </script>
