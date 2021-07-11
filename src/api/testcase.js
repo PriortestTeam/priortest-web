@@ -57,7 +57,7 @@ export function editTestCase(data) {
   })
 }
 /***弹框 新增步骤
- * 
+ *
  */
 export function testCaseStep(params, data) {
   return request({
@@ -88,5 +88,18 @@ export function editTestCaseStep(data) {
     url: '/testCaseStep/update',
     method: 'post',
     data
+  })
+}
+
+
+
+export function getFeatureLikeArgs(id) {
+  const reqBody = {
+    featureId : id
+  }
+  return request({
+    url: '/testCase/queryTestNeedByFeatureId',
+    method: 'get',
+    params: reqBody
   })
 }

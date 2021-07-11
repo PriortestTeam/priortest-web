@@ -298,6 +298,8 @@ export default {
 
     // 新增和修改确定表单
     submitForm(formName) {
+      // console.log(this.from)
+      // return
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.from.id) {

@@ -242,7 +242,7 @@ export default {
   childByValue: function (query) {
     this.isLoading = true
     this.viewSearchQueryId = query.viewTreeDto.id
-    sprintList(this.projectQuery, query).then(res => {
+    sprintList(this.sprintQuery, query).then(res => {
       this.sprinttableData = res.data;
       this.sprintTotal = res.total;
       this.isLoading = false

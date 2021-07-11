@@ -137,6 +137,7 @@
               <el-date-picker
                 v-model="projectFrom.planReleaseDate"
                 value-format="yyyy-MM-dd HH:mm:ss"
+                :picker-options="pickerOptions"
                 type="date"
                 placeholder="选择上线日期"
                 size="small"
@@ -208,6 +209,17 @@ export default {
           { required: true, message: "请输入负责人", trigger: "blur" },
         ],
         status: [{ required: true, message: "请选择状态", trigger: "change" }],
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;//设置选择今天以及今天之后的日
+          //return time.getTime() > Date.now(); //设置选择今天以及今天以前的日期
+          //return time.getTime() < Date.now();//设置选择今天之后的日期（不能选择当天时间）
+          // return time.getTime() > Date.now() - 8.64e7 //设置选择今天之前的日期（不能选择当天）
+          // 设置当天23：59：59可选
+          // let currentTime = this.getNowMonthDay() + ` 23:59:59`
+          // return time.getTime() > new Date(currentTime).getTime()
+        },
       },
     };
   },

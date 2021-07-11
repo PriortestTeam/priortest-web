@@ -197,7 +197,7 @@
                 clearable
               >
                <el-option
-                  v-for="item in getOptionsArrData.module"
+                  v-for="item in getOptionsArrData.moudle"
                   :key="item"
                   :label="item"
                   :value="item"
@@ -380,6 +380,7 @@ import {
   testCaseStep,
   delTestCaseStep,
   editTestCaseStep,
+  getFeatureLikeArgs
 } from "@/api/testcase";
 import { sysCustomField } from "@/api/systemArr";
 
@@ -474,8 +475,7 @@ export default {
     });
     this.getOptionsArr.forEach((element) => {
       sysCustomField({ fieldName: element }).then((res) => {
-        let data = res.data.mergeValues ? res.data.mergeValues : [];
-        this.getOptionsArrData[element]=data
+        this.getOptionsArrData[element]= res.data.mergeValues ? res.data.mergeValues : []
       });
     });
   },
@@ -625,7 +625,28 @@ export default {
       });
     },
     getFeatureLikeArgs(row){
-      console.log(row)
+      if ((this.testCaseFrom.module !== undefined && this.testCaseFrom.module !== "")
+        || (this.testCaseFrom.version !== undefined && this.testCaseFrom.version  !== "")) {
+        this.$confirm('重新选择可能会丢失内容请确认？', {
+          title: '提示',
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(s => {
+          this.testCaseFrom.module = ""
+          this.testCaseFrom.version = ""
+        }).catch(e => {
+          return
+        })
+      }
+
+      getFeatureLikeArgs(row).then((res) => {
+        const data = res.data
+        this.$set(this.testCaseFrom,'version',data.version)
+        this.$set(this.testCaseFrom,'module',data.moudle)
+      })
+
     }
   },
 };
