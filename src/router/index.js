@@ -253,6 +253,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/manageUser',
+    component: () => import('@/views/manageUser/index'),
+    redirect: '/manageUser/registerUser',
+    children: [
+      {
+        path: 'registerUser',
+        component: () => import('@/views/manageUser/registerUser'),
+        meta: { title: 'Register User', icon: 'registerUser' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

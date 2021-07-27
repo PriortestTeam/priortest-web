@@ -13,6 +13,7 @@ export default {
 @import "@/styles/color.scss";
 body{
   background: $bodybg;
+  min-width: 1024px;
 }
 
 </style>

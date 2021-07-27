@@ -1,10 +1,10 @@
 <template>
-$END$
+  <router-view />
 </template>
 
 <script>
 export default {
-name: "index"
+  name: 'ManageUser'
 }
 </script>
 
