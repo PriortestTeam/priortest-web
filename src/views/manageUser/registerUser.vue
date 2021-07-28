@@ -54,6 +54,7 @@
       </el-table>
       <!--      v-show="fieldsTotal > 0"-->
       <pagination
+        v-show="fieldsTotal>=fieldsQuery.pageSize"
         :total="fieldsTotal"
         :page.sync="fieldsQuery.pageNum"
         :limit.sync="fieldsQuery.pageSize"
