@@ -145,7 +145,15 @@ export const constantRoutes = [
       meta: {
         title: 'Project', icon: 'Project'
       }
-    }]
+    }, {
+      path: 'importTestCases',
+      name: 'ImportTestCases',
+      component: () => import('@/views/testcase/importTestCases'),
+      meta: {
+        title: 'ImportTestCases', icon: 'ImportTestCases'
+      }
+    }
+    ]
   },
   {
     path: '/testcycle',

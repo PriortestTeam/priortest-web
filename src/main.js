@@ -14,11 +14,12 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import '@/directives'
 
-//分页
+// 分页
 import Pagination from '@/components/Pagination'
-Vue.component('Pagination', Pagination)
 
+Vue.component('Pagination', Pagination)
 
 // 公共方法
 import { resetForm, handleTree, returntomenu } from '@/utils/jeethink'
@@ -27,6 +28,7 @@ Vue.prototype.resetForm = resetForm
 Vue.prototype.handleTree = handleTree
 Vue.prototype.returntomenu = returntomenu
 import storage from '@/utils/localStorage'
+
 Vue.prototype.set = storage.set
 Vue.prototype.get = storage.get
 Vue.prototype.remove = storage.remove

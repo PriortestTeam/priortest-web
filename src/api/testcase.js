@@ -17,7 +17,8 @@ export function testCaseList(params, data) {
     data: data
   })
 }
-//没有分页的
+
+// 没有分页的
 export function testCaseListAll(data) {
   return request({
     url: '/leftJoin/queryFestCaseTitles',
@@ -25,6 +26,7 @@ export function testCaseListAll(data) {
     params: data
   })
 }
+
 // 添加项目
 export function addTestCase(data) {
   return request({
@@ -33,13 +35,15 @@ export function addTestCase(data) {
     data
   })
 }
+
 // 获取详情
 export function detailTestCase(id) {
   return request({
     url: '/testCase/queryById/' + id,
-    method: 'get',
+    method: 'get'
   })
 }
+
 // 删除项目
 export function delTestCase(id) {
   return request({
@@ -56,7 +60,8 @@ export function editTestCase(data) {
     data
   })
 }
-/***弹框 新增步骤
+
+/** *弹框 新增步骤
  *
  */
 export function testCaseStep(params, data) {
@@ -68,6 +73,7 @@ export function testCaseStep(params, data) {
     data: data
   })
 }
+
 // 添加
 export function addTestCaseStep(data) {
   return request({
@@ -76,6 +82,7 @@ export function addTestCaseStep(data) {
     data
   })
 }
+
 // 删除
 export function delTestCaseStep(id) {
   return request({
@@ -83,6 +90,7 @@ export function delTestCaseStep(id) {
     method: 'delete'
   })
 }
+
 export function editTestCaseStep(data) {
   return request({
     url: '/testCaseStep/update',
@@ -91,15 +99,75 @@ export function editTestCaseStep(data) {
   })
 }
 
-
-
 export function getFeatureLikeArgs(id) {
   const reqBody = {
-    featureId : id
+    featureId: id
   }
   return request({
     url: '/testCase/queryTestNeedByFeatureId',
     method: 'get',
     params: reqBody
+  })
+}
+
+/**
+ * 获取当前登录人模板和默认模板
+ * @returns {AxiosPromise}
+ */
+export function queryListByUserId() {
+  return request({
+    url: '/testCaseTemplate/queryListByUserId',
+    method: 'get'
+  })
+}
+
+/**
+ * 插入测试用例模板
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function addTestCaseTemplate(data) {
+  return request({
+    url: '/testCaseTemplate/insert',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 删除模板
+ * @param id
+ * @returns {AxiosPromise}
+ */
+export function deleteTemp(id) {
+  return request({
+    url: '/testCaseTemplate/delete/' + id,
+    method: 'delete'
+  })
+}
+
+/**
+ * 更新测试用例模板
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function updateTestCaseTemplate(data) {
+  return request({
+    url: '/testCaseTemplate/update',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 导入测试用例
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function importTestCase(data) {
+  return request({
+    url: '/testCaseTemplate/importTestCase',
+    method: 'post',
+    data
   })
 }
