@@ -138,52 +138,56 @@
             </el-col>
           </el-row>
           <el-divider content-position="left">导入规则</el-divider>
-          <el-col :span="6" style="display: flex">
-            <el-form-item label-width="0px">
-              <el-checkbox v-model="testTemplate.ifSplitTestStep">步骤分隔符</el-checkbox>
-            </el-form-item>
-            <el-form-item v-if="testTemplate.ifSplitTestStep" label-width="10px" prop="splitTestStep">
-              <el-input v-model="testTemplate.splitTestStep" placeholder="分隔符" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label-width="0px">
-              <el-checkbox v-model="testTemplate.ifIgnorFirstRow">第一行不导入</el-checkbox>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label-width="0px">
-              <el-checkbox v-model="testTemplate.ifSendEmail">导入完毕邮件通知我</el-checkbox>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label-width="0px">
-              <el-checkbox v-model="testTemplate.ifCreateView">创建用例新视图</el-checkbox>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12" style="display: flex">
-            <el-form-item label-width="0px">
-              <el-checkbox v-model="testTemplate.ifUpdateCase">更新已有测试用例</el-checkbox>
-            </el-form-item>
-            <el-form-item
-              v-if="testTemplate.ifUpdateCase"
-              label-width="50px"
-              label="From"
-              style="margin-left: 20px"
-              prop="updateCaseFrom"
-            >
-              <el-input v-model="testTemplate.updateCaseFrom" type="number" :min="0" placeholder="From" />
-            </el-form-item>
-            <el-form-item
-              v-if="testTemplate.ifUpdateCase"
-              label-width="30px"
-              prop="updateCaseTo"
-              label="To"
-              style="margin-left: 10px"
-            >
-              <el-input v-model="testTemplate.updateCaseTo" type="number" :min="0" placeholder="To" />
-            </el-form-item>
-          </el-col>
+          <el-row>
+            <el-col :span="6" style="display: flex">
+              <el-form-item label-width="0px">
+                <el-checkbox v-model="testTemplate.ifSplitTestStep">步骤分隔符</el-checkbox>
+              </el-form-item>
+              <el-form-item v-if="testTemplate.ifSplitTestStep" label-width="10px" prop="splitTestStep">
+                <el-input v-model="testTemplate.splitTestStep" placeholder="分隔符" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label-width="0px">
+                <el-checkbox v-model="testTemplate.ifIgnorFirstRow">第一行不导入</el-checkbox>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label-width="0px">
+                <el-checkbox v-model="testTemplate.ifSendEmail">导入完毕邮件通知我</el-checkbox>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label-width="0px">
+                <el-checkbox v-model="testTemplate.ifCreateView">创建用例新视图</el-checkbox>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12" style="display: flex">
+              <el-form-item label-width="0px">
+                <el-checkbox v-model="testTemplate.ifUpdateCase">更新已有测试用例</el-checkbox>
+              </el-form-item>
+              <el-form-item
+                v-if="testTemplate.ifUpdateCase"
+                label-width="50px"
+                label="From"
+                style="margin-left: 20px"
+                prop="updateCaseFrom"
+              >
+                <el-input v-model="testTemplate.updateCaseFrom" type="number" :min="0" placeholder="From" />
+              </el-form-item>
+              <el-form-item
+                v-if="testTemplate.ifUpdateCase"
+                label-width="30px"
+                prop="updateCaseTo"
+                label="To"
+                style="margin-left: 10px"
+              >
+                <el-input v-model="testTemplate.updateCaseTo" type="number" :min="0" placeholder="To" />
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
       </el-col>
       <el-col :span="5">
@@ -437,7 +441,6 @@ export default {
     },
     // 保存模板
     saveTemp() {
-      console.log(this.selectTempDetail.ifDefault)
       if (this.selectTempDetail && this.selectTempDetail.ifDefault === 1) {
         this.$message.warning('当前模板是默认模板，不可修改')
         return
@@ -551,7 +554,7 @@ export default {
     },
     // 点击模板
     onRadioChange(e) {
-    // 当点击已经选中的把 activeModel 置空，就是取消选中，并返回
+      // 当点击已经选中的把 activeModel 置空，就是取消选中，并返回
       if (this.selectTemp === e.id) {
         this.selectTemp = ''
         this.selectTempDetail = null
