@@ -131,11 +131,11 @@
                 <el-input v-model="testTemplate.stepExpectResultCol" v-Alphabet placeholder="预期结果" />
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="实际结果" prop="stepActualResultCol">
-                <el-input v-model="testTemplate.stepActualResultCol" v-Alphabet placeholder="实际结果" />
-              </el-form-item>
-            </el-col>
+            <!--            <el-col :span="6">-->
+            <!--              <el-form-item label="实际结果" prop="stepActualResultCol">-->
+            <!--                <el-input v-model="testTemplate.stepActualResultCol" v-Alphabet placeholder="实际结果" />-->
+            <!--              </el-form-item>-->
+            <!--            </el-col>-->
           </el-row>
           <el-divider content-position="left">导入规则</el-divider>
           <el-row>
@@ -164,28 +164,32 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="12" style="display: flex">
+            <el-col :span="24" style="display: flex">
               <el-form-item label-width="0px">
                 <el-checkbox v-model="testTemplate.ifUpdateCase">更新已有测试用例</el-checkbox>
               </el-form-item>
-              <el-form-item
-                v-if="testTemplate.ifUpdateCase"
-                label-width="50px"
-                label="From"
-                style="margin-left: 20px"
-                prop="updateCaseFrom"
-              >
-                <el-input v-model="testTemplate.updateCaseFrom" type="number" :min="0" placeholder="From" />
-              </el-form-item>
-              <el-form-item
-                v-if="testTemplate.ifUpdateCase"
-                label-width="30px"
-                prop="updateCaseTo"
-                label="To"
-                style="margin-left: 10px"
-              >
-                <el-input v-model="testTemplate.updateCaseTo" type="number" :min="0" placeholder="To" />
-              </el-form-item>
+              <br>
+              <!--              <el-form-item-->
+              <!--                v-if="testTemplate.ifUpdateCase"-->
+              <!--                label-width="50px"-->
+              <!--                label="From"-->
+              <!--                style="margin-left: 20px"-->
+              <!--                prop="updateCaseFrom"-->
+              <!--              >-->
+              <!--                <el-input v-model="testTemplate.updateCaseFrom" type="number" :min="0" placeholder="From" />-->
+              <!--              </el-form-item>-->
+              <!--              <el-form-item-->
+              <!--                v-if="testTemplate.ifUpdateCase"-->
+              <!--                label-width="30px"-->
+              <!--                prop="updateCaseTo"-->
+              <!--                label="To"-->
+              <!--                style="margin-left: 10px"-->
+              <!--              >-->
+              <!--                <el-input v-model="testTemplate.updateCaseTo" type="number" :min="0" placeholder="To" />-->
+              <!--              </el-form-item>-->
+            </el-col>
+            <el-col v-if="testTemplate.ifUpdateCase">
+              <span style="color: red; font-size: 10px">请确保您要更新的 外部ID 、 故事 与现有测试用例相一致。如果导入的数据没有在数据库中找到对应的记录，会依据导入规则添加测试用例。</span>
             </el-col>
           </el-row>
         </el-form>
@@ -240,22 +244,22 @@ export default {
         callback()
       }
     }
-    const validateupdateCaseFrom = (rule, value, callback) => {
-      if (this.testTemplate.updateCaseFrom <= 0) {
-        callback(new Error('输入的值必须大于0'))
-      } else {
-        callback()
-      }
-    }
-    const validateupdateCaseTo = (rule, value, callback) => {
-      if (this.testTemplate.updateCaseTo <= 0) {
-        callback(new Error('输入的值必须大于0'))
-      } else if (this.testTemplate.updateCaseTo < this.testTemplate.updateCaseFrom) {
-        callback(new Error('结束行必须大于或等于起始行'))
-      } else {
-        callback()
-      }
-    }
+    // const validateupdateCaseFrom = (rule, value, callback) => {
+    //   if (this.testTemplate.updateCaseFrom <= 0) {
+    //     callback(new Error('输入的值必须大于0'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
+    // const validateupdateCaseTo = (rule, value, callback) => {
+    //   if (this.testTemplate.updateCaseTo <= 0) {
+    //     callback(new Error('输入的值必须大于0'))
+    //   } else if (this.testTemplate.updateCaseTo < this.testTemplate.updateCaseFrom) {
+    //     callback(new Error('结束行必须大于或等于起始行'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       selectTempDetail: null,
       selectTemp: '',
@@ -285,15 +289,15 @@ export default {
         stepCol: '',
         stepTestDataCol: '',
         stepExpectResultCol: '',
-        stepActualResultCol: '',
+        // stepActualResultCol: '',
         ifSplitTestStep: false,
         splitTestStep: '',
         ifIgnorFirstRow: false,
         ifSendEmail: false,
         ifCreateView: false,
-        ifUpdateCase: false,
-        updateCaseFrom: '',
-        updateCaseTo: ''
+        ifUpdateCase: false
+        // updateCaseFrom: '',
+        // updateCaseTo: ''
       },
       // 表单验证
       testTemplateRules: {
@@ -334,20 +338,20 @@ export default {
         stepCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
         stepTestDataCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
         stepExpectResultCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
-        stepActualResultCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
+        // stepActualResultCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
         moduleCol: [
           { required: true, message: '请输入模块列', trigger: 'blur' },
           { validator: verificationDuplicate, trigger: 'blur' }
         ],
-        splitTestStep: [{ required: true, message: '请输入步骤分隔符', trigger: 'blur' }],
-        updateCaseFrom: [
-          { required: true, message: '请输入更新已有测试用例起始行', trigger: 'blur' },
-          { validator: validateupdateCaseFrom, trigger: 'blur' }
-        ],
-        updateCaseTo: [
-          { required: true, message: '请输入更新已有测试用例结束行', trigger: 'blur' },
-          { validator: validateupdateCaseTo, trigger: 'blur' }
-        ]
+        splitTestStep: [{ required: true, message: '请输入步骤分隔符', trigger: 'blur' }]
+        // updateCaseFrom: [
+        //   { required: true, message: '请输入更新已有测试用例起始行', trigger: 'blur' },
+        //   { validator: validateupdateCaseFrom, trigger: 'blur' }
+        // ],
+        // updateCaseTo: [
+        //   { required: true, message: '请输入更新已有测试用例结束行', trigger: 'blur' },
+        //   { validator: validateupdateCaseTo, trigger: 'blur' }
+        // ]
       },
       notifyPromise: Promise.resolve()
     }
@@ -594,15 +598,15 @@ export default {
         stepCol: '',
         stepTestDataCol: '',
         stepExpectResultCol: '',
-        stepActualResultCol: '',
+        // stepActualResultCol: '',
         ifSplitTestStep: false,
         splitTestStep: '',
         ifIgnorFirstRow: false,
         ifSendEmail: false,
         ifCreateView: false,
-        ifUpdateCase: false,
-        updateCaseFrom: '',
-        updateCaseTo: ''
+        ifUpdateCase: false
+        // updateCaseFrom: '',
+        // updateCaseTo: ''
       }
     }
   }

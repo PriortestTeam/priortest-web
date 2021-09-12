@@ -69,6 +69,16 @@
                 </template>
               </el-table-column>
               <el-table-column
+                prop="status"
+                align="center"
+                label="状态"
+              >
+                <template slot-scope="scope">
+                  <span v-if="scope.row.status === 'Ready'">待执行</span>
+                  <span v-if="scope.row.status === 'Draft'">草稿</span>
+                </template>
+              </el-table-column>
+              <el-table-column
                 prop="executedDate"
                 align="center"
                 label="执行时间"

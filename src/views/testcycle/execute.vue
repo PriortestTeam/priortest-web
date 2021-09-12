@@ -28,10 +28,10 @@
         <template slot-scope="scope">
           <span>{{
             scope.row.status === 2
-              ? "通过"
+              ? '通过'
               : scope.row.status === 1
-              ? "不通过"
-              : "暂无"
+                ? '不通过'
+                : '暂无'
           }}</span>
         </template>
       </el-table-column>
@@ -43,6 +43,12 @@
         :show-overflow-tooltip="true"
         align="center"
       />
+      <el-table-column
+        prop="actualResult"
+        label="实际结果"
+        :show-overflow-tooltip="true"
+        align="center"
+      />
 
       <el-table-column label="操作(修改状态)" align="center">
         <template slot-scope="scope">
@@ -50,14 +56,14 @@
             type="text"
             class="table-btn"
             @click.stop="action(scope.row, 2)"
-            >通过</el-button
-          >
+          >通过
+          </el-button>
           <el-button
             type="text"
             class="table-btn"
             @click.stop="action(scope.row, 1)"
-            >不通过</el-button
-          >
+          >不通过
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,6 +80,7 @@
 import { testCaseStep } from '@/api/testcase'
 import { executeTestCase } from '@/api/testcycle'
 import { message } from '@/utils/common'
+
 export default {
   name: 'Execute',
   data() {
@@ -82,13 +89,12 @@ export default {
         color: '#d4dce3',
         background: '#003d79'
       }, // 表头颜色加粗设置
-      testCaseId: '',//传过来的周期下面步骤的id
-      testCycleId: '',//传过来的周期的id
-
+      testCaseId: '', // 传过来的周期下面步骤的id
+      testCycleId: '', // 传过来的周期的id
 
       stepQuery: { pageNum: 1, pageSize: 10 },
       stepData: [],
-      stepDataToatl: 0,
+      stepDataToatl: 0
 
     }
   },
@@ -102,7 +108,6 @@ export default {
     this.testCaseId = this.$route.query.id
     this.testCycleId = this.$route.query.testCycleId
     this.getTestStep()
-
   },
   methods: {
     getTestStep() {
@@ -115,27 +120,40 @@ export default {
           this.stepDataToatl = res.total
         })
       })
-
     },
     async refresh() {
-      let res = await this.getTestStep()
+      const res = await this.getTestStep()
       console.log(res)
       if (res.code === '200') {
         message('success', '刷新成功')
       }
     },
+    inputValidatorInput(value) {
+      return value !== '' && value.replace(/(^\s*)|(\s*$)/g, '') !== ''
+    },
+
     action(row, num) {
-      let data = {
-        testCaseId: row.testCaseId,
-        testCycleId: this.testCycleId,
-        testCaseStepId: row.id,
-        stepStatus: num,
-      }
-      executeTestCase(data).then(res => {
-        if (res.code === '200') {
-          message('success', res.msg)
-          this.getTestStep()
+      this.$prompt('', '请输入实际结果', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValidator: this.inputValidatorInput,
+        inputType: 'textarea',
+        inputPlaceholder: '请填写实际结果',
+        inputErrorMessage: '请填写实际结果'
+      }).then(({ value }) => {
+        const data = {
+          testCaseId: row.testCaseId,
+          testCycleId: this.testCycleId,
+          testCaseStepId: row.id,
+          stepStatus: num,
+          actualResult: value
         }
+        executeTestCase(data).then(res => {
+          if (res.code === '200') {
+            message('success', res.msg)
+            this.getTestStep()
+          }
+        })
       })
     }
   }
