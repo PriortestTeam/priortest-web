@@ -258,9 +258,14 @@ export default {
     childByValue: function(query) {
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id
-      testCaseList(this.featureQuery, query).then(res => {
+      console.log(query)
+      testCaseList(this.testCaseQuery, query).then(res => {
         this.testCasetableData = res.data
         this.testCaseTotal = res.total
+        this.isLoading = false
+      }).catch(() => {
+        this.testCasetableData = []
+        this.testCaseTotal = 0
         this.isLoading = false
       })
     }

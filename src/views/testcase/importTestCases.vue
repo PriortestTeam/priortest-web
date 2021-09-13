@@ -159,7 +159,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label-width="0px">
-                <el-checkbox v-model="testTemplate.ifCreateView">创建用例新视图</el-checkbox>
+                <el-checkbox v-model="testTemplate.ifCreateView">创建【创建时间】新视图</el-checkbox>
               </el-form-item>
             </el-col>
           </el-row>

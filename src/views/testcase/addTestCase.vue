@@ -154,7 +154,7 @@
           <el-col :span="8">
             <el-form-item size="small" label="测试类型" prop="caseType">
               <el-select
-                v-model="testCaseFrom.测试类型"
+                v-model="testCaseFrom.testType"
                 placeholder="请选择测试类型"
                 clearable
               >
@@ -475,6 +475,7 @@ export default {
     if (this.$route.query.id) {
       this.stepFrom.testCaseId = this.$route.query.id
       detailTestCase(this.$route.query.id).then((res) => {
+        console.log(res)
         this.stepFrom.testCaseId = res.data.id
         this.testCaseFrom = res.data
         this.testCaseFromTem = Object.assign({}, this.testCaseFrom)
