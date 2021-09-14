@@ -239,6 +239,7 @@ export default {
             return
           }
         }
+        this.$refs.testTemplateForm.validate()
         callback()
       } else {
         callback()
