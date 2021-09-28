@@ -226,11 +226,14 @@ import {
 } from '@/api/testcase'
 import { selectFile } from '@/utils/file'
 
+let timer = null
+
 export default {
   name: 'ImportTestCases',
   data() {
     // 验证列是否重复出现
     const verificationDuplicate = (rule, value, callback) => {
+      const _that = this
       if (value !== '' && typeof value === 'string') {
         for (const key in this.testTemplate) {
           if (key !== rule.field && value === this.testTemplate[key]) {
@@ -239,7 +242,12 @@ export default {
             return
           }
         }
-        this.$refs.testTemplateForm.validate()
+        if (timer == null) {
+          timer = setTimeout(function() {
+            _that.$refs.testTemplateForm.validate()
+            timer = null
+          }, 300)
+        }
         callback()
       } else {
         callback()
@@ -384,6 +392,7 @@ export default {
     // 导入
     importFile() {
       this.$refs.testTemplateForm.validate((valid) => {
+        console.log('**************')
         if (valid) {
           if (this.file === null) {
             this.$message.warning('请选择要导入的文件')
