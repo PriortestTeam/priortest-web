@@ -40,17 +40,72 @@
         ref="registerForm"
         class="login-form"
         label-position="left"
-        label-width="100px"
         :rules="registerRules"
         :model="registerForm"
       >
-        <div class="one-logo">
-          <img src="@/icons/img/one-logo.png" alt="" srcset="">
+        <div class="one-logo-1">
+          <!-- <img src="@/icons/img/one-logo.png" alt="" srcset=""> -->
+          欢迎注册试用 OneClick 免费30天
         </div>
-        <el-form-item prop="email" label="邮箱">
-          <el-input id="mazey" v-model="registerForm.email" @blur="check" />
-        </el-form-item>
-        <el-form-item prop="userName" label="名称">
+        <el-row :gutter="10">
+          <el-col :lg="12" :md="12" :sm="12">
+            <el-form-item prop="email">
+              <el-input
+              id="mazey"
+              size="mini"
+              v-model="registerForm.email"
+              @blur="check"
+              placeholder="请输入您的邮箱"
+            />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12" :md="12" :sm="12">
+            <el-form-item prop="contactNo">
+              <el-input
+              size="mini"
+              v-model="registerForm.contactNo"
+              placeholder="请输入您的电话"
+            />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12" :md="12" :sm="12">
+            <el-form-item prop="name">
+              <el-input
+              size="mini"
+              v-model="registerForm.name"
+              placeholder="请输入您的姓名"
+            />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12" :md="12" :sm="12">
+            <el-form-item prop="company">
+              <el-input
+              size="mini"
+              v-model="registerForm.company"
+              placeholder="请输入您的公司名称"
+            />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12" :md="12" :sm="12">
+            <el-form-item prop="industry">
+              <el-input
+              size="mini"
+              v-model="registerForm.industry"
+              placeholder="请输入您所在行业"
+            />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12" :md="12" :sm="12">
+            <el-form-item prop="profession">
+              <el-input
+              size="mini"
+              v-model="registerForm.profession"
+              placeholder="请输入您所在职位"
+            />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- <el-form-item prop="userName" label="名称">
           <el-input v-model="registerForm.userName" />
         </el-form-item>
         <el-form-item prop="password" label="密码">
@@ -72,8 +127,19 @@
               @click="goLogin('registerForm')"
             >to Login</el-button>
           </div>
-        </el-form-item>
+        </el-form-item> -->
+        <div class="pass-allowed">
+          <el-checkbox v-model="checked">
+            <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
+            <el-link v-else type="warning">您阅读已同意服务条款</el-link>
+          </el-checkbox>
+          <el-link type="primary" style="margin-right: 10px;" @click="backLogin">返回登录</el-link>
+        </div>
+        <div style="padding-right: 10px;box-sizing: border-box;margin-top: 20px;">
+          <el-button :disabled="passRigister" size="small" type="danger" style="width: 100%;">注册</el-button>
+        </div>
       </el-form>
+
     </div>
   </div>
   <!-- 注册 -->
@@ -105,16 +171,27 @@ export default {
       // 注册用户
       isShowregister: false,
       registerUser: '',
-
+      checked: false,
       registerForm: {},
       registerRules: {
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
+          // { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] },
+          { pattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/, message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] },
         ],
         password: [{ required: true, message: '请输入密码名称', trigger: 'blur' }],
         userName: [{ required: true, message: '请输入名称', trigger: 'blur' }],
         emailCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+      }
+    }
+  },
+  computed: {
+    passRigister() {
+      if(this.registerForm.email && this.checked) {
+        let reg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
+        return !reg.test(this.registerForm.email)
+      }else {
+        return true
       }
     }
   },
@@ -127,6 +204,10 @@ export default {
     }
   },
   methods: {
+    backLogin() {
+      this.isShowregister = false;
+      this.checked = false;
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -207,6 +288,15 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/color.scss";
+
+.el-form-item{
+  margin-bottom: 14px;
+}
+.pass-allowed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .login-container {
   min-height: 100%;
   width: 100%;
@@ -216,6 +306,12 @@ export default {
     .one-logo {
       margin-left: -70px;
       margin-bottom: 20px;
+    }
+    .one-logo-1 {
+      margin-left: 0px;
+      font-size: 20px;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
     }
     position: relative;
     width: 620px;
@@ -275,5 +371,8 @@ export default {
     cursor: pointer;
     user-select: none;
   }
+}
+.el-form-item__content {
+  line-height: 28px !important;
 }
 </style>

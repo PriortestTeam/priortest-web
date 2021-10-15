@@ -99,7 +99,7 @@ div:focus {
   }
   .el-input__inner:focus{
     border-color: $btnbgcolor;
-  } 
+  }
   .el-input.is-focus .el-input__inner{
     border-color: $btnbgcolor;
   }
@@ -138,6 +138,10 @@ div:focus {
   color: #FFF;
 }
 //单选框的颜色修改
+.el-radio__input {
+  position: relative;
+  transition: 0.2s;
+}
 .el-radio__input.is-checked+.el-radio__label {
   color:  $btnbgcolor;
 }
@@ -181,4 +185,21 @@ div:focus {
 //新增页面 占屏幕宽度的60%
 .form-box{
   width:80%;
+}
+
+
+// 间距类样式
+.mb-1 {
+  margin-bottom: 10px;
+}
+
+.mb-2 {
+  margin-bottom: 20px;
+}
+
+
+// 图标样式
+.el-icon {
+  font-size: 20px;
+  cursor: pointer;
 }

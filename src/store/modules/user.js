@@ -20,6 +20,8 @@ const mutations = {
   },
   SET_USERINFO: (state, userinfo) => {
     state.userinfo = userinfo
+    // 保存projectId 到缓存中去
+    localStorage.setItem('projectId', userinfo.userUseOpenProject.projectId);
   },
 
 }

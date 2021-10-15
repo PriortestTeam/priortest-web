@@ -2,10 +2,35 @@
 @import "@/styles/color.scss";//按钮
 
 .set_btn {
-    display: inline-block;
-    margin-bottom: $spacing;
-  }
-  
+  display: inline-block;
+  margin-bottom: $spacing;
+}
+
+// 新的按钮样式
+.set_btn_type {
+  display: inline-block;
+  margin-bottom: $spacing;
+  min-width: 100px;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  border-radius: 0px !important;
+  padding: 0 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+// 生成按钮
+.set_btn_type.set_btn_2 {
+  @include setBtn($btncreatebgColor, false);
+}
+//更新按钮
+.set_btn_type.set_btn_3 {
+  @include setBtn($selectColor, false);
+}
+
+
 .signoff-container {
     display: flex;
     justify-content: center;
@@ -30,6 +55,26 @@
           position: absolute;
           top: 0;
           left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+        }
+        ::v-deep .el-radio__inner {
+            border-radius: 100%;
+            border: 1px solid $selectColor;
+            background: #ffffff;
+        }
+        ::v-deep .el-radio__inner::after {
+          content: "";
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background:$selectColor;
+          border: none;
+          line-height: 14px;
+          position: absolute;
+          top: 6px;
+          left: 6px;
           right: 0;
           bottom: 0;
           margin: auto;
