@@ -18,99 +18,99 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="模板名称">
-                <el-input v-model="testTemplate.templateName" :maxlength="10" placeholder="模板名称" />
+                <el-input v-model="testTemplate.templateName" :maxlength="10" placeholder="模板名称"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="选中的文件">
-                <el-input v-model="testTemplate.selectFile" placeholder="选中的文件" :readonly="true" />
+                <el-input v-model="testTemplate.selectFile" placeholder="选中的文件" :readonly="true"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="测试用例标题" prop="testTitleCol">
-                <el-input v-model="testTemplate.testTitleCol" v-Alphabet placeholder="测试用例标题列" />
+                <el-input v-model="testTemplate.testTitleCol" v-Alphabet placeholder="测试用例标题列"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="状态" prop="statusCol">
-                <el-input v-model="testTemplate.statusCol" v-Alphabet placeholder="测试用例标题列" />
+                <el-input v-model="testTemplate.statusCol" v-Alphabet placeholder="测试用例标题列"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="描述" prop="descriptionCol">
-                <el-input v-model="testTemplate.descriptionCol" v-Alphabet placeholder="描述列" />
+                <el-input v-model="testTemplate.descriptionCol" v-Alphabet placeholder="描述列"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="关联故事" prop="featureCol">
-                <el-input v-model="testTemplate.featureCol" v-Alphabet placeholder="关联故事列" />
+                <el-input v-model="testTemplate.featureCol" v-Alphabet placeholder="关联故事列"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="优先级" prop="priorityCol">
-                <el-input v-model="testTemplate.priorityCol" v-Alphabet placeholder="优先级" />
+                <el-input v-model="testTemplate.priorityCol" v-Alphabet placeholder="优先级"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="浏览器" prop="browserCol">
-                <el-input v-model="testTemplate.browserCol" v-Alphabet placeholder="浏览器" />
+                <el-input v-model="testTemplate.browserCol" v-Alphabet placeholder="浏览器"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="平台" prop="platformCol">
-                <el-input v-model="testTemplate.platformCol" v-Alphabet placeholder="平台" />
+                <el-input v-model="testTemplate.platformCol" v-Alphabet placeholder="平台"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="版本" prop="versionCol">
-                <el-input v-model="testTemplate.versionCol" v-Alphabet placeholder="版本" />
+                <el-input v-model="testTemplate.versionCol" v-Alphabet placeholder="版本"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试分类" prop="caseCategoryCol">
-                <el-input v-model="testTemplate.caseCategoryCol" v-Alphabet placeholder="测试分类" />
+                <el-input v-model="testTemplate.caseCategoryCol" v-Alphabet placeholder="测试分类"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试类型" prop="caseTypeCol">
-                <el-input v-model="testTemplate.caseTypeCol" v-Alphabet placeholder="测试类型" />
+                <el-input v-model="testTemplate.caseTypeCol" v-Alphabet placeholder="测试类型"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="ExternalID" prop="externalIdCol">
-                <el-input v-model="testTemplate.externalIdCol" v-Alphabet placeholder="ExternalID" />
+                <el-input v-model="testTemplate.externalIdCol" v-Alphabet placeholder="ExternalID"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试环境" prop="envCol">
-                <el-input v-model="testTemplate.envCol" v-Alphabet placeholder="测试环境" />
+                <el-input v-model="testTemplate.envCol" v-Alphabet placeholder="测试环境"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试设备" prop="deviceTypeCol">
-                <el-input v-model="testTemplate.deviceTypeCol" v-Alphabet placeholder="测试设备" />
+                <el-input v-model="testTemplate.deviceTypeCol" v-Alphabet placeholder="测试设备"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="模块" prop="moduleCol">
-                <el-input v-model="testTemplate.moduleCol" v-Alphabet placeholder="模块" />
+                <el-input v-model="testTemplate.moduleCol" v-Alphabet placeholder="模块"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="Automation" prop="automationCol">
-                <el-input v-model="testTemplate.automationCol" v-Alphabet placeholder="Automation" />
+                <el-input v-model="testTemplate.automationCol" v-Alphabet placeholder="Automation"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试条件" prop="preConditionCol">
-                <el-input v-model="testTemplate.preConditionCol" v-Alphabet placeholder="测试条件" />
+                <el-input v-model="testTemplate.preConditionCol" v-Alphabet placeholder="测试条件"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="Comments" prop="commentsCol">
-                <el-input v-model="testTemplate.commentsCol" v-Alphabet placeholder="Comments" />
+                <el-input v-model="testTemplate.commentsCol" v-Alphabet placeholder="Comments"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -118,17 +118,17 @@
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="步骤" prop="stepCol">
-                <el-input v-model="testTemplate.stepCol" v-Alphabet placeholder="步骤" />
+                <el-input v-model="testTemplate.stepCol" v-Alphabet placeholder="步骤"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试数据" prop="stepTestDataCol">
-                <el-input v-model="testTemplate.stepTestDataCol" v-Alphabet placeholder="测试数据" />
+                <el-input v-model="testTemplate.stepTestDataCol" v-Alphabet placeholder="测试数据"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="预期结果" prop="stepExpectResultCol">
-                <el-input v-model="testTemplate.stepExpectResultCol" v-Alphabet placeholder="预期结果" />
+                <el-input v-model="testTemplate.stepExpectResultCol" v-Alphabet placeholder="预期结果"/>
               </el-form-item>
             </el-col>
             <!--            <el-col :span="6">-->
@@ -144,7 +144,7 @@
                 <el-checkbox v-model="testTemplate.ifSplitTestStep">步骤分隔符</el-checkbox>
               </el-form-item>
               <el-form-item v-if="testTemplate.ifSplitTestStep" label-width="10px" prop="splitTestStep">
-                <el-input v-model="testTemplate.splitTestStep" placeholder="分隔符" />
+                <el-input v-model="testTemplate.splitTestStep" placeholder="分隔符只能为逗号','或者分号';'"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -397,6 +397,9 @@ export default {
           if (this.file === null) {
             this.$message.warning('请选择要导入的文件')
           } else {
+            if (this.testTemplate.ifSplitTestStep && this.testTemplate.splitTestStep !== ',' && this.testTemplate.splitTestStep !== ';') {
+              return this.$message.warning(`步骤分隔符只能是‘,’或者‘;’`)
+            }
             const formData = new FormData()
             formData.append('file', this.file, this.file.name)
             const form = { ...this.testTemplate }
@@ -464,6 +467,9 @@ export default {
           if (this.testTemplate.templateName === '') {
             this.$message.warning('请输入模板名称')
           } else {
+            if (this.testTemplate.ifSplitTestStep && this.testTemplate.splitTestStep !== ',' && this.testTemplate.splitTestStep !== ';') {
+              return this.$message.warning(`步骤分隔符只能是‘,’或者‘;’`)
+            }
             // 格式化模板数据
             const formData = { ...this.testTemplate }
             const data = {
