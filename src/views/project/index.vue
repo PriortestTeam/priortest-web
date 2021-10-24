@@ -37,7 +37,7 @@
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="55" />
-              <el-table-column type="index" align="center" label="序号">
+              <el-table-column type="index" align="center" :label="$t('lang.Project.ProjectTable.ID')">
                 <template slot-scope="scope">
                   {{ scope.$index + 1 }}
                 </template>

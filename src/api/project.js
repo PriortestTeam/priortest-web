@@ -113,21 +113,6 @@ export function getCloseProject(data) {
   })
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //获取view 创建是的下拉框
 export function getViewScopeChildParams(scope) {
   return request({

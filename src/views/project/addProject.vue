@@ -3,7 +3,7 @@
     <el-form
       ref="projectFrom"
       :model="projectFrom"
-      :rules="Projectrules"
+      :rules="ProjectRules"
       label-width="120px"
       class="demo-ruleForm"
     >
@@ -44,7 +44,7 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="状态" prop="status">
+            <el-form-item size="small" :label="$t('lang.Project.Status')" prop="status">
               <el-select
                 v-model="projectFrom.status"
                 placeholder="请选择项目状态"
@@ -56,7 +56,7 @@
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="8">
-            <el-form-item label="负责人" size="small" prop="reportToName">
+            <el-form-item size="small" :label="$t('lang.Project.ReportTo')" prop="reportToName">
               <el-select
                 v-model="projectFrom.reportToName"
                 filterable
@@ -68,72 +68,53 @@
                 :loading="loading"
               >
                 <el-option
-                  v-for="item in optionsArr"
+                  v-for="item in reportToNameArr"
                   :key="item.id"
                   :label="item.userName"
                   :value="item.userName"
                 >
                 </el-option>
-              </el-select> </el-form-item
-          ></el-col>
+                 <router-link to="/admincenter/admincenter?par=report_name">
+                                                  <el-option label="添加新值" value="0" />
+                                                </router-link>
+              </el-select> </el-form-item></el-col>
           <el-col :span="8">
-            <el-form-item
-              size="small"
-              :label="$t('lang.Project.Customer')"
-              prop="customer"
-            >
-              <el-select
-                v-model="projectFrom.customer"
-                placeholder="请选择"
-                clearable
-              >
-                <el-option label="暂无" value="" />
-              </el-select> </el-form-item
-          ></el-col>
+            <el-form-item  size="small" :label="$t('lang.Project.Customer')" prop="customer">
+              <el-select  v-model="projectFrom.customer" placeholder="请选择客户" clearable>
+                <el-option  v-for="item in customerListArr" :key="item" :label="item" :value="item">
+                </el-option>
+                 <el-option label="测试客户" value="0" />
+                <router-link to="/admincenter/admincenter?par=customer_list">
+                <el-option label="添加新值" value="0" />
+                </router-link>
+              </el-select>
+              </el-form-item>
+              </el-col>
         </el-row>
+
         <el-row>
           <el-col :span="8">
-
-            <el-form-item size="small" label="测试框架" prop="testFrame">
-              <el-select
-                v-model="projectFrom.testFrame"
-                placeholder="请选择测试框架"
-                clearable
-              >
-               <el-option
-                  v-for="item in testFrameArr"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
+            <el-form-item size="small" :label="$t('lang.Project.TestFrame')" prop="testFrame">
+              <el-select  v-model="projectFrom.testFrame"  placeholder="请选择测试框架" clearable>
+               <el-option v-for="item in testFrameArr" :key="item" :label="item" :value="item">
                 </el-option>
                 <router-link to="/admincenter/admincenter?par=test_frame">
-                  <el-option label="Add New Value" value="0" />
+                <el-option label="添加新值" value="0" />
                 </router-link>
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
 
           <el-col :span="8">
-            <el-form-item size="small" label="项目类别" prop="projectCategory">
-              <el-select
-                v-model="projectFrom.projectCategory"
-                placeholder="请选择项目类别"
-                clearable
+            <el-form-item size="small" :label="$t('lang.Project.ProjectCategory')" prop="projectCategory">
+              <el-select v-model="projectFrom.projectCategory" placeholder="请选择项目类别" clearable
               >
-                <el-option
-                  v-for="item in projectCategory"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
+                <el-option v-for="item in projectCategory" :key="item" :label="item" :value="item">
                 </el-option>
                 <router-link to="/admincenter/admincenter?par=project_category">
-                  <el-option label="Add New Value" value=" " />
+                  <el-option label="添加新值" value="0" />
                 </router-link>
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="上线日期" prop="planReleaseDate">
+            <el-form-item size="small" :label="$t('lang.Project.PlanReleaseDate')" prop="planReleaseDate">
               <el-date-picker
                 v-model="projectFrom.planReleaseDate"
                 value-format="yyyy-MM-dd HH:mm:ss"
@@ -198,15 +179,17 @@ export default {
     return {
       disabled: false,
       optionsArr: [],
-      testFrameArr:[],
+      testFrameArr: [],
+      reportToNameArr: [],
+      customerListArr: [],
       projectCategory: [],
       loading: false,
       projectFrom: {},
       projectFromTem: {},
-      Projectrules: {
+      ProjectRules: {
         title: [{ required: true, message: "请输入项目标题", trigger: "blur" }],
         reportToName: [
-          { required: true, message: "请输入负责人", trigger: "blur" },
+         { required: true, message: "请选择负责人", trigger: "blur" },
         ],
         status: [{ required: true, message: "请选择状态", trigger: "change" }],
       },
@@ -238,8 +221,8 @@ export default {
         this.projectFromTem = Object.assign({}, this.projectFrom);
       });
     }
-    queryByNameSubUsers({ subUserName: "" }).then((res) => {
-      this.optionsArr = res.data;
+    queryByNameSubUsers({ subUserName: "reportToName" }).then((res) => {
+      this.reportToNameArr = res.data;
     });
     sysCustomField({ fieldName: "projectCategory" }).then((res) => {
       this.projectCategory = res.data.mergeValues;
@@ -247,6 +230,10 @@ export default {
       sysCustomField({ fieldName: "testFrame" }).then((res) => {
       this.testFrameArr = res.data.mergeValues;
     });
+     sysCustomField({ fieldName: "customer" }).then((res) => {
+          this.customerListArr = res.data.mergeValues;
+        });
+
   },
   mounted() {},
   methods: {
@@ -256,11 +243,11 @@ export default {
         setTimeout(() => {
           this.loading = false;
           queryByNameSubUsers({ subUserName: query }).then((res) => {
-            this.optionsArr = res.data;
+            this.reportToNameArr = res.data;
           });
         }, 200);
       } else {
-        this.optionsArr = [];
+        this.reportToNameArr = [];
       }
     },
     // 重置表单
@@ -269,7 +256,7 @@ export default {
         id: undefined,
         title: undefined,
         description: undefined,
-        report: undefined,
+        reportToName: undefined,
         customer: undefined,
         status: undefined,
         testFrame: undefined,

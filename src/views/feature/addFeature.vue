@@ -39,7 +39,7 @@
         </router-link>
       </div>
       <div class="form-box">
-        <el-form-item label="故事标题" prop="title">
+        <el-form-item :label="$t('lang.Feature.FeatureTitle')" prop="title">
           <el-input v-model="featureFrom.title" maxlength="50" size="small" />
         </el-form-item>
         <el-row>
@@ -287,9 +287,9 @@ export default {
           this.versionsArr=data
         }
     });
-      
+
     });
-   
+
   },
   mounted() {
   },
