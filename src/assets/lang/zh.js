@@ -7,12 +7,27 @@ export const lang = {
         TestCycle:'测试周期' ,
         Issue:'缺陷' ,
         SignOff:'验收' ,
+
+    },
+    CommonFiled: {
+     Status: '状态',
+     ReportTo:'负责人',
+     Description: '描述',
+     TestFrame:'测试框架',
+     ProjectCategory:'项目类别',
+     ClosedDate :'关闭日期',
+     ModifiedDate: '修改日期',
+     CreatedDate: '创建日期',
+     ID :'序号',
+     Title:'标题',
+     Attachment:'附件',
+     Version: '版本',
     },
     //项目
     Project: {
         ManageProject:'管理项目',
-        // 新建项目
         NewProject:'新建项目',
+        // 项目公共
         ProjectTitle:'项目标题',
         Description: '描述',
         Status: '状态',
@@ -22,9 +37,14 @@ export const lang = {
         ProjectCategory:'项目类别',
         Customer:'客户',
         PlanReleaseDate:'上线日期',
+
         Closed :'关闭',
         Plan :'计划',
         Progress: '开发中',
+        ClosedDate :'关闭日期',
+        ModifiedDate: '修改日期',
+        CreatedDate: '创建日期',
+        ID :'序号',
 
         title: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -48,12 +68,15 @@ export const lang = {
         FeatureTitle:'故事标题',
         Description: '描述',
         Status: '状态',
-        Attachment:'附件',
+
         ReportTo:'负责人',
         SprintList:'迭代周期',
         Module:'模块',
         EPIC:'EPIC',
         Version: '版本',
+
+
+
     },
     // 迭代
     Sprint: {

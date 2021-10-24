@@ -29,6 +29,7 @@
           <div v-loading="isLoading" class="protable table">
             <el-table
               ref="projecttableData"
+
               :data="projecttableData"
               :header-cell-style="tableHeader"
               stripe
@@ -36,8 +37,8 @@
               @row-click="switcproject"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column type="selection" width="55" />
-              <el-table-column type="index" align="center" :label="$t('lang.Project.ProjectTable.ID')">
+              <el-table-column type="selection" width="40" />
+              <el-table-column type="index" align="left" :label="$t('lang.CommonFiled.ID')">
                 <template slot-scope="scope">
                   {{ scope.$index + 1 }}
                 </template>
@@ -45,8 +46,9 @@
               <el-table-column
                 prop="title"
                 :show-overflow-tooltip="true"
-                align="center"
-                label="标题"
+                align="left"
+                width="155"
+                :label="$t('lang.CommonFiled.Title')"
               >
                 <template slot-scope="scope">
                   <span class="title" @click="openEdit(scope.row)">
@@ -56,10 +58,28 @@
               </el-table-column>
               <el-table-column
                 prop="reportToName"
-                align="center"
-                label="负责人"
+                align="left"
+                :label="$t('lang.CommonFiled.ReportTo')"
               />
-              <el-table-column prop="status" align="center" label="状态">
+               <el-table-column
+                              prop="customer"
+                              align="left"
+                              :label="$t('lang.Project.Customer')"
+                            />
+
+ <el-table-column
+                              prop="testFrame"
+                              align="left"
+                              :label="$t('lang.Project.TestFrame')"
+                              width="200"
+                            />
+                             <el-table-column
+                                                          prop="projectCategory"
+                                                          align="left"
+                                                          :label="$t('lang.Project.ProjectCategory')"
+                                                        />
+
+              <el-table-column prop="status" align="left" :label="$t('lang.Project.Status')">
                 <template slot-scope="scope">
                   <span>{{
                     scope.row.status === 3
@@ -73,17 +93,11 @@
                 </template>
               </el-table-column>
 
-              <el-table-column
-                prop="createTime"
-                align="center"
-                label="创建日期"
-                min-width="120"
-                :show-overflow-tooltip="true"
-              />
+
               <el-table-column
                 prop="planReleaseDate"
-                align="center"
-                label="上线日期"
+                align="left"
+                :label="$t('lang.Project.PlanReleaseDate')"
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
@@ -91,10 +105,11 @@
                   <span>{{ scope.row.planReleaseDate || "-" }}</span>
                 </template>
               </el-table-column>
+
               <el-table-column
                 prop="closeDate"
-                align="center"
-                label="关闭日期"
+                align="left"
+                :label="$t('lang.CommonFiled.ClosedDate')"
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
@@ -102,6 +117,13 @@
                   <span>{{ scope.row.closeDate || "-" }}</span>
                 </template>
               </el-table-column>
+               <el-table-column
+                prop="createTime"
+                align="left"
+                :label="$t('lang.CommonFiled.CreatedDate')"
+                min-width="120"
+                :show-overflow-tooltip="true"
+                 />
               <el-table-column label="操作" min-width="120" align="center">
                 <template slot-scope="scope">
                   <!-- <el-button type="text" class="table-btn">克隆</el-button>

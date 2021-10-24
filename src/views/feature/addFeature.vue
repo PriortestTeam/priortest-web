@@ -66,7 +66,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="版本" prop="version">
+            <el-form-item size="small" :label="$t('lang.CommonFiled.Version')" prop="version">
               <el-select
                 v-model="featureFrom.version"
                 placeholder="请选择版本"
@@ -82,7 +82,7 @@
                  <router-link
                   to="/admincenter/admincenter?par=versions"
                 >
-                <el-option label="Add New Value" :value="0" />
+                <el-option label="添加新值" :value="0" />
                     </router-link>
               </el-select>
             </el-form-item>
