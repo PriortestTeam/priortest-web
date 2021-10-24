@@ -145,7 +145,15 @@ export const constantRoutes = [
       meta: {
         title: 'Project', icon: 'Project'
       }
-    }]
+    }, {
+      path: 'importTestCases',
+      name: 'ImportTestCases',
+      component: () => import('@/views/testcase/importTestCases'),
+      meta: {
+        title: 'ImportTestCases', icon: 'ImportTestCases'
+      }
+    }
+    ]
   },
   {
     path: '/testcycle',
@@ -250,6 +258,18 @@ export const constantRoutes = [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
+      }
+    ]
+  },
+  {
+    path: '/manageUser',
+    component: () => import('@/views/manageUser/index'),
+    redirect: '/manageUser/registerUser',
+    children: [
+      {
+        path: 'registerUser',
+        component: () => import('@/views/manageUser/registerUser'),
+        meta: { title: 'Register User', icon: 'registerUser' }
       }
     ]
   },
