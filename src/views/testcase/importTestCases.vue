@@ -109,6 +109,11 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
+              <el-form-item label="测试数据" prop="preDataCol">
+                <el-input v-model="testTemplate.preDataCol" v-Alphabet placeholder="测试数据"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
               <el-form-item label="Comments" prop="commentsCol">
                 <el-input v-model="testTemplate.commentsCol" v-Alphabet placeholder="Comments"/>
               </el-form-item>
@@ -295,6 +300,7 @@ export default {
         automationCol: '',
         preConditionCol: '',
         commentsCol: '',
+        preDataCol: '',
         stepCol: '',
         stepTestDataCol: '',
         stepExpectResultCol: '',
@@ -344,6 +350,7 @@ export default {
         automationCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
         preConditionCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
         commentsCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
+        preDataCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
         stepCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
         stepTestDataCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
         stepExpectResultCol: [{ validator: verificationDuplicate, trigger: 'blur' }],
@@ -379,7 +386,9 @@ export default {
       position = 'top-right'
     }) {
       this.notifyPromise = this.notifyPromise.then(this.$nextTick).then(() => {
-        this.$notify({ type, title, message, duration, dangerouslyUseHTMLString, position })
+        this.$notify({
+          type, title, message, duration, dangerouslyUseHTMLString, position, customClass: 'notifyStyle'
+        })
       })
     },
     // 选择文件
@@ -388,7 +397,8 @@ export default {
         this.file = file.file
         this.testTemplate.selectFile = file.url
       })
-    },
+    }
+    ,
     // 导入
     importFile() {
       this.$refs.testTemplateForm.validate((valid) => {
@@ -455,7 +465,8 @@ export default {
           return false
         }
       })
-    },
+    }
+    ,
     // 保存模板
     saveTemp() {
       if (this.selectTempDetail && this.selectTempDetail.ifDefault === 1) {
@@ -490,7 +501,8 @@ export default {
           return false
         }
       })
-    },
+    }
+    ,
     // 新增模板
     addTemp(data) {
       const loading = this.$loading({
@@ -509,7 +521,8 @@ export default {
       }).finally(() => {
         loading.close()
       })
-    },
+    }
+    ,
     // 更新模板
     updateTemp(data) {
       const loading = this.$loading({
@@ -528,7 +541,8 @@ export default {
       }).finally(() => {
         loading.close()
       })
-    },
+    }
+    ,
     // 删除模板
     delTemp(temp) {
       this.$confirm('请问是否确认删除该模板?', '提示', {
@@ -556,7 +570,8 @@ export default {
         })
       }).catch(() => {
       })
-    },
+    }
+    ,
 
     // 获取当前登录人模板和默认模板
     queryListByUserId() {
@@ -571,7 +586,8 @@ export default {
           this.tempList = [...defaultTempList, ...tempList]
         }
       })
-    },
+    }
+    ,
     // 点击模板
     onRadioChange(e) {
       // 当点击已经选中的把 activeModel 置空，就是取消选中，并返回
@@ -587,7 +603,8 @@ export default {
       const selectFile = this.testTemplate.selectFile
       const jsonContent = JSON.parse(e.jsonContent)
       this.testTemplate = { selectFile, templateName: e.templateName, ...jsonContent }
-    },
+    }
+    ,
     // 初始化表单
     initialize() {
       const selectFile = this.testTemplate.selectFile
@@ -611,6 +628,7 @@ export default {
         automationCol: '',
         preConditionCol: '',
         commentsCol: '',
+        preDataCol: '',
         stepCol: '',
         stepTestDataCol: '',
         stepExpectResultCol: '',
@@ -654,6 +672,11 @@ export default {
     display: flex;
     justify-content: space-between;
   }
+}
+
+::v-deep .notifyStyle {
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 ::v-deep .el-divider__text {
