@@ -424,37 +424,38 @@ export default {
             })
             importTestCase(formData).then(res => {
               if (res.code === '200') {
-                const result = res.data
-                const h = this.$createElement
-                if (result.success && result.success.length > 0) {
-                  this.$message.success(result.success.join())
-                }
-                if (result.error && result.error.length > 0) {
-                  result.error.forEach(item => {
-                    const msgDatas = []
-                    item[Object.keys(item)[0]].forEach((errMsg, index) => {
-                      msgDatas.push(h('p', null, `${index + 1}、${errMsg}`))
-                    })
-                    this.notify({
-                      type: 'error',
-                      title: '异常：' + Object.keys(item)[0],
-                      message: h('div', null, msgDatas)
-                    })
-                  })
-                }
-                if (result.warning && result.warning.length > 0) {
-                  result.warning.forEach(item => {
-                    const msgDatas = []
-                    item[Object.keys(item)[0]].forEach((warnimgMsg, index) => {
-                      msgDatas.push(h('p', null, `${index + 1}、${warnimgMsg}`))
-                    })
-                    this.notify({
-                      type: 'warning',
-                      title: '警告：' + Object.keys(item)[0],
-                      message: h('div', null, msgDatas)
-                    })
-                  })
-                }
+                this.$message.success('测试用例导入，请稍后查看邮箱查询导入结果')
+                // const result = res.data
+                // const h = this.$createElement
+                // if (result.success && result.success.length > 0) {
+                //   this.$message.success(result.success.join())
+                // }
+                // if (result.error && result.error.length > 0) {
+                //   result.error.forEach(item => {
+                //     const msgDatas = []
+                //     item[Object.keys(item)[0]].forEach((errMsg, index) => {
+                //       msgDatas.push(h('p', null, `${index + 1}、${errMsg}`))
+                //     })
+                //     this.notify({
+                //       type: 'error',
+                //       title: '异常：' + Object.keys(item)[0],
+                //       message: h('div', null, msgDatas)
+                //     })
+                //   })
+                // }
+                // if (result.warning && result.warning.length > 0) {
+                //   result.warning.forEach(item => {
+                //     const msgDatas = []
+                //     item[Object.keys(item)[0]].forEach((warnimgMsg, index) => {
+                //       msgDatas.push(h('p', null, `${index + 1}、${warnimgMsg}`))
+                //     })
+                //     this.notify({
+                //       type: 'warning',
+                //       title: '警告：' + Object.keys(item)[0],
+                //       message: h('div', null, msgDatas)
+                //     })
+                //   })
+                // }
               }
             }).finally(() => {
               loading.close()
