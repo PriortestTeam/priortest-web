@@ -105,7 +105,7 @@ export default {
       profileOpen: false,
       tableHeader: {
         color: '#d4dce3',
-        background: '#003d79'
+        background: '#4286CD'
       }, // 表头颜色加粗设置
       // 修改文件
       editfileList: [],

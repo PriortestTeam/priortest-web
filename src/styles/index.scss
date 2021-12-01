@@ -62,6 +62,7 @@ div:focus {
 // main-container global css
 .app-container {
   padding: $spacing;
+  
 }
 // 布局总设置
 .el-row {
@@ -184,7 +185,7 @@ div:focus {
 
 //新增页面 占屏幕宽度的60%
 .form-box{
-  width:80%;
+  width:60%;
 }
 
 
@@ -202,4 +203,15 @@ div:focus {
 .el-icon {
   font-size: 20px;
   cursor: pointer;
+}
+
+.el-form-item{
+  // margin-bottom:10px;
+  .el-select,.el-date-editor{
+    width: 100%;
+  }
+  .el-form--label-top,.el-form-item__label{
+    padding: 0;
+    color:#5f6e8e
+  }
 }

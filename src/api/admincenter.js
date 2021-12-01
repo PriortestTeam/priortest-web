@@ -97,3 +97,11 @@ export function updateSysCustomFields(query) {
   })
 }
 
+// 项目获取角色
+export function getUserRoles() {
+  return request({
+    url: '/role/allList',
+    method: 'get'
+  })
+}
+

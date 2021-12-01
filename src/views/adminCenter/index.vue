@@ -46,7 +46,7 @@
                   placeholder="请输入用户名"
                 />
               </el-form-item>
-              <el-form-item
+              <!-- <el-form-item
                 v-if="accountSingle"
                 label="密码"
                 prop="password"
@@ -56,7 +56,7 @@
                   v-model="accountForm.password"
                   placeholder="请设置初始密码"
                 />
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item label="角色" prop="sysRoleId" size="small">
                 <el-select
                   v-model="accountForm.sysRoleId"
@@ -237,7 +237,7 @@ import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
 import Memoindex from '@/views/adminCenter/memo'
 import Dropdown from '@/views/adminCenter/dropDown'
-import { queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
+import {getUserRoles, queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
 import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
 export default {
   name: 'Admincenter',
@@ -250,7 +250,7 @@ export default {
       propSystem:'',
       tableHeader: {
         color: '#d4dce3',
-        background: '#003d79'
+        background: '#4286CD'
       },
       accountRoleOption: [],
       accountTempForm: {},
@@ -350,7 +350,7 @@ export default {
   },
   created() {
     this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId
-    queryRoles().then(res => {
+    getUserRoles().then(res => {
       this.accountRoleOption = res.data
     })
     this.getquerySubUsers()
@@ -427,6 +427,9 @@ export default {
             var form = JSON.parse(JSON.stringify(this.accountForm))
             form.projectIdStr = form.projectIdStr.join(',')
             createSubUser(form).then(res => {
+              if(res.code!=200){
+                return
+              }
               message('success', res.msg)
               this.resetAccountForm()
               this.getquerySubUsers()

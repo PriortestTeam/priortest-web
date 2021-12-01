@@ -15,12 +15,15 @@
       </div>
       <el-form-item label="项目" prop="scope" class="form-small">
         <el-select
-          v-model="from.scope"
+          v-model="projectId"
           size="small"
           placeholder="请选择Project"
+          @change="getProjectInfo"
         >
-          <el-option label="ProjectA" value="project" />
-          <el-option label="ProjectB" value="sprint" />
+          <el-option  :key="index"
+                  :label="item.title"
+                  :value="item.id"
+                  v-for="(item, index) in projectList" />
         </el-select>
       </el-form-item>
 
@@ -34,7 +37,7 @@
                   :key="index"
                   :label="item"
                   :value="item"
-                  v-for="(item, index) in projectVersionList"
+                  v-for="(item, index) in projectVersionList.mergeValues"
                 />
               </el-select>
             </el-radio>
@@ -58,7 +61,7 @@
               :label="item"
               :key="index"
               :value="item"
-              v-for="(item, index) in projectEnvList"
+              v-for="(item, index) in projectEnvList.mergeValues"
             />
             <!-- <el-option label="PRO" value="2.0" /> -->
           </el-select>
@@ -147,13 +150,20 @@
         <el-row class="radiu" v-if="signiList.length > 0">
           <el-radio-group v-model="from.fileUrl">
             <div class="mb-2 signi" v-for="(item, index) in signiList" :key="item.label">
-              <el-radio :label="item.data">{{ item.data }}</el-radio>
+              <el-radio :label="item">{{ item }}</el-radio>
               <i class="el-icon el-icon-error" @click="removeSigniList(index)"></i>
             </div>
           </el-radio-group>
         </el-row>
         <!-- <div class="set_btn_type set_btn_3" @click="uploadSigni">上传签名</div> -->
         <UploadSigenatrue @getImgUrl="getImgUrl" />
+        <!-- <div class="signForm">
+           <el-radio-group v-model="from.fileUrl">
+    <el-radio :label="3">备选项</el-radio>
+    <el-radio :label="6">备选项</el-radio>
+    <el-radio :label="9">备选项</el-radio>
+  </el-radio-group>
+        </div> -->
       </el-form-item>
     </el-form>
   </div>
@@ -165,9 +175,11 @@ import {
   getProjectEnv,
   getProjectVersion,
   getTestCycleVersion,
-  createGenerate
+  createGenerate,getSignaturePath
 } from "@/api/signoff.js";
-
+import {
+  queryForProjects
+} from "@/api/project.js";
 import UploadSigenatrue from "@/components/Upload/UploadSigenatrue.vue";
 // 缺陷参数
 const lssueList = [
@@ -187,6 +199,7 @@ export default {
   },
   data() {
     return {
+      projectList:[],
       from: {
         env: '',
         testCycle: '',
@@ -242,13 +255,21 @@ export default {
     //   });
     // },
     async createFile() {
+      // const data = {
+      //   env: this.from.env,
+      //   fileUrl: this.from.fileUrl,
+      //   issue: this.lssueList.toString(),
+      //   projectId: localStorage.getItem('projectId'),
+      //   testCycleVersion: this.from.testCycle,
+      //   version: this.from.version
+      // };
       const data = {
-        env: this.from.env,
-        fileUrl: this.from.fileUrl,
+        env: '12',
+        fileUrl:'/usr/oneclick/data/file/bdc1ff71-3f30-42d2-a073-a8df9d5281d4.txt',
         issue: this.lssueList.toString(),
         projectId: localStorage.getItem('projectId'),
-        testCycleVersion: this.from.testCycle,
-        version: this.from.version
+        testCycleVersion:'1.0',
+        version:'v1.0'
       };
       console.log(this.signiList)
       console.log(data)
@@ -256,7 +277,7 @@ export default {
     },
     getImgUrl(url) {
       if(!url) return
-      this.signiList.push(url)
+      this.getSign()
     },
     async getProjectEnv() {
       const res = await getProjectEnv({ projectId: this.projectId })
@@ -267,16 +288,34 @@ export default {
       this.projectVersionList = res.data
     },
     async getTestCycleVersion() {
-      const res = await getTestCycleVersion({ projectId: this.projectId })
+      const res = await getTestCycleVersion({ projectId: this.projectId,env:'12',version:'v1.0'})
       this.testCycleVersionList = res.data;
+    },
+    async getSign() {
+      const res = await getSignaturePath()
+      this.signiList = res.data;
+    },
+    async getProject() {
+      const res = await queryForProjects({
+        pageNum: 1,
+        pageSize: 10,
+      },{})
+      this.projectList = res.data;
+    },
+    getProjectInfo(){
+        this.getProjectEnv()
+    this.getProjectVersion();
+    this.getTestCycleVersion();
     }
   },
   async mounted() {
     //从缓存中获取 projectId
     // const projectId = localStorage.getItem('projectId')
     // 测试id号
-    this.projectId = "434208954579423232";
+    this.projectId = "";
     //获取测试环境
+    this.getSign()
+    this.getProject()
     this.getProjectEnv()
     this.getProjectVersion();
     this.getTestCycleVersion();

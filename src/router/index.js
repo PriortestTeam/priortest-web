@@ -42,7 +42,26 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
+     // 注册
+     {
+      path: '/activate',
+      component: () => import('@/views/register/activate'),
+      hidden: true
+    },
+    // 忘记密码
+    {
+      path: '/findpwd',
+      component: () => import('@/views/login/findpwd'),
+      hidden: true
+      
+    },
+     // 忘记密码
+     {
+      path: '/deferred',
+      component: () => import('@/views/login/deferred'),
+      hidden: true
+      
+    },
   {
     path: '/',
     component: Layout,
@@ -97,6 +116,7 @@ export const constantRoutes = [
 
     ]
   },
+
   // 注册
   {
     path: '/register',
@@ -128,6 +148,7 @@ export const constantRoutes = [
     }
     ]
   },
+
   {
     path: '/testcase',
     component: Layout,

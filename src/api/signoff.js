@@ -45,5 +45,13 @@ export function uploadSignature(data) {
   })
 }
 
+// 获取签名文件路径
+export function getSignaturePath() {
+  return request({
+    url: '/signOff/getUserAttachmentSign',
+    method: 'get'
+  })
+}
+
 
 

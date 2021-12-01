@@ -16,6 +16,26 @@
     }
   }
 }
+.showBtn{
+  position: fixed;
+  top: 50%;
+  margin-top: -15px;
+  left: -10px;
+  width:30px;
+  height: 60px;
+  line-height: 60px;
+  background:$btnbgcolor;
+  color:#fff;
+ border-radius: 10px;
+ text-align: right;
+ cursor: pointer;
+ padding-right: 5px;
+ i{
+   color:#fff;
+   text-align: center;
+   font-size: 16pxs;
+ }
+}
 //表格操作的样式
 .table{
   .table-btn{

@@ -132,7 +132,7 @@ export default {
       currentScope: "Sprint",
       tableHeader: {
         color: "#d4dce3",
-        background: "#003d79",
+        background: "#4286CD",
       }, // 表头颜色加粗设置
       isLoading: false, // 是否加载
       activeNames: ["1"],

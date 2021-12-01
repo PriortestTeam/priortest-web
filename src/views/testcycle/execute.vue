@@ -87,7 +87,7 @@ export default {
     return {
       tableHeader: {
         color: '#d4dce3',
-        background: '#003d79'
+        background: '#4286CD'
       }, // 表头颜色加粗设置
       testCaseId: '', // 传过来的周期下面步骤的id
       testCycleId: '', // 传过来的周期的id

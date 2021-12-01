@@ -220,7 +220,7 @@ export default {
       }],
       tableHeader: {
         color: '#d4dce3',
-        background: '#003d79'
+        background: '#4286CD'
       },
       // 自定义字段
       fieldsfrom: {

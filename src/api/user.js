@@ -44,4 +44,51 @@ export function userRegiste(data) {
     data
   })
 }
-
+// 激活账户
+export function activateAccount(data) {
+  return request({
+    url: '/user/activateAccount',
+    method: 'post',
+    data
+  })
+}
+// 忘记密码填写邮箱
+export function sendForgetEmail(params) {
+  return request({
+    url: '/user/forgetThePassword',
+    method: 'post',
+    params
+  })
+}
+// 忘记密码重置密码
+export function resetPwd(data) {
+  return request({
+    url: '/user/forgetThePasswordIn',
+    method: 'post',
+    data
+  })
+}
+// 申请延期填写邮箱
+export function senddeferredEmail(params) {
+  return request({
+    url: '/user/applyForAnExtension',
+    method: 'post',
+    params
+  })
+}
+// 申请延期填写密码
+export function deferredPwd(data) {
+  return request({
+    url: '/user/applyForAnExtensionIn',
+    method: 'post',
+    data
+  })
+}
+// 验证链接字符串
+export function verifyLinkString(params) {
+  return request({
+    url: '/user/verifyLinkString',
+    method: 'post',
+    params
+  })
+}

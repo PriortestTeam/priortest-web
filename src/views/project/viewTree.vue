@@ -9,6 +9,7 @@
       </el-button>
       <span class="icon-box">
         <i class="el-icon-plus"></i>
+         <i class="el-icon-d-arrow-left" title="折叠" @click="hadleShow"></i>
       </span>
     </div>
     <div class="comp-data">
@@ -63,6 +64,9 @@ export default {
     }
   },
   methods: {
+    hadleShow(){
+      this.$emit('hadleTree')
+    },
     getList: function (data) {
       const query = {
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -93,7 +97,7 @@ export default {
   padding: $spacing;
   box-sizing: border-box;
   margin-right: 20px;
-
+  height: calc(100vh - 100px);
 }
 .comp-data {
   width: 100%;

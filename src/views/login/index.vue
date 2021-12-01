@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <el-form
-      v-if="!isShowregister"
+      v-if="loginView"
       ref="loginForm"
       class="login-form"
       label-position="left"
@@ -18,22 +18,38 @@
       <el-form-item prop="password" label="Password">
         <el-input v-model="loginForm.password" />
       </el-form-item>
-      <el-form-item>
+        <div class="ForgetView">
+       <div class="forget" @click="routeForget">{{$t('lang.login.forget')}}</div>
+       <div class="deferred" @click="routedeferred">{{$t('lang.login.deferred')}}</div>
+        </div>
+        <div class="btnLogin">
+          <el-button
+            type="primary"
+            size="medium"
+            round
+            @click="handleLogin('loginForm')" style="width:48%"
+          >Login</el-button>
+          <el-button
+            type="primary"
+            round
+            class="registerBtn"
+            @click="handleregister('loginForm')" style="width:48%"
+          >to Register</el-button>
+        </div>
+      <!-- <el-form-item>
         <div class="btnForget">
           <el-button
             type="primary"
             round
             @click="handleLogin('loginForm')"
           >Login</el-button>
-          <!-- @click="forgetPwd()" -->
-          <!-- <div class="Forget-frist">Forget & Set Password</div> -->
           <el-button
             type="primary"
             round
             @click="handleregister('loginForm')"
           >to Register</el-button>
         </div>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <div v-if="isShowregister">
       <el-form
@@ -69,10 +85,10 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12" :md="12" :sm="12">
-            <el-form-item prop="name">
+            <el-form-item >
               <el-input
               size="mini"
-              v-model="registerForm.name"
+              v-model="registerForm.userName"
               placeholder="请输入您的姓名"
             />
             </el-form-item>
@@ -133,30 +149,55 @@
             <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
             <el-link v-else type="warning">您阅读已同意服务条款</el-link>
           </el-checkbox>
-          <el-link type="primary" style="margin-right: 10px;" @click="backLogin">返回登录</el-link>
+          <el-link type="primary" style="margin-right: 10px;" @click="backLoginIndex">返回登录</el-link>
         </div>
         <div style="padding-right: 10px;box-sizing: border-box;margin-top: 20px;">
-          <el-button :disabled="passRigister" size="small" type="danger" style="width: 100%;">注册</el-button>
+          <el-button @click="goRegister"  :disabled="passRigister" size="small" type="danger" style="width: 100%;">注册</el-button>
         </div>
       </el-form>
 
     </div>
+     <div v-if="isShowregisterAfter">
+         <el-form
+      v-if="!isShowregister"
+      ref="loginForm"
+      class="login-form"
+      label-position="left"
+      label-width="80px"
+      :rules="loginRules"
+      :model="loginForm"
+    >
+      <div class="one-logo">
+        <img src="@/icons/img/one-logo.png" alt="" srcset="">
+      </div>
+       <el-link type="primary" style="margin-right: 10px;" @click="backLoginIndex">返回登录</el-link>
+      <div class="one-tip">感谢您试用OneClick, 请通过您的<span class="email" @click="routerEmail">注册邮箱</span>激活注册帐号开启您的体验之旅</div>
+    </el-form>
+
+    </div>
+      <forget v-if="forgetView" @backLoginIndex="backLoginIndex"></forget>
+      <!-- 申请延期 -->
+    <deferred v-if="deferredView"  @backLoginIndex="backLoginIndex"></deferred>
   </div>
   <!-- 注册 -->
+
 </template>
 
 <script>
 
 import { message } from '@/utils/common'
 import { sendEmailRegisterCode, userRegiste } from '@/api/user'
-
+import forget from './forget.vue'
+import deferred from './login-deferred.vue'
 export default {
   name: 'Login',
+  components:{forget,deferred},
   data() {
     return {
+     
       loginForm: {
-        username: '2211910447@qq.com',
-        password: '12345678Aa'
+        username: '1220186101@qq.com',
+        password: '12345678A'
       },
       loginRules: {
         username: [
@@ -170,9 +211,15 @@ export default {
       redirect: undefined,
       // 注册用户
       isShowregister: false,
+      isShowregisterAfter:false,
+       forgetView:false,//忘记密码view
+       loginView:true,//登录view
+       deferredView:false,//申请延期view
       registerUser: '',
       checked: false,
-      registerForm: {},
+      registerForm: {
+        email:''
+      },
       registerRules: {
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
@@ -204,9 +251,91 @@ export default {
     }
   },
   methods: {
+    routerEmail(){
+ window.open(this.gotoEmail())
+    },
+    gotoEmail() {
+       
+            var email = this.registerForm.email.split('@')[1];
+            email = email.toLowerCase();
+            if (email == '163.com') {
+                return 'http://mail.163.com';
+            } else if (email == 'vip.163.com') {
+                return 'http://vip.163.com';
+            } else if (email == '126.com') {
+                return 'http://mail.126.com';
+            } else if (email == 'qq.com' || email == 'vip.qq.com' || email == 'foxmail.com') {
+                return 'http://www.mail.qq.com';
+            } else if (email == 'gmail.com') {
+                return 'http://mail.google.com';
+            } else if (email == 'sohu.com') {
+                return 'http://mail.sohu.com';
+            } else if (email == 'tom.com') {
+                return 'http://mail.tom.com';
+            } else if (email == 'vip.sina.com') {
+                return 'http://vip.sina.com';
+            } else if (email == 'sina.com.cn' || email == 'sina.com') {
+                return 'http://mail.sina.com.cn';
+            } else if (email == 'tom.com') {
+                return 'http://mail.tom.com';
+            } else if (email == 'yahoo.com.cn' || email == 'yahoo.cn') {
+                return 'http://www.mail.cn.yahoo.com';
+            } else if (email == 'tom.com') {
+                return 'http://www.mail.tom.com';
+            } else if (email == 'yeah.net') {
+                return 'http://www.yeah.net';
+            } else if (email == '21cn.com') {
+                return 'http://mail.21cn.com';
+            } else if (email == 'hotmail.com') {
+                return 'http://www.hotmail.com';
+            } else if (email == 'sogou.com') {
+                return 'http://mail.sogou.com';
+            } else if (email == '188.com') {
+                return 'http://www.188.com';
+            } else if (email == '139.com') {
+                return 'http://mail.10086.cn';
+            } else if (email == '189.cn') {
+                return 'http://webmail15.189.cn/webmail';
+            } else if (email == 'wo.com.cn') {
+                return 'http://mail.wo.com.cn/smsmail';
+            } else if (email == '139.com') {
+                return 'http://mail.10086.cn';
+            } else {
+                return '';
+            }
+        },
     backLogin() {
       this.isShowregister = false;
+      this.isShowregisterAfter=true//显示提示激活
       this.checked = false;
+       this.forgetView = false;
+       this.loginView=false
+       this.deferredView=false
+    },
+    routeForget() {
+      this.isShowregister = false;
+      this.isShowregisterAfter = false; //显示提示激活
+      this.checked = false;
+       this.loginView=false
+      this.forgetView = true;
+        this.deferredView=false
+    },
+    routedeferred() {
+      this.isShowregister = false;
+      this.isShowregisterAfter = false; //显示提示激活
+      this.checked = false;
+       this.loginView=false
+      this.forgetView = false;
+        this.deferredView=true
+    },
+    backLoginIndex(){
+      this.registerForm={}
+       this.isShowregister = false;
+      this.isShowregisterAfter=false//显示提示激活
+      this.checked = false;
+        this.forgetView = false;
+         this.loginView=true
+           this.deferredView=false
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -238,7 +367,13 @@ export default {
     },
     // 注册
     handleregister() {
+       this.registerForm={}
       this.isShowregister = true
+      this.isShowregisterAfter = false; //显示提示激活
+      this.checked = false;
+       this.loginView=false
+      this.forgetView = false;
+        this.deferredView=false
     },
     // 验证邮箱
     check() {
@@ -247,11 +382,12 @@ export default {
       if (!reg.test(obj.value)) { // 正则验证不通过，格式不对
         return false
       } else {
-        message('success', '验证码已发送，请注意查收邮箱')
-        const email = this.registerForm.email
+       
         sendEmailRegisterCode(email).then(res => {
           if (res.code === '200') {
             console.log(res)
+             message('success', '验证码已发送，请注意查收邮箱')
+        const email = this.registerForm.email
           }
         })
         return true
@@ -262,8 +398,13 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           userRegiste(this.registerForm).then((res) => {
+            console.log(res.code!=200)
+            if(res.code!=200){
+              return
+            }
             message('success', res.msg)
-            this.$router.push({ path: '/' })
+            this.backLogin()
+           
           }).catch(error => {
             console.log(error)
           })
@@ -290,7 +431,7 @@ export default {
 @import "@/styles/color.scss";
 
 .el-form-item{
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 .pass-allowed {
   display: flex;
@@ -319,7 +460,14 @@ export default {
     padding: 160px 90px 0;
     margin: 0 auto;
     overflow: hidden;
-
+  .btnLogin{
+       display: flex;
+       justify-content: space-between;
+       .registerBtn{
+         background: $secondbgcolor;
+         border: 1px solid $secondbgcolor;
+       }
+  }
     .btnForget {
       display: flex;
       justify-content: space-evenly;
@@ -335,6 +483,15 @@ export default {
       .Forget-frist {
         color: #386795;
         font-size: 18px;
+        cursor: pointer;
+      }
+    }
+    .ForgetView{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      div{
+        color: #8590a6;
         cursor: pointer;
       }
     }
@@ -373,6 +530,10 @@ export default {
   }
 }
 .el-form-item__content {
-  line-height: 28px !important;
+  line-height: 38px !important;
+}
+.email{
+  cursor: pointer;
+  color:$btnbgcolor;
 }
 </style>

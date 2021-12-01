@@ -23,6 +23,12 @@ export const lang = {
      Attachment:'附件',
      Version: '版本',
     },
+    login:{
+        forget:'忘记密码',
+        deferred:'延期试用',
+        send:'发送',
+        deferredBtn:"延期试用"
+    },
     //项目
     Project: {
         ManageProject:'管理项目',

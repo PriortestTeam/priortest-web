@@ -1,7 +1,7 @@
 <template>
   <el-upload
     class="upload-demo"
-    action="#"
+    :action="url"
     :auto-upload="false"
     :headers="headers"
     :on-change="handleChange"
@@ -16,11 +16,17 @@
 <script>
 import { uploadSignature } from '../../api/signoff.js'
 export default {
+  props:['signPaath'],
   computed: {
     headers() {
       return {
         Authorization: 'Bearer ' + localStorage.getItem('token')//本地获取token,添加到headers里面
       }
+    }
+  },
+  data() {
+    return {
+      url:process.env.VUE_APP_BASE_API+'/signOff/upload'
     }
   },
   methods: {

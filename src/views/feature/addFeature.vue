@@ -233,7 +233,7 @@ export default {
       profileOpen: false,
       tableHeader: {
         color: '#d4dce3',
-        background: '#003d79'
+        background: '#4286CD'
       }, // 表头颜色加粗设置
       editfileList: [],
       onefileList: [],
@@ -425,7 +425,7 @@ export default {
       margin-bottom: 20px;
       display: block;
       font-size: 12px;
-      color: #003d79;
+      color: #4286CD;
     }
   }
 }

@@ -5,6 +5,7 @@
       :model="projectFrom"
       :rules="ProjectRules"
       label-width="120px"
+      label-position="top"
       class="demo-ruleForm"
     >
       <div>
@@ -39,12 +40,19 @@
         </router-link>
       </div>
       <div class="form-box">
-        <el-form-item :label="$t('lang.Project.ProjectTitle')" prop="title">
-          <el-input v-model="projectFrom.title" size="small" maxlength="20" />
+         <el-row :gutter="20" >
+          <el-col :span="24">
+              <el-form-item :label="$t('lang.Project.ProjectTitle')" prop="title">
+          <el-input v-model="projectFrom.title"  maxlength="20" />
         </el-form-item>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item size="small" :label="$t('lang.Project.Status')" prop="status">
+           </el-col>
+         
+       
+        </el-row>
+     
+        <el-row :gutter="20" >
+          <el-col :span="12">
+            <el-form-item  :label="$t('lang.Project.Status')" prop="status">
               <el-select
                 v-model="projectFrom.status"
                 placeholder="请选择项目状态"
@@ -55,8 +63,8 @@
                 <el-option label="Plan" :value="2" />
               </el-select> </el-form-item
           ></el-col>
-          <el-col :span="8">
-            <el-form-item size="small" :label="$t('lang.Project.ReportTo')" prop="reportToName">
+          <el-col :span="12">
+            <el-form-item  :label="$t('lang.Project.ReportTo')" prop="reportToName">
               <el-select
                 v-model="projectFrom.reportToName"
                 filterable
@@ -78,8 +86,12 @@
                                                   <el-option label="添加新值" value="0" />
                                                 </router-link>
               </el-select> </el-form-item></el-col>
-          <el-col :span="8">
-            <el-form-item  size="small" :label="$t('lang.Project.Customer')" prop="customer">
+       
+        </el-row>
+
+        <el-row :gutter="20">
+             <el-col :span="12">
+            <el-form-item   :label="$t('lang.Project.Customer')" prop="customer">
               <el-select  v-model="projectFrom.customer" placeholder="请选择客户" clearable>
                 <el-option  v-for="item in customerListArr" :key="item" :label="item" :value="item">
                 </el-option>
@@ -90,11 +102,8 @@
               </el-select>
               </el-form-item>
               </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="8">
-            <el-form-item size="small" :label="$t('lang.Project.TestFrame')" prop="testFrame">
+          <el-col :span="12">
+            <el-form-item  :label="$t('lang.Project.TestFrame')" prop="testFrame">
               <el-select  v-model="projectFrom.testFrame"  placeholder="请选择测试框架" clearable>
                <el-option v-for="item in testFrameArr" :key="item" :label="item" :value="item">
                 </el-option>
@@ -103,8 +112,11 @@
                 </router-link>
               </el-select> </el-form-item></el-col>
 
-          <el-col :span="8">
-            <el-form-item size="small" :label="$t('lang.Project.ProjectCategory')" prop="projectCategory">
+        </el-row>
+       
+ <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item  :label="$t('lang.Project.ProjectCategory')" prop="projectCategory">
               <el-select v-model="projectFrom.projectCategory" placeholder="请选择项目类别" clearable
               >
                 <el-option v-for="item in projectCategory" :key="item" :label="item" :value="item">
@@ -113,15 +125,15 @@
                   <el-option label="添加新值" value="0" />
                 </router-link>
               </el-select> </el-form-item></el-col>
-          <el-col :span="8">
-            <el-form-item size="small" :label="$t('lang.Project.PlanReleaseDate')" prop="planReleaseDate">
+          <el-col :span="12">
+            <el-form-item  :label="$t('lang.Project.PlanReleaseDate')" prop="planReleaseDate">
               <el-date-picker
                 v-model="projectFrom.planReleaseDate"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="pickerOptions"
                 type="date"
                 placeholder="选择上线日期"
-                size="small"
+                
               >
               </el-date-picker> </el-form-item
           ></el-col>
@@ -132,16 +144,18 @@
               <el-input
                 :disabled="true"
                 v-model="projectFrom.foreignId"
-                size="small"
+                
                 maxlength="20"
               />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item
+        <el-row :gutter="20" >
+          <el-col :span="24">
+             <el-form-item
           :label="$t('lang.Project.Description')"
           prop="description"
-          size="small"
+          
         >
           <el-input
             v-model="projectFrom.description"
@@ -151,6 +165,12 @@
             :autosize="{ minRows: 3, maxRows: 8 }"
           />
         </el-form-item>
+           </el-col>
+         
+       
+        </el-row>
+     
+       
       </div>
     </el-form>
     <div class="table" v-if="projectFrom.id">

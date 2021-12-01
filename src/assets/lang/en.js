@@ -8,6 +8,12 @@ export const lang = {
         Issue: 'Issue',
         SignOff: 'SignOff',
     },
+    login:{
+        forget:'Forget Password',
+        deferred:'Trail has been expired, Extend it!',
+        send:"Send",
+        deferredBtn:"Trial Extensions"
+    },
     //项目 
     Project: {
         ManageProject:'Manage Project',
