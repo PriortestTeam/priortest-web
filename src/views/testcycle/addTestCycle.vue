@@ -3,7 +3,7 @@
     <el-form
       ref="testCycleFrom"
       :model="testCycleFrom"
-      :rules="testCyclerules"
+      :rules="testCycleRules"
       label-width="120px"
       class="demo-ruleForm"
     >
@@ -42,15 +42,44 @@
         <el-form-item label="测试周期标题" prop="title">
           <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
         </el-form-item>
-        <el-row>
+
+ <el-form-item label="远程自动化编译" prop="remoteAutoRunJob">
+                  <el-input v-model="testCycleFrom.remoteAutoRunJob" maxlength="30" size="small" />
+                </el-form-item>
+       <el-row>
+
           <el-col :span="8">
-            <el-form-item label="当前版本" size="small" prop="currentVersion">
-              <el-radio-group v-model="testCycleFrom.currentVersion">
-                <el-radio :label="0">否</el-radio>
-                <el-radio :label="1">是</el-radio>
-              </el-radio-group>
-            </el-form-item>
+            <el-checkbox label="当前发布版本" size="small" prop="currentVersion" />
+            <el-checkbox label="发布版本" size="small" prop="releaseVersion" />
           </el-col>
+         <el-col :span="8">
+                     <el-form-item size="small" label="平台" prop="platform">
+                       <el-select v-model="testCycleFrom.platform" placeholder="请选择测试平台">
+                         <el-option label="window" value="window" />
+                         <el-option label="mac" value="mac" />
+                       </el-select>
+                     </el-form-item>
+                   </el-col>
+
+<el-col :span="8">
+                     <el-form-item size="small" label="测试环境" prop="testEnv">
+                       <el-select v-model="testCycleFrom.env" placeholder="请选择测试环境">
+                          <el-option
+                                           v-for="item in testEnvArr"
+                                           :key="item"
+                                           :label="item"
+                                           :value="item"
+                                         />
+                                         <router-link to="/admincenter/admincenter?par=test_env">
+                                                           <el-option label="Add New Value" value="" />
+                                                         </router-link>
+                       </el-select>
+                     </el-form-item>
+                   </el-col>
+
+
+
+
           <el-col :span="8">
             <el-form-item label="版本" size="small" prop="version">
               <el-select
@@ -146,6 +175,13 @@
               </el-select>
             </el-form-item>
           </el-col>
+
+<el-form-item label="自动化测试报告" prop="allureReport">
+          <el-input v-model="testCycleFrom.allureReport" maxlength="30" size="small" />
+        </el-form-item>
+        <el-form-item label="自动化编译" prop="autoRunJob">
+                  <el-input v-model="testCycleFrom.autoRunJob" maxlength="30" size="small" />
+                </el-form-item>
         </el-row>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -163,7 +199,7 @@
       </div>
     </el-form>
     <div class="table" v-if="this.testCycleFrom.id">
-      <el-button type="text" @click="newStep">添加测试用例</el-button>
+      <el-button type="text" @click="newStep">添加用例</el-button>
       <el-table
         ref="testCaseData"
         :data="testCaseData"
@@ -267,12 +303,13 @@ export default {
     return {
       optionsArr: [],
       versionsArr: [],
+      envArr: [],
       loading: false,
       testCycleFrom: {
         currentVersion: 0,
       },
       testCycleFromTemp: {},
-      testCyclerules: {
+      testCycleRules: {
         title: [{ required: true, message: "请输入故事标题", trigger: "blur" }],
       },
 
@@ -325,6 +362,11 @@ export default {
       let data = res.data.mergeValues ? res.data.mergeValues : [];
       this.versionsArr = data;
     });
+
+    sysCustomField({ fieldName: "testEnv" }).then((res) => {
+          let data = res.data.mergeValues ? res.data.mergeValues : [];
+          this.envArr = data;
+        });
   },
   mounted() {},
   methods: {

@@ -47,11 +47,37 @@
                 </template>
               </el-table-column>
               <el-table-column
+                              prop="UUID"
+                              :show-overflow-tooltip="true"
+                              align="center"
+                              label="UUID"
+                            />
+
+              <el-table-column
+                            prop="status"
+                            align="center"
+                            label="状态"
+                          >
+                           <template slot-scope="scope">
+                                            <span v-if="scope.row.status === 'Ready'">待执行</span>
+                                            <span v-if="scope.row.status === 'Draft'">草稿</span>
+                                          </template>
+                                        </el-table-column>
+              <el-table-column
                 prop="title"
                 :show-overflow-tooltip="true"
                 align="center"
                 label="标题"
               />
+
+
+
+                 <el-table-column
+                              prop="automationStatus"
+                              :show-overflow-tooltip="true"
+                              align="center"
+                              label="测试方法"
+                            />
               <el-table-column prop="priority" align="center" label="优先级" />
               <el-table-column
                 prop="featureTitle"
@@ -59,25 +85,49 @@
                 :show-overflow-tooltip="true"
                 label="需求"
               />
+                 <el-table-column
+                              prop="module"
+                              align="center"
+                              :show-overflow-tooltip="true"
+                              label="模块"
+                            />
+
+                 <el-table-column
+                  prop="version"
+                  align="center"
+                  :show-overflow-tooltip="true"
+                  label="版本"
+                  />
+
+                  <el-table-column
+                    prop="testCategory"
+                   align="center"
+                   :show-overflow-tooltip="true"
+                   label="测试分类"
+                  />
+           <el-table-column
+             prop="testType"
+             align="center"
+             :show-overflow-tooltip="true"
+             label="测试类型"
+             />
               <el-table-column
                 prop="lastRunStatus"
                 align="center"
                 label="末次运行状态"
               >
-                <template slot-scope="scope">
+               <template slot-scope="scope">
                   {{ scope.row.lastRunStatus === 1 ? '失败' : '成功' }}
                 </template>
-              </el-table-column>
               <el-table-column
-                prop="status"
-                align="center"
-                label="状态"
-              >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.status === 'Ready'">待执行</span>
-                  <span v-if="scope.row.status === 'Draft'">草稿</span>
-                </template>
+               prop="stepStatus"
+               align="center"
+               :show-overflow-tooltip="true"
+               label="测试步骤执行状态"
+               />
               </el-table-column>
+
+
               <el-table-column
                 prop="executedDate"
                 align="center"

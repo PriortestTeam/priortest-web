@@ -57,7 +57,7 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="feature" prop="feature">
+            <el-form-item size="small" label="故事" prop="feature">
               <el-select v-model="testCaseFrom.feature" placeholder="关联故事" @change="getFeatureLikeArgs">
                 <el-option
                   v-for="item in featueData"
@@ -171,8 +171,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="ExternaID" prop="externaId">
-              <el-input v-model="testCaseFrom.externaId" />
+            <el-form-item size="small" label="导入ID" prop="externalId">
+              <el-input v-model="testCaseFrom.externalId" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -303,7 +303,7 @@
           :show-overflow-tooltip="true"
           align="center"
         />
-        <el-table-column prop="testDate" label="测试时间" align="center" />
+        <el-table-column prop="testData" label="运行数据" align="center" />
         <el-table-column
           prop="expectedResult"
           label="预计结果"
@@ -340,28 +340,22 @@
         :rules="stepFromRules"
         label-width="80px"
       >
-        <el-form-item label="步骤名称" prop="step" size="small">
+        <el-form-item label="步骤" prop="step" size="small">
           <el-input
             v-model="stepFrom.step"
             maxlength="20"
-            placeholder="请输入步骤名称"
+            placeholder="请输入步骤"
           />
         </el-form-item>
-        <el-form-item label="测试日期" prop="testDate" size="small">
-          <el-date-picker
-            v-model="stepFrom.testDate"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="date"
-            placeholder="选择测试日期"
-          />
-        </el-form-item>
-        <el-form-item label="状态" prop="status" size="small">
-          <el-select v-model="stepFrom.status" placeholder="请选择状态">
-            <el-option label="未执行" :value="0" />
-            <el-option label="执行失败" :value="1" />
-            <el-option label="执行成功" :value="2" />
-          </el-select>
-        </el-form-item>
+
+        <el-form-item label="运行数据" prop="testData" size="small">
+                  <el-input
+                    v-model="stepFrom.testData"
+                    maxlength="20"
+                    placeholder="请输入步骤运行数据"
+                  />
+                </el-form-item>
+
         <el-form-item label="预期结果" prop="expectedResult" size="small">
           <el-input
             v-model="stepFrom.expectedResult"
@@ -452,11 +446,7 @@ export default {
       stepFrom: {},
       stepFromTemp: {},
       stepFromRules: {
-        step: [{ required: true, message: '请输入步骤名称', trigger: 'blur' }],
-        testDate: [
-          { required: true, message: '请选择测试日期', trigger: 'change' }
-        ],
-        status: [{ required: true, message: '请选择状态', trigger: 'change' }],
+        step: [{ required: true, message: '请输入步骤', trigger: 'blur' }],
         expectedResult: [
           { required: true, message: '请输入预期结果', trigger: 'blur' }
         ]
@@ -525,7 +515,7 @@ export default {
         version: undefined,
         caseCategory: undefined,
         caseType: undefined,
-        externaId: undefined,
+        externalId: undefined,
         env: undefined,
         module: undefined,
         testDevice: undefined,
