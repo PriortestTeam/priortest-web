@@ -47,10 +47,11 @@
             @change="viewScopeChildParams"
           >
             <el-option
-              v-for= "item in scopeOptions"
+              v-for="item in scopeOptions"
               :key="item.value"
               :label="item.label"
-              :value="item.value"/>
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
 
@@ -68,11 +69,12 @@
               v-for="i in viewParents"
               :label="i.title"
               :value="i.id"
-            ></el-option>
+            />
             <el-option
               label="无"
-              value="0"/>
-            </el-select>
+              value="0"
+            />
+          </el-select>
         </el-form-item>
       </div>
 
@@ -104,7 +106,8 @@
                   <el-option
                     v-for="i in scopeDownChildParams"
                     :label="i.filedNameCn"
-                    :value="i.filedName"/>
+                    :value="i.filedName"
+                  />
                 </el-select>
               </el-col>
               <!-- input -->
@@ -121,7 +124,8 @@
                   <el-option
                     v-for="i in statusDownChildParams"
                     :label="i.optionValueCn"
-                    :value="i.optionValue"/>
+                    :value="i.optionValue"
+                  />
                 </el-select>
               </el-col>
               <!-- date -->
@@ -207,8 +211,7 @@
 </template>
 <script>
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import { queryViews, lookView, addView, updateView, deleteView, getViewScopeChildParams, queryViewParents} from '@/api/project'
-import text from '../adminCenter/text'
+import { queryViews, lookView, addView, updateView, deleteView, getViewScopeChildParams, queryViewParents } from '@/api/project'
 export default {
   name: 'Projectview',
   data() {
@@ -362,7 +365,7 @@ export default {
       this.$refs.viewData.toggleRowSelection(row)
       this.searchViewInfo()
 
-      if (row.parentTitle !== undefined && row.parentTitle !== ''){
+      if (row.parentTitle !== undefined && row.parentTitle !== '') {
         this.viewParentQuery = row.parentTitle
       }
 
@@ -447,8 +450,9 @@ export default {
       for (let i = 0; i < this.scopeDownChildParams.length; i++) {
         const entity = this.scopeDownChildParams[i]
         if (entity.filedName === fieldName) {
-          //如果是下拉框，赋值
+          // 如果是下拉框，赋值
           if (entity.selectChild !== undefined && entity.selectChild.length > 0) {
+            console.log('statusDownChildParams', this.statusDownChildParams)
             this.statusDownChildParams = entity.selectChild
           }
           this.from.oneFilters[index].type = entity.type

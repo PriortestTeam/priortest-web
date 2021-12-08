@@ -18,12 +18,15 @@
           v-model="projectId"
           size="small"
           placeholder="请选择Project"
+          disabled
           @change="getProjectInfo"
         >
-          <el-option  :key="index"
-                  :label="item.title"
-                  :value="item.id"
-                  v-for="(item, index) in projectList" />
+          <el-option
+            v-for="(item, index) in projectList"
+            :key="index"
+            :label="item.title"
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
 
@@ -34,10 +37,10 @@
             <el-radio label="复选框 C">
               <el-select v-model="from.version" size="mini" placeholder="1.0">
                 <el-option
+                  v-for="(item, index) in projectVersionList.mergeValues"
                   :key="index"
                   :label="item"
                   :value="item"
-                  v-for="(item, index) in projectVersionList.mergeValues"
                 />
               </el-select>
             </el-radio>
@@ -58,10 +61,10 @@
         <el-row class="radiu">
           <el-select v-model="from.env" size="mini" placeholder="1.0">
             <el-option
-              :label="item"
-              :key="index"
-              :value="item"
               v-for="(item, index) in projectEnvList.mergeValues"
+              :key="index"
+              :label="item"
+              :value="item"
             />
             <!-- <el-option label="PRO" value="2.0" /> -->
           </el-select>
@@ -78,10 +81,11 @@
                 placeholder="Version 1.0 - Regression"
               >
                 <el-option
-                  :label="item"
-                  :key="index"
-                  :value="item"
                   v-for="(item, index) in testCycleVersionList"
+                  :key="index"
+                  :label="item"
+                  :value="item"
+                  multiple
                 />
                 <!-- <el-option label="Version 2.0 - Regression" value="2.0" /> -->
               </el-select>
@@ -107,11 +111,10 @@
         <el-row>
           <el-row :span="4">
             <el-checkbox
-              :indeterminate="isIndeterminate"
               v-model="checkAll"
+              :indeterminate="isIndeterminate"
               @change="handleCheckAllChange"
-              >全选</el-checkbox
-            >
+            >全选</el-checkbox>
           </el-row>
           <el-checkbox-group
             v-model="lssueList"
@@ -147,11 +150,11 @@
 
       <el-form-item label="签名" prop="scope" class="form-small">
         <!-- Signi-Upload -->
-        <el-row class="radiu" v-if="signiList.length > 0">
+        <el-row v-if="signiList.length > 0" class="radiu">
           <el-radio-group v-model="from.fileUrl">
-            <div class="mb-2 signi" v-for="(item, index) in signiList" :key="item.label">
+            <div v-for="(item, index) in signiList" :key="item.label" class="mb-2 signi">
               <el-radio :label="item">{{ item }}</el-radio>
-              <i class="el-icon el-icon-error" @click="removeSigniList(index)"></i>
+              <i class="el-icon el-icon-error" @click="removeSigniList(index)" />
             </div>
           </el-radio-group>
         </el-row>
@@ -170,51 +173,51 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 import {
   getProjectEnv,
   getProjectVersion,
   getTestCycleVersion,
-  createGenerate,getSignaturePath
-} from "@/api/signoff.js";
+  createGenerate, getSignaturePath
+} from '@/api/signoff.js'
 import {
   queryForProjects
-} from "@/api/project.js";
-import UploadSigenatrue from "@/components/Upload/UploadSigenatrue.vue";
+} from '@/api/project.js'
+import UploadSigenatrue from '@/components/Upload/UploadSigenatrue.vue'
 // 缺陷参数
 const lssueList = [
-  "修改",
-  "关闭",
-  "未分配",
-  "已分配",
-  "拒绝",
-  "已验证",
-  "验证成功",
-  "验证失败"
-];
+  '修改',
+  '关闭',
+  '未分配',
+  '已分配',
+  '拒绝',
+  '已验证',
+  '验证成功',
+  '验证失败'
+]
 export default {
-  name: "Dashboard",
+  name: 'Dashboard',
   components: {
     UploadSigenatrue
   },
   data() {
     return {
-      projectList:[],
+      projectList: [],
       from: {
         env: '',
-        testCycle: '',
+        testCycle: [],
         version: '',
         fileUrl: ''
       },
       rules: {},
-      versionList: ["Current Version"],
-      version: "Latest Version",
+      versionList: ['Current Version'],
+      version: 'Latest Version',
       // TestleList: ['Current Version'],
-      Testle: "Current Version",
+      Testle: 'Current Version',
       // lssueList: ['', 'Fixed', 'Closed', 'Opend', 'Assigned', 'Rejected'],
       lssueList: [],
-      signiList: [], //签名列表
-      signi: "",
+      signiList: [], // 签名列表
+      signi: '',
       allLssueList: lssueList,
       isIndeterminate: true,
       checkAll: false,
@@ -222,26 +225,38 @@ export default {
       projectVersionList: [],
       testCycleVersionList: [],
       projectId: ''
-    };
+    }
   },
   computed: {
     ...mapGetters([
-      "name",
+      'name',
       {
         lang: state => state.header.lang
       }
     ])
   },
+  async mounted() {
+    // 从缓存中获取 projectId
+    // const projectId = localStorage.getItem('projectId')
+    // 测试id号
+    this.projectId = localStorage.getItem('projectId')
+    // 获取测试环境
+    this.getSign()
+    this.getProject()
+    this.getProjectEnv()
+    this.getProjectVersion()
+    this.getTestCycleVersion()
+  },
   methods: {
     handleCheckAllChange(val) {
-      this.lssueList = val ? lssueList : [];
-      this.isIndeterminate = false;
+      this.lssueList = val ? lssueList : []
+      this.isIndeterminate = false
     },
     handleCheckedCitiesChange(value) {
-      const checkedCount = value.length;
-      this.checkAll = checkedCount === this.allLssueList.length;
+      const checkedCount = value.length
+      this.checkAll = checkedCount === this.allLssueList.length
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.allLssueList.length;
+        checkedCount > 0 && checkedCount < this.allLssueList.length
     },
     // 删除签名信息
     removeSigniList(i) {
@@ -255,28 +270,29 @@ export default {
     //   });
     // },
     async createFile() {
-      // const data = {
-      //   env: this.from.env,
-      //   fileUrl: this.from.fileUrl,
-      //   issue: this.lssueList.toString(),
-      //   projectId: localStorage.getItem('projectId'),
-      //   testCycleVersion: this.from.testCycle,
-      //   version: this.from.version
-      // };
       const data = {
-        env: '12',
-        fileUrl:'/usr/oneclick/data/file/bdc1ff71-3f30-42d2-a073-a8df9d5281d4.txt',
+        env: this.from.env,
+        fileUrl: this.from.fileUrl,
         issue: this.lssueList.toString(),
         projectId: localStorage.getItem('projectId'),
-        testCycleVersion:'1.0',
-        version:'v1.0'
-      };
+        testCycleVersion: this.from.testCycle.length ? this.from.testCycle.toString() : this.Testle,
+        version: this.from.version ? this.from.version : this.version
+      }
+      // const data = {
+      //   env: '12',
+      //   fileUrl:'/usr/oneclick/data/file/bdc1ff71-3f30-42d2-a073-a8df9d5281d4.txt',
+      //   issue: this.lssueList.toString(),
+      //   projectId: localStorage.getItem('projectId'),
+      //   testCycleVersion:'1.0',
+      //   version:'v1.0'
+      // };
       console.log(this.signiList)
       console.log(data)
-      const res = await createGenerate(data);
+      const res = await createGenerate(data)
+      console.log('res', res)
     },
     getImgUrl(url) {
-      if(!url) return
+      if (!url) return
       this.getSign()
     },
     async getProjectEnv() {
@@ -288,39 +304,27 @@ export default {
       this.projectVersionList = res.data
     },
     async getTestCycleVersion() {
-      const res = await getTestCycleVersion({ projectId: this.projectId,env:'12',version:'v1.0'})
-      this.testCycleVersionList = res.data;
+      const res = await getTestCycleVersion({ projectId: this.projectId, env: '12', version: 'v1.0' })
+      this.testCycleVersionList = res.data
     },
     async getSign() {
       const res = await getSignaturePath()
-      this.signiList = res.data;
+      this.signiList = res.data
     },
     async getProject() {
       const res = await queryForProjects({
         pageNum: 1,
-        pageSize: 10,
-      },{})
-      this.projectList = res.data;
+        pageSize: 10
+      }, {})
+      this.projectList = res.data
     },
-    getProjectInfo(){
-        this.getProjectEnv()
-    this.getProjectVersion();
-    this.getTestCycleVersion();
+    getProjectInfo() {
+      this.getProjectEnv()
+      this.getProjectVersion()
+      this.getTestCycleVersion()
     }
-  },
-  async mounted() {
-    //从缓存中获取 projectId
-    // const projectId = localStorage.getItem('projectId')
-    // 测试id号
-    this.projectId = "";
-    //获取测试环境
-    this.getSign()
-    this.getProject()
-    this.getProjectEnv()
-    this.getProjectVersion();
-    this.getTestCycleVersion();
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

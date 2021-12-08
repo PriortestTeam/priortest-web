@@ -5,126 +5,126 @@
         新建测试周期
       </el-button>
     </div>
-    <el-row >
-  <el-col :span="5">
-      <view-tree :childScope="currentScope" v-on:childByValue="childByValue"></view-tree>
+    <el-row>
+      <el-col :span="5">
+        <view-tree :child-scope="currentScope" @childByValue="childByValue" />
 
-  </el-col>
-      <el-col :span="19"
-        ><div class="project_table">
-          <div class="oprate_btn">
-            <el-button type="text" @click="projectRefresh">刷新</el-button>
-            <el-button type="text" :disabled="single" @click="projectClone"
-              >克隆</el-button
+      </el-col>
+      <el-col
+        :span="19"
+      ><div class="project_table">
+        <div class="oprate_btn">
+          <el-button type="text" @click="projectRefresh">刷新</el-button>
+          <el-button
+            type="text"
+            :disabled="single"
+            @click="projectClone"
+          >克隆</el-button>
+          <el-button
+            type="text"
+            :disabled="multiple"
+            @click="delproject('all')"
+          >批量删除</el-button>
+          <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
+        </div>
+        <div v-loading="isLoading" class="protable table">
+          <el-table
+            ref="featureData"
+            :data="featureData"
+            :header-cell-style="tableHeader"
+            stripe
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column type="selection" width="55" />
+            <el-table-column type="index" align="center" label="序号">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="title"
+              :show-overflow-tooltip="true"
+              align="center"
+              label="标题"
+            />
+            <el-table-column
+              prop="status"
+              min-width="100"
+              align="center"
+              label="状态"
             >
-            <el-button
-              type="text"
-              :disabled="multiple"
-              @click="delproject('all')"
-              >批量删除</el-button
-            >
-            <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
-          </div>
-          <div class="protable table" v-loading="isLoading">
-            <el-table
-              ref="featureData"
-              :data="featureData"
-              :header-cell-style="tableHeader"
-              stripe
-              style="width: 100%"
-              @selection-change="handleSelectionChange"
-            >
-              <el-table-column type="selection" width="55" />
-              <el-table-column type="index" align="center" label="序号">
-                <template slot-scope="scope">
-                  {{ scope.$index + 1 }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="title"
-                :show-overflow-tooltip="true"
-                align="center"
-                label="标题"
-              />
-              <el-table-column
-                prop="status"
-                min-width="100"
-                align="center"
-                label="状态"
-              >
-                <template slot-scope="scope">
-                  <span>{{
-                    scope.row.status === 1
-                      ? "completed"
-                      : scope.row.status === 2
+              <template slot-scope="scope">
+                <span>{{
+                  scope.row.status === 1
+                    ? "completed"
+                    : scope.row.status === 2
                       ? "uncompleted"
                       : ""
-                  }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="runStatus"
-                min-width="100"
-                align="center"
-                label="运行状态"
-              >
-                <template slot-scope="scope">
-                  <span>{{
-                    scope.row.runStatus === 1
-                      ? "passed"
-                      : scope.row.runStatus === 2
+                }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="runStatus"
+              min-width="100"
+              align="center"
+              label="运行状态"
+            >
+              <template slot-scope="scope">
+                <span>{{
+                  scope.row.runStatus === 1
+                    ? "passed"
+                    : scope.row.runStatus === 2
                       ? "failed"
                       : ""
-                  }}</span>
-                </template>
-              </el-table-column>
+                }}</span>
+              </template>
+            </el-table-column>
 
-              <el-table-column
-                prop="createTime"
-                align="center"
-                label="创建日期"
-                min-width="120"
-                :show-overflow-tooltip="true"
-              />
-              <el-table-column label="操作" min-width="160" align="center">
-                <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    class="table-btn"
-                    @click.stop="openEdit(scope.row)"
-                    >编辑</el-button
-                  >
-                  <el-button
-                    type="text"
-                    class="table-btn"
-                    @click.stop="delproject(scope.row.id)"
-                    >删除</el-button
-                  >
-                </template>
-              </el-table-column>
-            </el-table>
-
-            <pagination
-              v-show="featureTotal > 0"
-              :total="featureTotal"
-              :page.sync="testCycleQuery.pageNum"
-              :limit.sync="testCycleQuery.pageSize"
-              @pagination="getfeatureList"
+            <el-table-column
+              prop="createTime"
+              align="center"
+              label="创建日期"
+              min-width="120"
+              :show-overflow-tooltip="true"
             />
-          </div></div
-      ></el-col>
+            <el-table-column label="操作" min-width="160" align="center">
+              <template slot-scope="scope">
+                <el-button
+                  type="text"
+                  class="table-btn"
+                  @click.stop="openEdit(scope.row)"
+                >编辑</el-button>
+                <el-button
+                  type="text"
+                  class="table-btn"
+                  @click.stop="delproject(scope.row.id)"
+                >删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <pagination
+            v-show="featureTotal > 0"
+            :total="featureTotal"
+            :page.sync="testCycleQuery.pageNum"
+            :limit.sync="testCycleQuery.pageSize"
+            @pagination="getfeatureList"
+          />
+        </div></div></el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-  import viewTree from '../project/viewTree.vue'
+import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import { testCycleList, delTestCycle } from '@/api/testcycle'
 import { queryViews } from '@/api/project'
 
 export default {
   name: 'Testcycle',
+  components: { viewTree },
   data() {
     return {
       currentScope: 'TestCycle',
@@ -135,15 +135,13 @@ export default {
       isLoading: false, // 是否加载
       activeNames: ['1'],
 
-
-
       testCycleQuery: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       featureTotal: 0,
       featureData: [],
-      multipleSelection: [],//多选
+      multipleSelection: [], // 多选
       single: true, // 非单个禁用
       multiple: true, // 非多个禁用
       featureIds: '',
@@ -152,11 +150,10 @@ export default {
       testCycleBody: {
         scope: '',
         projectId: ''
-      },//tree的参数
+      }, // tree的参数
       viewSearchQueryId: ''
     }
   },
-  components: {viewTree},
   computed: {
     projectInfo() {
       return this.$store.state.user.userinfo
@@ -172,12 +169,12 @@ export default {
       this.$router.push({ name: 'Addtestcycle' })
     },
 
-    /**项目列表表格开始 */
+    /** 项目列表表格开始 */
     getfeatureList() {
       this.isLoading = true
       const query = {
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        viewTreeDto : {
+        viewTreeDto: {
           id: this.viewSearchQueryId
         }
       }
@@ -237,10 +234,9 @@ export default {
     },
     // 表格行点击去编辑
     openEdit(row) {
-
-      this.$router.push({ name: 'Addtestcycle', query: { id: row.id } })
+      this.$router.push({ name: 'Addtestcycle', query: { id: row.id }})
     },
-    childByValue: function (query) {
+    childByValue: function(query) {
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id
       testCycleList(this.featureQuery, query).then(res => {
@@ -250,7 +246,7 @@ export default {
       })
     }
 
-    /**项目列表表格结束 */
+    /** 项目列表表格结束 */
 
   }
 }

@@ -4,102 +4,102 @@
       <div class="one-logo">
         <img src="@/icons/img/one-logo.png" alt="" srcset="">
       </div>
-     <div class="one-tip">
-       激活您的 OneClick 账号
-     </div>
+      <div class="one-tip">
+        激活您的 OneClick 账号
+      </div>
       <el-form-item prop="email" label="邮箱地址">
-        <el-input disabled v-model="loginForm.email" />
+        <el-input v-model="loginForm.email" disabled />
       </el-form-item>
       <el-form-item prop="password" label="密码">
-        <el-input type="password" v-model="loginForm.password" />
+        <el-input v-model="loginForm.password" type="password" />
       </el-form-item>
-       <el-form-item prop="rePassword" label="确认密码">
-        <el-input  type="password" v-model="loginForm.rePassword" />
+      <el-form-item prop="rePassword" label="确认密码">
+        <el-input v-model="loginForm.rePassword" type="password" />
       </el-form-item>
-        <div class="pass-allowed">
-          <el-checkbox v-model="checked">
-            <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
-            <el-link v-else type="warning">您阅读已同意服务条款</el-link>
-          </el-checkbox>
-          <el-link type="primary" style="margin-right: 10px;" @click="backLogin">返回登录</el-link>
-        </div>
-        <el-button
+      <div class="pass-allowed">
+        <el-checkbox v-model="checked">
+          <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
+          <el-link v-else type="warning">您阅读已同意服务条款</el-link>
+        </el-checkbox>
+        <el-link type="primary" style="margin-right: 10px;" @click="backLogin">返回登录</el-link>
+      </div>
+      <el-button
         class="acBtn"
-          :disabled="!checked"
-            round
-            @click="goActivate"
-          >激活账户</el-button>
+        :disabled="!checked"
+        round
+        @click="goActivate"
+      >激活账户</el-button>
     </el-form>
   </div>
 </template>
 
 <script>
-import { activateAccount,verifyLinkString } from '@/api/user'
+import { activateAccount, verifyLinkString } from '@/api/user'
 export default {
   data() {
-     var validatePassword = (rule, value, callback) => {
-        if (!/\S/.test(value)) {
-          return callback(new Error('必填项不能为空'))
-        }
-        if(!/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*,\.])[0-9a-zA-Z!@#$%^&*,\\.]{8,12}$/.test(value)){
-           return callback(new Error('密码为8~12位且包含大写、小写、数字、特殊字符'))
-        }
-        callback()
+    var validatePassword = (rule, value, callback) => {
+      if (!/\S/.test(value)) {
+        return callback(new Error('必填项不能为空'))
       }
-      var validateConfirmPassword = (rule, value, callback) => {
-        console.log(value)
-        if (!/\S/.test(value)) {
-          return callback(new Error('必填项不能为空'))
-        }
-        if (this.loginForm.password&&this.loginForm.password !== value) {
-          return callback(new Error('确认密码与密码输入不一致'))
-        }
-        callback()
+      if (!/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@+#$%^&*,\.])[0-9a-zA-Z!@+#$%^&*,\\.]{8,12}$/.test(value)) {
+        return callback(new Error('密码为8~12位且包含大写、小写、数字、特殊字符'))
       }
+      callback()
+    }
+    var validateConfirmPassword = (rule, value, callback) => {
+      console.log(value)
+      if (!/\S/.test(value)) {
+        return callback(new Error('必填项不能为空'))
+      }
+      if (this.loginForm.password && this.loginForm.password !== value) {
+        return callback(new Error('确认密码与密码输入不一致'))
+      }
+      callback()
+    }
     return {
       loginForm: {
         email: '',
         password: '',
-        rePassword:""
+        rePassword: ''
       },
-      checked:false,
-            loginRules: {
+      checked: false,
+      loginRules: {
         username: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' }
           // { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
         ],
-         password: [
-           {validator: validatePassword, trigger: 'blur'}
+        password: [
+          { validator: validatePassword, trigger: 'blur' }
         ],
         rePassword: [
-          {validator: validateConfirmPassword, trigger: 'blur'}
-        ],
-      },
+          { validator: validateConfirmPassword, trigger: 'blur' }
+        ]
+      }
     }
   },
   watch: {
   },
   mounted() {
-      this.loginForm.email=this.$route.query.email
-    this.loginForm.params=this.$route.query.params
-    if(!this.loginForm.email||!this.loginForm.params){
+    this.loginForm.email = this.$route.query.email
+    this.loginForm.params = this.$route.query.params
+    if (!this.loginForm.email || !this.loginForm.params) {
       this.$router.push({ path: '/' })
       return
     }
-    verifyLinkString({params:this.loginForm.params}).then(res=>{
-      if(res.code!=200){
-         this.$router.push({ path: '/' })
+    verifyLinkString({ params: this.loginForm.params }).then(res => {
+      if (res.code != 200) {
+        this.$router.push({ path: '/' })
       }
     })
   },
   methods: {
-    backLogin(){
-     this.$router.push({ path: '/' })
+    backLogin() {
+      this.$router.push({ path: '/' })
     },
-     goActivate() {
+    goActivate() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-            if(!this.checked){
+          if (!this.checked) {
             return this.$message.error('请勾选同意服务条款按钮')
           }
           activateAccount(this.loginForm).then((res) => {
@@ -114,7 +114,7 @@ export default {
           return false
         }
       })
-    },
+    }
   }
 }
 </script>

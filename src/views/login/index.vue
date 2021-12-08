@@ -18,24 +18,26 @@
       <el-form-item prop="password" label="Password">
         <el-input v-model="loginForm.password" />
       </el-form-item>
-        <div class="ForgetView">
-       <div class="forget" @click="routeForget">{{$t('lang.login.forget')}}</div>
-       <div class="deferred" @click="routedeferred">{{$t('lang.login.deferred')}}</div>
-        </div>
-        <div class="btnLogin">
-          <el-button
-            type="primary"
-            size="medium"
-            round
-            @click="handleLogin('loginForm')" style="width:48%"
-          >Login</el-button>
-          <el-button
-            type="primary"
-            round
-            class="registerBtn"
-            @click="handleregister('loginForm')" style="width:48%"
-          >to Register</el-button>
-        </div>
+      <div class="ForgetView">
+        <div class="forget" @click="routeForget">{{ $t('lang.login.forget') }}</div>
+        <div class="deferred" @click="routedeferred">{{ $t('lang.login.deferred') }}</div>
+      </div>
+      <div class="btnLogin">
+        <el-button
+          type="primary"
+          size="medium"
+          round
+          style="width:48%"
+          @click="handleLogin('loginForm')"
+        >Login</el-button>
+        <el-button
+          type="primary"
+          round
+          class="registerBtn"
+          style="width:48%"
+          @click="handleregister('loginForm')"
+        >to Register</el-button>
+      </div>
       <!-- <el-form-item>
         <div class="btnForget">
           <el-button
@@ -67,57 +69,57 @@
           <el-col :lg="12" :md="12" :sm="12">
             <el-form-item prop="email">
               <el-input
-              id="mazey"
-              size="mini"
-              v-model="registerForm.email"
-              @blur="check"
-              placeholder="请输入您的邮箱"
-            />
+                id="mazey"
+                v-model="registerForm.email"
+                size="mini"
+                placeholder="请输入您的邮箱"
+                @blur="check"
+              />
             </el-form-item>
           </el-col>
           <el-col :lg="12" :md="12" :sm="12">
             <el-form-item prop="contactNo">
               <el-input
-              size="mini"
-              v-model="registerForm.contactNo"
-              placeholder="请输入您的电话"
-            />
+                v-model="registerForm.contactNo"
+                size="mini"
+                placeholder="请输入您的电话"
+              />
             </el-form-item>
           </el-col>
           <el-col :lg="12" :md="12" :sm="12">
-            <el-form-item >
+            <el-form-item>
               <el-input
-              size="mini"
-              v-model="registerForm.userName"
-              placeholder="请输入您的姓名"
-            />
+                v-model="registerForm.userName"
+                size="mini"
+                placeholder="请输入您的姓名"
+              />
             </el-form-item>
           </el-col>
           <el-col :lg="12" :md="12" :sm="12">
             <el-form-item prop="company">
               <el-input
-              size="mini"
-              v-model="registerForm.company"
-              placeholder="请输入您的公司名称"
-            />
+                v-model="registerForm.company"
+                size="mini"
+                placeholder="请输入您的公司名称"
+              />
             </el-form-item>
           </el-col>
           <el-col :lg="12" :md="12" :sm="12">
             <el-form-item prop="industry">
               <el-input
-              size="mini"
-              v-model="registerForm.industry"
-              placeholder="请输入您所在行业"
-            />
+                v-model="registerForm.industry"
+                size="mini"
+                placeholder="请输入您所在行业"
+              />
             </el-form-item>
           </el-col>
           <el-col :lg="12" :md="12" :sm="12">
             <el-form-item prop="profession">
               <el-input
-              size="mini"
-              v-model="registerForm.profession"
-              placeholder="请输入您所在职位"
-            />
+                v-model="registerForm.profession"
+                size="mini"
+                placeholder="请输入您所在职位"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -152,32 +154,32 @@
           <el-link type="primary" style="margin-right: 10px;" @click="backLoginIndex">返回登录</el-link>
         </div>
         <div style="padding-right: 10px;box-sizing: border-box;margin-top: 20px;">
-          <el-button @click="goRegister"  :disabled="passRigister" size="small" type="danger" style="width: 100%;">注册</el-button>
+          <el-button :disabled="passRigister" size="small" type="danger" style="width: 100%;" @click="goRegister">注册</el-button>
         </div>
       </el-form>
 
     </div>
-     <div v-if="isShowregisterAfter">
-         <el-form
-      v-if="!isShowregister"
-      ref="loginForm"
-      class="login-form"
-      label-position="left"
-      label-width="80px"
-      :rules="loginRules"
-      :model="loginForm"
-    >
-      <div class="one-logo">
-        <img src="@/icons/img/one-logo.png" alt="" srcset="">
-      </div>
-       <el-link type="primary" style="margin-right: 10px;" @click="backLoginIndex">返回登录</el-link>
-      <div class="one-tip">感谢您试用OneClick, 请通过您的<span class="email" @click="routerEmail">注册邮箱</span>激活注册帐号开启您的体验之旅</div>
-    </el-form>
+    <div v-if="isShowregisterAfter">
+      <el-form
+        v-if="!isShowregister"
+        ref="loginForm"
+        class="login-form"
+        label-position="left"
+        label-width="80px"
+        :rules="loginRules"
+        :model="loginForm"
+      >
+        <div class="one-logo">
+          <img src="@/icons/img/one-logo.png" alt="" srcset="">
+        </div>
+        <el-link type="primary" style="margin-right: 10px;" @click="backLoginIndex">返回登录</el-link>
+        <div class="one-tip">感谢您试用OneClick, 请通过您的<span class="email" @click="routerEmail">注册邮箱</span>激活注册帐号开启您的体验之旅</div>
+      </el-form>
 
     </div>
-      <forget v-if="forgetView" @backLoginIndex="backLoginIndex"></forget>
-      <!-- 申请延期 -->
-    <deferred v-if="deferredView"  @backLoginIndex="backLoginIndex"></deferred>
+    <forget v-if="forgetView" @backLoginIndex="backLoginIndex" />
+    <!-- 申请延期 -->
+    <deferred v-if="deferredView" @backLoginIndex="backLoginIndex" />
   </div>
   <!-- 注册 -->
 
@@ -191,10 +193,10 @@ import forget from './forget.vue'
 import deferred from './login-deferred.vue'
 export default {
   name: 'Login',
-  components:{forget,deferred},
+  components: { forget, deferred },
   data() {
     return {
-     
+
       loginForm: {
         username: '1220186101@qq.com',
         password: '12345678A'
@@ -211,20 +213,20 @@ export default {
       redirect: undefined,
       // 注册用户
       isShowregister: false,
-      isShowregisterAfter:false,
-       forgetView:false,//忘记密码view
-       loginView:true,//登录view
-       deferredView:false,//申请延期view
+      isShowregisterAfter: false,
+      forgetView: false, // 忘记密码view
+      loginView: true, // 登录view
+      deferredView: false, // 申请延期view
       registerUser: '',
       checked: false,
       registerForm: {
-        email:''
+        email: ''
       },
       registerRules: {
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           // { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] },
-          { pattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/, message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] },
+          { pattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/, message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
         ],
         password: [{ required: true, message: '请输入密码名称', trigger: 'blur' }],
         userName: [{ required: true, message: '请输入名称', trigger: 'blur' }],
@@ -234,10 +236,10 @@ export default {
   },
   computed: {
     passRigister() {
-      if(this.registerForm.email && this.checked) {
-        let reg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
+      if (this.registerForm.email && this.checked) {
+        const reg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/
         return !reg.test(this.registerForm.email)
-      }else {
+      } else {
         return true
       }
     }
@@ -251,91 +253,90 @@ export default {
     }
   },
   methods: {
-    routerEmail(){
- window.open(this.gotoEmail())
+    routerEmail() {
+      window.open(this.gotoEmail())
     },
     gotoEmail() {
-       
-            var email = this.registerForm.email.split('@')[1];
-            email = email.toLowerCase();
-            if (email == '163.com') {
-                return 'http://mail.163.com';
-            } else if (email == 'vip.163.com') {
-                return 'http://vip.163.com';
-            } else if (email == '126.com') {
-                return 'http://mail.126.com';
-            } else if (email == 'qq.com' || email == 'vip.qq.com' || email == 'foxmail.com') {
-                return 'http://www.mail.qq.com';
-            } else if (email == 'gmail.com') {
-                return 'http://mail.google.com';
-            } else if (email == 'sohu.com') {
-                return 'http://mail.sohu.com';
-            } else if (email == 'tom.com') {
-                return 'http://mail.tom.com';
-            } else if (email == 'vip.sina.com') {
-                return 'http://vip.sina.com';
-            } else if (email == 'sina.com.cn' || email == 'sina.com') {
-                return 'http://mail.sina.com.cn';
-            } else if (email == 'tom.com') {
-                return 'http://mail.tom.com';
-            } else if (email == 'yahoo.com.cn' || email == 'yahoo.cn') {
-                return 'http://www.mail.cn.yahoo.com';
-            } else if (email == 'tom.com') {
-                return 'http://www.mail.tom.com';
-            } else if (email == 'yeah.net') {
-                return 'http://www.yeah.net';
-            } else if (email == '21cn.com') {
-                return 'http://mail.21cn.com';
-            } else if (email == 'hotmail.com') {
-                return 'http://www.hotmail.com';
-            } else if (email == 'sogou.com') {
-                return 'http://mail.sogou.com';
-            } else if (email == '188.com') {
-                return 'http://www.188.com';
-            } else if (email == '139.com') {
-                return 'http://mail.10086.cn';
-            } else if (email == '189.cn') {
-                return 'http://webmail15.189.cn/webmail';
-            } else if (email == 'wo.com.cn') {
-                return 'http://mail.wo.com.cn/smsmail';
-            } else if (email == '139.com') {
-                return 'http://mail.10086.cn';
-            } else {
-                return '';
-            }
-        },
+      var email = this.registerForm.email.split('@')[1]
+      email = email.toLowerCase()
+      if (email == '163.com') {
+        return 'http://mail.163.com'
+      } else if (email == 'vip.163.com') {
+        return 'http://vip.163.com'
+      } else if (email == '126.com') {
+        return 'http://mail.126.com'
+      } else if (email == 'qq.com' || email == 'vip.qq.com' || email == 'foxmail.com') {
+        return 'http://www.mail.qq.com'
+      } else if (email == 'gmail.com') {
+        return 'http://mail.google.com'
+      } else if (email == 'sohu.com') {
+        return 'http://mail.sohu.com'
+      } else if (email == 'tom.com') {
+        return 'http://mail.tom.com'
+      } else if (email == 'vip.sina.com') {
+        return 'http://vip.sina.com'
+      } else if (email == 'sina.com.cn' || email == 'sina.com') {
+        return 'http://mail.sina.com.cn'
+      } else if (email == 'tom.com') {
+        return 'http://mail.tom.com'
+      } else if (email == 'yahoo.com.cn' || email == 'yahoo.cn') {
+        return 'http://www.mail.cn.yahoo.com'
+      } else if (email == 'tom.com') {
+        return 'http://www.mail.tom.com'
+      } else if (email == 'yeah.net') {
+        return 'http://www.yeah.net'
+      } else if (email == '21cn.com') {
+        return 'http://mail.21cn.com'
+      } else if (email == 'hotmail.com') {
+        return 'http://www.hotmail.com'
+      } else if (email == 'sogou.com') {
+        return 'http://mail.sogou.com'
+      } else if (email == '188.com') {
+        return 'http://www.188.com'
+      } else if (email == '139.com') {
+        return 'http://mail.10086.cn'
+      } else if (email == '189.cn') {
+        return 'http://webmail15.189.cn/webmail'
+      } else if (email == 'wo.com.cn') {
+        return 'http://mail.wo.com.cn/smsmail'
+      } else if (email == '139.com') {
+        return 'http://mail.10086.cn'
+      } else {
+        return ''
+      }
+    },
     backLogin() {
-      this.isShowregister = false;
-      this.isShowregisterAfter=true//显示提示激活
-      this.checked = false;
-       this.forgetView = false;
-       this.loginView=false
-       this.deferredView=false
+      this.isShowregister = false
+      this.isShowregisterAfter = true// 显示提示激活
+      this.checked = false
+      this.forgetView = false
+      this.loginView = false
+      this.deferredView = false
     },
     routeForget() {
-      this.isShowregister = false;
-      this.isShowregisterAfter = false; //显示提示激活
-      this.checked = false;
-       this.loginView=false
-      this.forgetView = true;
-        this.deferredView=false
+      this.isShowregister = false
+      this.isShowregisterAfter = false // 显示提示激活
+      this.checked = false
+      this.loginView = false
+      this.forgetView = true
+      this.deferredView = false
     },
     routedeferred() {
-      this.isShowregister = false;
-      this.isShowregisterAfter = false; //显示提示激活
-      this.checked = false;
-       this.loginView=false
-      this.forgetView = false;
-        this.deferredView=true
+      this.isShowregister = false
+      this.isShowregisterAfter = false // 显示提示激活
+      this.checked = false
+      this.loginView = false
+      this.forgetView = false
+      this.deferredView = true
     },
-    backLoginIndex(){
-      this.registerForm={}
-       this.isShowregister = false;
-      this.isShowregisterAfter=false//显示提示激活
-      this.checked = false;
-        this.forgetView = false;
-         this.loginView=true
-           this.deferredView=false
+    backLoginIndex() {
+      this.registerForm = {}
+      this.isShowregister = false
+      this.isShowregisterAfter = false// 显示提示激活
+      this.checked = false
+      this.forgetView = false
+      this.loginView = true
+      this.deferredView = false
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -367,13 +368,12 @@ export default {
     },
     // 注册
     handleregister() {
-       this.registerForm={}
       this.isShowregister = true
-      this.isShowregisterAfter = false; //显示提示激活
-      this.checked = false;
-       this.loginView=false
-      this.forgetView = false;
-        this.deferredView=false
+      this.isShowregisterAfter = false // 显示提示激活
+      this.checked = false
+      this.loginView = false
+      this.forgetView = false
+      this.deferredView = false
     },
     // 验证邮箱
     check() {
@@ -382,12 +382,11 @@ export default {
       if (!reg.test(obj.value)) { // 正则验证不通过，格式不对
         return false
       } else {
-       
         sendEmailRegisterCode(email).then(res => {
           if (res.code === '200') {
             console.log(res)
-             message('success', '验证码已发送，请注意查收邮箱')
-        const email = this.registerForm.email
+            message('success', '验证码已发送，请注意查收邮箱')
+            const email = this.registerForm.email
           }
         })
         return true
@@ -398,13 +397,13 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           userRegiste(this.registerForm).then((res) => {
-            console.log(res.code!=200)
-            if(res.code!=200){
+            console.log(res.code != 200)
+            if (res.code != 200) {
               return
             }
             message('success', res.msg)
             this.backLogin()
-           
+            this.registerForm = {}
           }).catch(error => {
             console.log(error)
           })

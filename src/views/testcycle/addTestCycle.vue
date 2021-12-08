@@ -13,25 +13,24 @@
           type="primary"
           round
           @click="submitForm('testCycleFrom', false)"
-          >保存并新建</el-button
-        >
+        >保存并新建</el-button>
         <el-button
           v-if="!testCycleFrom.id"
           type="primary"
           round
           @click="submitForm('testCycleFrom', true)"
-          >保存并返回</el-button
-        >
+        >保存并返回</el-button>
         <el-button
           v-if="testCycleFrom.id"
           type="primary"
           round
           @click="submitForm('testCycleFrom')"
-          >确认修改</el-button
-        >
-        <el-button type="primary" round @click="giveupBack('testCycleFrom')"
-          >放弃</el-button
-        >
+        >确认修改</el-button>
+        <el-button
+          type="primary"
+          round
+          @click="giveupBack('testCycleFrom')"
+        >放弃</el-button>
         <router-link v-if="!testCycleFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
@@ -54,54 +53,50 @@
           <el-col :span="8">
             <el-form-item label="版本" size="small" prop="version">
               <el-select
-                :disabled="testCycleFrom.currentVersion === 1"
                 v-model="testCycleFrom.version"
+                :disabled="testCycleFrom.currentVersion === 1"
                 placeholder="请选择版本"
                 clearable
               >
-               <el-option
+                <el-option
                   v-for="item in versionsArr"
                   :key="item"
                   :label="item"
                   :value="item"
-                >
-                </el-option>
+                />
                 <router-link
                   to="/admincenter/admincenter?par=versions"
                 >
-                <el-option label="Add New Value" value='' />
-                    </router-link>
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="状态" prop="status">
               <el-select
-                :disabled="true"
                 v-model="testCycleFrom.status"
+                :disabled="true"
                 placeholder="状态"
               >
                 <el-option label="completed" :value="1" />
                 <el-option
                   label="uncompleted"
                   :value="2"
-                /> </el-select></el-form-item
-          ></el-col>
+                /> </el-select></el-form-item></el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="运行状态" prop="runStatus">
               <el-select
-                :disabled="true"
                 v-model="testCycleFrom.runStatus"
+                :disabled="true"
                 placeholder="状态"
               >
                 <el-option label="passed" :value="1" />
                 <el-option
                   label="failed"
                   :value="2"
-                /> </el-select></el-form-item
-          ></el-col>
+                /> </el-select></el-form-item></el-col>
           <el-col :span="8">
             <el-form-item label="用例执行人" size="small" prop="assignTo">
               <el-select
@@ -119,8 +114,7 @@
                   :key="item.id"
                   :label="item.userName"
                   :value="item.userName"
-                >
-                </el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -141,12 +135,45 @@
                   :key="item.id"
                   :label="item.userName"
                   :value="item.userName"
-                >
-                </el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item size="small" label="测试平台/设备">
+              <el-select
+                v-model="testCycleFrom.runStatus"
+                :disabled="true"
+              >
+                <el-option
+                  v-for="item in optionsArr"
+                  :key="item.id"
+                  :label="item.userName"
+                  :value="item.userName"
+                /></el-select></el-form-item></el-col>
+          <el-col :span="8">
+            <el-form-item label="Env" size="small">
+              <el-select
+                v-model="testCycleFrom.runStatus"
+                :disabled="true"
+              >
+                <el-option
+                  v-for="item in optionsArr"
+                  :key="item.id"
+                  :label="item.userName"
+                  :value="item.userName"
+                /></el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="编译URL">
+          <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
+        </el-form-item>
+        <el-form-item label="Allure报表">
+          <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
+        </el-form-item>
         <el-form-item
           :label="$t('lang.Project.Description')"
           prop="description"
@@ -162,7 +189,7 @@
         </el-form-item>
       </div>
     </el-form>
-    <div class="table" v-if="this.testCycleFrom.id">
+    <div class="table">
       <el-button type="text" @click="newStep">添加测试用例</el-button>
       <el-table
         ref="testCaseData"
@@ -198,14 +225,12 @@
               type="text"
               class="table-btn"
               @click.stop="delview(scope.row)"
-              >删除</el-button
-            >
+            >删除</el-button>
             <el-button
               type="text"
               class="table-btn"
               @click.stop="runview(scope.row)"
-              >运行</el-button
-            >
+            >运行</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -232,8 +257,7 @@
               :key="item.id"
               :label="item.title"
               :value="item.id"
-            >
-            </el-option>
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -245,100 +269,100 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 import {
   detailTestCycle,
   addTestCycle,
   editTestCycle,
   testCycleCase,
   addtestCycle,
-  bindCaseDelete,
-} from "@/api/testcycle";
+  bindCaseDelete
+} from '@/api/testcycle'
 
-import { testCaseListAll } from "@/api/testcase";
+import { testCaseListAll } from '@/api/testcase'
 
-import { queryByNameSubUsers } from "@/api/project";
-import { sysCustomField } from "@/api/systemArr";
+import { queryByNameSubUsers } from '@/api/project'
+import { sysCustomField } from '@/api/systemArr'
 
-import { message, returntomenu, formatChangedPara } from "@/utils/common";
+import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
-  name: "Addtestcycle",
+  name: 'Addtestcycle',
   data() {
     return {
       optionsArr: [],
       versionsArr: [],
       loading: false,
       testCycleFrom: {
-        currentVersion: 0,
+        currentVersion: 0
       },
       testCycleFromTemp: {},
       testCyclerules: {
-        title: [{ required: true, message: "请输入故事标题", trigger: "blur" }],
+        title: [{ required: true, message: '请输入故事标题', trigger: 'blur' }]
       },
 
       tableHeader: {
-        color: "#d4dce3",
-        background: "#003d79",
+        color: '#d4dce3',
+        background: '#003d79'
       },
 
       openDia: false,
       testCaseFrom: {
         testCycleId: undefined,
-        testCaseId: undefined,
+        testCaseId: undefined
       },
       testCaseData: [],
       testCaseDataSelect: [],
       testCaseFromRules: {
         testCaseId: [
-          { required: true, message: "请选择测试用例", trigger: "change" },
-        ],
-      },
-    };
+          { required: true, message: '请选择测试用例', trigger: 'change' }
+        ]
+      }
+    }
   },
   computed: {
     ...mapGetters({
-      lang: (state) => state.header.lang,
+      lang: (state) => state.header.lang
     }),
     projectInfo() {
-      return this.$store.state.user.userinfo;
-    },
+      return this.$store.state.user.userinfo
+    }
   },
   created() {
     if (this.$route.query.id) {
-      this.testCaseFrom.testCycleId = this.$route.query.id;
+      this.testCaseFrom.testCycleId = this.$route.query.id
       detailTestCycle(this.$route.query.id).then((res) => {
-        this.testCycleFrom = res.data;
-        this.testCycleFromTemp = Object.assign({}, this.testCycleFrom);
-      });
-      this.gettestCycleCase();
+        this.testCycleFrom = res.data
+        this.testCycleFromTemp = Object.assign({}, this.testCycleFrom)
+      })
+      this.gettestCycleCase()
       testCaseListAll({
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        title: "",
+        title: ''
       }).then((res) => {
-        this.testCaseDataSelect = res.data;
-      });
+        this.testCaseDataSelect = res.data
+      })
     } else {
-      this.testCycleFrom.projectId = this.projectInfo.userUseOpenProject.projectId;
+      this.testCycleFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
 
-    sysCustomField({ fieldName: "versions" }).then((res) => {
-      let data = res.data.mergeValues ? res.data.mergeValues : [];
-      this.versionsArr = data;
-    });
+    sysCustomField({ fieldName: 'versions' }).then((res) => {
+      const data = res.data.mergeValues ? res.data.mergeValues : []
+      this.versionsArr = data
+    })
   },
   mounted() {},
   methods: {
     remoteReport(query) {
-      if (query !== "") {
-        this.loading = true;
+      if (query !== '') {
+        this.loading = true
         setTimeout(() => {
-          this.loading = false;
+          this.loading = false
           queryByNameSubUsers({ subUserName: query }).then((res) => {
-            this.optionsArr = res.data;
-          });
-        }, 200);
+            this.optionsArr = res.data
+          })
+        }, 200)
       } else {
-        this.optionsArr = [];
+        this.optionsArr = []
       }
     },
     // 重置表单
@@ -353,9 +377,9 @@ export default {
         version: undefined,
         assignTo: undefined,
         notifiyList: undefined,
-        description: undefined,
-      };
-      this.$refs["testCycleFrom"].resetFields();
+        description: undefined
+      }
+      this.$refs['testCycleFrom'].resetFields()
     },
 
     // 提交
@@ -366,106 +390,106 @@ export default {
             const param = formatChangedPara(
               this.testCycleFromTemp,
               this.testCycleFrom
-            );
-            param.projectId = this.testCycleFromTemp.projectId;
+            )
+            param.projectId = this.testCycleFromTemp.projectId
             editTestCycle(param)
               .then((res) => {
-                if (res.code === "200") {
-                  message("success", res.msg);
-                  returntomenu(this, 1000);
+                if (res.code === '200') {
+                  message('success', res.msg)
+                  returntomenu(this, 1000)
                 }
               })
               .catch((error) => {
-                console.log(error);
-              });
+                console.log(error)
+              })
           } else {
             addTestCycle(this.testCycleFrom)
               .then((res) => {
-                if (res.code === "200") {
-                  message("success", res.msg);
-                  this.resetFields();
+                if (res.code === '200') {
+                  message('success', res.msg)
+                  this.resetFields()
                   if (type) {
-                    returntomenu(this, 1000);
+                    returntomenu(this, 1000)
                   }
                 } else {
-                  message("error", res.msg);
+                  message('error', res.msg)
                 }
               })
               .catch((error) => {
-                console.log(error);
-              });
+                console.log(error)
+              })
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     // 放弃并且返回
     giveupBack() {
       if (!this.testCycleFrom.id) {
-        this.resetFields();
+        this.resetFields()
       }
-      this.returntomenu(this);
+      this.returntomenu(this)
     },
 
-    /***编辑的表格 */
+    /** *编辑的表格 */
     resettestCaseFrom() {
       this.testCaseFrom = {
         testCycleId: this.testCycleFrom.id,
-        testCaseId: undefined,
-      };
-      this.$refs["testCaseFrom"].resetFields();
+        testCaseId: undefined
+      }
+      this.$refs['testCaseFrom'].resetFields()
     },
     gettestCycleCase() {
       testCycleCase(
         {
           pageNum: 1,
           pageSize: 10,
-          testCycleId: this.testCaseFrom.testCycleId,
+          testCycleId: this.testCaseFrom.testCycleId
         },
         {}
       ).then((res) => {
-        this.testCaseData = res.data;
-      });
+        this.testCaseData = res.data
+      })
     },
     newStep() {
-      this.openDia = true;
+      this.openDia = true
     },
     submittestCaseFrom() {
-      this.$refs["testCaseFrom"].validate((valid) => {
+      this.$refs['testCaseFrom'].validate((valid) => {
         if (valid) {
           addtestCycle(this.testCaseFrom).then((res) => {
-            if (res.code === "200") {
-              this.gettestCycleCase();
-              message("success", res.msg);
-              this.openDia = false;
-              this.resettestCaseFrom();
+            if (res.code === '200') {
+              this.gettestCycleCase()
+              message('success', res.msg)
+              this.openDia = false
+              this.resettestCaseFrom()
             }
-          });
+          })
         }
-      });
+      })
     },
     canceltestCaseFrom() {
-      this.resettestCaseFrom();
-      this.openDia = false;
+      this.resettestCaseFrom()
+      this.openDia = false
     },
     runview(row) {
       this.$router.push({
-        name: "Execute",
-        query: { id: row.id, testCycleId: this.testCycleFrom.id },
-      });
+        name: 'Execute',
+        query: { id: row.id, testCycleId: this.testCycleFrom.id }
+      })
     },
     delview(row) {
       bindCaseDelete(row.id).then((res) => {
-        if (res.code === "200") {
-          message("success", res.msg);
-          this.gettestCycleCase();
+        if (res.code === '200') {
+          message('success', res.msg)
+          this.gettestCycleCase()
         }
-      });
-    },
-  },
-};
+      })
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
