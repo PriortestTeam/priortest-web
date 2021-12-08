@@ -57,13 +57,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column
-                prop="createTime"
-                align="center"
-                label="创建日期"
-                min-width="120"
-                :show-overflow-tooltip="true"
-              />
+
               <el-table-column
                 prop="startDate"
                 align="center"
@@ -82,6 +76,14 @@
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
+
+               <el-table-column
+                              prop="createTime"
+                              align="center"
+                              label="创建日期"
+                              min-width="120"
+                              :show-overflow-tooltip="true"
+                            />
                 <template slot-scope="scope">
                   <span>{{ scope.row.endDate || "-" }}</span>
                 </template>

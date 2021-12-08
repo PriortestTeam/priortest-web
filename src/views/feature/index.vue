@@ -51,7 +51,8 @@
               align="center"
               label="epic"
             />
-            <el-table-column prop="reportTo" align="center" label="负责人" />
+            <el-table-column prop="module" align="center" label="模块" />
+
             <el-table-column prop="status" align="center" label="状态">
               <template slot-scope="scope">
                 <span>{{
@@ -63,7 +64,7 @@
                 }}</span>
               </template>
             </el-table-column>
-
+          <el-table-column prop="reportTo" align="center" label="负责人" />
             <el-table-column
               prop="createTime"
               align="center"
