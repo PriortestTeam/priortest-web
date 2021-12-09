@@ -43,20 +43,14 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="当前版本" size="small" prop="currentVersion">
-              <el-radio-group v-model="testCycleFrom.currentVersion">
-                <el-radio :label="0">否</el-radio>
-                <el-radio :label="1">是</el-radio>
-              </el-radio-group>
-            </el-form-item>
+          <el-checkbox label="当前发布版本" size="small" prop="currentVersion" />
+                      <el-checkbox label="发布版本" size="small" prop="releaseVersion" />
           </el-col>
           <el-col :span="8">
             <el-form-item label="版本" size="small" prop="version">
               <el-select
                 v-model="testCycleFrom.version"
-                :disabled="testCycleFrom.currentVersion === 1"
                 placeholder="请选择版本"
-                clearable
               >
                 <el-option
                   v-for="item in versionsArr"
@@ -75,28 +69,24 @@
             <el-form-item size="small" label="状态" prop="status">
               <el-select
                 v-model="testCycleFrom.status"
-                :disabled="true"
                 placeholder="状态"
               >
-                <el-option label="completed" :value="1" />
                 <el-option
-                  label="uncompleted"
-                  :value="2"
-                /> </el-select></el-form-item></el-col>
+                                  v-for="item in statusArr"
+                                  :key="item"
+                                  :label="item"
+                                  :value="item"
+                                />
+                                <router-link
+                                  to="/admincenter/admincenter?par=status"
+                                >
+                                  <el-option label="Add New Value" value="" />
+                                </router-link>
+
+                 </el-select></el-form-item></el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
-            <el-form-item size="small" label="运行状态" prop="runStatus">
-              <el-select
-                v-model="testCycleFrom.runStatus"
-                :disabled="true"
-                placeholder="状态"
-              >
-                <el-option label="passed" :value="1" />
-                <el-option
-                  label="failed"
-                  :value="2"
-                /> </el-select></el-form-item></el-col>
+
           <el-col :span="8">
             <el-form-item label="用例执行人" size="small" prop="assignTo">
               <el-select
@@ -142,38 +132,45 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="测试平台/设备">
-              <el-select
-                v-model="testCycleFrom.runStatus"
-                :disabled="true"
-              >
-                <el-option
-                  v-for="item in optionsArr"
-                  :key="item.id"
-                  :label="item.userName"
-                  :value="item.userName"
-                /></el-select></el-form-item></el-col>
-          <el-col :span="8">
-            <el-form-item label="Env" size="small">
-              <el-select
-                v-model="testCycleFrom.runStatus"
-                :disabled="true"
-              >
-                <el-option
-                  v-for="item in optionsArr"
-                  :key="item.id"
-                  :label="item.userName"
-                  :value="item.userName"
-                /></el-select>
-            </el-form-item>
-          </el-col>
+                              <el-form-item size="small" label="测试平台" prop="platform">
+                                <el-select v-model="testCycleFrom.platform" placeholder="请选择测试平台">
+                                  <el-option
+                                                                                   v-for="item in testPlatformArr"
+                                                                                   :key="item"
+                                                                                   :label="item"
+                                                                                   :value="item"
+                                                                                 />
+                                                                                 <router-link to="/admincenter/admincenter?par=test_platform">
+                                                                                                   <el-option label="Add New Value" value="" />
+                                                                                                 </router-link>
+                                </el-select>
+                              </el-form-item>
+                            </el-col>
+       <el-col :span="8">
+                            <el-form-item size="small" label="测试环境" prop="testEnv">
+                              <el-select v-model="testCycleFrom.env" placeholder="请选择测试环境">
+                                 <el-option
+                                                  v-for="item in testEnvArr"
+                                                  :key="item"
+                                                  :label="item"
+                                                  :value="item"
+                                                />
+                                                <router-link to="/admincenter/admincenter?par=test_env">
+                                                                  <el-option label="Add New Value" value="" />
+                                                                </router-link>
+                              </el-select>
+                            </el-form-item>
+                          </el-col>
         </el-row>
-        <el-form-item label="编译URL">
+        <el-form-item label="自动化编译">
           <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
         </el-form-item>
         <el-form-item label="Allure报表">
           <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
         </el-form-item>
+        <el-form-item label="远程自动化编译">
+                  <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
+                </el-form-item>
         <el-form-item
           :label="$t('lang.Project.Description')"
           prop="description"
@@ -190,7 +187,7 @@
       </div>
     </el-form>
     <div class="table">
-      <el-button type="text" @click="newStep">添加测试用例</el-button>
+      <el-button type="text" @click="newStep">添加用例</el-button>
       <el-table
         ref="testCaseData"
         :data="testCaseData"
@@ -210,15 +207,66 @@
           align="center"
         />
         <el-table-column
+                  prop="linkedIssue"
+                  label="关联缺陷"
+                  :show-overflow-tooltip="true"
+                  align="center"
+                />
+                 <el-table-column
+                                  prop="Module"
+                                  label="模块"
+                                  :show-overflow-tooltip="true"
+                                  align="center"
+                                />
+
+                                 <el-table-column
+                                                                  prop="AutoStatus"
+                                                                  label="自动化"
+                                                                  :show-overflow-tooltip="true"
+                                                                  align="center"
+                                                                />
+
+                                                                   <el-table-column
+                                                                                                                                  prop="RunTimes"
+                                                                                                                                  label="运行次数"
+                                                                                                                                  :show-overflow-tooltip="true"
+                                                                                                                                  align="center"
+                                                                                                                               />
+  <el-table-column
+                                                                  prop="lastRun"
+                                                                  label="运行日期"
+                                                                  :show-overflow-tooltip="true"
+                                                                  align="center"
+                                                                />
+        <el-table-column
           prop="lastRunStatus"
-          label="末次运行状态"
+          label="运行状态"
           :show-overflow-tooltip="true"
           align="center"
         >
-          <template slot-scope="scope">
-            {{ scope.row.lastRunStatus === 1 ? "失败" : "成功" }}
-          </template>
-        </el-table-column>
+        <el-table-column
+                       prop="stepStatus"
+                       align="center"
+                       :show-overflow-tooltip="true"
+                       label="步骤运行状态"
+                       />
+         </el-table-column>
+
+         <el-table-column
+                  prop="lastRunDuration"
+                  label="运行时长"
+                  :show-overflow-tooltip="true"
+                  align="center"
+                >
+                </el-table-column>
+
+             <el-table-column
+                  prop="lastRunner"
+                  label="运行人"
+                  :show-overflow-tooltip="true"
+                  align="center"
+                >
+                </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -291,6 +339,9 @@ export default {
     return {
       optionsArr: [],
       versionsArr: [],
+      statusArr: [],
+      testEnvArr: [],
+      testPlatformArr: [],
       loading: false,
       testCycleFrom: {
         currentVersion: 0
@@ -349,6 +400,21 @@ export default {
       const data = res.data.mergeValues ? res.data.mergeValues : []
       this.versionsArr = data
     })
+    sysCustomField({ fieldName: 'status' }).then((res) => {
+          const data = res.data.mergeValues ? res.data.mergeValues : []
+          this.statusArr = data
+        })
+
+
+
+     sysCustomField({ fieldName: 'test_env' }).then((res) => {
+          const data = res.data.mergeValues ? res.data.mergeValues : []
+          this.testEnvArr = data
+        })
+         sysCustomField({ fieldName: 'test_platform' }).then((res) => {
+                  const data = res.data.mergeValues ? res.data.mergeValues : []
+                  this.testPlatformArr = data
+                })
   },
   mounted() {},
   methods: {

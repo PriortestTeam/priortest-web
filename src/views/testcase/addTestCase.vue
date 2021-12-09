@@ -81,14 +81,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="浏览器" prop="browser">
+            <el-form-item size="small" label="浏览器" prop="browser" clearable>
               <el-select
                 v-model="testCaseFrom.browser"
-                placeholder="请选择浏览器"
-              >
-                <el-option label="Google Chrome" value="Google Chrome" />
-                <el-option label="Fire Fox" value="Fire Fox" />
-                <el-option label="IE" value="IE" />
+                placeholder="请选择浏览器"              >
+<el-option
+                  v-for="item in getOptionsArrData.browser"
+                   :key="item"
+                  :label="item"
+                  :value="item"
+ /> <router-link to="/admincenter/admincenter?par=browser">
+                                     <el-option label="Add New Value" value="" />
+                                   </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -96,17 +100,31 @@
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="平台" prop="platform">
-              <el-select v-model="testCaseFrom.platform" placeholder="请选择测试平台">
-                <el-option label="window" value="window" />
-                <el-option label="mac" value="mac" />
+              <el-select v-model="testCaseFrom.platform" placeholder="请选择测试平台" clearable>
+<el-option
+                  v-for="item in getOptionsArrData.platform"
+                   :key="item"
+                  :label="item"
+                  :value="item"
+                />
+                 <router-link to="/admincenter/admincenter?par=test_platform">
+                                  <el-option label="Add New Value" value="" />
+                                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="状态" prop="status">
-              <el-select v-model="testCaseFrom.status" placeholder="请选择测试用例状态">
-                <el-option label="待执行" value="Ready" />
-                <el-option label="草稿" value="Draft" />
+              <el-select v-model="testCaseFrom.status" placeholder="请选择状态" clearable>
+ <el-option
+                  v-for="item in getOptionsArrData.status"
+                   :key="item"
+                  :label="item"
+                  :value="item"
+                />
+                <router-link to="/admincenter/admincenter?par=status">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -178,9 +196,9 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="测试环境" prop="env">
+            <el-form-item size="small" label="测试环境" prop="testEnv">
               <el-select
-                v-model="testCaseFrom.env"
+                v-model="testCaseFrom.testEnv"
                 placeholder="请选择测试环境"
                 clearable
               >
@@ -401,6 +419,9 @@ export default {
         'testCategory',
         'testType',
         'testEnv',
+        'platform',
+        'status',
+        'browser',
         'moudle',
         'testDevice',
         'testMethod'
@@ -410,6 +431,9 @@ export default {
         testCategory: [],
         testType: [],
         testEnv: [],
+        platform: [],
+        status: [],
+        browser: [],
         moudle: [],
         testDevice: [],
         testMethod: []
@@ -420,8 +444,8 @@ export default {
       },
       testCaseFromTem: {},
       sprintrules: {
-        title: [{ required: true, message: '请输入迭代标题', trigger: 'blur' }],
-        feature: [{ required: true, message: '请选择需求', trigger: 'change' }],
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        feature: [{ required: true, message: '请选择故事', trigger: 'change' }],
         priority: [
           { required: true, message: '请选择优先级', trigger: 'change' }
         ],
@@ -516,7 +540,7 @@ export default {
         caseCategory: undefined,
         caseType: undefined,
         externalId: undefined,
-        env: undefined,
+        testEnv: undefined,
         module: undefined,
         testDevice: undefined,
         testMethod: undefined,

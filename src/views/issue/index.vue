@@ -38,13 +38,21 @@
                   {{ scope.$index + 1 }}
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="title"
-                :show-overflow-tooltip="true"
-                align="center"
-                label="标题"
-              />
-              <el-table-column prop="status" align="center" label="状态">
+
+ <el-table-column
+              prop="title"
+              :show-overflow-tooltip="true"
+              align="left"
+              width="155"
+              :label="$t('lang.CommonFiled.Title')"
+            >
+              <template slot-scope="scope">
+                <span class="title" @click="openEdit(scope.row)">
+                  {{ scope.row.title }}
+                </span>
+              </template>
+            </el-table-column>
+             <el-table-column prop="status" align="center" label="状态">
                 <template slot-scope="scope">
                   <span>{{
                     scope.row.status === 1
@@ -59,9 +67,14 @@
                   }}</span>
                 </template>
               </el-table-column>
+ <el-table-column prop="version" align="center" label="版本">
+  </el-table-column>
 
-              <el-table-column prop="version" align="center" label="版本" />
+              <el-table-column prop="feature" align="center" label="故事"/>
 
+              <el-table-column prop="test_env" align="center" label="测试环境"/>
+              <el-table-column prop="test_platform" align="center" label="测试平台" />
+              <el-table-column prop="test_cycle" align="center" label="测试周期" />
               <el-table-column
                 prop="createTime"
                 align="center"
@@ -69,24 +82,16 @@
                 min-width="120"
                 :show-overflow-tooltip="true"
               />
-              <el-table-column
-                prop="plannedReleaseDate"
-                align="center"
-                label="计划发型日期"
-                min-width="120"
-                :show-overflow-tooltip="true"
-              >
-              </el-table-column>
+
 
               <el-table-column label="操作" min-width="160" align="center">
                 <template slot-scope="scope">
-                  <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
                   <el-button
                     type="text"
                     class="table-btn"
                     @click.stop="openEdit(scope.row)"
-                    >编辑</el-button
+                    >克隆</el-button
                   >
                   <el-button
                     type="text"

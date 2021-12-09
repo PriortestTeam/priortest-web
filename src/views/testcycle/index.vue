@@ -42,12 +42,37 @@
                 {{ scope.$index + 1 }}
               </template>
             </el-table-column>
+             </el-table-column>
+                                        <el-table-column
+                                          prop="UUID"
+                                          :show-overflow-tooltip="true"
+                                          align="center"
+                                          label="UUID"
+                                        />
             <el-table-column
               prop="title"
               :show-overflow-tooltip="true"
               align="center"
               label="标题"
             />
+             <el-table-column
+                                          prop="version"
+                                          :show-overflow-tooltip="true"
+                                          align="center"
+                                          label="版本"
+                                        />
+                                <el-table-column
+                                            prop="currentRelease"
+                                            :show-overflow-tooltip="true"
+                                            align="center"
+                                            label="当前发布版本"
+                                          />
+                               <el-table-column
+                                                          prop="Release"
+                                                          :show-overflow-tooltip="true"
+                                                          align="center"
+                                                          label="发布版本"
+                                                        />
             <el-table-column
               prop="status"
               min-width="100"
@@ -80,7 +105,29 @@
                 }}</span>
               </template>
             </el-table-column>
+<el-table-column
+               prop="stepStatus"
+               align="center"
+               :show-overflow-tooltip="true"
+               label="测试步骤执行状态"
+               />
+              </el-table-column>
 
+ <el-table-column
+                prop="lastRunTime"
+                align="center"
+                label="最后运行日期"
+                min-width="120"
+                :show-overflow-tooltip="true"
+              />
+
+               <el-table-column
+                              prop="closeTime"
+                              align="center"
+                              label="关闭日期"
+                              min-width="120"
+                              :show-overflow-tooltip="true"
+                            />
             <el-table-column
               prop="createTime"
               align="center"

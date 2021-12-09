@@ -80,10 +80,19 @@
               </el-form-item
           >
           </el-col>
+
+
+
           <el-col :span="8">
             <el-form-item size="small" label="测试分类" prop="caseCategory">
               <el-input v-model="issueFrom.caseCategory" /> </el-form-item
           ></el-col>
+
+          <el-col :span="8">
+                      <el-form-item size="small" label="测试分类" prop="caseCategory">
+                        <el-input v-model="issueFrom.caseCategory" /> </el-form-item
+                    ></el-col>
+
         </el-row>
         <el-row>
           <el-col :span="8">
@@ -112,29 +121,24 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item size="small" label="环境" prop="env">
-              <el-input v-model="issueFrom.env" /> </el-form-item
+            <el-form-item size="small" label="测试环境" prop="env">
+              <el-select v-model="issueFrom.env" placeholder="请选择环境"/> </el-form-item
           ></el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="浏览器" prop="browser">
               <el-select v-model="issueFrom.browser" placeholder="请选择浏览器">
-                <el-option label="Google Chrome" value="Google Chrome" />
-                <el-option label="Fire Fox" value="Fire Fox" />
-                <el-option label="IE" value="IE" />
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="平台" prop="platform">
-              <el-select v-model="issueFrom.platform" placeholder="请选择需求">
-                <el-option label="window" value="window" />
-                <el-option label="mac" value="mac" />
+              <el-select v-model="issueFrom.platform" placeholder="请选择平台">
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="版本" prop="version">
-              <el-input v-model="issueFrom.version" />
+              <el-select v-model="issueFrom.version" placeholder="请选择版本"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -224,7 +228,7 @@ export default {
 
   },
   mounted() {
-    
+
   },
   methods: {
      remoteReport(query) {

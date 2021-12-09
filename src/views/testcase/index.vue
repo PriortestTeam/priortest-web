@@ -116,14 +116,12 @@
                 align="center"
                 label="末次运行状态"
               >
-               <template slot-scope="scope">
-                  {{ scope.row.lastRunStatus === 1 ? '失败' : '成功' }}
-                </template>
+
               <el-table-column
                prop="stepStatus"
                align="center"
                :show-overflow-tooltip="true"
-               label="测试步骤执行状态"
+               label="步骤运行状态"
                />
               </el-table-column>
 
