@@ -1,8 +1,6 @@
 <template>
   <div class="project-container app-container">
-    <div class="new_project">
-      <el-button type="primary" round @click="newproject"> 新建缺陷 </el-button>
-    </div>
+    
     <el-row>
   <el-col :span="5">
       <view-tree :childScope="currentScope"  v-on:childByValue="childByValue"></view-tree>
@@ -10,6 +8,10 @@
 
       <el-col :span="19"
         ><div class="project_table">
+          <div class="new_project">
+      <el-button type="primary" round @click="newproject"> 新建缺陷 </el-button>
+    </div>
+    
           <div class="oprate_btn">
             <el-button type="text" @click="projectRefresh">刷新</el-button>
             <el-button type="text" :disabled="single" @click="projectClone"

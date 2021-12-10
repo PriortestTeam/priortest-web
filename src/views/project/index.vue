@@ -10,16 +10,15 @@
           @childByValue="childByValue"
         />
       </el-col>
-
       <el-col
         :span="24-treeCol"
-      ><div class="project_table">
+      >
+      <div class="project_table">
         <div class="new_project">
           <el-button type="primary" round @click="newproject">
             新建项目
           </el-button>          
         </div>
-
 
         <div class="oprate_btn">
           <el-button type="text" @click="projectRefresh">刷新</el-button>

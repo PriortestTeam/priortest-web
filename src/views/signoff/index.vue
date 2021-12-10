@@ -16,8 +16,7 @@
       <el-form-item label="项目" prop="scope" class="form-small">
         <el-select
           v-model="projectId"
-          size="small"
-          placeholder="请选择Project"
+          size="small"        
           disabled
           @change="getProjectInfo"
         >
@@ -33,9 +32,9 @@
       <el-form-item label="发布版本" prop="scope" class="form-small">
         <el-row class="radiu">
           <el-radio-group v-model="version">
-            <el-radio label="Latest Version">Latest Version</el-radio>
+            <el-radio label="Latest Version">最新版本</el-radio>
             <el-radio label="复选框 C">
-              <el-select v-model="from.version" size="mini" placeholder="1.0">
+              <el-select v-model="from.version" size="mini" placeholder="测试版本">
                 <el-option
                   v-for="(item, index) in projectVersionList.mergeValues"
                   :key="index"
@@ -44,17 +43,7 @@
                 />
               </el-select>
             </el-radio>
-          </el-radio-group>
-          <!-- <el-checkbox-group v-model="versionList">
-            <el-checkbox label="Current Version" />
-            <el-checkbox label="Latest Version" />
-            <el-checkbox label="复选框 C">
-              <el-select v-model="from.version" size="mini" placeholder="1.0">
-                <el-option label="1.0" value="1.0" />
-                <el-option label="2.0" value="2.0" />
-              </el-select>
-            </el-checkbox>
-          </el-checkbox-group> -->
+          </el-radio-group>         
         </el-row>
       </el-form-item>
       <el-form-item label="测试环境" prop="scope" class="form-small">
@@ -73,12 +62,12 @@
       <el-form-item label="测试周期" prop="scope" class="form-small">
         <el-row class="radiu">
           <el-radio-group v-model="Testle">
-            <el-radio label="Current Version">Current Version</el-radio>
+            <el-radio label="Current Version">当前版本</el-radio>
             <el-radio label="复选框 C">
               <el-select
                 v-model="from.testCycle"
                 size="mini"
-                placeholder="Version 1.0 - Regression"
+                placeholder="测试周期标题"
               >
                 <el-option
                   v-for="(item, index) in testCycleVersionList"
@@ -87,24 +76,11 @@
                   :value="item"
                   multiple
                 />
-                <!-- <el-option label="Version 2.0 - Regression" value="2.0" /> -->
+               
               </el-select>
             </el-radio>
           </el-radio-group>
-          <!-- <el-checkbox-group v-model="TestleList">
-            <el-checkbox label="Current Version" />
-            <el-checkbox label="Latest Version" />
-            <el-checkbox label="复选框 C">
-              <el-select
-                v-model="from.testCycle"
-                size="mini"
-                placeholder="Version 1.0 - Regression"
-              >
-                <el-option label="Version 1.0 - Regression" value="1.0" />
-                <el-option label="Version 2.0 - Regression" value="2.0" />
-              </el-select>
-            </el-checkbox>
-          </el-checkbox-group> -->
+      
         </el-row>
       </el-form-item>
       <el-form-item label="缺陷" prop="scope" class="form-small">
@@ -277,15 +253,7 @@ export default {
         projectId: localStorage.getItem('projectId'),
         testCycleVersion: this.from.testCycle.length ? this.from.testCycle.toString() : this.Testle,
         version: this.from.version ? this.from.version : this.version
-      }
-      // const data = {
-      //   env: '12',
-      //   fileUrl:'/usr/oneclick/data/file/bdc1ff71-3f30-42d2-a073-a8df9d5281d4.txt',
-      //   issue: this.lssueList.toString(),
-      //   projectId: localStorage.getItem('projectId'),
-      //   testCycleVersion:'1.0',
-      //   version:'v1.0'
-      // };
+      }    
       console.log(this.signiList)
       console.log(data)
       const res = await createGenerate(data)

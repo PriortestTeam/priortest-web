@@ -1,10 +1,6 @@
 <template>
   <div class="project-container app-container">
-    <div class="new_project">
-      <el-button type="primary" round @click="newproject">
-        新建测试周期
-      </el-button>
-    </div>
+    
     <el-row>
       <el-col :span="5">
         <view-tree :child-scope="currentScope" @childByValue="childByValue" />
@@ -13,6 +9,11 @@
       <el-col
         :span="19"
       ><div class="project_table">
+        <div class="new_project">
+      <el-button type="primary" round @click="newproject">
+        新建测试周期
+      </el-button>
+    </div>
         <div class="oprate_btn">
           <el-button type="text" @click="projectRefresh">刷新</el-button>
           <el-button
@@ -82,9 +83,7 @@
               prop="testResult"
               min-width="100"             
               label="周期完成状态"
-            />  
-
-                 
+            />                   
 
             <el-table-column
               prop="CaseStatus"

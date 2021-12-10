@@ -1,15 +1,23 @@
 <template>
   <div class="project-container app-container">
-    <div class="new_project">
+   
+  <div v-if="treeCol==0" class="showBtn" @click="hadleTreeshow"><i class="el-icon-d-arrow-right" /></div>
+    <el-row>
+      <el-col :span="treeCol">
+        <view-tree
+          :key="timer"
+          :child-scope="currentScope"
+          @hadleTree="hadleTreeshow"
+          @childByValue="childByValue"
+        />
+      </el-col>
+      <el-col
+        :span="24-treeCol"
+      >     
+        <div class="project_table">
+           <div class="new_project">
       <el-button type="primary" round @click="newproject"> 新建迭代 </el-button>
     </div>
-    <el-row>
-      <el-col :span="5">
-        <view-tree :childScope="currentScope"  v-on:childByValue="childByValue"></view-tree>
-      </el-col>
-
-      <el-col :span="19"
-        ><div class="project_table">
           <div class="oprate_btn">
             <el-button type="text" @click="projectRefresh">刷新</el-button>
             <el-button type="text" :disabled="single" @click="projectClone"
@@ -131,6 +139,7 @@ export default {
   name: "Sprint",
   data() {
     return {
+      treeCol: 5,
       currentScope: "Sprint",
       tableHeader: {
         color: "#d4dce3",
@@ -168,14 +177,20 @@ export default {
     // 初始值
     this.getqueryForSprint(); // 获取管理项目列表
   },
+
   methods: {
     // 新建项目
     newproject() {
       this.$router.push({ name: "Addsprint" });
       this.viewSearchQueryId = ''
     },
+        methods: {
+    hadleTreeshow() {
+      this.treeCol = this.treeCol == 5 ? 0 : 5
+    }
+        },
 
-    /** 项目列表表格开始 */
+   
     getqueryForSprint() {
       this.isLoading = true;
       const query = {
@@ -249,9 +264,9 @@ export default {
       this.sprintTotal = res.total;
       this.isLoading = false
     })
+  }   
+   /** 项目列表表格结束 */
   }
-    /** 项目列表表格结束 */
-  },
 };
 </script>
 <style lang="scss" scoped>
