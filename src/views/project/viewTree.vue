@@ -1,14 +1,10 @@
 <template>
   <div class="comp-tree">
-    <div class="new_project">
+    <div class="new_project">      
       <el-button type="primary" round>
-        <router-link :to="viewUrl"> 新建视图 </router-link>
+        <router-link :to="viewUrl"> 新建/管理视图 </router-link>
       </el-button>
-      <el-button type="primary" round>
-        <router-link :to="viewUrl"> 管理视图 </router-link>
-      </el-button>
-      <span class="icon-box">
-        <i class="el-icon-plus"></i>
+      <span class="icon-box">        
          <i class="el-icon-d-arrow-left" title="折叠" @click="hadleShow"></i>
       </span>
     </div>

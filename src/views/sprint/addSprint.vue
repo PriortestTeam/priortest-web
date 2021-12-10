@@ -112,31 +112,22 @@ export default {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7; //如果没有后面的-8.64e7就是不可以选择今天的
         },
-        shortcuts: [
+        shortcuts: [         
           {
-            text: "最近一周",
+            text: "15个工作日",
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              end.setTime(end.getTime() + 3600 * 1000 * 24 * 14);
               picker.$emit("pick", [start, end]);
             },
           },
           {
-            text: "最近半个月",
+            text: "28个工作日",
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 14);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "最近一个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              end.setTime(end.getTime() + 3600 * 1000 * 24 * 30);
               picker.$emit("pick", [start, end]);
             },
           },
@@ -147,7 +138,6 @@ export default {
       sprintFromTem: {},
       sprintrules: {
         title: [{ required: true, message: "请输入迭代标题", trigger: "blur" }],
-
         timeArr: [{ required: true, message: "请选择日期", trigger: "change" }],
       },
     };

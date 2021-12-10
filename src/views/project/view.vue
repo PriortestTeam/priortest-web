@@ -34,11 +34,11 @@
           @click.stop="cancelUpdate('from')"
         >取消修改</el-button>
       </div>
-      <el-form-item label="新视图" prop="title" class="form-small">
+      <el-form-item label="视图标题" prop="title" class="form-small">
         <el-input v-model="from.title" size="small" />
       </el-form-item>
       <div class="scopeView">
-        <el-form-item label="scope" prop="scope" class="form-small">
+        <el-form-item label="范围" prop="scope" class="form-small">
           <el-select
             v-model="from.scope"
             size="small"
@@ -61,7 +61,7 @@
             size="small"
             filterable
             :filter-method="dataFilter"
-            placeholder="请选择适用范围"
+            placeholder="请选择父级视图"
             @keyup.enter.native="queryViewParent"
             @change="fuzhiFrom"
           >
@@ -78,7 +78,7 @@
         </el-form-item>
       </div>
 
-      <el-form-item label="Filter" prop="oneFilters">
+      <el-form-item label="查询条件" prop="oneFilters">
         <div class="filter-item">
           <el-col v-if="from.oneFilters.length === 0" :span="1">
             <span @click="addFliter">
@@ -147,17 +147,17 @@
             <el-row>
               <el-col :span="2">~ </el-col>
               <el-col :span="3">
-                <el-radio v-model="item.andOr" label="and">And</el-radio>
-                <el-radio v-model="item.andOr" label="or">Or</el-radio>
+                <el-radio v-model="item.andOr" label="and">并且</el-radio>
+                <el-radio v-model="item.andOr" label="or">或者</el-radio>
               </el-col>
             </el-row>
           </el-row>
         </div>
       </el-form-item>
 
-      <el-form-item label="Status" prop="isPrivate" class="form-small">
-        <el-radio v-model="from.isPrivate" label="0">Private</el-radio>
-        <el-radio v-model="from.isPrivate" label="1">Public</el-radio>
+      <el-form-item label="视图状态" prop="isPrivate" class="form-small">
+        <el-radio v-model="from.isPrivate" label="0">仅自己</el-radio>
+        <el-radio v-model="from.isPrivate" label="1">公开</el-radio>
       </el-form-item>
     </el-form>
     <div class="table">
@@ -178,19 +178,30 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="View Title" align="center" />
-        <el-table-column prop="scope" label="Scope" align="center" />
-        <el-table-column prop="parentTitle" label="Parent" align="center" />
-        <el-table-column prop="owner" label="Owner" align="center" />
-        <el-table-column prop="createTime" label="Created" align="center" />
-        <el-table-column prop="updateTime" label="Modified" align="center" />
-        <el-table-column label="Action" align="center">
-          <template slot-scope="scope">
-            <el-button
-              type="text"
-              class="table-btn"
-              @click.stop="toEdit(scope.row)"
-            >编辑</el-button>
+        
+        <el-table-column
+              prop="title"
+              :show-overflow-tooltip="true"
+              align="left"
+              width="155"
+              :label="$t('lang.CommonFiled.Title')"
+            >
+              <template slot-scope="scope">
+                <span class="title" @click="toEdit(scope.row)">
+                  {{ scope.row.title }}
+                </span>
+              </template>
+            </el-table-column>     
+
+        <el-table-column prop="scope" label="范围"/>
+        <el-table-column prop="status" label="视图状态" />
+        <el-table-column prop="parentTitle" label="父级视图"/>
+        <el-table-column prop="owner" label="创建者" />
+        <el-table-column prop="createTime" label="创建日期" />
+        <el-table-column prop="modifier" label="修改者" />
+        <el-table-column prop="updateTime" label="修改日期"/>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">            
             <el-button
               type="text"
               class="table-btn"

@@ -1,11 +1,5 @@
 <template>
   <div class="project-container app-container">
-    <div class="new_project">
-      <el-button type="primary" round @click="newproject">
-        新建测试用例
-      </el-button>
-      <!-- <el-button type="primary" round  @click="importTestCase"> 导入 </el-button> -->
-    </div>
     <el-row>
       <el-col :span="5">
         <view-tree :child-scope="currentScope" @childByValue="childByValue" />
@@ -14,6 +8,12 @@
         :span="19"
       >
         <div class="project_table">
+<div class="new_project">
+          <el-button type="primary" round @click="newproject">
+            新建测试用例
+          </el-button>          
+      </div>
+
           <div class="oprate_btn">
             <el-button type="text" @click="projectRefresh">刷新</el-button>
             <el-button
@@ -55,32 +55,36 @@
 
               <el-table-column
                             prop="status"
+                            :show-overflow-tooltip="true"
                             align="center"
                             label="状态"
-                          >
-                           <template slot-scope="scope">
-                                            <span v-if="scope.row.status === 'Ready'">待执行</span>
-                                            <span v-if="scope.row.status === 'Draft'">草稿</span>
-                                          </template>
-                                        </el-table-column>
-              <el-table-column
-                prop="title"
-                :show-overflow-tooltip="true"
-                align="center"
-                label="标题"
-              />
+                          />             
 
+
+ <el-table-column
+              prop="title"
+              :show-overflow-tooltip="true"
+              align="left"
+              width="155"
+              :label="$t('lang.CommonFiled.Title')"
+            >
+              <template slot-scope="scope">
+                <span class="title" @click="openEdit(scope.row)">
+                  {{ scope.row.title }}
+                </span>
+              </template>
+            </el-table-column>
 
 
                  <el-table-column
-                              prop="automationStatus"
+                              prop="test_method"
                               :show-overflow-tooltip="true"
                               align="center"
                               label="测试方法"
                             />
               <el-table-column prop="priority" align="center" label="优先级" />
               <el-table-column
-                prop="featureTitle"
+                prop="feature"
                 align="center"
                 :show-overflow-tooltip="true"
                 label="需求"
@@ -150,7 +154,7 @@
                     type="text"
                     class="table-btn"
                     @click.stop="openEdit(scope.row)"
-                  >编辑
+                  >克隆
                   </el-button>
                   <el-button
                     type="text"

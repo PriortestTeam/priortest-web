@@ -64,26 +64,8 @@
                   <el-option label="Add New Value" value="" />
                 </router-link>
               </el-select>
-              </el-select> </el-form-item></el-col>
-          <el-col :span="8">
-            <el-form-item size="small" label="状态" prop="status">
-              <el-select
-                v-model="testCycleFrom.status"
-                placeholder="状态"
-              >
-                <el-option
-                                  v-for="item in statusArr"
-                                  :key="item"
-                                  :label="item"
-                                  :value="item"
-                                />
-                                <router-link
-                                  to="/admincenter/admincenter?par=status"
-                                >
-                                  <el-option label="Add New Value" value="" />
-                                </router-link>
-
-                 </el-select></el-form-item></el-col>
+              </el-form-item></el-col>
+         
         </el-row>
         <el-row>
 
@@ -163,13 +145,13 @@
                           </el-col>
         </el-row>
         <el-form-item label="自动化编译">
-          <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
+          <el-input v-model="testCycleFrom.autoJob" maxlength="30" size="small" />
         </el-form-item>
         <el-form-item label="Allure报表">
-          <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
+          <el-input v-model="testCycleFrom.allureReport" maxlength="30" size="small" />
         </el-form-item>
         <el-form-item label="远程自动化编译">
-                  <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
+                  <el-input v-model="testCycleFrom.remoteJob" maxlength="30" size="small" />
                 </el-form-item>
         <el-form-item
           :label="$t('lang.Project.Description')"
@@ -242,11 +224,10 @@
           prop="lastRunStatus"
           label="运行状态"
           :show-overflow-tooltip="true"
-          align="center"
+         
         >
         <el-table-column
-                       prop="stepStatus"
-                       align="center"
+                       prop="stepStatus"                      
                        :show-overflow-tooltip="true"
                        label="步骤运行状态"
                        />
@@ -255,8 +236,7 @@
          <el-table-column
                   prop="lastRunDuration"
                   label="运行时长"
-                  :show-overflow-tooltip="true"
-                  align="center"
+                  :show-overflow-tooltip="true"                 
                 >
                 </el-table-column>
 
@@ -264,7 +244,7 @@
                   prop="lastRunner"
                   label="运行人"
                   :show-overflow-tooltip="true"
-                  align="center"
+                 
                 >
                 </el-table-column>
         <el-table-column label="操作" align="center">

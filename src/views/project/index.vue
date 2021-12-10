@@ -3,7 +3,6 @@
     <div v-if="treeCol==0" class="showBtn" @click="hadleTreeshow"><i class="el-icon-d-arrow-right" /></div>
     <el-row>
       <el-col :span="treeCol">
-
         <view-tree
           :key="timer"
           :child-scope="currentScope"
@@ -18,8 +17,10 @@
         <div class="new_project">
           <el-button type="primary" round @click="newproject">
             新建项目
-          </el-button>
+          </el-button>          
         </div>
+
+
         <div class="oprate_btn">
           <el-button type="text" @click="projectRefresh">刷新</el-button>
           <el-button

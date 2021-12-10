@@ -3,7 +3,7 @@
     <el-form
       ref="testCaseFrom"
       :model="testCaseFrom"
-      :rules="sprintrules"
+      :rules="testCaseRules"
       label-width="120px"
       class="demo-ruleForm"
     >
@@ -74,9 +74,14 @@
                 v-model="testCaseFrom.priority"
                 placeholder="请选择优先级"
               >
-                <el-option label="高" value="高" />
-                <el-option label="中" value="中" />
-                <el-option label="低" value="低" />
+              <el-option
+                  v-for="item in getOptionsArrData.priority"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+ /> <router-link to="/admincenter/admincenter?par=priority">
+                                     <el-option label="Add New Value" value="" />
+                                   </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -99,11 +104,11 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item size="small" label="平台" prop="platform">
-              <el-select v-model="testCaseFrom.platform" placeholder="请选择测试平台" clearable>
+            <el-form-item size="small" label="平台" prop="testPlatform">
+              <el-select v-model="testCaseFrom.testPlatform" placeholder="请选择测试平台" clearable>
 <el-option
-                  v-for="item in getOptionsArrData.platform"
-                   :key="item"
+                  v-for="item in getOptionsArrData.testPlatform"
+                  :key="item"
                   :label="item"
                   :value="item"
                 />
@@ -118,7 +123,7 @@
               <el-select v-model="testCaseFrom.status" placeholder="请选择状态" clearable>
  <el-option
                   v-for="item in getOptionsArrData.status"
-                   :key="item"
+                  :key="item"
                   :label="item"
                   :value="item"
                 />
@@ -135,7 +140,6 @@
                 placeholder="请选择版本"
                 clearable
               >
-
                 <el-option
                   v-for="item in getOptionsArrData.versions"
                   :key="item"
@@ -237,7 +241,7 @@
             <el-form-item size="small" label="测试设备" prop="testDevice">
               <el-select
                 v-model="testCaseFrom.testDevice"
-                placeholder="请选择测试设备"
+                placeholder="请选择测试设备1"
                 clearable
               >
                 <el-option
@@ -419,9 +423,10 @@ export default {
         'testCategory',
         'testType',
         'testEnv',
-        'platform',
+        'testPlatform',
         'status',
         'browser',
+        'priority',
         'moudle',
         'testDevice',
         'testMethod'
@@ -431,33 +436,21 @@ export default {
         testCategory: [],
         testType: [],
         testEnv: [],
-        platform: [],
+        testPlatform: [],
         status: [],
         browser: [],
+        priority: [],
         moudle: [],
         testDevice: [],
         testMethod: []
       },
       featueData: [],
-      testCaseFrom: {
-        status: 1
+      testCaseFrom: {   
       },
       testCaseFromTem: {},
-      sprintrules: {
+      testCaseRules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-        feature: [{ required: true, message: '请选择故事', trigger: 'change' }],
-        priority: [
-          { required: true, message: '请选择优先级', trigger: 'change' }
-        ],
-        browser: [
-          { required: true, message: '请选择浏览器', trigger: 'change' }
-        ],
-        platform: [
-          { required: true, message: '请选择平台', trigger: 'change' }
-        ],
-        status: [
-          { required: true, message: '请选择测试用例状态', trigger: 'change' }
-        ]
+        feature: [{ required: true, message: '请选择故事', trigger: 'change' }]        
       },
 
       tableHeader: {
@@ -534,7 +527,7 @@ export default {
         priority: undefined,
         feature: undefined,
         browser: undefined,
-        platform: undefined,
+        testPlatform: undefined,
         status: undefined,
         version: undefined,
         caseCategory: undefined,

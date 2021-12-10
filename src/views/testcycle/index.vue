@@ -42,106 +42,97 @@
                 {{ scope.$index + 1 }}
               </template>
             </el-table-column>
-             </el-table-column>
+           
                                         <el-table-column
                                           prop="UUID"
                                           :show-overflow-tooltip="true"
                                           align="center"
                                           label="UUID"
                                         />
-            <el-table-column
+         <el-table-column
               prop="title"
               :show-overflow-tooltip="true"
-              align="center"
-              label="标题"
-            />
+              align="left"
+              width="155"
+              :label="$t('lang.CommonFiled.Title')"
+            >
+              <template slot-scope="scope">
+                <span class="title" @click="openEdit(scope.row)">
+                  {{ scope.row.title }}
+                </span>
+              </template>
+            </el-table-column>
              <el-table-column
                                           prop="version"
-                                          :show-overflow-tooltip="true"
-                                          align="center"
+                                          :show-overflow-tooltip="true"                                        
                                           label="版本"
                                         />
                                 <el-table-column
                                             prop="currentRelease"
-                                            :show-overflow-tooltip="true"
-                                            align="center"
+                                            :show-overflow-tooltip="true"                                           
                                             label="当前发布版本"
                                           />
                                <el-table-column
                                                           prop="Release"
-                                                          :show-overflow-tooltip="true"
-                                                          align="center"
+                                                          :show-overflow-tooltip="true"                                                         
                                                           label="发布版本"
                                                         />
+           
+          <el-table-column
+              prop="testResult"
+              min-width="100"             
+              label="周期完成状态"
+            />  
+
+                 
+
             <el-table-column
-              prop="status"
+              prop="CaseStatus"
               min-width="100"
-              align="center"
-              label="状态"
-            >
-              <template slot-scope="scope">
-                <span>{{
-                  scope.row.status === 1
-                    ? "completed"
-                    : scope.row.status === 2
-                      ? "uncompleted"
-                      : ""
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="runStatus"
-              min-width="100"
-              align="center"
               label="运行状态"
             >
-              <template slot-scope="scope">
-                <span>{{
-                  scope.row.runStatus === 1
-                    ? "passed"
-                    : scope.row.runStatus === 2
-                      ? "failed"
-                      : ""
-                }}</span>
-              </template>
-            </el-table-column>
-<el-table-column
+            <el-table-column
                prop="stepStatus"
-               align="center"
+              
                :show-overflow-tooltip="true"
                label="测试步骤执行状态"
+               />            
+</el-table-column>
+ <el-table-column
+              prop="TotalCount"
+              min-width="100"
+              label="总用例"
+            >  
+            <el-table-column
+               prop="executedCount"
+              
+               :show-overflow-tooltip="true"
+               label="已执行用例"
                />
-              </el-table-column>
+               </el-table-column> 
+
+
 
  <el-table-column
                 prop="lastRunTime"
-                align="center"
+              
                 label="最后运行日期"
                 min-width="120"
                 :show-overflow-tooltip="true"
-              />
-
-               <el-table-column
-                              prop="closeTime"
-                              align="center"
-                              label="关闭日期"
-                              min-width="120"
-                              :show-overflow-tooltip="true"
-                            />
+              />         
             <el-table-column
-              prop="createTime"
-              align="center"
+              prop="createTime"             
               label="创建日期"
               min-width="120"
               :show-overflow-tooltip="true"
             />
-            <el-table-column label="操作" min-width="160" align="center">
+            <el-table-column label="操作" min-width="160">
               <template slot-scope="scope">
                 <el-button
                   type="text"
                   class="table-btn"
                   @click.stop="openEdit(scope.row)"
-                >编辑</el-button>
+                >克隆</el-button>
                 <el-button
                   type="text"
                   class="table-btn"
