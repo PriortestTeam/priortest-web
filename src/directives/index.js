@@ -8,9 +8,14 @@ Vue.directive('Alphabet', {
     const input = el.querySelector('input')
     input.onkeyup = function(e) {
       input.value = input.value.replace(/[^A-Z]/g, '')
+      if (input.value.length > 2) {
+        input.value = input.value.substring(0, 2)
+      }
     }
     input.onblur = function(e) {
       input.value = input.value.replace(/[^A-Z]/g, '')
+      if (input.value.length > 2) {
+        input.value = input.value.substring(0, 2)
     }
   }
-})
+}})

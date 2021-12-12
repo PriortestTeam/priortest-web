@@ -225,7 +225,18 @@ export default {
   },
   created() {
     // 初始值
-    this.getqueryForTestCase()// 获取管理项目列表
+     if (this.$route.query.projectId && this.$route.query.viewTreeDtoId) {
+      const query = {
+        projectId: this.$route.query.projectId,
+        viewTreeDto: {
+          id: this.$route.query.viewTreeDtoId
+        }
+      }
+      this.childByValue(query)
+    } else {
+      // 初始值
+      this.getqueryForTestCase()// 获取管理项目列表
+    }
   },
   methods: {
     // 新建项目
@@ -309,8 +320,7 @@ export default {
     },
     childByValue: function(query) {
       this.isLoading = true
-      this.viewSearchQueryId = query.viewTreeDto.id
-      console.log(query)
+      this.viewSearchQueryId = query.viewTreeDto.id     
       testCaseList(this.testCaseQuery, query).then(res => {
         this.testCasetableData = res.data
         this.testCaseTotal = res.total

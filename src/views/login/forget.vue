@@ -13,7 +13,7 @@
         <img src="@/icons/img/one-logo.png" alt="" srcset="" />
         <span>获取密码</span>
       </div>
-      <el-form-item prop="email" label="email">
+      <el-form-item prop="email" label="邮箱">
         <el-input v-model="forgetForm.email" placeholder="请输入您的邮箱地址" />
       </el-form-item>
       <div class="btnLogin">
@@ -58,7 +58,7 @@ export default {
     return {
       forgetForm: {
         email: "",
-       
+
       },
        forgetViable:true,
       forgetRules: {
@@ -80,7 +80,7 @@ export default {
  window.open(this.gotoEmail())
     },
     gotoEmail() {
-       
+
             var email = this.forgetForm.email.split('@')[1];
             email = email.toLowerCase();
             if (email == '163.com') {

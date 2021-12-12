@@ -4,10 +4,10 @@
       <div class="one-logo">
         <img src="@/icons/img/one-logo.png" alt="" srcset="">
       </div>
-      <el-form-item prop="username" label="Email">
+      <el-form-item prop="username" label="邮箱">
         <el-input v-model="loginForm.username" />
       </el-form-item>
-      <el-form-item prop="password" label="Password">
+      <el-form-item prop="password" label="密码">
         <el-input v-model="loginForm.password" />
       </el-form-item>
       <el-form-item>

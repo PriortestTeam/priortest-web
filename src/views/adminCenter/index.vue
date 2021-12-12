@@ -46,17 +46,7 @@
                   placeholder="请输入用户名"
                 />
               </el-form-item>
-              <!-- <el-form-item
-                v-if="accountSingle"
-                label="密码"
-                prop="password"
-                size="small"
-              >
-                <el-input
-                  v-model="accountForm.password"
-                  placeholder="请设置初始密码"
-                />
-              </el-form-item> -->
+           
               <el-form-item label="角色" prop="sysRoleId" size="small">
                 <el-select
                   v-model="accountForm.sysRoleId"
@@ -89,9 +79,9 @@
             </div>
             <div class="table">
               <el-button type="text" @click="accountRefresh">刷新</el-button>
-              <!-- <el-button type="text" :disabled="accountMultiple"
+               <el-button type="text" :disabled="accountMultiple"
                 >批量删除</el-button
-              > -->
+              >
               <el-button
                 type="text"
                 :disabled="accountSingle"
@@ -108,27 +98,27 @@
                 @selection-change="accountSelectionChange"
               >
                 <el-table-column type="selection" width="55" />
-                <el-table-column align="center" label="序号" type="index" />
+                <el-table-column label="序号" type="index" />
 
-                <el-table-column prop="email" align="center" label="邮箱" />
+                <el-table-column prop="email" label="邮箱" />
                 <el-table-column
                   prop="userName"
-                  align="center"
+                
                   label="用户名"
                 />
                 <el-table-column
                   prop="projectsSts"
-                  align="center"
+               
                   label="项目"
                   :show-overflow-tooltip="true"
                 />
                 <el-table-column
                   prop="registerDate"
-                  align="center"
+                
                   label="注册日期"
                 />
-                <el-table-column prop="roleName" align="center" label="角色" />
-                <el-table-column label="操作" align="center">
+                <el-table-column prop="roleName" label="角色" />
+                <el-table-column label="操作">
                   <template slot-scope="scope">
                     <span class="table-btn" @click.stop="accountDel(scope.row)"
                       >删除</span

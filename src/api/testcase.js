@@ -9,6 +9,7 @@
 import request from '@/utils/request'
 
 export function testCaseList(params, data) {
+  console.log(data)
   return request({
     url: '/testCase/queryList',
     method: 'post',

@@ -130,7 +130,7 @@
                             </el-col>
        <el-col :span="8">
                             <el-form-item size="small" label="测试环境" prop="testEnv">
-                              <el-select v-model="testCycleFrom.env" placeholder="请选择测试环境">
+                              <el-select v-model="testCycleFrom.testEnv" placeholder="请选择测试环境">
                                  <el-option
                                                   v-for="item in testEnvArr"
                                                   :key="item"
@@ -166,6 +166,21 @@
             :autosize="{ minRows: 3, maxRows: 8 }"
           />
         </el-form-item>
+        <el-form-item size="small" label="重复运行" prop="frenquency">
+        <el-select v-model="testCycleFrom.frenquency" placeholder="请选择重复运行">
+         <el-option
+         v-for="item in frenquencyArr"
+          :key="item"
+          :label="item"
+       :value="item"
+       />
+       <router-link to="/admincenter/admincenter?par=schedule_run_frequency">
+                                                    
+       </router-link>
+        </el-select>
+       </el-form-item>
+                
+
       </div>
     </el-form>
     <div class="table">
@@ -321,6 +336,7 @@ export default {
       versionsArr: [],
       statusArr: [],
       testEnvArr: [],
+      frenquencyArr: [],
       testPlatformArr: [],
       loading: false,
       testCycleFrom: {
@@ -391,6 +407,11 @@ export default {
           const data = res.data.mergeValues ? res.data.mergeValues : []
           this.testEnvArr = data
         })
+
+  sysCustomField({ fieldName: 'frenquency' }).then((res) => {
+          const data = res.data.mergeValues ? res.data.mergeValues : []
+          this.frenquencyArr = data
+        })        
          sysCustomField({ fieldName: 'test_platform' }).then((res) => {
                   const data = res.data.mergeValues ? res.data.mergeValues : []
                   this.testPlatformArr = data

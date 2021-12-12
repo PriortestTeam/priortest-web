@@ -12,10 +12,10 @@
       <div class="one-logo">
         <img src="@/icons/img/one-logo.png" alt="" srcset="">
       </div>
-      <el-form-item prop="username" label="Email">
+      <el-form-item prop="username" label="邮箱">
         <el-input v-model="loginForm.username" />
       </el-form-item>
-      <el-form-item prop="password" label="Password">
+      <el-form-item prop="password" label="密码">
         <el-input v-model="loginForm.password" />
       </el-form-item>
       <div class="ForgetView">
@@ -29,29 +29,16 @@
           round
           style="width:48%"
           @click="handleLogin('loginForm')"
-        >Login</el-button>
+        >登录</el-button>
         <el-button
           type="primary"
           round
           class="registerBtn"
           style="width:48%"
           @click="handleregister('loginForm')"
-        >to Register</el-button>
+        >注册</el-button>
       </div>
-      <!-- <el-form-item>
-        <div class="btnForget">
-          <el-button
-            type="primary"
-            round
-            @click="handleLogin('loginForm')"
-          >Login</el-button>
-          <el-button
-            type="primary"
-            round
-            @click="handleregister('loginForm')"
-          >to Register</el-button>
-        </div>
-      </el-form-item> -->
+     
     </el-form>
     <div v-if="isShowregister">
       <el-form
@@ -123,29 +110,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- <el-form-item prop="userName" label="名称">
-          <el-input v-model="registerForm.userName" />
-        </el-form-item>
-        <el-form-item prop="password" label="密码">
-          <el-input v-model="registerForm.password" />
-        </el-form-item>
-        <el-form-item prop="emailCode" label="邮箱验证码">
-          <el-input v-model="registerForm.emailCode" />
-        </el-form-item>
-        <el-form-item>
-          <div class="btnForget">
-            <el-button
-              type="primary"
-              round
-              @click="goRegister('registerForm')"
-            >register</el-button>
-            <el-button
-              type="primary"
-              round
-              @click="goLogin('registerForm')"
-            >to Login</el-button>
-          </div>
-        </el-form-item> -->
+       
         <div class="pass-allowed">
           <el-checkbox v-model="checked">
             <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>

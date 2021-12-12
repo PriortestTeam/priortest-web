@@ -64,6 +64,7 @@ export default {
       this.$emit('hadleTree')
     },
     getList: function (data) {
+      console.log(data)
       const query = {
         projectId: this.projectInfo.userUseOpenProject.projectId,
         viewTreeDto : {
