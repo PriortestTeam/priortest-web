@@ -314,7 +314,7 @@
         stripe
         style="width: 100%"
       >
-        <el-table-column type="index" align="center" label="序号">
+        <el-table-column type="index" label="序号">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -325,14 +325,14 @@
           :show-overflow-tooltip="true"
           align="center"
         />
-        <el-table-column prop="testData" label="运行数据" align="center" />
+        <el-table-column prop="stepData" label="运行数据"/>
         <el-table-column
           prop="expectedResult"
           label="预计结果"
           :show-overflow-tooltip="true"
           align="center"
         />
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="left">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -370,9 +370,9 @@
           />
         </el-form-item>
 
-        <el-form-item label="运行数据" prop="testData" size="small">
+        <el-form-item label="运行数据" prop="stepData" size="small">
                   <el-input
-                    v-model="stepFrom.testData"
+                    v-model="stepFrom.stepData"
                     maxlength="20"
                     placeholder="请输入步骤运行数据"
                   />
@@ -445,12 +445,12 @@ export default {
         testMethod: []
       },
       featueData: [],
-      testCaseFrom: {   
+      testCaseFrom: {
       },
       testCaseFromTem: {},
       testCaseRules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-        feature: [{ required: true, message: '请选择故事', trigger: 'change' }]        
+        feature: [{ required: true, message: '请选择故事', trigger: 'change' }]
       },
 
       tableHeader: {
@@ -596,9 +596,8 @@ export default {
       this.stepFrom = {
         testCaseId: undefined,
         step: undefined,
-        testDate: undefined,
+        stepData: undefined,
         expectedResult: undefined,
-        status: undefined
       }
       this.$refs['stepFrom'].resetFields()
     },
