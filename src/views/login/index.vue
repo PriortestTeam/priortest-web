@@ -74,7 +74,7 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12" :md="12" :sm="12">
-            <el-form-item>
+            <el-form-item prop="userName">
               <el-input
                 v-model="registerForm.userName"
                 size="mini"
@@ -185,18 +185,29 @@ export default {
       registerUser: '',
       checked: false,
       registerForm: {
-        email: ''
+        email: '',
+        contactNo: '',
+        userName: '',
+        company: '',
+        industry: '',
+        profession: ''
       },
       registerRules: {
         email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { max: 50, message: '长度最多50个字符', trigger: 'blur' },
           // { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] },
           { pattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/, message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
         ],
-        password: [{ required: true, message: '请输入密码名称', trigger: 'blur' }],
-        userName: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        emailCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
-      }
+        // password: [{ required: true, message: '请输入密码名称', trigger: 'blur' }],
+        contactNo: [{ max: 20, message: '长度最多20个字符', trigger: 'blur' }],
+        userName: [{ max: 20, message: '长度最多20个字符', trigger: 'blur' }],
+        company: [{ max: 50, message: '长度最多50个字符', trigger: 'blur' }],
+        industry: [{ max: 50, message: '长度最多50个字符', trigger: 'blur' }],
+        profession: [{ max: 50, message: '长度最多50个字符', trigger: 'blur' }]
+        // emailCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+      },
+      email: ''
     }
   },
   computed: {
@@ -222,49 +233,50 @@ export default {
       window.open(this.gotoEmail())
     },
     gotoEmail() {
-      var email = this.registerForm.email.split('@')[1]
-      email = email.toLowerCase()
-      if (email === '163.com') {
+      const that = this
+      const email = that.registerForm.email.split('@')[1]
+      that.email = email.toLowerCase()
+      if (that.email === '163.com') {
         return 'http://mail.163.com'
-      } else if (email === 'vip.163.com') {
+      } else if (that.email === 'vip.163.com') {
         return 'http://vip.163.com'
-      } else if (email === '126.com') {
+      } else if (that.email === '126.com') {
         return 'http://mail.126.com'
-      } else if (email === 'qq.com' || email === 'vip.qq.com' || email === 'foxmail.com') {
+      } else if (that.email === 'qq.com' || that.email === 'vip.qq.com' || that.email === 'foxmail.com') {
         return 'http://www.mail.qq.com'
-      } else if (email === 'gmail.com') {
+      } else if (that.email === 'gmail.com') {
         return 'http://mail.google.com'
-      } else if (email === 'sohu.com') {
+      } else if (that.email === 'sohu.com') {
         return 'http://mail.sohu.com'
-      } else if (email === 'tom.com') {
+      } else if (that.email === 'tom.com') {
         return 'http://mail.tom.com'
-      } else if (email === 'vip.sina.com') {
+      } else if (that.email === 'vip.sina.com') {
         return 'http://vip.sina.com'
-      } else if (email === 'sina.com.cn' || email === 'sina.com') {
+      } else if (that.email === 'sina.com.cn' || that.email === 'sina.com') {
         return 'http://mail.sina.com.cn'
-      } else if (email === 'tom.com') {
+      } else if (that.email === 'tom.com') {
         return 'http://mail.tom.com'
-      } else if (email === 'yahoo.com.cn' || email === 'yahoo.cn') {
+      } else if (that.email === 'yahoo.com.cn' || that.email === 'yahoo.cn') {
         return 'http://www.mail.cn.yahoo.com'
-      } else if (email === 'tom.com') {
+      } else if (that.email === 'tom.com') {
         return 'http://www.mail.tom.com'
-      } else if (email === 'yeah.net') {
+      } else if (that.email === 'yeah.net') {
         return 'http://www.yeah.net'
-      } else if (email === '21cn.com') {
+      } else if (that.email === '21cn.com') {
         return 'http://mail.21cn.com'
-      } else if (email === 'hotmail.com') {
+      } else if (that.email === 'hotmail.com') {
         return 'http://www.hotmail.com'
-      } else if (email === 'sogou.com') {
+      } else if (that.email === 'sogou.com') {
         return 'http://mail.sogou.com'
-      } else if (email === '188.com') {
+      } else if (that.email === '188.com') {
         return 'http://www.188.com'
-      } else if (email === '139.com') {
+      } else if (that.email === '139.com') {
         return 'http://mail.10086.cn'
-      } else if (email === '189.cn') {
+      } else if (that.email === '189.cn') {
         return 'http://webmail15.189.cn/webmail'
-      } else if (email === 'wo.com.cn') {
+      } else if (that.email === 'wo.com.cn') {
         return 'http://mail.wo.com.cn/smsmail'
-      } else if (email === '139.com') {
+      } else if (that.email === '139.com') {
         return 'http://mail.10086.cn'
       } else {
         return ''
@@ -347,11 +359,10 @@ export default {
       if (!reg.test(obj.value)) { // 正则验证不通过，格式不对
         return false
       } else {
-        sendEmailRegisterCode(email).then(res => {
+        sendEmailRegisterCode(this.email).then(res => {
           if (res.code === '200') {
-            console.log(res)
             message('success', '验证码已发送，请注意查收邮箱')
-            const email = this.registerForm.email
+            this.email = this.registerForm.email
           }
         })
         return true
@@ -359,18 +370,21 @@ export default {
     },
     // 注册接口
     goRegister() {
-      this.$refs.registerForm.validate(valid => {
+      const that = this
+      that.$refs.registerForm.validate(valid => {
         if (valid) {
-          const registerForm = this.registerForm
+          const registerForm = that.registerForm
           registerForm.locale = '中国'
+          if (that.registerForm.userName === '') {
+            that.registerForm.userName = that.registerForm.email.substring(that.registerForm.email.indexOf('@'))
+          }
           userRegiste(registerForm).then((res) => {
-            console.log(res.code !== 200)
-            if (res.code !== 200) {
+            if (res.code !== '200') {
               return
             }
             message('success', res.msg)
-            this.backLogin()
-            this.registerForm = {}
+            that.backLogin()
+            // that.registerForm = {}
           }).catch(error => {
             console.log(error)
           })

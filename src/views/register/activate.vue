@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { message } from '@/utils/common'
 import { activateAccount, verifyLinkString } from '@/api/user'
 export default {
   data() {
@@ -103,7 +104,7 @@ export default {
             return this.$message.error('请勾选同意服务条款按钮')
           }
           activateAccount(this.loginForm).then((res) => {
-            message('success', res.msg)
+            this.$message('success', res.msg)
             this.backLogin()
             // this.$router.push({ path: '/' })
           }).catch(error => {
