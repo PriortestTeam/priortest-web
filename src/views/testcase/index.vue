@@ -1,18 +1,23 @@
 <template>
   <div class="project-container app-container">
+    <div v-if="treeCol==0" class="showBtn" @click="hadleTreeshow"><i class="el-icon-d-arrow-right" /></div>
     <el-row>
-      <el-col :span="5">
-        <view-tree :child-scope="currentScope" @childByValue="childByValue" />
+      <el-col :span="treeCol">
+        <view-tree
+          :child-scope="currentScope"
+          @hadleTree="hadleTreeshow"
+          @childByValue="childByValue"
+        />
       </el-col>
       <el-col
-        :span="19"
+        :span="24-treeCol"
       >
         <div class="project_table">
-<div class="new_project">
-          <el-button type="primary" round @click="newproject">
-            新建测试用例
-          </el-button>          
-      </div>
+          <div class="new_project">
+            <el-button type="primary" round @click="newproject">
+              新建测试用例
+            </el-button>
+          </div>
 
           <div class="oprate_btn">
             <el-button type="text" @click="projectRefresh">刷新</el-button>
@@ -47,41 +52,39 @@
                 </template>
               </el-table-column>
               <el-table-column
-                              prop="UUID"
-                              :show-overflow-tooltip="true"
-                              align="center"
-                              label="UUID"
-                            />
+                prop="UUID"
+                :show-overflow-tooltip="true"
+                align="center"
+                label="UUID"
+              />
 
               <el-table-column
-                            prop="status"
-                            :show-overflow-tooltip="true"
-                            align="center"
-                            label="状态"
-                          />             
+                prop="status"
+                :show-overflow-tooltip="true"
+                align="center"
+                label="状态"
+              />
 
+              <el-table-column
+                prop="title"
+                :show-overflow-tooltip="true"
+                align="left"
+                width="155"
+                :label="$t('lang.CommonFiled.Title')"
+              >
+                <template slot-scope="scope">
+                  <span class="title" @click="openEdit(scope.row)">
+                    {{ scope.row.title }}
+                  </span>
+                </template>
+              </el-table-column>
 
- <el-table-column
-              prop="title"
-              :show-overflow-tooltip="true"
-              align="left"
-              width="155"
-              :label="$t('lang.CommonFiled.Title')"
-            >
-              <template slot-scope="scope">
-                <span class="title" @click="openEdit(scope.row)">
-                  {{ scope.row.title }}
-                </span>
-              </template>
-            </el-table-column>
-
-
-                 <el-table-column
-                              prop="test_method"
-                              :show-overflow-tooltip="true"
-                              align="center"
-                              label="测试方法"
-                            />
+              <el-table-column
+                prop="test_method"
+                :show-overflow-tooltip="true"
+                align="center"
+                label="测试方法"
+              />
               <el-table-column prop="priority" align="center" label="优先级" />
               <el-table-column
                 prop="feature"
@@ -89,46 +92,45 @@
                 :show-overflow-tooltip="true"
                 label="需求"
               />
-                 <el-table-column
-                              prop="module"
-                              align="center"
-                              :show-overflow-tooltip="true"
-                              label="模块"
-                            />
+              <el-table-column
+                prop="module"
+                align="center"
+                :show-overflow-tooltip="true"
+                label="模块"
+              />
 
-                 <el-table-column
-                  prop="version"
-                  align="center"
-                  :show-overflow-tooltip="true"
-                  label="版本"
-                  />
+              <el-table-column
+                prop="version"
+                align="center"
+                :show-overflow-tooltip="true"
+                label="版本"
+              />
 
-                  <el-table-column
-                    prop="testCategory"
-                   align="center"
-                   :show-overflow-tooltip="true"
-                   label="测试分类"
-                  />
-           <el-table-column
-             prop="testType"
-             align="center"
-             :show-overflow-tooltip="true"
-             label="测试类型"
-             />
+              <el-table-column
+                prop="testCategory"
+                align="center"
+                :show-overflow-tooltip="true"
+                label="测试分类"
+              />
+              <el-table-column
+                prop="testType"
+                align="center"
+                :show-overflow-tooltip="true"
+                label="测试类型"
+              />
               <el-table-column
                 prop="lastRunStatus"
                 align="center"
                 label="末次运行状态"
               >
 
-              <el-table-column
-               prop="stepStatus"
-               align="center"
-               :show-overflow-tooltip="true"
-               label="步骤运行状态"
-               />
+                <el-table-column
+                  prop="stepStatus"
+                  align="center"
+                  :show-overflow-tooltip="true"
+                  label="步骤运行状态"
+                />
               </el-table-column>
-
 
               <el-table-column
                 prop="executedDate"
@@ -184,13 +186,14 @@
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import { testCaseList, delTestCase } from '@/api/testcase'
-import { queryViews } from '@/api/project'
+// import { queryViews } from '@/api/project'
 
 export default {
   name: 'Testcase',
   components: { viewTree },
   data() {
     return {
+      treeCol: 5,
       currentScope: 'TestCase',
       tableHeader: {
         color: '#d4dce3',
@@ -225,7 +228,7 @@ export default {
   },
   created() {
     // 初始值
-     if (this.$route.query.projectId && this.$route.query.viewTreeDtoId) {
+    if (this.$route.query.projectId && this.$route.query.viewTreeDtoId) {
       const query = {
         projectId: this.$route.query.projectId,
         viewTreeDto: {
@@ -320,7 +323,7 @@ export default {
     },
     childByValue: function(query) {
       this.isLoading = true
-      this.viewSearchQueryId = query.viewTreeDto.id     
+      this.viewSearchQueryId = query.viewTreeDto.id
       testCaseList(this.testCaseQuery, query).then(res => {
         this.testCasetableData = res.data
         this.testCaseTotal = res.total
@@ -330,9 +333,10 @@ export default {
         this.testCaseTotal = 0
         this.isLoading = false
       })
+    },
+    hadleTreeshow() {
+      this.treeCol = this.treeCol === 5 ? 0 : 5
     }
-    /** 项目列表表格结束 */
-
   }
 }
 </script>

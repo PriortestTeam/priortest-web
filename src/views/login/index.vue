@@ -38,7 +38,7 @@
           @click="handleregister('loginForm')"
         >注册</el-button>
       </div>
-     
+
     </el-form>
     <div v-if="isShowregister">
       <el-form
@@ -110,7 +110,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-       
+
         <div class="pass-allowed">
           <el-checkbox v-model="checked">
             <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
@@ -224,47 +224,47 @@ export default {
     gotoEmail() {
       var email = this.registerForm.email.split('@')[1]
       email = email.toLowerCase()
-      if (email == '163.com') {
+      if (email === '163.com') {
         return 'http://mail.163.com'
-      } else if (email == 'vip.163.com') {
+      } else if (email === 'vip.163.com') {
         return 'http://vip.163.com'
-      } else if (email == '126.com') {
+      } else if (email === '126.com') {
         return 'http://mail.126.com'
-      } else if (email == 'qq.com' || email == 'vip.qq.com' || email == 'foxmail.com') {
+      } else if (email === 'qq.com' || email === 'vip.qq.com' || email === 'foxmail.com') {
         return 'http://www.mail.qq.com'
-      } else if (email == 'gmail.com') {
+      } else if (email === 'gmail.com') {
         return 'http://mail.google.com'
-      } else if (email == 'sohu.com') {
+      } else if (email === 'sohu.com') {
         return 'http://mail.sohu.com'
-      } else if (email == 'tom.com') {
+      } else if (email === 'tom.com') {
         return 'http://mail.tom.com'
-      } else if (email == 'vip.sina.com') {
+      } else if (email === 'vip.sina.com') {
         return 'http://vip.sina.com'
-      } else if (email == 'sina.com.cn' || email == 'sina.com') {
+      } else if (email === 'sina.com.cn' || email === 'sina.com') {
         return 'http://mail.sina.com.cn'
-      } else if (email == 'tom.com') {
+      } else if (email === 'tom.com') {
         return 'http://mail.tom.com'
-      } else if (email == 'yahoo.com.cn' || email == 'yahoo.cn') {
+      } else if (email === 'yahoo.com.cn' || email === 'yahoo.cn') {
         return 'http://www.mail.cn.yahoo.com'
-      } else if (email == 'tom.com') {
+      } else if (email === 'tom.com') {
         return 'http://www.mail.tom.com'
-      } else if (email == 'yeah.net') {
+      } else if (email === 'yeah.net') {
         return 'http://www.yeah.net'
-      } else if (email == '21cn.com') {
+      } else if (email === '21cn.com') {
         return 'http://mail.21cn.com'
-      } else if (email == 'hotmail.com') {
+      } else if (email === 'hotmail.com') {
         return 'http://www.hotmail.com'
-      } else if (email == 'sogou.com') {
+      } else if (email === 'sogou.com') {
         return 'http://mail.sogou.com'
-      } else if (email == '188.com') {
+      } else if (email === '188.com') {
         return 'http://www.188.com'
-      } else if (email == '139.com') {
+      } else if (email === '139.com') {
         return 'http://mail.10086.cn'
-      } else if (email == '189.cn') {
+      } else if (email === '189.cn') {
         return 'http://webmail15.189.cn/webmail'
-      } else if (email == 'wo.com.cn') {
+      } else if (email === 'wo.com.cn') {
         return 'http://mail.wo.com.cn/smsmail'
-      } else if (email == '139.com') {
+      } else if (email === '139.com') {
         return 'http://mail.10086.cn'
       } else {
         return ''
@@ -361,9 +361,11 @@ export default {
     goRegister() {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
-          userRegiste(this.registerForm).then((res) => {
-            console.log(res.code != 200)
-            if (res.code != 200) {
+          const registerForm = this.registerForm
+          registerForm.locale = '中国'
+          userRegiste(registerForm).then((res) => {
+            console.log(res.code !== 200)
+            if (res.code !== 200) {
               return
             }
             message('success', res.msg)

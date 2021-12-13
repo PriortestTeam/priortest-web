@@ -1,16 +1,20 @@
 <template>
   <div class="project-container app-container">
-    
+    <div v-if="treeCol==0" class="showBtn" @click="hadleTreeshow"><i class="el-icon-d-arrow-right" /></div>
     <el-row>
-        <el-col :span="5">
-      <view-tree :childScope="currentScope" v-on:childByValue="childByValue"></view-tree>
-        </el-col>
+      <el-col :span="treeCol">
+        <view-tree
+          :child-scope="currentScope"
+          @hadleTree="hadleTreeshow"
+          @childByValue="childByValue"
+        />
+      </el-col>
       <el-col
-        :span="19"
+        :span="24-treeCol"
       ><div class="project_table">
         <div class="new_project">
-      <el-button type="primary" round @click="newproject"> 新建故事 </el-button>
-    </div>
+          <el-button type="primary" round @click="newproject"> 新建故事 </el-button>
+        </div>
         <div class="oprate_btn">
           <el-button type="text" @click="projectRefresh">刷新</el-button>
           <el-button
@@ -65,7 +69,7 @@
                 }}</span>
               </template>
             </el-table-column>
-          <el-table-column prop="reportTo" align="center" label="负责人" />
+            <el-table-column prop="reportTo" align="center" label="负责人" />
             <el-table-column
               prop="createTime"
               align="center"
@@ -131,12 +135,14 @@
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import { featureList, delFeature, closeUpdate } from '@/api/feature'
-import { queryViews } from '@/api/project'
+// import { queryViews } from '@/api/project'
 
 export default {
   name: 'Feature',
+  components: { viewTree },
   data() {
     return {
+      treeCol: 5,
       currentScope: 'Feature',
       tableHeader: {
         color: '#d4dce3',
@@ -164,7 +170,6 @@ export default {
       viewSearchQueryId: ''
     }
   },
-  components: {viewTree},
   computed: {
     projectInfo() {
       return this.$store.state.user.userinfo
@@ -180,13 +185,12 @@ export default {
       this.$router.push({ name: 'Addfeature' })
     },
 
-
     /** 项目列表表格开始 */
     getfeatureList() {
       this.isLoading = true
       const query = {
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        viewTreeDto : {
+        viewTreeDto: {
           id: this.viewSearchQueryId
         }
       }
@@ -263,7 +267,7 @@ export default {
         console.log(error)
       })
     },
-    childByValue: function (query) {
+    childByValue: function(query) {
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id
       featureList(this.featureQuery, query).then(res => {
@@ -271,8 +275,10 @@ export default {
         this.featureTotal = res.total
         this.isLoading = false
       })
+    },
+    hadleTreeshow() {
+      this.treeCol = this.treeCol === 5 ? 0 : 5
     }
-
   }
 }
 </script>

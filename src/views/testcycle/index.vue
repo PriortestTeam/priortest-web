@@ -1,19 +1,22 @@
 <template>
   <div class="project-container app-container">
-    
+    <div v-if="treeCol==0" class="showBtn" @click="hadleTreeshow"><i class="el-icon-d-arrow-right" /></div>
     <el-row>
-      <el-col :span="5">
-        <view-tree :child-scope="currentScope" @childByValue="childByValue" />
-
+      <el-col :span="treeCol">
+        <view-tree
+          :child-scope="currentScope"
+          @hadleTree="hadleTreeshow"
+          @childByValue="childByValue"
+        />
       </el-col>
       <el-col
-        :span="19"
+        :span="24-treeCol"
       ><div class="project_table">
         <div class="new_project">
-      <el-button type="primary" round @click="newproject">
-        新建测试周期
-      </el-button>
-    </div>
+          <el-button type="primary" round @click="newproject">
+            新建测试周期
+          </el-button>
+        </div>
         <div class="oprate_btn">
           <el-button type="text" @click="projectRefresh">刷新</el-button>
           <el-button
@@ -43,14 +46,14 @@
                 {{ scope.$index + 1 }}
               </template>
             </el-table-column>
-           
-                                        <el-table-column
-                                          prop="UUID"
-                                          :show-overflow-tooltip="true"
-                                          align="center"
-                                          label="UUID"
-                                        />
-         <el-table-column
+
+            <el-table-column
+              prop="UUID"
+              :show-overflow-tooltip="true"
+              align="center"
+              label="UUID"
+            />
+            <el-table-column
               prop="title"
               :show-overflow-tooltip="true"
               align="left"
@@ -63,64 +66,62 @@
                 </span>
               </template>
             </el-table-column>
-             <el-table-column
-                                          prop="version"
-                                          :show-overflow-tooltip="true"                                        
-                                          label="版本"
-                                        />
-                                <el-table-column
-                                            prop="currentRelease"
-                                            :show-overflow-tooltip="true"                                           
-                                            label="当前发布版本"
-                                          />
-                               <el-table-column
-                                                          prop="Release"
-                                                          :show-overflow-tooltip="true"                                                         
-                                                          label="发布版本"
-                                                        />
-           
-          <el-table-column
+            <el-table-column
+              prop="version"
+              :show-overflow-tooltip="true"
+              label="版本"
+            />
+            <el-table-column
+              prop="currentRelease"
+              :show-overflow-tooltip="true"
+              label="当前发布版本"
+            />
+            <el-table-column
+              prop="Release"
+              :show-overflow-tooltip="true"
+              label="发布版本"
+            />
+
+            <el-table-column
               prop="testResult"
-              min-width="100"             
+              min-width="100"
               label="周期完成状态"
-            />                   
+            />
 
             <el-table-column
               prop="CaseStatus"
               min-width="100"
               label="运行状态"
             >
+              <el-table-column
+                prop="stepStatus"
+
+                :show-overflow-tooltip="true"
+                label="测试步骤执行状态"
+              />
+            </el-table-column>
             <el-table-column
-               prop="stepStatus"
-              
-               :show-overflow-tooltip="true"
-               label="测试步骤执行状态"
-               />            
-</el-table-column>
- <el-table-column
               prop="TotalCount"
               min-width="100"
               label="总用例"
-            >  
-            <el-table-column
-               prop="executedCount"
-              
-               :show-overflow-tooltip="true"
-               label="已执行用例"
-               />
-               </el-table-column> 
+            >
+              <el-table-column
+                prop="executedCount"
 
-
-
- <el-table-column
-                prop="lastRunTime"
-              
-                label="最后运行日期"
-                min-width="120"
                 :show-overflow-tooltip="true"
-              />         
+                label="已执行用例"
+              />
+            </el-table-column>
+
             <el-table-column
-              prop="createTime"             
+              prop="lastRunTime"
+
+              label="最后运行日期"
+              min-width="120"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column
+              prop="createTime"
               label="创建日期"
               min-width="120"
               :show-overflow-tooltip="true"
@@ -157,13 +158,14 @@
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import { testCycleList, delTestCycle } from '@/api/testcycle'
-import { queryViews } from '@/api/project'
+// import { queryViews } from '@/api/project'
 
 export default {
   name: 'Testcycle',
   components: { viewTree },
   data() {
     return {
+      treeCol: 5,
       currentScope: 'TestCycle',
       tableHeader: {
         color: '#d4dce3',
@@ -281,10 +283,10 @@ export default {
         this.featureTotal = res.total
         this.isLoading = false
       })
+    },
+    hadleTreeshow() {
+      this.treeCol = this.treeCol === 5 ? 0 : 5
     }
-
-    /** 项目列表表格结束 */
-
   }
 }
 </script>
