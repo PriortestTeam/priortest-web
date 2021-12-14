@@ -60,7 +60,6 @@
                 v-model="registerForm.email"
                 size="mini"
                 placeholder="请输入您的邮箱"
-                @blur="check"
               />
             </el-form-item>
           </el-col>
