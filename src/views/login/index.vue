@@ -375,7 +375,7 @@ export default {
           const registerForm = that.registerForm
           registerForm.locale = '中国'
           if (that.registerForm.userName === '') {
-            that.registerForm.userName = that.registerForm.email.substring(that.registerForm.email.indexOf('@'))
+            that.registerForm.userName = that.registerForm.email.substring(0, that.registerForm.email.indexOf('@'))
           }
           userRegiste(registerForm).then((res) => {
             if (res.code !== '200') {
