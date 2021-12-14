@@ -8,7 +8,7 @@
  */
 import request from '@/utils/request'
 
-export function queryForProjects(params ,data) {
+export function queryForProjects(params, data) {
   return request({
     url: '/project/queryForProjects',
     method: 'post',
@@ -89,7 +89,7 @@ export function deleteView(data) {
   })
 }
 
-//获取负责人
+// 获取负责人
 export function queryByNameSubUsers(data) {
   return request({
     url: '/user/queryByNameSubUsers',
@@ -97,14 +97,14 @@ export function queryByNameSubUsers(data) {
     params: data
   })
 }
-//获取详情
+// 获取详情
 export function getFeature(id) {
   return request({
     url: '/project/queryById/' + id,
     method: 'get'
   })
 }
-//关闭
+// 关闭
 export function getCloseProject(data) {
   return request({
     url: '/project/getCloseProject',
@@ -113,7 +113,7 @@ export function getCloseProject(data) {
   })
 }
 
-//获取view 创建是的下拉框
+// 获取view 创建是的下拉框
 export function getViewScopeChildParams(scope) {
   return request({
     url: '/view/getViewScopeChildParams',
@@ -122,8 +122,7 @@ export function getViewScopeChildParams(scope) {
   })
 }
 
-
-//查询父view
+// 查询父view
 export function queryViewParents(params) {
   return request({
     url: '/view/queryViewParents',
@@ -132,12 +131,18 @@ export function queryViewParents(params) {
   })
 }
 
-
-//查询view 树状结构
+// 查询view 树状结构
 export function queryViewTrees(params) {
   return request({
     url: '/view/queryViewTrees',
     method: 'get',
     params: params
+  })
+}
+// 查询view 树状结构
+export function getAllSysCustomField() {
+  return request({
+    url: '/project/getAllSysCustomField',
+    method: 'get'
   })
 }

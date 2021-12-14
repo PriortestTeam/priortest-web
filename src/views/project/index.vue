@@ -99,29 +99,17 @@
                 prop="status"
                 align="left"
                 :label="$t('lang.Project.Status')"
-              >
-                <template slot-scope="scope">
-                  <span>{{
-                    scope.row.status === 3
-                      ? "开发中"
-                      : scope.row.status === 2
-                        ? "计划中"
-                        : scope.row.status === 1
-                          ? "关闭"
-                          : ""
-                  }}</span>
-                </template>
-              </el-table-column>
+              />
 
               <el-table-column
-                prop="planReleaseDate"
+                prop="goLiveDate"
                 align="left"
-                :label="$t('lang.Project.PlanReleaseDate')"
+                :label="$t('lang.Project.goLiveDate')"
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.planReleaseDate || "-" }}</span>
+                  <span>{{ scope.row.goLiveDate || "-" }}</span>
                 </template>
               </el-table-column>
 

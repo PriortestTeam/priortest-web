@@ -56,11 +56,12 @@
                 placeholder="请选择项目状态"
                 clearable
               >
-                <el-option label="Progress" :value="3" />
-                <el-option label="Closed" :value="1" />
-                <el-option label="Plan" :value="2" />
+                <el-option v-for="item in statusListArr" :key="item" :label="item" :value="item" />
+                <router-link to="/admincenter/admincenter?par=customer_list">
+                  <el-option label="添加新值" value="0" />
+                </router-link>
               </el-select> </el-form-item></el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item :label="$t('lang.Project.ReportTo')" prop="reportToName">
               <el-select
                 v-model="projectFrom.reportToName"
@@ -81,8 +82,29 @@
                 <router-link to="/admincenter/admincenter?par=report_name">
                   <el-option label="添加新值" value="0" />
                 </router-link>
-              </el-select> </el-form-item></el-col>
-
+              </el-select> </el-form-item>
+          </el-col> -->
+          <el-col :span="12">
+            <el-form-item :label="$t('lang.Project.ReportTo')" prop="reportToName">
+              <el-select
+                v-model="projectFrom.reportToName"
+                filterable
+                clearable
+                remote
+                reserve-keyword
+                placeholder="请选择负责人"
+              >
+                <el-option
+                  v-for="item in reportToNameArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+                <router-link to="/admincenter/admincenter?par=report_name">
+                  <el-option label="添加新值" value="0" />
+                </router-link>
+              </el-select> </el-form-item>
+          </el-col>
         </el-row>
 
         <el-row :gutter="20">
@@ -90,7 +112,7 @@
             <el-form-item :label="$t('lang.Project.Customer')" prop="customer">
               <el-select v-model="projectFrom.customer" placeholder="请选择客户" clearable>
                 <el-option v-for="item in customerListArr" :key="item" :label="item" :value="item" />
-                <el-option label="测试客户" value="0" />
+                <!-- <el-option label="测试客户" value="0" /> -->
                 <router-link to="/admincenter/admincenter?par=customer_list">
                   <el-option label="添加新值" value="0" />
                 </router-link>
@@ -122,9 +144,9 @@
                 </router-link>
               </el-select> </el-form-item></el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.PlanReleaseDate')" prop="planReleaseDate">
+            <el-form-item :label="$t('lang.Project.goLiveDate')" prop="goLiveDate">
               <el-date-picker
-                v-model="projectFrom.planReleaseDate"
+                v-model="projectFrom.goLiveDate"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="pickerOptions"
                 type="date"
@@ -174,9 +196,10 @@ import {
   addProjects,
   editProjects,
   queryByNameSubUsers,
-  getFeature
+  getFeature,
+  getAllSysCustomField
 } from '@/api/project'
-import { sysCustomField } from '@/api/systemArr'
+// import { sysCustomField } from '@/api/systemArr'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 import Upload from '@/components/Upload'
 
@@ -193,6 +216,7 @@ export default {
       reportToNameArr: [],
       customerListArr: [],
       projectCategory: [],
+      statusListArr: [],
       loading: false,
       projectFrom: {},
       projectFromTem: {},
@@ -224,29 +248,45 @@ export default {
       return this.$store.state.user.userinfo
     }
   },
-  created() {
-    console.log('$route---', this.$route.query.id)
-    if (this.$route.query.id) {
-      getFeature(this.$route.query.id).then((res) => {
-        this.projectFrom = res.data
-        this.projectFromTem = Object.assign({}, this.projectFrom)
-      })
-    }
-    queryByNameSubUsers({ subUserName: 'reportToName' }).then((res) => {
-      this.reportToNameArr = res.data
-    })
-    sysCustomField({ fieldName: 'projectCategory' }).then((res) => {
-      this.projectCategory = res.data.mergeValues
-    })
-    sysCustomField({ fieldName: 'testFrame' }).then((res) => {
-      this.testFrameArr = res.data.mergeValues
-    })
-    sysCustomField({ fieldName: 'customer' }).then((res) => {
-      this.customerListArr = res.data.mergeValues
-    })
+  async created() {
+    await this.edit()
+    await this.setAllSysCustomField()
   },
-  mounted() {},
   methods: {
+    // 编辑
+    async edit() {
+      const that = this
+      if (that.$route.query.id) {
+        const res = await getFeature(that.$route.query.id)
+        // res.data.status = res.data.status === 1 ? '关闭' : res.data.status === 2 ? '计划' : '开发中'
+        that.projectFrom = res.data
+        that.projectFromTem = Object.assign({}, that.projectFrom)
+      }
+    },
+    // 系统字段赋值
+    async setAllSysCustomField() {
+      const that = this
+      const res = await getAllSysCustomField()
+      res.data.forEach((v, k) => {
+        switch (v.sysCustomField.fieldName) {
+          case 'project_status':
+            that.statusListArr = v.mergeValues
+            break
+          case 'customer_list':
+            that.customerListArr = v.mergeValues
+            break
+          case 'report_name':
+            that.reportToNameArr = v.mergeValues
+            break
+          case 'test_frame':
+            that.testFrameArr = v.mergeValues
+            break
+          case 'project_category':
+            that.projectCategory = v.mergeValues
+            break
+        }
+      })
+    },
     remoteReport(query) {
       if (query !== '') {
         this.loading = true
