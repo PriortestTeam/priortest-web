@@ -141,7 +141,7 @@
           <img src="@/icons/img/one-logo.png" alt="" srcset="">
         </div>
         <el-link type="primary" style="margin-right: 10px;" @click="backLoginIndex">返回登录</el-link>
-        <div class="one-tip">感谢您试用OneClick, 请通过您的<span class="email" @click="routerEmail">注册邮箱</span>激活注册帐号开启您的体验之旅</div>
+        <div class="one-tip">感谢您试用OneClick, 请通过您的<span class="email" @click="routerEmail">注册邮箱{{ registerForm.email }}</span>激活注册帐号开启您的体验之旅</div>
       </el-form>
 
     </div>

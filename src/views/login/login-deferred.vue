@@ -29,7 +29,7 @@
       </div>
       <div class="btnLogin">
         <el-button
-          :disabled="!(checked && isDeferred)"
+          :disabled="!(checked && isDeferred && forgetForm.email != '')"
           type="primary"
           size="medium"
           round
@@ -55,7 +55,7 @@
         style="margin-right: 10px"
         @click="backLoginIndex"
       >返回登录</el-link>
-      <div class="one-tip">你的密码重置请求已发送到您的<span class="email" @click="routerEmail">邮箱</span>，请使用邮箱链接重置您的密码</div>
+      <div class="one-tip">你的密码重置请求已发送到您的<span class="email" @click="routerEmail">邮箱{{ newEmail }}</span>，请使用邮箱链接重置您的密码</div>
     </el-form>
     <!-- 服务条款 -->
     <service-clause v-if="dialogVisible" :visible.sync="dialogVisible" @getServiceClause="getServiceClause" />
@@ -90,7 +90,16 @@ export default {
       isDeferred: false,
       checked: false,
       dialogVisible: false,
-      isViewServiceClause: false
+      isViewServiceClause: false,
+      newEmail: ''
+    }
+  },
+  watch: {
+    'forgetForm.email': {
+      handler: function(val) {
+        this.newEmail = val
+      },
+      deep: true
     }
   },
   methods: {
@@ -151,7 +160,6 @@ export default {
     },
     // 发送邮箱接口
     sendEmail() {
-      console.log('sendEmail--')
       this.$refs.forgetForm.validate(valid => {
         if (valid) {
           senddeferredEmail(this.forgetForm).then((res) => {
