@@ -111,10 +111,14 @@
         </el-row>
 
         <div class="pass-allowed">
-          <el-checkbox v-model="checked">
-            <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
-            <el-link v-else type="warning">您阅读已同意服务条款</el-link>
-          </el-checkbox>
+          <!-- <el-checkbox v-model="checked">
+            <el-link v-if="checked" type="success" @click="dialogVisible = true">您阅读已同意服务条款</el-link>
+            <el-link v-else type="warning" @click="dialogVisible = true">您阅读已同意服务条款</el-link>
+          </el-checkbox> -->
+          <div>
+            <el-checkbox v-model="checked" />
+            <el-link type="success" class="service-clause" @click="dialogVisible = true">您阅读已同意服务条款</el-link>
+          </div>
           <el-link type="primary" style="margin-right: 10px;" @click="backLoginIndex">返回登录</el-link>
         </div>
         <div style="padding-right: 10px;box-sizing: border-box;margin-top: 20px;">
@@ -144,6 +148,8 @@
     <forget v-if="forgetView" @backLoginIndex="backLoginIndex" />
     <!-- 申请延期 -->
     <deferred v-if="deferredView" @backLoginIndex="backLoginIndex" />
+    <!-- 服务条款 -->
+    <service-clause v-if="dialogVisible" :visible.sync="dialogVisible" @getServiceClause="getServiceClause" />
   </div>
   <!-- 注册 -->
 
@@ -155,12 +161,12 @@ import { message } from '@/utils/common'
 import { sendEmailRegisterCode, userRegiste } from '@/api/user'
 import forget from './forget.vue'
 import deferred from './login-deferred.vue'
+import serviceClause from './serviceClause.vue'
 export default {
   name: 'Login',
-  components: { forget, deferred },
+  components: { forget, deferred, serviceClause },
   data() {
     return {
-
       loginForm: {
         username: '1220186101@qq.com',
         password: '12345678A'
@@ -202,11 +208,13 @@ export default {
         contactNo: [{ max: 20, message: '长度最多20个字符', trigger: 'blur' }],
         userName: [{ max: 20, message: '长度最多20个字符', trigger: 'blur' }],
         company: [{ max: 50, message: '长度最多50个字符', trigger: 'blur' }],
-        industry: [{ max: 50, message: '长度最多50个字符', trigger: 'blur' }],
-        profession: [{ max: 50, message: '长度最多50个字符', trigger: 'blur' }]
+        industry: [{ max: 20, message: '长度最多20个字符', trigger: 'blur' }],
+        profession: [{ max: 20, message: '长度最多20个字符', trigger: 'blur' }]
         // emailCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
       },
-      email: ''
+      email: '',
+      dialogVisible: false,
+      isViewServiceClause: false
     }
   },
   computed: {
@@ -228,6 +236,9 @@ export default {
     }
   },
   methods: {
+    getServiceClause(data) {
+      this.isViewServiceClause = data
+    },
     routerEmail() {
       window.open(this.gotoEmail())
     },
@@ -370,6 +381,10 @@ export default {
     // 注册接口
     goRegister() {
       const that = this
+      if (!that.isViewServiceClause) {
+        message('warning', '请您浏览服务条款，点击同意并继续！')
+        return
+      }
       that.$refs.registerForm.validate(valid => {
         if (valid) {
           const registerForm = that.registerForm
@@ -514,5 +529,9 @@ export default {
 .email{
   cursor: pointer;
   color:$btnbgcolor;
+}
+.service-clause {
+  vertical-align: top;
+  margin-left: 8px;
 }
 </style>

@@ -42,10 +42,10 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('err---', error.response) // for debug
     if (error.config.url.indexOf('testCaseTemplate/importTestCase') === -1) {
       Message({
-        message: error.message,
+        message: error.response.data.data,
         type: 'error',
         duration: 5 * 1000
       })
