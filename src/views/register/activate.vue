@@ -16,14 +16,7 @@
       <el-form-item prop="rePassword" label="确认密码">
         <el-input v-model="loginForm.rePassword" type="password" />
       </el-form-item>
-      <el-form-item prop="email" label="初始化项目">
-        <el-input v-model="projectTitle" />
-      </el-form-item>
       <div class="pass-allowed">
-        <!-- <el-checkbox v-model="checked">
-          <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
-          <el-link v-else type="warning">您阅读已同意服务条款</el-link>
-        </el-checkbox> -->
         <div>
           <el-checkbox v-model="checked" />
           <el-link type="success" class="service-clause" @click="dialogVisible = true">您阅读已同意服务条款</el-link>
@@ -90,8 +83,7 @@ export default {
         ]
       },
       dialogVisible: false,
-      isViewServiceClause: false,
-      projectTitle: ''
+      isViewServiceClause: false
     }
   },
   watch: {
