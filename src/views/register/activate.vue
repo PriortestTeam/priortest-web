@@ -16,6 +16,9 @@
       <el-form-item prop="rePassword" label="确认密码">
         <el-input v-model="loginForm.rePassword" type="password" />
       </el-form-item>
+      <el-form-item prop="email" label="初始化项目">
+        <el-input v-model="projectTitle" />
+      </el-form-item>
       <div class="pass-allowed">
         <el-checkbox v-model="checked">
           <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
@@ -34,6 +37,7 @@
 </template>
 
 <script>
+import { addProjects } from '@/api/project'
 import { message } from '@/utils/common'
 import { activateAccount, verifyLinkString } from '@/api/user'
 export default {
@@ -75,7 +79,8 @@ export default {
         rePassword: [
           { validator: validateConfirmPassword, trigger: 'blur' }
         ]
-      }
+      },
+      projectTitle: ''
     }
   },
   watch: {
@@ -104,8 +109,18 @@ export default {
             return this.$message.error('请勾选同意服务条款按钮')
           }
           activateAccount(this.loginForm).then((res) => {
-            this.$message('success', res.msg)
-            this.backLogin()
+            message('success', res.msg)
+            const params = {
+              title: this.projectTitle,
+              status: '计划中',
+              reportToName: this.loginForm.email.substring(0, this.this.email.indexOf('@')),
+              description: '系统初始化项目'
+            }
+            addProjects(params).then((res) => {
+              this.backLogin()
+            }).catch(error => {
+              console.log(error)
+            })
             // this.$router.push({ path: '/' })
           }).catch(error => {
             console.log(error)

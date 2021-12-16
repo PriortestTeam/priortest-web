@@ -29,7 +29,7 @@
       </div>
       <div class="btnLogin">
         <el-button
-          :disabled="!(checked && isDeferred && forgetForm.email != '')"
+          :disabled="!(checked && forgetForm.email != '')"
           type="primary"
           size="medium"
           round
@@ -160,6 +160,10 @@ export default {
     },
     // 发送邮箱接口
     sendEmail() {
+      if (!this.isDeferred) {
+        message('warning', '请您浏览服务条款，点击同意并继续！')
+        return
+      }
       this.$refs.forgetForm.validate(valid => {
         if (valid) {
           senddeferredEmail(this.forgetForm).then((res) => {

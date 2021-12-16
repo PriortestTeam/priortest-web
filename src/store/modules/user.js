@@ -6,7 +6,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     userinfo: {
-    },
+    }
   }
 }
 const state = getDefaultState()
@@ -21,8 +21,8 @@ const mutations = {
   SET_USERINFO: (state, userinfo) => {
     state.userinfo = userinfo
     // 保存projectId 到缓存中去
-    localStorage.setItem('projectId', userinfo.userUseOpenProject.projectId);
-  },
+    localStorage.setItem('projectId', userinfo.userUseOpenProject.projectId)
+  }
 
 }
 
@@ -89,4 +89,3 @@ export default {
   mutations,
   actions
 }
-
