@@ -34,6 +34,7 @@
             >批量删除
             </el-button>
             <el-button type="text" @click="importTestCases">导入测试用例</el-button>
+            <el-button type="text" @click="selectMoreCol">更多列</el-button>
             <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
           </div>
           <div v-loading="isLoading" class="protable table">
@@ -122,16 +123,13 @@
                 prop="lastRunStatus"
                 align="center"
                 label="末次运行状态"
-              >
-
-                <el-table-column
-                  prop="stepStatus"
-                  align="center"
-                  :show-overflow-tooltip="true"
-                  label="步骤运行状态"
-                />
-              </el-table-column>
-
+              />
+              <el-table-column
+                prop="stepStatus"
+                align="center"
+                :show-overflow-tooltip="true"
+                label="步骤运行状态"
+              />
               <el-table-column
                 prop="executedDate"
                 align="center"
@@ -242,6 +240,10 @@ export default {
     }
   },
   methods: {
+    // 选择更多列
+    selectMoreCol() {
+
+    },
     // 新建项目
     newproject() {
       this.$router.push({ name: 'Addtestcase' })

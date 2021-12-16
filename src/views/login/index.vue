@@ -214,7 +214,8 @@ export default {
       },
       email: '',
       dialogVisible: false,
-      isViewServiceClause: false
+      isViewServiceClause: false,
+      cloneRegisterForm: {}
     }
   },
   computed: {
@@ -234,6 +235,10 @@ export default {
       },
       immediate: true
     }
+  },
+  created() {
+    /* eslint-disable */
+    this.cloneRegisterForm = _.cloneDeep(this.registerForm)
   },
   methods: {
     getServiceClause(data) {
@@ -299,6 +304,7 @@ export default {
       this.forgetView = false
       this.loginView = false
       this.deferredView = false
+      this.isViewServiceClause = false
     },
     routeForget() {
       this.isShowregister = false
@@ -317,7 +323,7 @@ export default {
       this.deferredView = true
     },
     backLoginIndex() {
-      this.registerForm = {}
+      this.registerForm = _.cloneDeep(this.cloneRegisterForm)
       this.isShowregister = false
       this.isShowregisterAfter = false// 显示提示激活
       this.checked = false

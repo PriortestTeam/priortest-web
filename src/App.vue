@@ -5,6 +5,8 @@
 </template>
 
 <script>
+/* eslint-disable */
+import _ from 'lodash'
 export default {
   name: 'App'
 }
