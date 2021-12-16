@@ -324,6 +324,7 @@ export default {
       this.forgetView = false
       this.loginView = true
       this.deferredView = false
+      this.isViewServiceClause = false
     },
     showPwd() {
       if (this.passwordType === 'password') {
