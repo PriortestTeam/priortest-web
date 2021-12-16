@@ -32,7 +32,7 @@
           round
           @click="giveupBack('projectFrom')"
         >放弃</el-button>
-        <router-link v-if="!projectFrom.id" to="/admincenter/admincenter">
+        <router-link v-if="projectFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
           }}</el-button>
@@ -61,29 +61,6 @@
                   <el-option label="添加新值" value="0" />
                 </router-link>
               </el-select> </el-form-item></el-col>
-          <!-- <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.ReportTo')" prop="reportToName">
-              <el-select
-                v-model="projectFrom.reportToName"
-                filterable
-                clearable
-                remote
-                reserve-keyword
-                placeholder="请选择负责人"
-                :remote-method="remoteReport"
-                :loading="loading"
-              >
-                <el-option
-                  v-for="item in reportToNameArr"
-                  :key="item.id"
-                  :label="item.userName"
-                  :value="item.userName"
-                />
-                <router-link to="/admincenter/admincenter?par=report_name">
-                  <el-option label="添加新值" value="0" />
-                </router-link>
-              </el-select> </el-form-item>
-          </el-col> -->
           <el-col :span="12">
             <el-form-item :label="$t('lang.Project.ReportTo')" prop="reportToName">
               <el-select
@@ -95,8 +72,8 @@
                 placeholder="请选择负责人"
               >
                 <el-option
-                  v-for="item in reportToNameArr"
-                  :key="item"
+                  v-for="(item, index) in reportToNameArr"
+                  :key="index"
                   :label="item"
                   :value="item"
                 />
@@ -197,7 +174,8 @@ import {
   editProjects,
   queryByNameSubUsers,
   getFeature,
-  getAllSysCustomField
+  getAllSysCustomField,
+  getAllCustomField
 } from '@/api/project'
 // import { sysCustomField } from '@/api/systemArr'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
@@ -244,19 +222,33 @@ export default {
     ...mapGetters({
       lang: (state) => state.header.lang
     }),
-    projectInfo() {
-      return this.$store.state.user.userinfo
+    userUseOpenProject() {
+      return this.$store.state.user.userinfo.userUseOpenProject
     }
   },
   async created() {
     await this.edit()
     await this.setAllSysCustomField()
+    await this.queryAllCustomField()
   },
   methods: {
+    // 获取字段
+    async queryAllCustomField() {
+      const that = this
+      const params = {
+        'projectId': that.userUseOpenProject.projectId,
+        'scope': 'project'
+      }
+      const res = await getAllCustomField(params)
+      if (res.code === '200') {
+        console.log('res---', res)
+      }
+    },
     // 编辑
     async edit() {
       const that = this
       if (that.$route.query.id) {
+        console.log('edit---', that.$route.query.id)
         const res = await getFeature(that.$route.query.id)
         // res.data.status = res.data.status === 1 ? '关闭' : res.data.status === 2 ? '计划' : '开发中'
         that.projectFrom = res.data

@@ -146,3 +146,12 @@ export function getAllSysCustomField() {
     method: 'get'
   })
 }
+
+// 查询字段
+export function getAllCustomField(params) {
+  return request({
+    url: '/project/getAllCustomField',
+    method: 'post',
+    data: params
+  })
+}

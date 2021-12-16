@@ -67,7 +67,10 @@
                 :label="$t('lang.CommonFiled.Title')"
               >
                 <template slot-scope="scope">
-                  <span class="title" @click="openEdit(scope.row)">
+                  <span v-if="scope.row.id === userUseOpenProject.projectId" class="title" @click="openEdit(scope.row)">
+                    {{ scope.row.title }}
+                  </span>
+                  <span v-else>
                     {{ scope.row.title }}
                   </span>
                 </template>
@@ -136,7 +139,7 @@
                   <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
                   <el-button
-                    v-if="scope.row.status !== 1"
+                    v-if="scope.row.status !== 1 && scope.row.id === userUseOpenProject.projectId"
                     type="text"
                     class="table-btn"
                     @click.stop="closeAction(scope.row)"
@@ -208,7 +211,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name'])
+    ...mapGetters(['name']),
+    userUseOpenProject() {
+      return this.$store.state.user.userinfo.userUseOpenProject
+    }
   },
   created() {
     // 初始值
