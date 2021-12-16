@@ -20,10 +20,14 @@
         <el-input v-model="projectTitle" />
       </el-form-item>
       <div class="pass-allowed">
-        <el-checkbox v-model="checked">
+        <!-- <el-checkbox v-model="checked">
           <el-link v-if="checked" type="success">您阅读已同意服务条款</el-link>
           <el-link v-else type="warning">您阅读已同意服务条款</el-link>
-        </el-checkbox>
+        </el-checkbox> -->
+        <div>
+          <el-checkbox v-model="checked" />
+          <el-link type="success" class="service-clause" @click="dialogVisible = true">您阅读已同意服务条款</el-link>
+        </div>
         <el-link type="primary" style="margin-right: 10px;" @click="backLogin">返回登录</el-link>
       </div>
       <el-button
@@ -33,6 +37,8 @@
         @click="goActivate"
       >激活账户</el-button>
     </el-form>
+    <!-- 服务条款 -->
+    <service-clause v-if="dialogVisible" :visible.sync="dialogVisible" @getServiceClause="getServiceClause" />
   </div>
 </template>
 
@@ -40,7 +46,10 @@
 import { addProjects } from '@/api/project'
 import { message } from '@/utils/common'
 import { activateAccount, verifyLinkString } from '@/api/user'
+import serviceClause from '../login/serviceClause.vue'
 export default {
+  name: 'Active',
+  components: { serviceClause },
   data() {
     var validatePassword = (rule, value, callback) => {
       if (!/\S/.test(value)) {
@@ -80,6 +89,8 @@ export default {
           { validator: validateConfirmPassword, trigger: 'blur' }
         ]
       },
+      dialogVisible: false,
+      isViewServiceClause: false,
       projectTitle: ''
     }
   },
@@ -93,43 +104,36 @@ export default {
       return
     }
     verifyLinkString({ params: this.loginForm.params }).then(res => {
-      if (res.code != 200) {
+      if (res.code !== '200') {
         this.$router.push({ path: '/' })
       }
     })
   },
   methods: {
+    getServiceClause(data) {
+      this.isViewServiceClause = data
+    },
     backLogin() {
       this.$router.push({ path: '/' })
     },
-    goActivate() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          if (!this.checked) {
-            return this.$message.error('请勾选同意服务条款按钮')
+    // 激活账户
+    async goActivate() {
+      const that = this
+      try {
+        const bool = await that.$refs.loginForm.validate()
+        if (bool) {
+          if (!that.isViewServiceClause) {
+            return that.$message.error('请勾选同意服务条款按钮')
           }
-          activateAccount(this.loginForm).then((res) => {
+          const res = await activateAccount(that.loginForm)
+          if (res.code === '200') {
             message('success', res.msg)
-            const params = {
-              title: this.projectTitle,
-              status: '计划中',
-              reportToName: this.loginForm.email.substring(0, this.this.email.indexOf('@')),
-              description: '系统初始化项目'
-            }
-            addProjects(params).then((res) => {
-              this.backLogin()
-            }).catch(error => {
-              console.log(error)
-            })
-            // this.$router.push({ path: '/' })
-          }).catch(error => {
-            console.log(error)
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+            that.backLogin()
+          }
         }
-      })
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
@@ -224,6 +228,10 @@ export default {
     font-size: 16px;
     cursor: pointer;
     user-select: none;
+  }
+  .service-clause {
+    vertical-align: top;
+    margin-left: 8px;
   }
 }
 </style>
