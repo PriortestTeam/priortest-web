@@ -24,7 +24,7 @@
             <el-button type="text" @click="projectRefresh">刷新</el-button>
             <el-button
               type="text"
-              :disabled="single"
+              :disabled="isAllowChangePro"
               @click="projectChange"
             >切换项目</el-button>
             <el-button
@@ -105,14 +105,14 @@
               />
 
               <el-table-column
-                prop="goLiveDate"
+                prop="planReleaseDate"
                 align="left"
-                :label="$t('lang.Project.goLiveDate')"
+                :label="$t('lang.Project.planReleaseDate')"
                 min-width="120"
                 :show-overflow-tooltip="true"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.goLiveDate || "-" }}</span>
+                  <span>{{ scope.row.planReleaseDate || "-" }}</span>
                 </template>
               </el-table-column>
 
@@ -139,12 +139,13 @@
                   <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
                   <el-button
-                    v-if="scope.row.status !== 1 && scope.row.id === userUseOpenProject.projectId"
+                    v-if="scope.row.status !== '关闭' && scope.row.id === userUseOpenProject.projectId"
                     type="text"
                     class="table-btn"
                     @click.stop="closeAction(scope.row)"
                   >关闭</el-button>
                   <el-button
+                    v-if="scope.row.id !== userUseOpenProject.projectId"
                     type="text"
                     class="table-btn"
                     @click.stop="delproject(scope.row.id)"
@@ -197,6 +198,7 @@ export default {
       projectTotal: 0,
       projecttableData: [],
       multipleSelection: [], // 多选
+      isAllowChangePro: true,
       single: true, // 非单个禁用
       multiple: true, // 非多个禁用
       projectIds: '',
@@ -303,6 +305,12 @@ export default {
       this.projectIds = this.projectIds.slice(0, this.projectIds.length - 1)
       this.multiple = !val.length
       this.single = val.length !== 1
+      const newSelection = this.multipleSelection.filter(item => item.id === this.userUseOpenProject.projectId)
+      if (val.length !== 1 || newSelection.length > 0) {
+        this.isAllowChangePro = true
+      } else {
+        this.isAllowChangePro = false
+      }
     },
     // 表格行点击去编辑
     openEdit(row) {
@@ -324,9 +332,7 @@ export default {
             getCloseProject({ id: row.id, closeDesc: value }).then((res) => {
               this.getqueryForProjects()
             })
-          } else {
           }
-
           // TO DO DO ...
         })
         .catch({})

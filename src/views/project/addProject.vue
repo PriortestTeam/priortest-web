@@ -121,9 +121,9 @@
                 </router-link>
               </el-select> </el-form-item></el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.goLiveDate')" prop="goLiveDate">
+            <el-form-item :label="$t('lang.Project.planReleaseDate')" prop="planReleaseDate">
               <el-date-picker
-                v-model="projectFrom.goLiveDate"
+                v-model="projectFrom.planReleaseDate"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="pickerOptions"
                 type="date"

@@ -42,7 +42,7 @@ export const lang = {
     TestFrame: '测试框架',
     ProjectCategory: '项目类别',
     Customer: '客户',
-    goLiveDate: '上线日期',
+    planReleaseDate: '上线日期',
 
     Closed: '关闭',
     Plan: '计划',
