@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { addProjects } from '@/api/project'
+// import { addProjects } from '@/api/project'
 import { message } from '@/utils/common'
 import { activateAccount, verifyLinkString } from '@/api/user'
 import serviceClause from '../login/serviceClause.vue'
@@ -90,7 +90,7 @@ export default {
   },
   mounted() {
     this.loginForm.email = this.$route.query.email
-    this.loginForm.params = this.$route.query.params
+    /* this.loginForm.params = this.$route.query.params
     if (!this.loginForm.email || !this.loginForm.params) {
       this.$router.push({ path: '/' })
       return
@@ -99,7 +99,7 @@ export default {
       if (res.code !== '200') {
         this.$router.push({ path: '/' })
       }
-    })
+    }) */
   },
   methods: {
     getServiceClause(data) {

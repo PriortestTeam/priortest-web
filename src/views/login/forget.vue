@@ -144,10 +144,10 @@ export default {
       this.$refs.forgetForm.validate(valid => {
         if (valid) {
           sendForgetEmail(this.forgetForm).then((res) => {
-            message('success', res.msg)
-            // this.backLogin()
-            // this.forgetForm={}
-            this.forgetViable = false
+            if (res.code === '200') {
+              message('success', res.msg)
+              this.forgetViable = false
+            }
           }).catch(error => {
             console.log(error)
           })
