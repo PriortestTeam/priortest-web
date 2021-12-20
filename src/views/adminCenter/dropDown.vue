@@ -198,6 +198,10 @@ export default {
     customname: {
       type: Object,
       required: true
+    },
+    fieldName: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -222,6 +226,7 @@ export default {
         color: '#d4dce3',
         background: '#4286CD'
       },
+      cloneFieldsForm: {},
       // 自定义字段
       fieldsfrom: {
         type: 'DropDown',
@@ -229,7 +234,8 @@ export default {
         scope: [false, false, false, false, false],
         mandatory: [false, false, false, false, false],
         dropDowns: [],
-        projectId: ''
+        projectId: '',
+        fieldName: this.fieldName
       },
       fieldsrules: {
         fieldName: [{ required: true, message: '请输入字段名称', trigger: 'blur' }],
@@ -256,13 +262,11 @@ export default {
     }
   },
   created() {
+    /* eslint-disable */
+    this.cloneFieldsForm = _.cloneDeep(this.fieldsfrom)
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
   },
-  mounted() {
-
-  },
   methods: {
-
     // 字段表单提交
     submitfdForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -289,12 +293,16 @@ export default {
             addCustomDropDown(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
+                this.fieldsfrom = _.cloneDeep(this.cloneFieldsForm)
+                this.$emit('executeQueryCustomList')
               }
             })
           } else {
             updateCustomDropDown(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
+                this.fieldsfrom = _.cloneDeep(this.cloneFieldsForm)
+                this.$emit('executeQueryCustomList')
               }
             })
           }
@@ -305,6 +313,7 @@ export default {
       })
     },
     PleaseType(val) {
+      this.$emit('setFieldName', this.fieldsfrom.fieldName)
       this.$emit('PleaseType', val)
     },
     // drop表格选中

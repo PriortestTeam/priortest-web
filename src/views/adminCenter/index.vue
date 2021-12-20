@@ -16,22 +16,19 @@
                 round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-                >新建账户</el-button
-              >
+              >新建账户</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="submitForm('accountForm')"
-                >确认修改</el-button
-              >
+              >确认修改</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="cancelUpdate('accountForm')"
-                >取消修改</el-button
-              >
+              >取消修改</el-button>
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -46,7 +43,7 @@
                   placeholder="请输入用户名"
                 />
               </el-form-item>
-           
+
               <el-form-item label="角色" prop="sysRoleId" size="small">
                 <el-select
                   v-model="accountForm.sysRoleId"
@@ -79,15 +76,15 @@
             </div>
             <div class="table">
               <el-button type="text" @click="accountRefresh">刷新</el-button>
-               <el-button type="text" :disabled="accountMultiple"
-                >批量删除</el-button
-              >
+              <el-button
+                type="text"
+                :disabled="accountMultiple"
+              >批量删除</el-button>
               <el-button
                 type="text"
                 :disabled="accountSingle"
                 @click="accountJurisdiction"
-                >权限</el-button
-              >
+              >权限</el-button>
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -103,26 +100,27 @@
                 <el-table-column prop="email" label="邮箱" />
                 <el-table-column
                   prop="userName"
-                
+
                   label="用户名"
                 />
                 <el-table-column
                   prop="projectsSts"
-               
+
                   label="项目"
                   :show-overflow-tooltip="true"
                 />
                 <el-table-column
                   prop="registerDate"
-                
+
                   label="注册日期"
                 />
                 <el-table-column prop="roleName" label="角色" />
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                    <span class="table-btn" @click.stop="accountDel(scope.row)"
-                      >删除</span
-                    >
+                    <span
+                      class="table-btn"
+                      @click.stop="accountDel(scope.row)"
+                    >删除</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -150,31 +148,42 @@
           <Radioindex
             v-if="customType === 'radio'"
             :customname="fieldsfrom"
+            :field-name="fieldName"
             @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
           />
 
           <Textindex
             v-else-if="customType === 'text'"
             :customname="fieldsfrom"
+            :field-name="fieldName"
             @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
           />
 
           <Memoindex
             v-else-if="customType === 'memo'"
             :customname="fieldsfrom"
+            :field-name="fieldName"
             @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
           />
 
           <!-- <Chackbox
             v-else-if="customType==='chackbox'"
-            :customname="fieldsfrom"
-            @PleaseType="chType"
+            :customname="fieldsfrom
           /> -->
 
           <Dropdown
             v-else-if="customType === 'DropDown' || customType === 'dropDown'"
             :customname="fieldsfrom"
+            :field-name="fieldName"
             @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
           />
           <div class="table">
             <el-button type="text" :disabled="dbfields">删除</el-button>
@@ -197,8 +206,7 @@
                     type="text"
                     class="table-btn"
                     @click.stop="delfield(scope.row)"
-                    >删除</el-button
-                  >
+                  >删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -214,7 +222,7 @@
         <!-- 自定义字段 -->
       </el-tab-pane>
       <el-tab-pane label="系统字段" name="4">
-        <System :paramValue="propSystem"></System>
+        <System :param-value="propSystem" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -227,17 +235,17 @@ import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
 import Memoindex from '@/views/adminCenter/memo'
 import Dropdown from '@/views/adminCenter/dropDown'
-import {getUserRoles, queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
+import { getUserRoles, queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
 import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Radioindex, Textindex, Memoindex, Dropdown,System
+    Jurisdiction, Radioindex, Textindex, Memoindex, Dropdown, System
   },
   data() {
     return {
       activeName: '0',
-      propSystem:'',
+      propSystem: '',
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'
@@ -300,25 +308,26 @@ export default {
       },
       fieldsId: {
         projectId: ''
-      }
+      },
+      fieldName: ''
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       // 新增项目到自定义字段
 
-      if(to.query.par){
-         if ((from.name === 'Addproject')|| from.name === 'Addfeature' || from.name === 'Addsprint' ||
+      if (to.query.par) {
+        if ((from.name === 'Addproject') || from.name === 'Addfeature' || from.name === 'Addsprint' ||
           from.name === 'Addtestcycle' || from.name === 'Addissue' || from.name === 'Addtestcase') {
           vm.activeName = '4'
-          vm.propSystem=to.query.par
-          }
-        }else{
-            if ((from.name === 'Addproject')|| from.name === 'Addfeature' || from.name === 'Addsprint' ||
+          vm.propSystem = to.query.par
+        }
+      } else {
+        if ((from.name === 'Addproject') || from.name === 'Addfeature' || from.name === 'Addsprint' ||
           from.name === 'Addtestcycle' || from.name === 'Addissue' || from.name === 'Addtestcase') {
           vm.activeName = '3'
-          }
         }
+      }
     })
   },
   computed: {
@@ -327,10 +336,10 @@ export default {
     }
   },
   watch: {
-    'fieldsfrom.type': function (val) {
+    'fieldsfrom.type': function(val) {
       this.PleaseType(val)
     },
-    'fieldsfrom.fieldName': function (val) {
+    'fieldsfrom.fieldName': function(val) {
       if (val) {
         this.fielddisabled = false
       } else {
@@ -347,15 +356,15 @@ export default {
     this.getProject()
     this.getqueryCustomList()
   },
-  mounted() {
-
-  },
   methods: {
+    setFieldName(data) {
+      this.fieldName = data
+    },
     handleClick(val) {
-      if(val==='4'){
+      if (val === '4') {
         if (!this.projectInfo.userUseOpenProject.projectId) {
           message('error', '请先选择项目')
-           throw new Error("");
+          throw new Error('')
         }
       }
     },
@@ -417,7 +426,7 @@ export default {
             var form = JSON.parse(JSON.stringify(this.accountForm))
             form.projectIdStr = form.projectIdStr.join(',')
             createSubUser(form).then(res => {
-              if(res.code!=200){
+              if (res.code != 200) {
                 return
               }
               message('success', res.msg)
@@ -479,7 +488,7 @@ export default {
             message('success', '删除成功')
           }
         })
-      }).catch(function () { })
+      }).catch(function() { })
     },
     // 权限
     accountJurisdiction() {
