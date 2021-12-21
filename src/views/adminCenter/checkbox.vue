@@ -39,11 +39,16 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="值来源" prop="valueFrom" class="form-small">
-          <el-radio v-model="fieldsfrom.valueFrom" label="1">新值</el-radio>
-          <el-radio v-model="fieldsfrom.valueFrom" label="2">系统列表</el-radio>
+        <el-form-item
+          v-if="showLength"
+          label="长度"
+          prop="length"
+          class="form-small"
+        >
+          <el-input v-model="fieldsfrom.length" size="small" />
         </el-form-item>
         <el-form-item
+          v-if="dropValue"
           label="值"
           prop="length"
           class="form-small"
@@ -51,23 +56,12 @@
           <el-row>
             <el-col
               :span="16"
-            >
-            <el-input
+            ><el-input
               v-model="fieldsfrom.Value"
               size="small"
-            />
-            <el-select
-              v-model="fieldsfrom.sysList"
-              size="small"
-            >
-              <el-option
-                label="value"
-                value="value"
-              />
-            </el-select>
-            </el-col>
+            /></el-col>
             <el-col :span="8">
-              <div style="margin-left: 5px">
+              <div style="marginleft: 5px">
                 <el-button
                   type="primary"
                   round
@@ -80,20 +74,16 @@
         </el-form-item>
       </el-form>
     </el-col>
-    <el-col :span="4">
+    <el-col v-if="dropValue" :span="4">
       <el-row>
         <el-col :span="16">
           <el-table
             border
             max-height="205"
-            :data="fieldsfrom.dropDowns"
+            :data="dropData"
             @row-click="dropselect"
           >
-            <el-table-column align="center" label="value">
-              <template slot-scope="scope">
-                {{ scope.row }}
-              </template>
-            </el-table-column>
+            <el-table-column prop="name" align="center" label="value" />
           </el-table>
         </el-col>
         <el-col :span="8">
@@ -130,19 +120,10 @@
             <el-checkbox v-model="fieldsfrom.mandatory[0]" />
           </div>
         </el-col>
+        <!-- 单选 or 复选-->
         <el-col :span="4">
-          <div class="ng-input">
-            <el-select
-              v-model="fieldsfrom.defaultValues[0]"
-              size="small"
-            >
-              <el-option
-                v-for="item in sysList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+          <div class="ng-red check-box">
+            <el-checkbox v-model="fieldsfrom.defaultValue[0]" />
           </div>
         </el-col>
       </el-row>
@@ -156,19 +137,10 @@
             <el-checkbox v-model="fieldsfrom.mandatory[1]" />
           </div>
         </el-col>
+        <!-- 单选 or 复选-->
         <el-col :span="4">
-          <div class="ng-input">
-            <el-select
-              v-model="fieldsfrom.defaultValues[1]"
-              size="small"
-            >
-              <el-option
-                v-for="item in sysList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+          <div class="ng-red check-box">
+            <el-checkbox v-model="fieldsfrom.defaultValue[1]" />
           </div>
         </el-col>
       </el-row>
@@ -182,19 +154,10 @@
             <el-checkbox v-model="fieldsfrom.mandatory[2]" />
           </div>
         </el-col>
+        <!-- 单选 or 复选-->
         <el-col :span="4">
-          <div class="ng-input">
-            <el-select
-              v-model="fieldsfrom.defaultValues[2]"
-              size="small"
-            >
-              <el-option
-                v-for="item in sysList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+          <div class="ng-red check-box">
+            <el-checkbox v-model="fieldsfrom.defaultValue[2]" />
           </div>
         </el-col>
       </el-row>
@@ -208,19 +171,10 @@
             <el-checkbox v-model="fieldsfrom.mandatory[3]" />
           </div>
         </el-col>
+        <!-- 单选 or 复选-->
         <el-col :span="4">
-          <div class="ng-input">
-            <el-select
-              v-model="fieldsfrom.defaultValues[3]"
-              size="small"
-            >
-              <el-option
-                v-for="item in sysList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+          <div class="ng-red check-box">
+            <el-checkbox v-model="fieldsfrom.defaultValue[3]" />
           </div>
         </el-col>
       </el-row>
@@ -234,19 +188,10 @@
             <el-checkbox v-model="fieldsfrom.mandatory[4]" />
           </div>
         </el-col>
+        <!-- 单选 or 复选-->
         <el-col :span="4">
-          <div class="ng-input">
-            <el-select
-              v-model="fieldsfrom.defaultValues[4]"
-              size="small"
-            >
-              <el-option
-                v-for="item in sysList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+          <div class="ng-red check-box">
+            <el-checkbox v-model="fieldsfrom.defaultValue[4]" />
           </div>
         </el-col>
       </el-row>
@@ -256,16 +201,12 @@
 
 <script>
 import { message } from '@/utils/common'
-import { addCustomDropDown, updateCustomDropDown } from '@/api/customField'
+import { addCustomRadio, updateCustomRadio } from '@/api/customField'
 export default {
   name: 'Radio',
   props: {
     customname: {
       type: Object,
-      required: true
-    },
-    fieldName: {
-      type: String,
       required: true
     }
   },
@@ -297,18 +238,13 @@ export default {
         color: '#d4dce3',
         background: '#4286CD'
       },
-      cloneFieldsForm: {},
       // 自定义字段
       fieldsfrom: {
-        type: 'DropDown',
-        concat: '',
+        type: 'checkbox',
         scope: [false, false, false, false, false],
+        defaultValue: [false, false, false, false, false],
         mandatory: [false, false, false, false, false],
-        defaultValues: ['', '', '', '', ''],
-        dropDowns: [],
-        projectId: '',
-        fieldName: this.fieldName,
-        valueFrom: '1'
+        projectId: ''
       },
       fieldsrules: {
         fieldName: [{ required: true, message: '请输入字段名称', trigger: 'blur' }],
@@ -320,13 +256,13 @@ export default {
       singleorType: false,
       // 字符长度 （文本 or 备注）
       showLength: false,
-      droprow: '',
-      sysList: [
-        {
-          label: '1',
-          value: '1',
-        }
-      ]
+      dropValue: false,
+      dropData: [
+        { name: '01' },
+        { name: '02' }
+      ],
+      droprow: ''
+      // 自定义字段 结束
     }
   },
   computed: {
@@ -340,9 +276,10 @@ export default {
     }
   },
   created() {
-    /* eslint-disable */
-    this.cloneFieldsForm = _.cloneDeep(this.fieldsfrom)
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
+  },
+  mounted() {
+
   },
   methods: {
     // 字段表单提交
@@ -351,7 +288,7 @@ export default {
         if (valid) {
           const radio = this.fieldsfrom
           for (const key in radio) {
-            if (key === 'scope' || key === 'mandatory') {
+            if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
               for (let i = 0; i < radio[key].length; i++) {
                 if (radio[key][i] === false) {
                   radio[key][i] = '0'
@@ -363,24 +300,20 @@ export default {
           }
 
           for (const i in radio) {
-            if (i === 'scope' || i === 'mandatory') {
+            if (i === 'scope' || i === 'defaultValue' || i === 'mandatory') {
               radio[i] = radio[i].join(',')
             }
           }
           if (!this.fieldsfrom.id) {
-            addCustomDropDown(radio).then(res => {
+            addCustomRadio(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
-                this.fieldsfrom = _.cloneDeep(this.cloneFieldsForm)
-                this.$emit('executeQueryCustomList')
               }
             })
           } else {
-            updateCustomDropDown(radio).then(res => {
+            updateCustomRadio(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
-                this.fieldsfrom = _.cloneDeep(this.cloneFieldsForm)
-                this.$emit('executeQueryCustomList')
               }
             })
           }
@@ -391,7 +324,6 @@ export default {
       })
     },
     PleaseType(val) {
-      this.$emit('setFieldName', this.fieldsfrom.fieldName)
       this.$emit('PleaseType', val)
     },
     // drop表格选中
@@ -400,18 +332,17 @@ export default {
     },
     // 添加drop值
     addDrop() {
-      // const obj = {
-      //   name: this.fieldsfrom.Value
-      // }
-      this.fieldsfrom.dropDowns.push(this.fieldsfrom.Value)
-      console.log(this.fieldsfrom.dropDowns)
+      const obj = {
+        name: this.fieldsfrom.Value
+      }
+      this.dropData.push(obj)
     },
     // 删除drop值
     delDrop() {
       const val = this.droprow
-      this.fieldsfrom.dropDowns.filter((item, index) => {
+      this.dropData.filter((item, index) => {
         if (item === val) {
-          this.fieldsfrom.dropDowns.splice(index, 1)
+          this.dropData.splice(index, 1)
           this.droprow = ''
         }
       })
@@ -425,4 +356,24 @@ export default {
 <style lang="scss" scoped>
 @import "index.scss";
 @import "@/views/project/index.scss";
+</style>
+<style lang="scss">
+  .manage-view .fd-row .sen-row .ng-red.check-box{
+    .el-checkbox__inner{
+      border-radius: 0;
+      &::after{
+        border: 1px solid #666;
+        border-top: none;
+        border-left: none;
+        width: 3px;
+        height: 7px;
+        left: 4px;
+        top: 1px;
+        right: inherit;
+        border-radius: 0;
+        bottom: 3px;
+        background: #fff;
+      }
+    }
+  }
 </style>

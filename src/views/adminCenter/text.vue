@@ -44,7 +44,7 @@
           prop="length"
           class="form-small"
         >
-          <el-input v-model="fieldsfrom.length" size="small" />
+          <el-input v-model="fieldsfrom.length" @blur="setLimitLen" size="small" />
         </el-form-item>
       </el-form>
     </el-col>
@@ -72,7 +72,7 @@
         </el-col>
         <el-col :span="4">
           <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[0]" />
+            <el-input v-model="fieldsfrom.defaultValues[0]" maxlength="50" />
           </div>
         </el-col>
       </el-row>
@@ -88,7 +88,7 @@
         </el-col>
         <el-col :span="4">
           <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[1]" />
+            <el-input v-model="fieldsfrom.defaultValues[1]" maxlength="50" />
           </div>
         </el-col>
       </el-row>
@@ -104,7 +104,7 @@
         </el-col>
         <el-col :span="4">
           <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[2]" />
+            <el-input v-model="fieldsfrom.defaultValues[2]" maxlength="50" />
           </div>
         </el-col>
       </el-row>
@@ -120,7 +120,7 @@
         </el-col>
         <el-col :span="4">
           <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[3]" />
+            <el-input v-model="fieldsfrom.defaultValues[3]" maxlength="50" />
           </div>
         </el-col>
       </el-row>
@@ -136,7 +136,7 @@
         </el-col>
         <el-col :span="4">
           <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[4]" />
+            <el-input v-model="fieldsfrom.defaultValues[4]" maxlength="50" />
           </div>
         </el-col>
       </el-row>
@@ -165,17 +165,23 @@ export default {
         value: 'dropDown',
         label: '下拉框'
       }, {
+        value: 'DropDown',
+        label: '多选框'
+      }, {
         value: 'text',
         label: '文本'
       }, {
         value: 'memo',
         label: '备注'
       }, {
-        value: 'chackbox',
-        label: '多选框'
-      }, {
         value: 'radio',
         label: '单选框'
+      }, {
+        value: 'date',
+        label: '日期'
+      }, {
+        value: 'checkbox',
+        label: '复选框'
       }],
       tableHeader: {
         color: '#d4dce3',
@@ -227,8 +233,18 @@ export default {
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
   },
   methods: {
+    // 长度文本框失焦
+    setLimitLen() {
+      if(Number(this.fieldsfrom.length) > 50) {
+        message('warning', '长度最大值为50')
+        return true
+      }
+    },
     // 字段表单提交
     submitfdForm(formName) {
+      if (this.setLimitLen()) {
+        return
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const radio = this.fieldsfrom
@@ -243,7 +259,6 @@ export default {
               }
             }
           }
-
           for (const i in radio) {
             if (i === 'scope' || i === 'defaultValue' || i === 'mandatory') {
               radio[i] = radio[i].join(',')

@@ -220,17 +220,23 @@ export default {
         value: 'dropDown',
         label: '下拉框'
       }, {
+        value: 'DropDown',
+        label: '多选框'
+      }, {
         value: 'text',
         label: '文本'
       }, {
         value: 'memo',
         label: '备注'
       }, {
-        value: 'chackbox',
-        label: '多选框'
-      }, {
         value: 'radio',
         label: '单选框'
+      }, {
+        value: 'date',
+        label: '日期'
+      }, {
+        value: 'checkbox',
+        label: '复选框'
       }],
       tableHeader: {
         color: '#d4dce3',

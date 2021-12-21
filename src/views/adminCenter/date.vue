@@ -123,7 +123,12 @@
         <!-- 单选 or 复选-->
         <el-col :span="4">
           <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[0]" />
+            <el-date-picker
+              v-model="fieldsfrom.defaultValues[0]"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+            <!-- <el-checkbox v-model="fieldsfrom.defaultValues[0]" /> -->
           </div>
         </el-col>
       </el-row>
@@ -140,7 +145,12 @@
         <!-- 单选 or 复选-->
         <el-col :span="4">
           <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[1]" />
+            <!-- <el-checkbox v-model="fieldsfrom.defaultValue[1]" /> -->
+            <el-date-picker
+              v-model="fieldsfrom.defaultValues[1]"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
           </div>
         </el-col>
       </el-row>
@@ -157,7 +167,12 @@
         <!-- 单选 or 复选-->
         <el-col :span="4">
           <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[2]" />
+            <!-- <el-checkbox v-model="fieldsfrom.defaultValue[2]" /> -->
+            <el-date-picker
+              v-model="fieldsfrom.defaultValues[2]"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
           </div>
         </el-col>
       </el-row>
@@ -174,7 +189,12 @@
         <!-- 单选 or 复选-->
         <el-col :span="4">
           <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[3]" />
+            <!-- <el-checkbox v-model="fieldsfrom.defaultValue[3]" /> -->
+            <el-date-picker
+              v-model="fieldsfrom.defaultValues[3]"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
           </div>
         </el-col>
       </el-row>
@@ -191,7 +211,12 @@
         <!-- 单选 or 复选-->
         <el-col :span="4">
           <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.defaultValue[4]" />
+            <!-- <el-checkbox v-model="fieldsfrom.defaultValue[4]" /> -->
+            <el-date-picker
+              v-model="fieldsfrom.defaultValues[4]"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
           </div>
         </el-col>
       </el-row>
@@ -203,10 +228,14 @@
 import { message } from '@/utils/common'
 import { addCustomRadio, updateCustomRadio } from '@/api/customField'
 export default {
-  name: 'Radio',
+  name: 'Date',
   props: {
     customname: {
       type: Object,
+      required: true
+    },
+    fieldName: {
+      type: String,
       required: true
     }
   },
@@ -216,29 +245,37 @@ export default {
         value: 'dropDown',
         label: '下拉框'
       }, {
+        value: 'DropDown',
+        label: '多选框'
+      }, {
         value: 'text',
         label: '文本'
       }, {
         value: 'memo',
         label: '备注'
       }, {
-        value: 'chackbox',
-        label: '多选框'
-      }, {
         value: 'radio',
         label: '单选框'
+      }, {
+        value: 'date',
+        label: '日期'
+      }, {
+        value: 'checkbox',
+        label: '复选框'
       }],
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'
       },
+      cloneFieldsForm: {},
       // 自定义字段
       fieldsfrom: {
-        type: 'radio',
+        type: 'date',
         scope: [false, false, false, false, false],
-        defaultValue: [false, false, false, false, false],
+        defaultValues: ['', '', '', '', ''],
         mandatory: [false, false, false, false, false],
-        projectId: ''
+        projectId: '',
+        fieldName: this.fieldName
       },
       fieldsrules: {
         fieldName: [{ required: true, message: '请输入字段名称', trigger: 'blur' }],
@@ -270,10 +307,9 @@ export default {
     }
   },
   created() {
+    /* eslint-disable */
+    this.cloneFieldsForm = _.cloneDeep(this.fieldsfrom)
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
-  },
-  mounted() {
-
   },
   methods: {
     // 字段表单提交
@@ -302,12 +338,16 @@ export default {
             addCustomRadio(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
+                this.fieldsfrom = _.cloneDeep(this.cloneFieldsForm)
+                this.$emit('executeQueryCustomList')
               }
             })
           } else {
             updateCustomRadio(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
+                this.fieldsfrom = _.cloneDeep(this.cloneFieldsForm)
+                this.$emit('executeQueryCustomList')
               }
             })
           }
@@ -318,6 +358,7 @@ export default {
       })
     },
     PleaseType(val) {
+      this.$emit('setFieldName', this.fieldsfrom.fieldName)
       this.$emit('PleaseType', val)
     },
     // drop表格选中

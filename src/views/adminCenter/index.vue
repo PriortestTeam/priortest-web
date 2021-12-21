@@ -145,6 +145,14 @@
       <el-tab-pane label="自定义字段" name="3">
         <div class="manage-view">
           <!-- 自定义字段 -->
+          <Dateindex
+            v-if="customType === 'date'"
+            :customname="fieldsfrom"
+            :field-name="fieldName"
+            @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
+          />
           <Radioindex
             v-if="customType === 'radio'"
             :customname="fieldsfrom"
@@ -172,10 +180,14 @@
             @setFieldName="setFieldName"
           />
 
-          <!-- <Chackbox
-            v-else-if="customType==='chackbox'"
-            :customname="fieldsfrom
-          /> -->
+          <Checkbox
+            v-else-if="customType==='checkbox'"
+            :customname="fieldsfrom"
+            :field-name="fieldName"
+            @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
+          />
 
           <Dropdown
             v-else-if="customType === 'DropDown' || customType === 'dropDown'"
@@ -231,16 +243,18 @@
 import { message, formatChangedPara, customradioData, customtextData } from '@/utils/common'
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import System from '@/views/adminCenter/system'
+import Dateindex from '@/views/adminCenter/date'
 import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
 import Memoindex from '@/views/adminCenter/memo'
 import Dropdown from '@/views/adminCenter/dropDown'
+import Checkbox from '@/views/adminCenter/checkbox'
 import { getUserRoles, queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
 import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Radioindex, Textindex, Memoindex, Dropdown, System
+    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox
   },
   data() {
     return {
@@ -315,7 +329,6 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       // 新增项目到自定义字段
-
       if (to.query.par) {
         if ((from.name === 'Addproject') || from.name === 'Addfeature' || from.name === 'Addsprint' ||
           from.name === 'Addtestcycle' || from.name === 'Addissue' || from.name === 'Addtestcase') {
@@ -594,7 +607,6 @@ export default {
       this.customType = val
     }
     // 自定义字段 结束
-
   }
 }
 </script>
@@ -619,4 +631,11 @@ export default {
 <style lang="scss" scoped>
 @import "index.scss";
 // @import "field.scss";
+</style>
+<style lang="scss">
+.admin-center {
+  .el-form-item .el-form-item__label {
+    padding-right: 8px;
+  }
+}
 </style>
