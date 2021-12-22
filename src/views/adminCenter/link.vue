@@ -40,68 +40,16 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="showLength"
           label="长度"
           prop="length"
           class="form-small"
         >
-          <el-input v-model="fieldsfrom.length" size="small" />
-        </el-form-item>
-        <el-form-item
-          v-if="dropValue"
-          label="值"
-          prop="length"
-          class="form-small"
-        >
-          <el-row>
-            <el-col
-              :span="16"
-            ><el-input
-              v-model="fieldsfrom.Value"
-              size="small"
-            /></el-col>
-            <el-col :span="8">
-              <div style="marginleft: 5px">
-                <el-button
-                  type="primary"
-                  round
-                  :disabled="!fieldsfrom.Value"
-                  @click="addDrop"
-                >添加</el-button>
-              </div>
-            </el-col>
-          </el-row>
+          <el-input v-model="fieldsfrom.length" size="small" @blur="setLimitLen" />
         </el-form-item>
       </el-form>
     </el-col>
-    <el-col v-if="dropValue" :span="4">
-      <el-row>
-        <el-col :span="16">
-          <el-table
-            border
-            max-height="205"
-            :data="dropData"
-            @row-click="dropselect"
-          >
-            <el-table-column prop="name" align="center" label="value" />
-          </el-table>
-        </el-col>
-        <el-col :span="8">
-          <div style="marginleft: 5px">
-            <el-button
-              type="primary"
-              round
-              :disabled="!droprow"
-              @click="delDrop"
-            >删除</el-button>
-          </div>
-        </el-col>
-      </el-row>
-    </el-col>
-    <el-col
-      v-if="true"
-      :span="6"
-    ><div class="grid-content bg-purple" />
+    <el-col v-if="true" :span="6">
+      <div class="grid-content bg-purple" />
       <el-row class="sen-row" :gutter="20">
         <el-col :span="4">
           <el-checkbox v-model="checked1" />
@@ -121,12 +69,8 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <div class="ng-red">
-            <el-date-picker
-              v-model="fieldsfrom.defaultValues[index]"
-              type="date"
-              placeholder="选择日期"
-            />
+          <div class="ng-input">
+            <el-input v-model="fieldsfrom.defaultValues[index]" maxlength="50" />
           </div>
         </el-col>
       </el-row>
@@ -136,9 +80,9 @@
 
 <script>
 import { message } from '@/utils/common'
-import { addCustomRadio, updateCustomRadio } from '@/api/customField'
+import { addCustomText, updateCustomText } from '@/api/customField'
 export default {
-  name: 'Date',
+  name: 'Link',
   props: {
     customType: {
       type: String,
@@ -171,6 +115,7 @@ export default {
       // 自定义字段
       fieldsfrom: {
         type: this.customType,
+        concat: '',
         scope: [],
         defaultValues: [],
         mandatory: [],
@@ -222,8 +167,18 @@ export default {
         that.fieldsfrom.mandatory[index] = false
       })
     },
+    // 长度文本框失焦
+    setLimitLen() {
+      if(Number(this.fieldsfrom.length) > 50) {
+        message('warning', '长度最大值为50')
+        return true
+      }
+    },
     // 字段表单提交
     submitfdForm(formName) {
+      if (this.setLimitLen()) {
+        return
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const radio = this.fieldsfrom
@@ -238,14 +193,13 @@ export default {
               }
             }
           }
-
           for (const i in radio) {
             if (i === 'scope' || i === 'defaultValue' || i === 'mandatory') {
               radio[i] = radio[i].join(',')
             }
           }
           if (!this.fieldsfrom.id) {
-            addCustomRadio(radio).then(res => {
+            addCustomText(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 this.fieldsfrom = _.cloneDeep(this.cloneFieldsForm)
@@ -253,7 +207,7 @@ export default {
               }
             })
           } else {
-            updateCustomRadio(radio).then(res => {
+            updateCustomText(radio).then(res => {
               if (res.code === '200') {
                 message('success', res.msg)
                 this.fieldsfrom = _.cloneDeep(this.cloneFieldsForm)

@@ -44,7 +44,7 @@
           prop="length"
           class="form-small"
         >
-          <el-input v-model="fieldsfrom.length" @blur="setLimitLen" size="small" />
+          <el-input v-model="fieldsfrom.length" size="small" @blur="setLimitLen" />
         </el-form-item>
       </el-form>
     </el-col>
@@ -60,83 +60,19 @@
         <el-col :span="4">是否必填</el-col>
         <el-col :span="4">初始值</el-col>
       </el-row>
-      <el-row class="sen-row" :gutter="20">
+      <el-row v-for="(item, index) in scopeList" :key="index" class="sen-row" :gutter="20">
         <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[0]" />
+          <el-checkbox v-model="fieldsfrom.scope[index]" />
         </el-col>
-        <el-col :span="4">项目</el-col>
+        <el-col :span="4">{{ item }}</el-col>
         <el-col :span="4">
           <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[0]" />
+            <el-checkbox v-model="fieldsfrom.mandatory[index]" />
           </div>
         </el-col>
         <el-col :span="4">
           <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[0]" maxlength="300" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="sen-row" :gutter="20">
-        <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[1]" />
-        </el-col>
-        <el-col :span="4">故事</el-col>
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[1]" />
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[1]" maxlength="300" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="sen-row" :gutter="20">
-        <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[2]" />
-        </el-col>
-        <el-col :span="4">测试用例</el-col>
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[2]" />
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[2]" maxlength="300" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="sen-row" :gutter="20">
-        <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[3]" />
-        </el-col>
-        <el-col :span="4">测试周期</el-col>
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[3]" />
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[3]" maxlength="300" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="sen-row" :gutter="20">
-        <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[4]" />
-        </el-col>
-        <el-col :span="4">验收</el-col>
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[4]" />
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[4]" maxlength="300" />
+            <el-input v-model="fieldsfrom.defaultValues[index]" maxlength="300" />
           </div>
         </el-col>
       </el-row>
@@ -148,8 +84,12 @@
 import { message } from '@/utils/common'
 import { addCustomRichText, updateCustomRichText } from '@/api/customField'
 export default {
-  name: 'Radio',
+  name: 'Memo',
   props: {
+    customType: {
+      type: String,
+      required: true
+    },
     customname: {
       type: Object,
       required: true
@@ -157,32 +97,18 @@ export default {
     fieldName: {
       type: String,
       required: true
+    },
+    fieldsOptions: {
+      type: Array,
+      required: true
+    },
+    scopeList: {
+      type: Array,
+      required: true
     }
   },
   data() {
     return {
-      fieldsOptions: [{
-        value: 'dropDown',
-        label: '下拉框'
-      }, {
-        value: 'DropDown',
-        label: '多选框'
-      }, {
-        value: 'text',
-        label: '文本'
-      }, {
-        value: 'memo',
-        label: '备注'
-      }, {
-        value: 'radio',
-        label: '单选框'
-      }, {
-        value: 'date',
-        label: '日期'
-      }, {
-        value: 'checkbox',
-        label: '复选框'
-      }],
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'
@@ -190,11 +116,11 @@ export default {
       cloneFieldsForm: {},
       // 自定义字段
       fieldsfrom: {
-        type: 'memo',
+        type: this.customType,
         concat: '',
-        scope: [false, false, false, false, false],
-        defaultValues: ['', '', '', '', ''],
-        mandatory: [false, false, false, false, false],
+        scope: [],
+        defaultValues: [],
+        mandatory: [],
         projectId: '',
         fieldName: this.fieldName
       },
@@ -231,8 +157,18 @@ export default {
     /* eslint-disable */
     this.cloneFieldsForm = _.cloneDeep(this.fieldsfrom)
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
+    this.initScopeValue()
   },
   methods: {
+    // 初始化范围值、是否必填、初始值
+    initScopeValue() {
+      const that = this
+      that.scopeList.forEach((item, index) => {
+        that.fieldsfrom.scope[index] = false
+        that.fieldsfrom.defaultValues[index] = ''
+        that.fieldsfrom.mandatory[index] = false
+      })
+    },
     // 长度文本框失焦
     setLimitLen() {
       if(Number(this.fieldsfrom.length) > 300) {

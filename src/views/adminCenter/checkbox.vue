@@ -110,88 +110,19 @@
         <el-col :span="4">是否必填</el-col>
         <el-col :span="4">初始值</el-col>
       </el-row>
-      <el-row class="sen-row" :gutter="20">
+      <el-row v-for="(item, index) in scopeList" :key="index" class="sen-row" :gutter="20">
         <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[0]" />
+          <el-checkbox v-model="fieldsfrom.scope[index]" />
         </el-col>
-        <el-col :span="4">项目</el-col>
+        <el-col :span="4">{{ item }}</el-col>
         <el-col :span="4">
           <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[0]" />
+            <el-checkbox v-model="fieldsfrom.mandatory[index]" />
           </div>
         </el-col>
-        <!-- 单选 or 复选-->
         <el-col :span="4">
           <div class="ng-red check-box">
-            <el-checkbox v-model="fieldsfrom.defaultValue[0]" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="sen-row" :gutter="20">
-        <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[1]" />
-        </el-col>
-        <el-col :span="4">故事</el-col>
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[1]" />
-          </div>
-        </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red check-box">
-            <el-checkbox v-model="fieldsfrom.defaultValue[1]" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="sen-row" :gutter="20">
-        <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[2]" />
-        </el-col>
-        <el-col :span="4">测试用例</el-col>
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[2]" />
-          </div>
-        </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red check-box">
-            <el-checkbox v-model="fieldsfrom.defaultValue[2]" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="sen-row" :gutter="20">
-        <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[3]" />
-        </el-col>
-        <el-col :span="4">测试周期</el-col>
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[3]" />
-          </div>
-        </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red check-box">
-            <el-checkbox v-model="fieldsfrom.defaultValue[3]" />
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="sen-row" :gutter="20">
-        <el-col :span="4">
-          <el-checkbox v-model="fieldsfrom.scope[4]" />
-        </el-col>
-        <el-col :span="4">验收</el-col>
-        <el-col :span="4">
-          <div class="ng-red">
-            <el-checkbox v-model="fieldsfrom.mandatory[4]" />
-          </div>
-        </el-col>
-        <!-- 单选 or 复选-->
-        <el-col :span="4">
-          <div class="ng-red check-box">
-            <el-checkbox v-model="fieldsfrom.defaultValue[4]" />
+            <el-checkbox v-model="fieldsfrom.defaultValue[index]" />
           </div>
         </el-col>
       </el-row>
@@ -203,48 +134,43 @@
 import { message } from '@/utils/common'
 import { addCustomRadio, updateCustomRadio } from '@/api/customField'
 export default {
-  name: 'Radio',
+  name: 'CheckBox',
   props: {
+    customType: {
+      type: String,
+      required: true
+    },
     customname: {
       type: Object,
+      required: true
+    },
+    fieldName: {
+      type: String,
+      required: true
+    },
+    fieldsOptions: {
+      type: Array,
+      required: true
+    },
+    scopeList: {
+      type: Array,
       required: true
     }
   },
   data() {
     return {
-      fieldsOptions: [{
-        value: 'dropDown',
-        label: '下拉框'
-      }, {
-        value: 'DropDown',
-        label: '多选框'
-      }, {
-        value: 'text',
-        label: '文本'
-      }, {
-        value: 'memo',
-        label: '备注'
-      }, {
-        value: 'radio',
-        label: '单选框'
-      }, {
-        value: 'date',
-        label: '日期'
-      }, {
-        value: 'checkbox',
-        label: '复选框'
-      }],
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'
       },
       // 自定义字段
       fieldsfrom: {
-        type: 'checkbox',
-        scope: [false, false, false, false, false],
-        defaultValue: [false, false, false, false, false],
-        mandatory: [false, false, false, false, false],
-        projectId: ''
+        type: this.customType,
+        scope: [],
+        defaultValue: [],
+        mandatory: [],
+        projectId: '',
+        fieldName: this.fieldName
       },
       fieldsrules: {
         fieldName: [{ required: true, message: '请输入字段名称', trigger: 'blur' }],
@@ -277,11 +203,18 @@ export default {
   },
   created() {
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
-  },
-  mounted() {
-
+    this.initScopeValue()
   },
   methods: {
+    // 初始化范围值、是否必填、初始值
+    initScopeValue() {
+      const that = this
+      that.scopeList.forEach((item, index) => {
+        that.fieldsfrom.scope[index] = false
+        that.fieldsfrom.defaultValue[index] = false
+        that.fieldsfrom.mandatory[index] = false
+      })
+    },
     // 字段表单提交
     submitfdForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -324,6 +257,7 @@ export default {
       })
     },
     PleaseType(val) {
+      this.$emit('setFieldName', this.fieldsfrom.fieldName)
       this.$emit('PleaseType', val)
     },
     // drop表格选中

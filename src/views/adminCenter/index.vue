@@ -145,17 +145,34 @@
       <el-tab-pane label="自定义字段" name="3">
         <div class="manage-view">
           <!-- 自定义字段 -->
-          <Dateindex
-            v-if="customType === 'date'"
+          <Userindex
+            v-if="customType === '用户'"
+            :scope-list="scopeList"
+            :custom-type="customType"
             :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
+            :field-name="fieldName"
+            @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
+          />
+          <Dateindex
+            v-if="customType === '日期'"
+            :scope-list="scopeList"
+            :custom-type="customType"
+            :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
             :field-name="fieldName"
             @PleaseType="chType"
             @executeQueryCustomList="getqueryCustomList"
             @setFieldName="setFieldName"
           />
           <Radioindex
-            v-if="customType === 'radio'"
+            v-if="customType === '单选框'"
+            :scope-list="scopeList"
+            :custom-type="customType"
             :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
             :field-name="fieldName"
             @PleaseType="chType"
             @executeQueryCustomList="getqueryCustomList"
@@ -163,8 +180,11 @@
           />
 
           <Textindex
-            v-else-if="customType === 'text'"
+            v-else-if="customType === '文本'"
+            :scope-list="scopeList"
+            :custom-type="customType"
             :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
             :field-name="fieldName"
             @PleaseType="chType"
             @executeQueryCustomList="getqueryCustomList"
@@ -172,8 +192,23 @@
           />
 
           <Memoindex
-            v-else-if="customType === 'memo'"
+            v-else-if="customType === '备注'"
+            :scope-list="scopeList"
+            :custom-type="customType"
             :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
+            :field-name="fieldName"
+            @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
+          />
+
+          <Link
+            v-else-if="customType === '链接'"
+            :scope-list="scopeList"
+            :custom-type="customType"
+            :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
             :field-name="fieldName"
             @PleaseType="chType"
             @executeQueryCustomList="getqueryCustomList"
@@ -181,8 +216,11 @@
           />
 
           <Checkbox
-            v-else-if="customType==='checkbox'"
+            v-else-if="customType==='复选框'"
+            :scope-list="scopeList"
+            :custom-type="customType"
             :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
             :field-name="fieldName"
             @PleaseType="chType"
             @executeQueryCustomList="getqueryCustomList"
@@ -190,8 +228,11 @@
           />
 
           <Dropdown
-            v-else-if="customType === 'DropDown' || customType === 'dropDown'"
+            v-else-if="customType === '下拉框' || customType === '多选项'"
+            :scope-list="scopeList"
+            :custom-type="customType"
             :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
             :field-name="fieldName"
             @PleaseType="chType"
             @executeQueryCustomList="getqueryCustomList"
@@ -249,12 +290,14 @@ import Textindex from '@/views/adminCenter/text'
 import Memoindex from '@/views/adminCenter/memo'
 import Dropdown from '@/views/adminCenter/dropDown'
 import Checkbox from '@/views/adminCenter/checkbox'
-import { getUserRoles, queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser } from '@/api/admincenter'
+import Userindex from '@/views/adminCenter/user'
+import Link from '@/views/adminCenter/link'
+import { getUserRoles, queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysCustomField } from '@/api/admincenter'
 import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox
+    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link
   },
   data() {
     return {
@@ -309,7 +352,7 @@ export default {
       fieldsfrom: {},
       textfrom: {},
       // 子传父数据
-      customType: 'radio',
+      customType: '单选框',
 
       // 自定义字段表格数据
       fieldsData: [],
@@ -323,7 +366,9 @@ export default {
       fieldsId: {
         projectId: ''
       },
-      fieldName: ''
+      fieldName: '',
+      fieldsOptions: [],
+      scopeList: []
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -368,8 +413,43 @@ export default {
     this.getquerySubUsers()
     this.getProject()
     this.getqueryCustomList()
+    this.getSysCustomFieldByType()
+    this.getSysCustomFieldByScope()
   },
   methods: {
+    async getSysCustomFieldByType() {
+      const params = {
+        'fieldName': 'type'
+      }
+      const res = await getSysCustomField(params)
+      if (res.code === '200') {
+        console.log('getSysCustomField---', res)
+        res.data.mergeValues.forEach(item => {
+          const obj = {
+            value: item,
+            label: item
+          }
+          this.fieldsOptions.push(obj)
+        })
+      }
+    },
+    async getSysCustomFieldByScope() {
+      const params = {
+        'fieldName': 'scope'
+      }
+      const res = await getSysCustomField(params)
+      if (res.code === '200') {
+        console.log('getSysCustomFieldByScope---', res)
+        this.scopeList = res.data.mergeValues
+        /* res.data.mergeValues.forEach(item => {
+          const obj = {
+            value: item,
+            label: item
+          }
+          this.fieldsOptions.push(obj)
+        }) */
+      }
+    },
     setFieldName(data) {
       this.fieldName = data
     },
@@ -439,7 +519,7 @@ export default {
             var form = JSON.parse(JSON.stringify(this.accountForm))
             form.projectIdStr = form.projectIdStr.join(',')
             createSubUser(form).then(res => {
-              if (res.code != 200) {
+              if (res.code !== '200') {
                 return
               }
               message('success', res.msg)

@@ -80,11 +80,11 @@ export function updatePermissions(query) {
   })
 }
 
-/***系统字段 */
+/** *系统字段 */
 export function querySysCustomFields() {
   return request({
     url: '/sysCustomField/querySysCustomFields',
-    method: 'get',
+    method: 'get'
   })
 }
 export function updateSysCustomFields(query) {
@@ -92,11 +92,15 @@ export function updateSysCustomFields(query) {
     url: '/sysCustomField/updateSysCustomFields',
     method: 'post',
     data: query
-
-
   })
 }
-
+export function getSysCustomField(data) {
+  return request({
+    url: '/sysCustomField/getSysCustomField',
+    method: 'get',
+    params: data
+  })
+}
 // 项目获取角色
 export function getUserRoles() {
   return request({
@@ -104,4 +108,3 @@ export function getUserRoles() {
     method: 'get'
   })
 }
-
