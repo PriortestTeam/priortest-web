@@ -206,7 +206,7 @@ export default {
   },
   watch: {
     'customname': function(val) {
-      this.fieldsfrom = val
+      this.setForm()
     }
   },
   created() {
@@ -214,8 +214,17 @@ export default {
     this.cloneFieldsForm = _.cloneDeep(this.fieldsfrom)
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
     this.initScopeValue()
+    this.setForm()
   },
   methods: {
+    setForm() {
+      const that = this
+      for (const key in that.fieldsfrom) {
+        if (that.customname[key]){
+          this.fieldsfrom[key] = that.customname[key]
+        }
+      }
+    },
     // 初始化单选按钮
     handleCheck(checked, index) {
       this.disabledList[index] = !checked

@@ -168,7 +168,7 @@
             @setFieldName="setFieldName"
           />
           <Radioindex
-            v-if="customType === '单选框'"
+            v-if="customType === 'radio'"
             :scope-list="scopeList"
             :custom-type="customType"
             :customname="fieldsfrom"
@@ -180,7 +180,7 @@
           />
 
           <Textindex
-            v-else-if="customType === '文本'"
+            v-else-if="customType === 'text'"
             :scope-list="scopeList"
             :custom-type="customType"
             :customname="fieldsfrom"
@@ -192,7 +192,7 @@
           />
 
           <Memoindex
-            v-else-if="customType === '备注'"
+            v-else-if="customType === 'RichText'"
             :scope-list="scopeList"
             :custom-type="customType"
             :customname="fieldsfrom"
@@ -216,7 +216,7 @@
           />
 
           <Checkbox
-            v-else-if="customType==='复选框'"
+            v-else-if="customType==='Checkbox'"
             :scope-list="scopeList"
             :custom-type="customType"
             :customname="fieldsfrom"
@@ -228,7 +228,7 @@
           />
 
           <Dropdown
-            v-else-if="customType === '下拉框' || customType === '多选项'"
+            v-else-if="customType === 'DropDown' || customType === '多选项'"
             :scope-list="scopeList"
             :custom-type="customType"
             :customname="fieldsfrom"
@@ -349,10 +349,12 @@ export default {
 
       jurisdictionAccountId: '',
       // 父传子数据
-      fieldsfrom: {},
+      fieldsfrom: {
+        type: 'radio'
+      },
       textfrom: {},
       // 子传父数据
-      customType: '单选框',
+      customType: 'radio',
 
       // 自定义字段表格数据
       fieldsData: [],
@@ -367,8 +369,35 @@ export default {
         projectId: ''
       },
       fieldName: '',
-      fieldsOptions: [],
-      scopeList: []
+      scopeList: [],
+      fieldsOptions: [{
+        value: 'DropDown',
+        label: '下拉框'
+      }, {
+        value: 'text',
+        label: '文本'
+      }, {
+        value: 'RichText',
+        label: '备注'
+      }, {
+        value: 'Checkbox',
+        label: '复选框'
+      }, {
+        value: 'radio',
+        label: '单选框'
+      }, {
+        value: '链接',
+        label: '链接'
+      }, {
+        value: '多选项',
+        label: '多选项'
+      }, {
+        value: '用户',
+        label: '用户'
+      }, {
+        value: '日期',
+        label: '日期'
+      }]
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -395,7 +424,8 @@ export default {
   },
   watch: {
     'fieldsfrom.type': function(val) {
-      this.PleaseType(val)
+      this.chType(val)
+      // this.PleaseType(val)
     },
     'fieldsfrom.fieldName': function(val) {
       if (val) {
@@ -413,8 +443,8 @@ export default {
     this.getquerySubUsers()
     this.getProject()
     this.getqueryCustomList()
-    this.getSysCustomFieldByType()
     this.getSysCustomFieldByScope()
+    // this.getSysCustomFieldByType()
   },
   methods: {
     async getSysCustomFieldByType() {
@@ -423,7 +453,6 @@ export default {
       }
       const res = await getSysCustomField(params)
       if (res.code === '200') {
-        console.log('getSysCustomField---', res)
         res.data.mergeValues.forEach(item => {
           const obj = {
             value: item,
@@ -594,6 +623,7 @@ export default {
     /** 自定义字段 开始 */
     // 获取子类的传值
     chType(type) {
+      this.fieldsfrom.type = type
       this.customType = type
     },
 
@@ -658,8 +688,10 @@ export default {
     // 获取radio详情
     getradioInfo(id) {
       queryFieldRadioById(id).then(res => {
-        const data = customradioData(res.data)
-        this.fieldsfrom = data
+        if (res.code === '200') {
+          const data = customradioData(res.data)
+          this.fieldsfrom = data
+        }
       })
     },
     // 获取text，Remarks详情

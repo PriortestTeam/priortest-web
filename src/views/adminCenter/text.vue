@@ -70,7 +70,7 @@
         </el-col>
         <el-col :span="4">
           <div class="ng-input ng-red flex">
-            <el-checkbox v-model="fieldsfrom.defaultRadio[index]" class="mr10" @change="checked=>handleCheck(checked, index)" />
+            <el-checkbox v-model="defaultRadio[index]" class="mr10" @change="checked=>handleCheck(checked, index)" />
             <el-input v-model="fieldsfrom.defaultValues[index]" :disabled="disabledList[index]" maxlength="50" />
           </div>
         </el-col>
@@ -91,7 +91,8 @@ export default {
     },
     customname: {
       type: Object,
-      required: true
+      required: true,
+      default: () => null
     },
     fieldName: {
       type: String,
@@ -116,13 +117,12 @@ export default {
       // 自定义字段
       fieldsfrom: {
         type: this.customType,
-        concat: '',
         scope: [],
         defaultValues: [],
-        defaultRadio: [],
         mandatory: [],
         projectId: '',
-        fieldName: this.fieldName
+        fieldName: this.fieldName,
+        length: ''
       },
       fieldsrules: {
         fieldName: [{ required: true, message: '请输入字段名称', trigger: 'blur' }],
@@ -140,7 +140,8 @@ export default {
         { name: '02' }
       ],
       droprow: '',
-      disabledList: []
+      disabledList: [],
+      defaultRadio: []
     }
   },
   computed: {
@@ -150,7 +151,7 @@ export default {
   },
   watch: {
     'customname': function(val) {
-      this.fieldsfrom = val
+      this.setForm()
     }
   },
   created() {
@@ -158,8 +159,17 @@ export default {
     this.cloneFieldsForm = _.cloneDeep(this.fieldsfrom)
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
     this.initScopeValue()
+    this.setForm()
   },
   methods: {
+    setForm() {
+      const that = this
+      for (const key in that.fieldsfrom) {
+        if (that.customname[key]){
+          this.fieldsfrom[key] = that.customname[key]
+        }
+      }
+    },
     // 初始化单选按钮
     handleCheck(checked, index) {
       this.disabledList[index] = !checked
@@ -170,7 +180,7 @@ export default {
       that.scopeList.forEach((item, index) => {
         that.fieldsfrom.scope[index] = false
         that.fieldsfrom.defaultValues[index] = ''
-        that.fieldsfrom.defaultRadio[index] = false
+        that.defaultRadio[index] = false
         that.fieldsfrom.mandatory[index] = false
         that.disabledList[index] = true
       })
