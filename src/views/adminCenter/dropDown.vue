@@ -57,12 +57,14 @@
                 size="small"
               />
               <el-select
-                v-model="fieldsfrom.sysList"
+                v-model="sysValue"
                 size="small"
               >
                 <el-option
-                  label="value"
-                  value="value"
+                  v-for="item in sysList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
                 />
               </el-select>
             </el-col>
@@ -131,9 +133,11 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <div class="ng-input">
+          <div class="ng-input ng-red flex">
+            <el-checkbox v-model="fieldsfrom.defaultRadio[index]" class="mr10" @change="checked=>handleCheck(checked, index)" />
             <el-select
               v-model="fieldsfrom.defaultValues[index]"
+              :disabled="disabledList[index]"
               size="small"
             >
               <el-option
@@ -191,6 +195,7 @@ export default {
         scope: [],
         mandatory: [],
         defaultValues: [],
+        defaultRadio: [],
         dropDowns: [],
         projectId: '',
         fieldName: this.fieldName,
@@ -212,7 +217,9 @@ export default {
           label: '1',
           value: '1'
         }
-      ]
+      ],
+      disabledList: [],
+      sysValue: ''
     }
   },
   computed: {
@@ -232,6 +239,10 @@ export default {
     this.initScopeValue()
   },
   methods: {
+    // 初始化单选按钮
+    handleCheck(checked, index) {
+      this.disabledList[index] = !checked
+    },
     // 初始化范围值、是否必填、初始值
     initScopeValue() {
       const that = this
@@ -239,6 +250,8 @@ export default {
         that.fieldsfrom.scope[index] = false
         that.fieldsfrom.defaultValues[index] = ''
         that.fieldsfrom.mandatory[index] = false
+        that.fieldsfrom.defaultRadio[index] = false
+        that.disabledList[index] = true
       })
     },
     // 字段表单提交
@@ -296,11 +309,17 @@ export default {
     },
     // 添加drop值
     addDrop() {
-      // const obj = {
-      //   name: this.fieldsfrom.Value
-      // }
-      this.fieldsfrom.dropDowns.push(this.fieldsfrom.Value)
-      console.log(this.fieldsfrom.dropDowns)
+      const that = this
+      let value = ''
+      if (that.fieldsfrom.valueFrom === '1') {
+        value = that.fieldsfrom.Value
+      } else {
+        value = that.sysValue
+      }
+      const res = that.fieldsfrom.dropDowns.filter(item => item === value)
+      if (res.length === 0) {
+        that.fieldsfrom.dropDowns.push(value)
+      }
     },
     // 删除drop值
     delDrop() {

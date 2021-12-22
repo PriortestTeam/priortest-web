@@ -64,9 +64,11 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <div class="ng-input">
+          <div class="ng-input ng-red flex">
+            <el-checkbox v-model="fieldsfrom.defaultRadio[index]" class="mr10" @change="checked=>handleCheck(checked, index)" />
             <el-select
               v-model="fieldsfrom.defaultValues[0]"
+              :disabled="disabledList[index]"
               size="small"
             >
               <el-option
@@ -123,6 +125,7 @@ export default {
         concat: '',
         scope: [],
         defaultValues: [],
+        defaultRadio: [],
         mandatory: [],
         projectId: '',
         fieldName: this.fieldName
@@ -148,7 +151,8 @@ export default {
           label: '1',
           value: '1'
         }
-      ]
+      ],
+      disabledList: []
     }
   },
   computed: {
@@ -168,6 +172,10 @@ export default {
     this.initScopeValue()
   },
   methods: {
+    // 初始化单选按钮
+    handleCheck(checked, index) {
+      this.disabledList[index] = !checked
+    },
     // 初始化范围值、是否必填、初始值
     initScopeValue() {
       const that = this
@@ -175,6 +183,8 @@ export default {
         that.fieldsfrom.scope[index] = false
         that.fieldsfrom.defaultValues[index] = ''
         that.fieldsfrom.mandatory[index] = false
+        that.fieldsfrom.defaultRadio[index] = false
+        that.disabledList[index] = true
       })
     },
     // 长度文本框失焦

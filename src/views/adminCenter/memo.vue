@@ -71,8 +71,9 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <div class="ng-input">
-            <el-input v-model="fieldsfrom.defaultValues[index]" maxlength="300" />
+          <div class="ng-input ng-red flex">
+            <el-checkbox v-model="fieldsfrom.defaultRadio[index]" class="mr10" @change="checked=>handleCheck(checked, index)" />
+            <el-input v-model="fieldsfrom.defaultValues[index]" :disabled="disabledList[index]" maxlength="300" />
           </div>
         </el-col>
       </el-row>
@@ -120,6 +121,7 @@ export default {
         concat: '',
         scope: [],
         defaultValues: [],
+        defaultRadio: [],
         mandatory: [],
         projectId: '',
         fieldName: this.fieldName
@@ -139,8 +141,8 @@ export default {
         { name: '01' },
         { name: '02' }
       ],
-      droprow: ''
-      // 自定义字段 结束
+      droprow: '',
+      disabledList: []
     }
   },
   computed: {
@@ -160,6 +162,10 @@ export default {
     this.initScopeValue()
   },
   methods: {
+    // 初始化单选按钮
+    handleCheck(checked, index) {
+      this.disabledList[index] = !checked
+    },
     // 初始化范围值、是否必填、初始值
     initScopeValue() {
       const that = this
@@ -167,6 +173,8 @@ export default {
         that.fieldsfrom.scope[index] = false
         that.fieldsfrom.defaultValues[index] = ''
         that.fieldsfrom.mandatory[index] = false
+        that.fieldsfrom.defaultRadio[index] = false
+        that.disabledList[index] = true
       })
     },
     // 长度文本框失焦

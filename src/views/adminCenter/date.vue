@@ -1,5 +1,5 @@
 <template>
-  <el-row class="fd-row" :gutter="20">
+  <el-row class="fd-row admin-center-date" :gutter="20">
     <el-col
       :span="8"
     ><div class="grid-content bg-purple" />
@@ -121,9 +121,11 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <div class="ng-red">
+          <div class="ng-input ng-red flex">
+            <el-checkbox v-model="fieldsfrom.defaultRadio[index]" class="mr10" @change="checked=>handleCheck(checked, index)" />
             <el-date-picker
               v-model="fieldsfrom.defaultValues[index]"
+              :disabled="disabledList[index]"
               type="date"
               placeholder="选择日期"
             />
@@ -173,6 +175,7 @@ export default {
         type: this.customType,
         scope: [],
         defaultValues: [],
+        defaultRadio: [],
         mandatory: [],
         projectId: '',
         fieldName: this.fieldName
@@ -192,8 +195,8 @@ export default {
         { name: '01' },
         { name: '02' }
       ],
-      droprow: ''
-      // 自定义字段 结束
+      droprow: '',
+      disabledList: []
     }
   },
   computed: {
@@ -213,13 +216,19 @@ export default {
     this.initScopeValue()
   },
   methods: {
+    // 初始化单选按钮
+    handleCheck(checked, index) {
+      this.disabledList[index] = !checked
+    },
     // 初始化范围值、是否必填、初始值
     initScopeValue() {
       const that = this
       that.scopeList.forEach((item, index) => {
         that.fieldsfrom.scope[index] = false
         that.fieldsfrom.defaultValues[index] = ''
+        that.fieldsfrom.defaultRadio[index] = false
         that.fieldsfrom.mandatory[index] = false
+        that.disabledList[index] = true
       })
     },
     // 字段表单提交
@@ -301,4 +310,11 @@ export default {
 <style lang="scss" scoped>
 @import "index.scss";
 @import "@/views/project/index.scss";
+</style>
+<style lang="scss">
+.admin-center-date {
+  .el-input__icon{
+    line-height: 32px;
+  }
+}
 </style>
