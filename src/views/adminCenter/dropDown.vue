@@ -212,12 +212,7 @@ export default {
       // 字符长度 （文本 or 备注）
       showLength: false,
       droprow: '',
-      sysList: [
-        {
-          label: '1',
-          value: '1'
-        }
-      ],
+      sysList: [],
       disabledList: [],
       sysValue: ''
     }
@@ -328,6 +323,11 @@ export default {
       const res = that.fieldsfrom.dropDowns.filter(item => item === value)
       if (res.length === 0) {
         that.fieldsfrom.dropDowns.push(value)
+        const obj = {
+          'label': value,
+          'value': value
+        }
+        that.sysList.push(obj)
       }
     },
     // 删除drop值
