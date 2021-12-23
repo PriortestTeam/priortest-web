@@ -81,14 +81,19 @@ export function updateView(data) {
   })
 }
 // 删除view
-
 export function deleteView(data) {
   return request({
     url: '/view/deleteView/' + data,
     method: 'delete'
   })
 }
-
+// view-查询条件
+export function getViewFilter() {
+  return request({
+    url: '/view/getViewFilter',
+    method: 'post'
+  })
+}
 // 获取负责人
 export function queryByNameSubUsers(data) {
   return request({

@@ -236,7 +236,7 @@
 </template>
 <script>
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import { queryViews, lookView, addView, updateView, deleteView, getViewScopeChildParams, queryViewParents } from '@/api/project'
+import { queryViews, lookView, addView, updateView, deleteView, getViewScopeChildParams, queryViewParents, getViewFilter } from '@/api/project'
 import { getSysCustomField } from '@/api/admincenter'
 import { mapState } from "vuex";
 export default {
@@ -328,16 +328,13 @@ export default {
     this.viewBody.projectId = this.projectInfo.userUseOpenProject.projectId
     await this.initScope()
     await this.getqueryViews() // 获取视图
-    this.getSysCustomFieldByFilter()
+    this.getViewFilter()
   },
   methods: {
-    async getSysCustomFieldByFilter() {
-      const params = {
-        'fieldName': 'filter'
-      }
-      const res = await getSysCustomField(params)
+    async getViewFilter() {
+      const res = await getViewFilter()
       if (res.code === '200') {
-        res.data.mergeValues.forEach(item => {
+        res.data.forEach(item => {
           const obj = {
             value: item.split(',')[1],
             label: item.split(',')[0]
