@@ -337,6 +337,7 @@ export default {
         if (item === val) {
           this.fieldsfrom.dropDowns.splice(index, 1)
           this.droprow = ''
+          this.sysList.splice(index, 1)
         }
       })
     }
