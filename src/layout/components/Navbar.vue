@@ -103,6 +103,7 @@ export default {
       {
         isCollapse: (state) => state.tab.isCollapse,
         lang: (state) => state.header.lang,
+        //navName: state => state.common.nvaName
       },
     ]),
     userInfo() {
@@ -136,6 +137,7 @@ export default {
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
     goOther(item, index) {
+      this.$store.commit('common/setNavName', item)
       this.activeIndex = index;
       this.set("activeIndex", index);
       if (index === 0) {

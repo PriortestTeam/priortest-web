@@ -95,7 +95,7 @@
                   <i class="el-icon-remove circle remove" />
                 </span>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="4">
                 <el-select
                   ref="selectFiled"
                   v-model="item.fieldName"
@@ -110,12 +110,26 @@
                   />
                 </el-select>
               </el-col>
+              <el-col :span="4">
+                <el-select
+                  ref="selectFiled"
+                  v-model="item.condition"
+                  size="small"
+                  placeholder=""
+                >
+                  <el-option
+                    v-for="i in conditionList"
+                    :label="i.label"
+                    :value="i.value"
+                  />
+                </el-select>
+              </el-col>
               <!-- input -->
-              <el-col v-if="item.type === 'fString'" :span="6">
+              <el-col v-if="item.type === 'fString'" :span="4">
                 <el-input v-model="item.textVal" size="small" />
               </el-col>
               <!-- select -->
-              <el-col v-else-if="item.type === 'fInteger'" :span="6">
+              <el-col v-else-if="item.type === 'fInteger'" :span="4">
                 <el-select
                   v-model="item.textVal"
                   size="small"
@@ -129,7 +143,7 @@
                 </el-select>
               </el-col>
               <!-- date -->
-              <el-col v-else :span="12">
+              <el-col v-else :span="6">
                 <el-date-picker
                   v-model="item.beginDate"
                   type="datetime"
@@ -178,7 +192,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        
+
         <el-table-column
               prop="title"
               :show-overflow-tooltip="true"
@@ -191,7 +205,7 @@
                   {{ scope.row.title }}
                 </span>
               </template>
-            </el-table-column>     
+            </el-table-column>
 
         <el-table-column prop="scope" label="范围"/>
         <el-table-column prop="status" label="视图状态" />
@@ -201,7 +215,7 @@
         <el-table-column prop="modifier" label="修改者" />
         <el-table-column prop="updateTime" label="修改日期"/>
         <el-table-column label="操作" align="center">
-          <template slot-scope="scope">            
+          <template slot-scope="scope">
             <el-button
               type="text"
               class="table-btn"
@@ -223,6 +237,8 @@
 <script>
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 import { queryViews, lookView, addView, updateView, deleteView, getViewScopeChildParams, queryViewParents } from '@/api/project'
+import { getSysCustomField } from '@/api/admincenter'
+import { mapState } from "vuex";
 export default {
   name: 'Projectview',
   data() {
@@ -286,10 +302,14 @@ export default {
       viewData: [], // 表格数据
       multipleSelection: [], // 选择的表格
       multiple: true, // 非多个禁用
-      viewId: ''
+      viewId: '',
+      conditionList: []
     }
   },
   computed: {
+    ...mapState({
+      nvaName: state => state.common.nvaName
+    }),
     projectInfo() {
       return this.$store.state.user.userinfo
     }
@@ -303,13 +323,37 @@ export default {
       }
     }
   },
-  created() {
-    this.viewBody.scope = this.$route.query.scope
+  async created() {
+    // this.viewBody.scope = this.$route.query.scope
     this.viewBody.projectId = this.projectInfo.userUseOpenProject.projectId
-    this.getqueryViews() // 获取视图
+    await this.initScope()
+    await this.getqueryViews() // 获取视图
+    this.getSysCustomFieldByFilter()
   },
   methods: {
-
+    async getSysCustomFieldByFilter() {
+      const params = {
+        'fieldName': 'filter'
+      }
+      const res = await getSysCustomField(params)
+      if (res.code === '200') {
+        res.data.mergeValues.forEach(item => {
+          const obj = {
+            value: item,
+            label: item
+          }
+          this.conditionList.push(obj)
+        })
+      }
+    },
+    // 初始化scope
+    initScope() {
+      const that = this
+      that.viewBody.scope = that.nvaName
+      if (that.nvaName !== 'Feature' && that.nvaName !== 'Sprint' && that.nvaName !== 'TestCase' && that.nvaName !== 'TestCycle' && that.nvaName !== 'Issue') {
+        that.viewBody.scope = 'Project'
+      }
+    },
     // 新增和修改确定表单
     submitForm(formName) {
       // console.log(this.from)
@@ -436,7 +480,7 @@ export default {
     // 新增字段
     addFliter() {
       if (this.from.scope === undefined || this.from.scope.trim() === '') {
-        message('success', '请选择作用域')
+        message('warning', '请选择作用域')
         return
       }
 
@@ -448,6 +492,7 @@ export default {
         intVal: '',
         sourceVal: '',
         textVal: '',
+        condition: '',
         type: 'fString'
       }
 

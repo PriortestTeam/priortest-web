@@ -277,6 +277,9 @@
       <el-tab-pane label="系统字段" name="4">
         <System :param-value="propSystem" />
       </el-tab-pane>
+      <el-tab-pane label="视图管理" name="5">
+        <ViewPage v-if="activeName === '5'"></ViewPage>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -284,6 +287,7 @@
 import { message, formatChangedPara, customradioData, customtextData } from '@/utils/common'
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import System from '@/views/adminCenter/system'
+import ViewPage from '@/views/project/view'
 import Dateindex from '@/views/adminCenter/date'
 import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
@@ -297,7 +301,7 @@ import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldText
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link
+    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link, ViewPage
   },
   data() {
     return {

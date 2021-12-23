@@ -1,10 +1,11 @@
 <template>
   <div class="comp-tree">
-    <div class="new_project">      
+    <div class="new_project">
       <el-button type="primary" round>
-        <router-link :to="viewUrl"> 新建/管理视图 </router-link>
+        <!-- <router-link :to="viewUrl"> 新建/管理视图 </router-link> -->
+        <div @click="toViewManage"> 新建/管理视图 </div>
       </el-button>
-      <span class="icon-box">        
+      <span class="icon-box">
          <i class="el-icon-d-arrow-left" title="折叠" @click="hadleShow"></i>
       </span>
     </div>
@@ -60,6 +61,10 @@ export default {
     }
   },
   methods: {
+    toViewManage() {
+      this.$store.commit('common/setNavName', this.childScope)
+      this.$router.push("/project/projectview")
+    },
     hadleShow(){
       this.$emit('hadleTree')
     },
