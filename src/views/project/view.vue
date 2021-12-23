@@ -339,8 +339,8 @@ export default {
       if (res.code === '200') {
         res.data.mergeValues.forEach(item => {
           const obj = {
-            value: item,
-            label: item
+            value: item.split(',')[1],
+            label: item.split(',')[0]
           }
           this.conditionList.push(obj)
         })

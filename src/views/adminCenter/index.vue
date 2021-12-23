@@ -448,7 +448,7 @@ export default {
     this.getProject()
     this.getqueryCustomList()
     this.getSysCustomFieldByScope()
-    // this.getSysCustomFieldByType()
+    //this.getSysCustomFieldByType()
   },
   methods: {
     async getSysCustomFieldByType() {
@@ -457,13 +457,14 @@ export default {
       }
       const res = await getSysCustomField(params)
       if (res.code === '200') {
-        res.data.mergeValues.forEach(item => {
+        console.log('getSysCustomFieldByType--', res)
+        /* res.data.mergeValues.forEach(item => {
           const obj = {
             value: item,
             label: item
           }
           this.fieldsOptions.push(obj)
-        })
+        }) */
       }
     },
     async getSysCustomFieldByScope() {
