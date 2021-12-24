@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container manage-view">
+  <div class="app-container manage-view view">
     <el-form
       ref="from"
       :model="from"
@@ -571,9 +571,9 @@ export default {
 @import "index.scss";
 </style>
 <style lang="scss">
-.manage-view {
+.view {
   .wd200 {
-    label {
+    .el-form-item__label {
       width: 200px!important;
     }
   }
