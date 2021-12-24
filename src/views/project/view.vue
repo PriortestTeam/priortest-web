@@ -67,6 +67,7 @@
           >
             <el-option
               v-for="i in viewParents"
+              :key="i.id"
               :label="i.title"
               :value="i.id"
             />
@@ -77,8 +78,10 @@
           </el-select>
         </el-form-item>
       </div>
-
-      <el-form-item label="查询条件" prop="oneFilters">
+      <el-form-item label="自动创建子视图基于选项值" prop="filter" class="form-small wd200">
+        <el-checkbox v-model="filter" @change="handleFilterChange" />
+      </el-form-item>
+      <el-form-item v-if="!filter" label="查询条件" prop="oneFilters">
         <div class="filter-item">
           <el-col v-if="from.oneFilters.length === 0" :span="1">
             <span @click="addFliter">
@@ -105,6 +108,7 @@
                 >
                   <el-option
                     v-for="i in scopeDownChildParams"
+                    :key="i.filedName"
                     :label="i.filedNameCn"
                     :value="i.filedName"
                   />
@@ -119,6 +123,7 @@
                 >
                   <el-option
                     v-for="i in conditionList"
+                    :key="i.value"
                     :label="i.label"
                     :value="i.value"
                   />
@@ -137,6 +142,7 @@
                 >
                   <el-option
                     v-for="i in statusDownChildParams"
+                    :key="i.optionValue"
                     :label="i.optionValueCn"
                     :value="i.optionValue"
                   />
@@ -194,26 +200,26 @@
         <el-table-column type="selection" width="55" />
 
         <el-table-column
-              prop="title"
-              :show-overflow-tooltip="true"
-              align="left"
-              width="155"
-              :label="$t('lang.CommonFiled.Title')"
-            >
-              <template slot-scope="scope">
-                <span class="title" @click="toEdit(scope.row)">
-                  {{ scope.row.title }}
-                </span>
-              </template>
-            </el-table-column>
+          prop="title"
+          :show-overflow-tooltip="true"
+          align="left"
+          width="155"
+          :label="$t('lang.CommonFiled.Title')"
+        >
+          <template slot-scope="scope">
+            <span class="title" @click="toEdit(scope.row)">
+              {{ scope.row.title }}
+            </span>
+          </template>
+        </el-table-column>
 
-        <el-table-column prop="scope" label="范围"/>
+        <el-table-column prop="scope" label="范围" />
         <el-table-column prop="status" label="视图状态" />
-        <el-table-column prop="parentTitle" label="父级视图"/>
+        <el-table-column prop="parentTitle" label="父级视图" />
         <el-table-column prop="owner" label="创建者" />
         <el-table-column prop="createTime" label="创建日期" />
         <el-table-column prop="modifier" label="修改者" />
-        <el-table-column prop="updateTime" label="修改日期"/>
+        <el-table-column prop="updateTime" label="修改日期" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -236,9 +242,9 @@
 </template>
 <script>
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import { queryViews, lookView, addView, updateView, deleteView, getViewScopeChildParams, queryViewParents, getViewFilter } from '@/api/project'
-import { getSysCustomField } from '@/api/admincenter'
-import { mapState } from "vuex";
+import { queryViews, lookView, addView, addViewRE, updateView, deleteView, getViewScopeChildParams, queryViewParents, getViewFilter } from '@/api/project'
+// import { getSysCustomField } from '@/api/admincenter'
+import { mapState } from 'vuex'
 export default {
   name: 'Projectview',
   data() {
@@ -303,7 +309,8 @@ export default {
       multipleSelection: [], // 选择的表格
       multiple: true, // 非多个禁用
       viewId: '',
-      conditionList: []
+      conditionList: [],
+      filter: false
     }
   },
   computed: {
@@ -331,6 +338,11 @@ export default {
     this.getViewFilter()
   },
   methods: {
+    handleFilterChange(val) {
+      if (val) {
+        this.from.oneFilters = []
+      }
+    },
     async getViewFilter() {
       const res = await getViewFilter()
       if (res.code === '200') {
@@ -353,12 +365,10 @@ export default {
     },
     // 新增和修改确定表单
     submitForm(formName) {
-      // console.log(this.from)
-      // return
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.from.id) {
-            addView(this.from).then(res => {
+            addViewRE(this.from).then(res => {
               if (res.code === '200') {
                 this.resetForm()
                 message('success', res.msg)
@@ -559,4 +569,41 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
+</style>
+<style lang="scss">
+.manage-view {
+  .wd200 {
+    label {
+      width: 200px!important;
+    }
+  }
+  .el-checkbox__input {
+    .el-checkbox__inner {
+      border-radius: 100%;
+      &:after {
+        width: 4px;
+        height: 4px;
+        border-radius: 100%;
+        background-color: #fff;
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%) scale(1);
+        transform: translate(-50%,-50%) scale(1);
+      }
+    }
+  }
+  .el-checkbox__input.is-checked {
+    .el-checkbox__inner {
+      border-color: #4286CD;
+      background: #4286CD;
+    }
+  }
+  .el-form-item {
+    .el-form-item__label {
+      padding-right: 8px;
+    }
+  }
+}
 </style>

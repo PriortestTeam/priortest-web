@@ -72,6 +72,13 @@ export function addView(data) {
     data
   })
 }
+export function addViewRE(data) {
+  return request({
+    url: '/view/addViewRE',
+    method: 'post',
+    data
+  })
+}
 // 更新view
 export function updateView(data) {
   return request({
