@@ -34,6 +34,7 @@
               <el-form-item label="邮箱" prop="email" size="small">
                 <el-input
                   v-model="accountForm.email"
+                  :disabled="emailDisabled"
                   placeholder="请输入邮箱地址"
                 />
               </el-form-item>
@@ -67,6 +68,19 @@
                 >
                   <el-option
                     v-for="item in accountProject"
+                    :key="item.id"
+                    :value="item.id"
+                    :label="item.title"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="默认登录项目" prop="openProjectByDefaultId" size="small">
+                <el-select
+                  v-model="accountForm.openProjectByDefaultId"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in openProjectByDefaultIdList"
                     :key="item.id"
                     :value="item.id"
                     :label="item.title"
@@ -278,7 +292,7 @@
         <System :param-value="propSystem" />
       </el-tab-pane>
       <el-tab-pane label="视图管理" name="5">
-        <ViewPage v-if="activeName === '5'"></ViewPage>
+        <ViewPage v-if="activeName === '5'" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -319,7 +333,8 @@ export default {
         userName: undefined,
         password: undefined,
         sysRoleId: undefined,
-        projectIdStr: []
+        projectIdStr: [],
+        openProjectByDefaultId: ''
       },
       accountProject: [],
       accountRules: {
@@ -338,6 +353,9 @@ export default {
         ],
         projectIdStr: [
           { required: true, message: '请选择项目', trigger: 'change' }
+        ],
+        openProjectByDefaultId: [
+          { required: true, message: '请选择默认登录项目', trigger: 'change' }
         ]
       },
       accountData: [],
@@ -374,6 +392,7 @@ export default {
       },
       fieldName: '',
       scopeList: [],
+      openProjectByDefaultIdList: [],
       fieldsOptions: [{
         value: 'DropDown',
         label: '下拉框'
@@ -401,7 +420,8 @@ export default {
       }, {
         value: '日期',
         label: '日期'
-      }]
+      }],
+      emailDisabled: false
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -448,7 +468,7 @@ export default {
     this.getProject()
     this.getqueryCustomList()
     this.getSysCustomFieldByScope()
-    //this.getSysCustomFieldByType()
+    // this.getSysCustomFieldByType()
   },
   methods: {
     async getSysCustomFieldByType() {
@@ -505,9 +525,25 @@ export default {
     },
     // 项目互斥
     accountChangePro(val) {
+      const that = this
       const index = val.indexOf('0')
       if (index !== -1) {
-        this.accountForm.projectIdStr = ['0']
+        that.accountForm.projectIdStr = ['0']
+      }
+      if (that.accountForm.projectIdStr[0] === '0') {
+        /* eslint-disable */
+        that.openProjectByDefaultIdList = _.cloneDeep(that.accountProject)
+        that.openProjectByDefaultIdList.splice(0, 1)
+        return
+      }
+      that.openProjectByDefaultIdList = that.accountProject.filter(item => {
+        return that.accountForm.projectIdStr.indexOf(item.id) !== -1
+      })
+      const arr = that.openProjectByDefaultIdList.filter(item => {
+        return item.id === that.accountForm.openProjectByDefaultId
+      })
+      if (arr.length === 0) {
+        that.accountForm.openProjectByDefaultId = ''
       }
     },
     // 得到账户列表
@@ -524,6 +560,7 @@ export default {
     },
     // 重置
     resetAccountForm() {
+      this.emailDisabled = false
       this.accountForm = {
         id: undefined,
         email: undefined,
@@ -532,6 +569,7 @@ export default {
         sysRoleId: undefined,
         projectIdStr: []
       }
+      this.openProjectByDefaultIdList = []
       this.$refs['accountForm'].resetFields()
     },
     submitForm(formName) {
@@ -577,6 +615,8 @@ export default {
     },
     // 行点击编辑
     accountEdit(row) {
+      this.emailDisabled = true
+      this.openProjectByDefaultIdList = []
       this.$refs.accountData.clearSelection()
       this.$refs.accountData.toggleRowSelection(row)
       const form = JSON.parse(JSON.stringify(row))
@@ -753,6 +793,14 @@ export default {
 .admin-center {
   .el-form-item .el-form-item__label {
     padding-right: 8px;
+  }
+  .demo-ruleForm {
+    .el-form-item__label {
+      width: 110px!important;
+    }
+    .el-form-item__content {
+      margin-left: 110px!important;
+    }
   }
 }
 </style>
