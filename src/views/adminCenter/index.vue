@@ -567,6 +567,7 @@ export default {
         userName: undefined,
         password: undefined,
         sysRoleId: undefined,
+        openProjectByDefaultId: '',
         projectIdStr: []
       }
       this.openProjectByDefaultIdList = []
@@ -626,6 +627,14 @@ export default {
       }
       this.accountTempForm = Object.assign({}, this.accountForm)
       this.accountUpdate = false
+      if (form.projectIdStr[0] === '0') {
+        this.openProjectByDefaultIdList = _.cloneDeep(this.accountProject)
+        this.openProjectByDefaultIdList.splice(0, 1)
+        return
+      }
+      this.openProjectByDefaultIdList = this.accountProject.filter(item => {
+        return form.projectIdStr.indexOf(item.id) !== -1
+      })
     },
     // 取消修改
     cancelUpdate() {
