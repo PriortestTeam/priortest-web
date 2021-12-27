@@ -294,6 +294,9 @@
       <el-tab-pane label="视图管理" name="5">
         <ViewPage v-if="activeName === '5'" />
       </el-tab-pane>
+      <el-tab-pane label="我的账户" name="6">
+        <MyAccount v-if="activeName === '6'" />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -302,6 +305,7 @@ import { message, formatChangedPara, customradioData, customtextData } from '@/u
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import System from '@/views/adminCenter/system'
 import ViewPage from '@/views/project/view'
+import MyAccount from '@/views/project/myAccount'
 import Dateindex from '@/views/adminCenter/date'
 import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
@@ -310,12 +314,12 @@ import Dropdown from '@/views/adminCenter/dropDown'
 import Checkbox from '@/views/adminCenter/checkbox'
 import Userindex from '@/views/adminCenter/user'
 import Link from '@/views/adminCenter/link'
-import { getUserRoles, queryRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysCustomField } from '@/api/admincenter'
+import { getUserRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysCustomField } from '@/api/admincenter'
 import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link, ViewPage
+    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link, ViewPage, MyAccount
   },
   data() {
     return {
@@ -805,10 +809,10 @@ export default {
   }
   .demo-ruleForm {
     .el-form-item__label {
-      width: 110px!important;
+      //width: 110px!important;
     }
     .el-form-item__content {
-      margin-left: 110px!important;
+      //margin-left: 110px!important;
     }
   }
 }

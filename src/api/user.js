@@ -92,3 +92,37 @@ export function verifyLinkString(params) {
     params
   })
 }
+// 生成token
+export function makeToken(data) {
+  return request({
+    url: '/user/makeToken',
+    method: 'post',
+    data
+  })
+}
+export function listTokens(params, data) {
+  return request({
+    url: '/user/listTokens',
+    method: 'post',
+    // post拼接路由参数
+    params: params,
+    data: data
+  })
+}
+// 删除token
+export function deleteToken(data) {
+  return request({
+    url: '/user/deleteToken',
+    // method: 'delete'
+    method: 'post',
+    params: data
+  })
+}
+// 返回用户的激活次数
+export function getUserActivNumber(data) {
+  return request({
+    url: '/user/getUserActivNumber',
+    method: 'post',
+    params: data
+  })
+}

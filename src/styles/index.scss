@@ -271,3 +271,33 @@ div:focus {
       }
     }
 }
+.radio-blue {
+  .el-checkbox__input {
+    .el-checkbox__inner {
+      border-radius: 100%;
+      &:after {
+        width: 4px;
+        height: 4px;
+        border-radius: 100%;
+        background-color: #fff;
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%) scale(1);
+        transform: translate(-50%,-50%) scale(1);
+      }
+    }
+  }
+  .el-checkbox__input.is-checked {
+    .el-checkbox__inner {
+      border-color: #4286CD;
+      background: #4286CD;
+    }
+  }
+}
+.wd-label200 {
+  .el-form-item__label {
+    width: 200px!important;
+  }
+}
