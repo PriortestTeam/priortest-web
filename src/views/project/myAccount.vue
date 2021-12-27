@@ -29,7 +29,7 @@
         <el-form-item label="账户状态" prop="health" class="form-small radio-blue">
           {{ userStatus }}
         </el-form-item>
-        <el-form-item v-if="projectUserInfo.identifier === ''" label="密钥" class="form-small">
+        <el-form-item v-if="projectUserInfo.identifier !== ''" label="密钥" class="form-small">
           <el-button type="primary">
             <router-link :to="tokenUrl">查看编辑</router-link>
           </el-button>
