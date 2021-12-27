@@ -297,6 +297,9 @@
       <el-tab-pane label="我的账户" name="6">
         <MyAccount v-if="activeName === '6'" />
       </el-tab-pane>
+      <el-tab-pane label="服务计划" name="7">
+        <ServicePlan v-if="activeName === '7'" />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -314,12 +317,13 @@ import Dropdown from '@/views/adminCenter/dropDown'
 import Checkbox from '@/views/adminCenter/checkbox'
 import Userindex from '@/views/adminCenter/user'
 import Link from '@/views/adminCenter/link'
+import ServicePlan from '@/views/servicePlan/index'
 import { getUserRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysCustomField } from '@/api/admincenter'
 import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link, ViewPage, MyAccount
+    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link, ViewPage, MyAccount, ServicePlan
   },
   data() {
     return {

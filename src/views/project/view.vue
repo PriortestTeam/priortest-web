@@ -174,7 +174,6 @@
           </el-row>
         </div>
       </el-form-item>
-
       <el-form-item label="视图状态" prop="isPrivate" class="form-small">
         <el-radio v-model="from.isPrivate" label="0">仅自己</el-radio>
         <el-radio v-model="from.isPrivate" label="1">公开</el-radio>
