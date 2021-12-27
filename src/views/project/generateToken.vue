@@ -412,6 +412,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
+@import "@/styles/index.scss";
 </style>
 <style lang="scss">
 /* .view {

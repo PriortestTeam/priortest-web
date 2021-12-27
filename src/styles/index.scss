@@ -301,3 +301,8 @@ div:focus {
     width: 200px!important;
   }
 }
+.el-form-item {
+  .el-form-item__label {
+    padding-right: 8px;
+  }
+}
