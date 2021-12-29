@@ -34,11 +34,11 @@
           @click.stop="cancelUpdate('from')"
         >取消修改</el-button>
       </div>
-      <el-form-item label="视图标题" prop="title" class="form-small">
+      <el-form-item label="视图标题:" prop="title" class="form-small">
         <el-input v-model="from.title" size="small" />
       </el-form-item>
       <div class="scopeView">
-        <el-form-item label="范围" prop="scope" class="form-small">
+        <el-form-item label="范围:" prop="scope" class="form-small">
           <el-select
             v-model="from.scope"
             size="small"
@@ -55,7 +55,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="父级视图" prop="parent" class="form-small">
+        <el-form-item label="父级视图:" prop="parent" class="form-small">
           <el-select
             v-model="viewParentQuery"
             size="small"
@@ -78,10 +78,10 @@
           </el-select>
         </el-form-item>
       </div>
-      <el-form-item label="自动创建子视图基于选项值" prop="filter" class="form-small wd200">
+      <el-form-item label="自动创建子视图基于选项值:" prop="filter" class="form-small wd200">
         <el-checkbox v-model="filter" @change="handleFilterChange" />
       </el-form-item>
-      <el-form-item v-if="!filter" label="查询条件" prop="oneFilters">
+      <el-form-item v-if="!filter" label="查询条件:" prop="oneFilters">
         <div class="filter-item">
           <el-col v-if="from.oneFilters.length === 0" :span="1">
             <span @click="addFliter">
@@ -174,7 +174,7 @@
           </el-row>
         </div>
       </el-form-item>
-      <el-form-item label="视图状态" prop="isPrivate" class="form-small">
+      <el-form-item label="视图状态:" prop="isPrivate" class="form-small">
         <el-radio v-model="from.isPrivate" label="0">仅自己</el-radio>
         <el-radio v-model="from.isPrivate" label="1">公开</el-radio>
       </el-form-item>

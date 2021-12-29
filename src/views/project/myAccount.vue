@@ -5,59 +5,59 @@
         ref="form"
         :model="form"
         :rules="rules"
-        label-width="120px"
+        label-width="130px"
       >
         <div class="scopeView">
-          <el-form-item label="账户邮箱" prop="email" class="form-small">
+          <el-form-item label="账户邮箱:" prop="email" class="form-small">
             {{ form.email }}
           </el-form-item>
-          <el-form-item label="账户名称" prop="userName" class="form-small">
+          <el-form-item label="账户名称:" prop="userName" class="form-small">
             <el-input v-model="form.userName" size="small" />
           </el-form-item>
-          <el-form-item label="账户类型" prop="userType" class="form-small radio-blue">
+          <el-form-item label="账户类型:" prop="userType" class="form-small radio-blue">
             {{ userTypeList[form.userType] }}
           </el-form-item>
-          <el-form-item label="注册日期" prop="registerDate" class="form-small">
+          <el-form-item label="注册日期:" prop="registerDate" class="form-small">
             {{ form.registerDate }}
           </el-form-item>
-          <el-form-item label="管理项目" prop="project" class="form-small">
+          <el-form-item label="管理项目:" prop="project" class="form-small">
             {{ form.project }}
           </el-form-item>
-          <el-form-item label="失效日期" prop="expireDate" class="form-small">
+          <el-form-item label="失效日期:" prop="expireDate" class="form-small">
             {{ form.expireDate }}
           </el-form-item>
-          <el-form-item label="账户状态" prop="health" class="form-small radio-blue">
+          <el-form-item label="账户状态:" prop="health" class="form-small radio-blue">
             {{ userStatus }}
           </el-form-item>
-          <el-form-item v-if="projectUserInfo.identifier !== ''" label="密钥" class="form-small">
+          <el-form-item v-if="projectUserInfo.identifier !== ''" label="密钥:" class="form-small">
             <el-button type="primary">
               <router-link :to="tokenUrl">查看编辑</router-link>
             </el-button>
           </el-form-item>
-          <el-form-item v-if="form.userType !== 'Trialer'" label="支付截止日期" class="form-small">
+          <el-form-item v-if="form.userType !== 'Trialer'" label="支付截止日期:" class="form-small">
             <el-button type="primary"><router-link to="/project/paymentDetails">续费</router-link></el-button>
           </el-form-item>
-          <el-form-item v-else label="延期申请" class="form-small">
+          <el-form-item v-else label="延期申请:" class="form-small">
             <el-button
               type="primary"
               :disabled="projectUserInfo.activitiNumber === 3"
               @click.stop="submitForm('form')"
             >延期试用</el-button>
           </el-form-item>
-          <el-form-item label="延期试用剩余次数" class="form-small">
+          <el-form-item label="延期试用剩余次数:" class="form-small">
             {{ projectUserInfo.activitiNumber }}/3
           </el-form-item>
           <el-button
             type="primary"
             :disabled="!serviceCheck"
             @click.stop="stopService"
-          <div>
+          >
             <el-checkbox v-model="serviceCheck" style="margin-top: 10px;margin-right: 5px;" />
             我已知悉，如果点击此按钮 <终止服务>，我的数据会立即从OneClick 服务器中永久册除。
-          </div>
-        </div>
-      </el-form>
-    </div>
+          </el-button></div>
+      </el-form></div>
+    </el-form>
+  </div>
   </div>
 </template>
 <script>

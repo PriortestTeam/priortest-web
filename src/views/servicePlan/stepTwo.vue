@@ -8,62 +8,62 @@
     >
       <el-row>
         <el-col :span="12">
-          <el-form-item label="邮箱" prop="email" size="small">
-            <el-input v-model="form.email" disabled></el-input>
+          <el-form-item label="邮箱:" prop="email" size="small">
+            <el-input v-model="form.email" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="电话" prop="contactNo" size="small">
-            <el-input v-model="form.contactNo"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="用户名" prop="userName" size="small">
-            <el-input v-model="form.userName"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="公司" prop="company" size="small">
-            <el-input v-model="form.company"></el-input>
+          <el-form-item label="电话:" prop="contactNo" size="small">
+            <el-input v-model="form.contactNo" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="职业" prop="profession" size="small">
-            <el-input v-model="form.profession"></el-input>
+          <el-form-item label="用户名:" prop="userName" size="small">
+            <el-input v-model="form.userName" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="地址" prop="address" size="small">
-            <el-input v-model="form.address"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="行业" prop="industry" size="small">
-            <el-input v-model="form.industry"></el-input>
+          <el-form-item label="公司:" prop="company" size="small">
+            <el-input v-model="form.company" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="城市" prop="city" size="small">
-            <el-input v-model="form.city"></el-input>
+          <el-form-item label="职业:" prop="profession" size="small">
+            <el-input v-model="form.profession" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="邮编" prop="postCode" size="small">
-            <el-input v-model="form.postCode"></el-input>
+          <el-form-item label="地址:" prop="address" size="small">
+            <el-input v-model="form.address" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="您是如何知道" size="small">
+          <el-form-item label="行业:" prop="industry" size="small">
+            <el-input v-model="form.industry" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="城市:" prop="city" size="small">
+            <el-input v-model="form.city" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="邮编:" prop="postCode" size="small">
+            <el-input v-model="form.postCode" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="您是如何知道:" size="small">
             <el-select
               v-model="form.how"
               :disabled="projectUserInfo.userType !== 'Trialer'"
@@ -77,14 +77,15 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="国家" prop="country" size="small">
-            <el-input v-model="form.country"></el-input>
+          <el-form-item label="国家:" prop="country" size="small">
+            <el-input v-model="form.country" />
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
     <div>
-      <el-button type="primary" @click="next" class="wd100">确认</el-button>
+      <el-button type="primary" class="wd100" @click="pre">上一步</el-button>
+      <el-button type="primary" class="wd100" @click="next">确认</el-button>
     </div>
   </div>
 </template>
@@ -140,7 +141,7 @@ export default {
         country: [
           { required: true, message: '请输入国家', trigger: 'blur' }
         ]
-      },
+      }
     }
   },
   computed: {
@@ -156,12 +157,15 @@ export default {
     // 服务计划
     init() {
       const that = this
-      const projectUserInfo = that.projectUserInfo
-      for(const key in that.form) {
+      // const projectUserInfo = that.projectUserInfo
+      for (const key in that.form) {
         if (that.projectUserInfo[key]) {
           that.form[key] = that.projectUserInfo[key]
         }
       }
+    },
+    pre() {
+      this.$emit('activeNum', 0)
     },
     next() {
       this.$emit('activeNum', 1)
