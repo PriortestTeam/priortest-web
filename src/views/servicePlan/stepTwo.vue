@@ -6,86 +6,19 @@
       :rules="rules"
       label-width="120px"
     >
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="邮箱:" prop="email" size="small">
-            <el-input v-model="form.email" disabled />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="电话:" prop="contactNo" size="small">
-            <el-input v-model="form.contactNo" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="用户名:" prop="userName" size="small">
-            <el-input v-model="form.userName" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="公司:" prop="company" size="small">
-            <el-input v-model="form.company" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="职业:" prop="profession" size="small">
-            <el-input v-model="form.profession" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="地址:" prop="address" size="small">
-            <el-input v-model="form.address" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="行业:" prop="industry" size="small">
-            <el-input v-model="form.industry" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="城市:" prop="city" size="small">
-            <el-input v-model="form.city" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="邮编:" prop="postCode" size="small">
-            <el-input v-model="form.postCode" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="您是如何知道:" size="small">
-            <el-select
-              v-model="form.how"
-              :disabled="projectUserInfo.userType !== 'Trialer'"
-              placeholder=""
-            >
-              <el-option
-                value="3"
-                label="3"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="国家:" prop="country" size="small">
-            <el-input v-model="form.country" />
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="支付方式:" prop="paymentType">
+        <el-radio v-for="item in paymentTypeList" :key="item.value" v-model="form.paymentType" :label="item.value">{{ item.key }}</el-radio>
+      </el-form-item>
+      <el-form-item :label="payCardLabel" prop="payCard">
+        <el-input v-model="form.payCard" :disabled="ispaymentType" />
+      </el-form-item>
+      <el-form-item :label="payNameLabel" prop="payName">
+        <el-input v-model="form.payName" :disabled="ispaymentType" />
+      </el-form-item>
     </el-form>
     <div>
       <el-button type="primary" class="wd100" @click="pre">上一步</el-button>
-      <el-button type="primary" class="wd100" @click="next">确认</el-button>
+      <el-button type="primary" class="wd100" @click="next">下一步</el-button>
     </div>
   </div>
 </template>
@@ -96,79 +29,104 @@ import { systemConfigAPI } from '@/api/systemConfig'
 import { mapState } from 'vuex'
 export default {
   name: 'StepTwo',
+  props: {
+    servicePlanUiList: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
       form: {
-        email: '',
-        contactNo: '',
-        userName: '',
-        company: '',
-        profession: '',
-        address: '',
-        industry: '',
-        city: '',
-        postCode: '',
-        country: ''
+        paymentType: '',
+        payCard: '',
+        payName: ''
       },
+      paymentTypeList: [], // 支付方式
       rules: {
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' }
+        paymentType: [
+          { required: true, message: '请选择支付方式', trigger: 'blur' }
         ],
-        contactNo: [
-          { required: true, message: '请输入电话', trigger: 'blur' }
+        payCard: [
+          { required: true, message: '请输入账号', trigger: 'blur' }
         ],
-        userName: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
-        ],
-        company: [
-          { required: true, message: '请输入公司', trigger: 'blur' }
-        ],
-        profession: [
-          { required: true, message: '请输入职业', trigger: 'blur' }
-        ],
-        address: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
-        ],
-        industry: [
-          { required: true, message: '请输入行业', trigger: 'blur' }
-        ],
-        city: [
-          { required: true, message: '请输入城市', trigger: 'blur' }
-        ],
-        postCode: [
-          { required: true, message: '请输入邮编', trigger: 'blur' }
-        ],
-        country: [
-          { required: true, message: '请输入国家', trigger: 'blur' }
+        payName: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
         ]
+      },
+      payNameLabel: '账号:',
+      payCardLabel: '名称:',
+      ispaymentType: true,
+      payLabelObj: {
+        'Wechat': {
+          'payCardLabel': '微信号:',
+          'payNameLabel': '用户名:'
+        },
+        'ZhiFuBao': {
+          'payCardLabel': '支付账号:',
+          'payNameLabel': '支付宝名称:'
+        },
+        'BankTransfer': {
+          'payCardLabel': '银行卡号:',
+          'payNameLabel': '账号名:'
+        },
+        'CreditCard': {
+          'payCardLabel': '信用卡账号:',
+          'payNameLabel': '信用卡账户名:'
+        }
       }
     }
   },
   computed: {
-    projectUserInfo() {
-      return this.$store.state.user.userinfo
+    ...mapState({
+      servicePlan: state => state.common.servicePlan
+    })
+  },
+  watch: {
+    'form.paymentType': function(val) {
+      if (val === '') {
+        this.form.payCard = ''
+        this.form.payName = ''
+        this.ispaymentType = true
+      } else {
+        this.ispaymentType = false
+        this.payNameLabel = this.payLabelObj[val].payNameLabel
+        this.payCardLabel = this.payLabelObj[val].payCardLabel
+      }
     }
   },
   created() {
-    console.log('stepTwo--', this.projectUserInfo)
     this.init()
   },
   methods: {
     // 服务计划
     init() {
       const that = this
-      // const projectUserInfo = that.projectUserInfo
-      for (const key in that.form) {
-        if (that.projectUserInfo[key]) {
-          that.form[key] = that.projectUserInfo[key]
+      /* eslint-disable */
+      _.forEach(that.servicePlanUiList, (item, key) => {
+        if (item.group === 'PaymentType') {
+          that.paymentTypeList.push(item)
         }
-      }
+      })
     },
     pre() {
       this.$emit('activeNum', 0)
     },
-    next() {
-      this.$emit('activeNum', 1)
+    async next() {
+      const that = this
+      try {
+        await that.$refs.form.validate()
+        return
+        const params  = {...that.form,...JSON.parse(that.servicePlan)}
+        params.dataStrorage = Number(params.dataStrorage.substring(0,params.dataStrorage.length - 2))
+        const res = await systemConfigAPI.insertOrder(params)
+        if (res.code === '200') {
+          message('success', res.msg)
+          that.$emit('activeNum', 2)
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

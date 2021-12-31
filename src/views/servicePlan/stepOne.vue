@@ -6,27 +6,31 @@
       :rules="rules"
       label-width="120px"
     >
-      <el-form-item label="支付方式:" prop="PaymentType">
-        <el-radio v-for="item in paymentTypeList" :key="item.value" v-model="form.PaymentType" :label="item.value">{{ item.key }}</el-radio>
+      <el-form-item :label="dataStrorageList[0].groupLabelCN+':'" prop="dataStrorage">
+        <el-radio-group v-model="form.dataStrorage">
+          <el-radio v-for="item in dataStrorageList" :key="item.value" :label="item.value">{{ item.key }}</el-radio>
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="数据存储:" prop="DataStrorage">
-        <el-radio v-for="item in dataStrorageList" :key="item.value" v-model="form.DataStrorage" :label="item.value">{{ item.key }}</el-radio>
+      <el-form-item :label="apiCallList[0].groupLabelCN+':'" prop="apiCall">
+        <el-radio-group v-model="form.apiCall">
+          <el-radio v-for="item in apiCallList" :key="item.value" :label="item.value">{{ item.key }}</el-radio>
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="API 请求:" prop="APICall">
-        <el-radio v-for="item in apiCallList" :key="item.value" v-model="form.APICall" :label="item.value">{{ item.key }}</el-radio>
+      <el-form-item :label="serviceDurationList[0].groupLabelCN+':'" prop="serviceDuration">
+        <el-radio-group v-model="form.serviceDuration">
+          <el-radio v-for="item in serviceDurationList" :key="item.value" :label="item.value">{{ item.key }}</el-radio>
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="服务周期:" prop="ServiceDuration">
-        <el-radio v-for="item in serviceDurationList" :key="item.value" v-model="form.ServiceDuration" :label="item.value">{{ item.key }}</el-radio>
-      </el-form-item>
-      <el-form-item label="采购模式:" prop="Subscribtion">
+      <el-form-item :label="subscribtionList[0].groupLabelCN+':'" prop="subScription">
+        <el-radio-group v-model="form.subScription">
         <el-radio
           v-for="item in subscribtionList"
           v-show="subscribtionObj[item.value]"
           :key="item.value"
-          v-model="form.Subscribtion"
           :label="item.value"
         >{{ item.key }}
         </el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="现价:" prop="currentPrice">
         {{ form.currentPrice }}元
@@ -42,22 +46,25 @@
 </template>
 
 <script>
-import { message } from '@/utils/common'
 import { systemConfigAPI } from '@/api/systemConfig'
 export default {
   name: 'StepOne',
+  props: {
+    servicePlanUiList: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
       form: {
-        PaymentType: '',
-        DataStrorage: '',
-        APICall: '',
-        ServiceDuration: '',
-        Subscribtion: '',
+        dataStrorage: '',
+        apiCall: '',
+        serviceDuration: '',
+        subScription: '',
         currentPrice: null,
         originalPrice: null
       },
-      paymentTypeList: [], // 支付方式
       dataStrorageList: [], // 数据存储
       apiCallList: [], // API 请求
       serviceDurationList: [], // 服务周期
@@ -70,20 +77,17 @@ export default {
         'All': true
       },
       rules: {
-        PaymentType: [
-          { required: true, message: '请选择支付方式', trigger: 'blur' }
+        dataStrorage: [
+          { required: true, message: '请选择数据存储', trigger: 'change' }
         ],
-        DataStrorage: [
-          { required: true, message: '请选择数据存储', trigger: 'blur' }
+        apiCall: [
+          { required: true, message: '请选择API请求', trigger: 'change' }
         ],
-        APICall: [
-          { required: true, message: '请选择API请求', trigger: 'blur' }
+        serviceDuration: [
+          { required: true, message: '请选择服务周期', trigger: 'change' }
         ],
-        ServiceDuration: [
-          { required: true, message: '请选择服务周期', trigger: 'blur' }
-        ],
-        Subscribtion: [
-          { required: true, message: '请选择采购模式', trigger: 'blur' }
+        subScription: [
+          { required: true, message: '请选择采购模式', trigger: 'change' }
         ]
       }
     }
@@ -94,29 +98,31 @@ export default {
     }
   },
   watch: {
-    'form.DataStrorage': function(val) {
+    'form.dataStrorage': function(val) {
       this.calculateOrderPrice()
     },
-    'form.APICall': function(val) {
+    'form.apiCall': function(val) {
       this.calculateOrderPrice()
     },
-    'form.ServiceDuration': function(val) {
-      this.form.Subscribtion = ''
+    'form.serviceDuration': function(val) {
+      this.form.subScription = ''
+      this.form.currentPrice = ''
+      this.form.originalPrice = ''
       this.changeServiceDuration()
       this.calculateOrderPrice()
     },
-    'form.Subscribtion': function(val) {
+    'form.subScription': function(val) {
       this.calculateOrderPrice()
     }
   },
   created() {
-    this.getServicePlanUi()
+    this.intServicePlanUi()
   },
   methods: {
     changeServiceDuration() {
       const that = this
-      const ServiceDuration = that.form.ServiceDuration
-      switch (ServiceDuration) {
+      const serviceDuration = that.form.serviceDuration
+      switch (serviceDuration) {
         case 'Monthly':
           that.subscribtionObj.Monthly = false
           that.subscribtionObj.Yearly = false
@@ -155,38 +161,33 @@ export default {
       }
     },
     // 服务计划
-    async getServicePlanUi() {
+    async intServicePlanUi() {
       const that = this
-      const res = await systemConfigAPI.getServicePlanUi()
-      if (res.code === '200') {
-        /* eslint-disable */
-        _.forEach(res.data, (item, key) => {
-          if (item.group === 'PaymentType') {
-            that.paymentTypeList.push(item)
-          } else if (item.group === 'DataStrorage') {
-            that.dataStrorageList.push(item)
-          } else if (item.group === 'APICall') {
-            that.apiCallList.push(item)
-          } else if (item.group === 'ServiceDuration') {
-            that.serviceDurationList.push(item)
-          } else if (item.group === 'Subscribtion') {
-            that.subscribtionList.push(item)
-          }
-        })
-      }
+      /* eslint-disable */
+      _.forEach(that.servicePlanUiList, (item, key) => {
+        if (item.group === 'DataStrorage') {
+          that.dataStrorageList.push(item)
+        } else if (item.group === 'APICall') {
+          that.apiCallList.push(item)
+        } else if (item.group === 'ServiceDuration') {
+          that.serviceDurationList.push(item)
+        } else if (item.group === 'Subscribtion') {
+          that.subscribtionList.push(item)
+        }
+      })
     },
     // 服务计划-订单折扣模块
     async calculateOrderPrice() {
       const that = this
-      const { APICall, DataStrorage, Subscribtion, ServiceDuration } = { ...that.form };
-      if (APICall === '' || DataStrorage === '' || Subscribtion === '' || ServiceDuration === '') {
+      const { apiCall, dataStrorage, subScription, serviceDuration } = { ...that.form };
+      if (apiCall === '' || dataStrorage === '' || subScription === '' || serviceDuration === '') {
         return
       }
       const params = {
-        'apiCall': APICall,
-        'dataStrorage': DataStrorage,
-        'subScription': Subscribtion,
-        'serviceDuration': ServiceDuration,
+        'apiCall': apiCall,
+        'dataStrorage': dataStrorage,
+        'subScription': subScription,
+        'serviceDuration': serviceDuration,
         'userClass': that.projectUserInfo.userClass
       }
       const res = await systemConfigAPI.calculateOrderPrice(params)
@@ -199,6 +200,7 @@ export default {
       const that = this
       try {
         await that.$refs.form.validate()
+        this.$store.commit('common/setServicePlan', JSON.stringify(that.form))
         that.$emit('activeNum', 1)
       } catch (error) {
         console.log(error)

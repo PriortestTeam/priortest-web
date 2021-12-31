@@ -15,5 +15,13 @@ export const systemConfigAPI = {
       method: 'post',
       data: data
     })
-  }
+  },
+  // 服务计划-新增订单
+  insertOrder(data) {
+    return request({
+      url: '/userOrder/insertOrder',
+      method: 'post',
+      data: data
+    })
+  },
 }
