@@ -79,11 +79,11 @@ export default {
 }
 
 .fixed-header {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 9;
+  // position: fixed;
+  // top: 0;
+  // right: 0;
+  // left: 0;
+  // z-index: 9;
   // width: calc(100% - #{$sideBarWidth});
   transition: width 0.28s;
 }
@@ -95,5 +95,10 @@ export default {
 
 .mobile .fixed-header {
   width: 100%;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
 }
 </style>

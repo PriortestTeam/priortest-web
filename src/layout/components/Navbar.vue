@@ -1,169 +1,197 @@
 <template>
   <div class="navbar">
-    <el-row>
-      <el-col :span="3">
-        <!-- 头部选择栏 -->
-        <img
-          class="one_logo"
-          src="@/icons/img/one-logo.png"
-          alt=""
-          srcset=""
-          @click="gohome"
-        />
-      </el-col>
-      <el-col :span="19">
-        <div class="one_title">
-          <div>
-            <div
-              v-for="(item, index) in clickItem"
-              :key="index"
-              :class="['item', index == activeIndex ? 'active' : '']"
-              @click="goOther(item, index)"
-            >
-              {{
-                index === 0
-                  ? item
-                  : index === 1
-                  ? $t("lang.menuTitle.Feature")
-                  : index === 2
-                  ? $t("lang.menuTitle.Sprint")
-                  : index === 3
-                  ? $t("lang.menuTitle.TestCase")
-                  : index === 4
-                  ? $t("lang.menuTitle.TestCycle")
-                  : index === 5
-                  ? $t("lang.menuTitle.Issue")
-                  : index === 6
-                  ? $t("lang.menuTitle.SignOff")
-                  : ""
-              }}
-            </div>
-          </div>
-
-          <div>
-            <el-input v-model="Idsearch" size="mini" placeholder="id/text">
-              <i slot="prefix" class="el-input__icon el-icon-search" />
-            </el-input>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="2">
-        <div class="right-menu">
-          <div v-if="false" class="lang">
-            <el-dropdown :hide-on-click="false" @command="changeLang">
-              <span class="el-dropdown-link"
-                >{{ $t("lang.custom.name")
-                }}<i class="el-icon-arrow-down el-icon--right"
-              /></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="zh-CN">{{
-                  $t("lang.chinese")
-                }}</el-dropdown-item>
-                <el-dropdown-item command="en-US">{{
-                  $t("lang.engLish")
-                }}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <router-link to="/admincenter/admincenter">
-            <img class="user-avatar" :src="userInfo.photo" />
-          </router-link>
-
-          <svg-icon icon-class="tuichu" class="tuichu" @click.native="logout" />
-        </div>
-      </el-col>
-    </el-row>
+    <div class="one_logo">
+      <img src="@/icons/img/one-logo.png" alt="" srcset="" @click="gohome">
+    </div>
+    <div class="nav-menu">
+      <el-menu
+        :default-active="activeIndex"
+        active-text-color="#409EFF"
+        mode="horizontal"
+        @select="menuSelect"
+      >
+        <el-menu-item
+          v-for="(item, i) in menuList"
+          :key="i"
+          :index="item.index"
+        >{{
+          item.index === "Project"
+            ? item.name
+            : $t(`lang.menuTitle.${item.name}`)
+        }}</el-menu-item>
+      </el-menu>
+    </div>
+    <div class="user-menu">
+      <div class="search-menu">
+        <el-input
+          v-model="Idsearch"
+          size="mini"
+          placeholder="id/text"
+          style="width: 240px"
+        >
+          <i slot="prefix" class="el-input__icon el-icon-search" />
+        </el-input>
+      </div>
+      <div class="lan-menu">
+        <el-dropdown>
+          <el-button type="text">语言切换</el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item> 中文 </el-dropdown-item>
+            <el-dropdown-item> English </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <div class="info-menu">
+        <el-dropdown>
+          <el-avatar icon="el-icon-user-solid" :size="40" />
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>
+              <div @click="menuSelect('Admincenter')">
+                <img class="user-avatar" :src="userInfo.photo">
+                个人中心
+              </div>
+            </el-dropdown-item>
+            <el-dropdown-item style="color: #f56c6c">
+              <div @click="logout">
+                <svg-icon icon-class="tuichu" class="tuichu" />
+                退出
+              </div>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { message } from "@/utils/common";
+import { mapGetters } from 'vuex'
+import { message } from '@/utils/common'
 export default {
   data() {
     return {
-      Idsearch: "",
-      projectName: "",
-      activeIndex: 99,
+      menuList: [{
+        index: 'Project',
+        name: ''
+      }, {
+        index: 'Feature',
+        name: 'Feature'
+      }, {
+        index: 'Sprint',
+        name: 'Sprint'
+      }, {
+        index: 'Testcase',
+        name: 'TestCase'
+      }, {
+        index: 'Testcycle',
+        name: 'TestCycle'
+      }, {
+        index: 'Issue',
+        name: 'Issue'
+      }, {
+        index: 'Signoff',
+        name: 'SignOff'
+      }],
+      Idsearch: '',
+      projectName: '',
+      activeIndex: '',
       userinfo: {},
       clickItem: [
-        "项目",
-        "Feature",
-        "Sprint",
-        "Testcase",
-        "Testcycle",
-        "Issue",
-        "Signoff",
-      ],
-    };
+        '项目',
+        'Feature',
+        'Sprint',
+        'Testcase',
+        'Testcycle',
+        'Issue',
+        'Signoff'
+      ]
+    }
   },
   computed: {
     ...mapGetters([
-      "sidebar",
+      'sidebar',
       {
         isCollapse: (state) => state.tab.isCollapse,
-        lang: (state) => state.header.lang,
-        //navName: state => state.common.nvaName
-      },
+        lang: (state) => state.header.lang
+        // navName: state => state.common.nvaName
+      }
     ]),
     userInfo() {
-      return this.$store.state.user.userinfo;
-    },
+      return this.$store.state.user.userinfo
+    }
   },
   watch: {
-    userInfo: function (newVal, oldVal) {
+    userInfo: function(newVal, oldVal) {
       if (newVal.userUseOpenProject) {
-        this.clickItem[0] = newVal.userUseOpenProject.title;
+        this.clickItem[0] = newVal.userUseOpenProject.title
       }
-    },
-  },
-  created() {
-    if (this.userInfo.userUseOpenProject.title) {
-      this.clickItem[0] = this.userInfo.userUseOpenProject.title;
     }
-    if (this.get("activeIndex")) {
-      this.activeIndex = this.get("activeIndex");
+  },
+  mounted() {
+    this.menuList[0].name = this.userInfo.userUseOpenProject.title
+    if (window.localStorage.currentMenu) {
+      this.activeIndex = window.localStorage.currentMenu
+      if (this.activeIndex === 'Project') {
+        this.$router.push({ name: 'Project' })
+      } else {
+        this.$router.push({ name: this.activeIndex })
+      }
     } else {
-      this.activeIndex == 99;
+      this.activeIndex = 'Project'
+      this.$router.push({ name: 'Project' })
     }
   },
   methods: {
+    // 菜单切换事件
+    menuSelect(name) {
+      const index = this.menuList.findIndex(v => v.index === name)
+      window.localStorage.setItem('currentMenu', name)
+      if (name === 'Project') {
+        this.$router.push({ name: 'Project' })
+      } else if (index < 0) {
+        window.localStorage.removeItem('currentMenu')
+        this.activeIndex = ''
+        this.$router.push({ name })
+      } else {
+        this.$router.push({ name })
+      }
+    },
     toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+      this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      this.remove("activeIndex");
-      await this.$store.dispatch("user/logout");
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      this.remove('activeIndex')
+      await this.$store.dispatch('user/logout')
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     goOther(item, index) {
       this.$store.commit('common/setNavName', item)
-      this.activeIndex = index;
-      this.set("activeIndex", index);
+      this.activeIndex = index
+      this.set('activeIndex', index)
       if (index === 0) {
-        this.$router.push({ name: "Project" });
+        this.$router.push({ name: 'Project' })
       } else if (!this.userInfo.userUseOpenProject.title) {
-        message("error", "请选择项目");
+        message('error', '请选择项目')
       } else {
-        this.$router.push({ name: item });
+        this.$router.push({ name: item })
       }
     },
     gohome() {
-      this.$router.push({ name: "Dashboard" });
+      this.$router.push({ name: 'Dashboard' })
     },
 
     // 切换语言
     changeLang(command) {
-      if (command === "zh-CN") {
-        this.$i18n.locale = "zh-CN";
+      if (command === 'zh-CN') {
+        this.$i18n.locale = 'zh-CN'
       }
-      if (command === "en-US") {
-        this.$i18n.locale = "en-US";
+      if (command === 'en-US') {
+        this.$i18n.locale = 'en-US'
       }
-      this.$store.dispatch("changeLang", command);
-    },
-  },
-};
+      this.$store.dispatch('changeLang', command)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -171,7 +199,6 @@ export default {
 
 .navbar {
   padding: 0 $spacing;
-  height: 46px;
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
@@ -179,6 +206,21 @@ export default {
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   display: flex;
   align-items: center;
+
+  .nav-menu {
+    flex: 1;
+    height: 100%;
+    margin: 0 30px;
+  }
+
+  .user-menu {
+    width: 400px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .right-menu {
     display: flex;
     justify-content: flex-end;
@@ -211,7 +253,7 @@ export default {
     box-sizing: border-box;
     color: #2a344b;
     justify-content: space-between;
-    >div {
+    > div {
       &:first-child {
         flex: 1;
         display: flex;
@@ -226,17 +268,17 @@ export default {
       cursor: pointer;
       font-size: 14px;
       margin: 0 20px;
-      &:hover{
-          position: relative;
-      &::after{
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: $tabcolorBG;
-        content: "";
-      }
+      &:hover {
+        position: relative;
+        &::after {
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: $tabcolorBG;
+          content: "";
+        }
       }
     }
     .active {
@@ -245,7 +287,7 @@ export default {
       border-radius: 23px;
       // margin: 5px 0;
       position: relative;
-      &::after{
+      &::after {
         position: absolute;
         bottom: -1px;
         left: 0;
@@ -265,9 +307,14 @@ export default {
   }
   .one_logo {
     cursor: pointer;
-    width: 90%;
     height: auto;
-    height: 46px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > img {
+      height: 40px;
+    }
   }
 }
 </style>

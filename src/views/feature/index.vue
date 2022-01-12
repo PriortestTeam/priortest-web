@@ -1,6 +1,8 @@
 <template>
   <div class="project-container app-container">
-    <div v-if="treeCol==0" class="showBtn" @click="hadleTreeshow"><i class="el-icon-d-arrow-right" /></div>
+    <div v-if="treeCol == 0" class="showBtn" @click="hadleTreeshow">
+      <i class="el-icon-d-arrow-right" />
+    </div>
     <el-row>
       <el-col :span="treeCol">
         <view-tree
@@ -9,124 +11,133 @@
           @childByValue="childByValue"
         />
       </el-col>
-      <el-col
-        :span="24-treeCol"
-      ><div class="project_table">
-        <div class="new_project">
-          <el-button type="primary" round @click="newproject"> 新建故事 </el-button>
-        </div>
-        <div class="oprate_btn">
-          <el-button type="text" @click="projectRefresh">刷新</el-button>
-          <el-button
-            type="text"
-            :disabled="single"
-            @click="projectClone"
-          >克隆</el-button>
-          <el-button
-            type="text"
-            :disabled="multiple"
-            @click="delproject('all')"
-          >批量删除</el-button>
-          <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
-        </div>
-        <div v-loading="isLoading" class="protable table">
-          <el-table
-            ref="featureData"
-            :data="featureData"
-            :header-cell-style="tableHeader"
-            stripe
-            style="width: 100%"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="55" />
-            <el-table-column type="index" align="center" label="序号">
-              <template slot-scope="scope">
-                {{ scope.$index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="title"
-              :show-overflow-tooltip="true"
-              align="center"
-              label="标题"
-            />
-            <el-table-column
-              prop="epic"
-              :show-overflow-tooltip="true"
-              align="center"
-              label="epic"
-            />
-            <el-table-column prop="module" align="center" label="模块" />
+      <el-col :span="24 - treeCol">
+        <el-card>
+          <div class="project_table">
+            <div class="new_project">
+              <el-button type="primary" round @click="newproject">
+                新建故事
+              </el-button>
+            </div>
+            <div class="oprate_btn">
+              <el-button type="text" @click="projectRefresh">刷新</el-button>
+              <el-button
+                type="text"
+                :disabled="single"
+                @click="projectClone"
+              >克隆</el-button>
+              <el-button
+                type="text"
+                :disabled="multiple"
+                @click="delproject('all')"
+              >批量删除</el-button>
+              <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
+            </div>
+            <div v-loading="isLoading" class="protable table">
+              <el-table
+                ref="featureData"
+                :data="featureData"
+                :header-cell-style="tableHeader"
+                stripe
+                style="width: 100%"
+                @selection-change="handleSelectionChange"
+              >
+                <el-table-column type="selection" width="55" />
+                <el-table-column type="index" align="center" label="序号">
+                  <template slot-scope="scope">
+                    {{ scope.$index + 1 }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="title"
+                  :show-overflow-tooltip="true"
+                  align="center"
+                  label="标题"
+                />
+                <el-table-column
+                  prop="epic"
+                  :show-overflow-tooltip="true"
+                  align="center"
+                  label="epic"
+                />
+                <el-table-column prop="module" align="center" label="模块" />
 
-            <el-table-column prop="status" align="center" label="状态">
-              <template slot-scope="scope">
-                <span>{{
-                  scope.row.status === 1
-                    ? "开发中"
-                    : scope.row.status === 2
-                      ? "计划中"
-                      : "关闭"
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="reportTo" align="center" label="负责人" />
-            <el-table-column
-              prop="createTime"
-              align="center"
-              label="创建日期"
-              min-width="120"
-              :show-overflow-tooltip="true"
-            />
-            <el-table-column
-              prop="version"
-              align="center"
-              label="发行版本"
-              min-width="120"
-              :show-overflow-tooltip="true"
-            />
-            <el-table-column
-              prop="closeDate"
-              align="center"
-              label="关闭日期"
-              min-width="120"
-              :show-overflow-tooltip="true"
-            >
-              <template slot-scope="scope">
-                <span>{{ scope.row.closeDate || "-" }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" min-width="160" align="center">
-              <template slot-scope="scope">
-                <!-- <el-button type="text" class="table-btn">克隆</el-button>
+                <el-table-column prop="status" align="center" label="状态">
+                  <template slot-scope="scope">
+                    <span>{{
+                      scope.row.status === 1
+                        ? "开发中"
+                        : scope.row.status === 2
+                          ? "计划中"
+                          : "关闭"
+                    }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="reportTo"
+                  align="center"
+                  label="负责人"
+                />
+                <el-table-column
+                  prop="createTime"
+                  align="center"
+                  label="创建日期"
+                  min-width="120"
+                  :show-overflow-tooltip="true"
+                />
+                <el-table-column
+                  prop="version"
+                  align="center"
+                  label="发行版本"
+                  min-width="120"
+                  :show-overflow-tooltip="true"
+                />
+                <el-table-column
+                  prop="closeDate"
+                  align="center"
+                  label="关闭日期"
+                  min-width="120"
+                  :show-overflow-tooltip="true"
+                >
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.closeDate || "-" }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" min-width="160" align="center">
+                  <template slot-scope="scope">
+                    <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
-                <el-button
-                  type="text"
-                  class="table-btn"
-                  @click.stop="openEdit(scope.row)"
-                >编辑</el-button>
-                <el-button
-                  type="text"
-                  class="table-btn"
-                  @click.stop="delproject(scope.row.id)"
-                >删除</el-button>
-                <el-button
-                  v-if="scope.row.status !== 0"
-                  type="text"
-                  class="table-btn"
-                  @click.stop="closeEdit(scope.row)"
-                >关闭</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+                    <el-button
+                      type="text"
+                      class="table-btn"
+                      @click.stop="openEdit(scope.row)"
+                    >编辑</el-button>
+                    <el-button
+                      type="text"
+                      class="table-btn"
+                      @click.stop="delproject(scope.row.id)"
+                    >删除</el-button>
+                    <el-button
+                      v-if="scope.row.status !== 0"
+                      type="text"
+                      class="table-btn"
+                      @click.stop="closeEdit(scope.row)"
+                    >关闭</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
 
-          <pagination
-            v-show="featureTotal > 0"
-            :total="featureTotal"
-            :page.sync="featureQuery.pageNum"
-            :limit.sync="featureQuery.pageSize"
-            @pagination="getfeatureList"
-          />
-        </div></div></el-col>
+              <pagination
+                v-show="featureTotal > 0"
+                :total="featureTotal"
+                :page.sync="featureQuery.pageNum"
+                :limit.sync="featureQuery.pageSize"
+                @pagination="getfeatureList"
+              />
+            </div>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
   </div>
 </template>

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import router from '../router/index.js'
 
 // create an axios instance
 const service = axios.create({
@@ -43,9 +44,13 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err---', error.response) // for debug
+    if (error.response.status === 401) {
+      router.redirect(`/login?redirect=${router.app.$route.fullPath}`)
+      return
+    }
     if (error.config.url.indexOf('testCaseTemplate/importTestCase') === -1) {
       Message({
-        message: error.response.data.data,
+        message: error.response.data.data || error.response.data.error,
         type: 'error',
         duration: 5 * 1000
       })

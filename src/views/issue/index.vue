@@ -1,6 +1,8 @@
 <template>
   <div class="project-container app-container">
-    <div v-if="treeCol==0" class="showBtn" @click="hadleTreeshow"><i class="el-icon-d-arrow-right" /></div>
+    <div v-if="treeCol == 0" class="showBtn" @click="hadleTreeshow">
+      <i class="el-icon-d-arrow-right" />
+    </div>
     <el-row>
       <el-col :span="treeCol">
         <view-tree
@@ -10,111 +12,128 @@
         />
       </el-col>
 
-      <el-col
-        :span="24-treeCol"
-      ><div class="project_table">
-        <div class="new_project">
-          <el-button type="primary" round @click="newproject"> 新建缺陷 </el-button>
-        </div>
+      <el-col :span="24 - treeCol">
+        <el-card>
+          <div class="project_table">
+            <div class="new_project">
+              <el-button type="primary" round @click="newproject">
+                新建缺陷
+              </el-button>
+            </div>
 
-        <div class="oprate_btn">
-          <el-button type="text" @click="projectRefresh">刷新</el-button>
-          <el-button
-            type="text"
-            :disabled="single"
-            @click="projectClone"
-          >克隆</el-button>
-          <el-button
-            type="text"
-            :disabled="multiple"
-            @click="delproject('all')"
-          >批量删除</el-button>
-          <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
-        </div>
-        <div v-loading="isLoading" class="protable table">
-          <el-table
-            ref="issueData"
-            :data="issueData"
-            :header-cell-style="tableHeader"
-            stripe
-            style="width: 100%"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="55" />
-            <el-table-column type="index" align="center" label="序号">
-              <template slot-scope="scope">
-                {{ scope.$index + 1 }}
-              </template>
-            </el-table-column>
+            <div class="oprate_btn">
+              <el-button type="text" @click="projectRefresh">刷新</el-button>
+              <el-button
+                type="text"
+                :disabled="single"
+                @click="projectClone"
+              >克隆</el-button>
+              <el-button
+                type="text"
+                :disabled="multiple"
+                @click="delproject('all')"
+              >批量删除</el-button>
+              <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
+            </div>
+            <div v-loading="isLoading" class="protable table">
+              <el-table
+                ref="issueData"
+                :data="issueData"
+                :header-cell-style="tableHeader"
+                stripe
+                style="width: 100%"
+                @selection-change="handleSelectionChange"
+              >
+                <el-table-column type="selection" width="55" />
+                <el-table-column type="index" align="center" label="序号">
+                  <template slot-scope="scope">
+                    {{ scope.$index + 1 }}
+                  </template>
+                </el-table-column>
 
-            <el-table-column
-              prop="title"
-              :show-overflow-tooltip="true"
-              align="left"
-              width="155"
-              :label="$t('lang.CommonFiled.Title')"
-            >
-              <template slot-scope="scope">
-                <span class="title" @click="openEdit(scope.row)">
-                  {{ scope.row.title }}
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="status" align="center" label="状态">
-              <template slot-scope="scope">
-                <span>{{
-                  scope.row.status === 1
-                    ? "open"
-                    : scope.row.status === 2
-                      ? "assigned"
-                      : scope.row.status === 3
-                        ? "fixed"
-                        : scope.row.status === 4
-                          ? "closed"
-                          : ""
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="version" align="center" label="版本" />
+                <el-table-column
+                  prop="title"
+                  :show-overflow-tooltip="true"
+                  align="left"
+                  width="155"
+                  :label="$t('lang.CommonFiled.Title')"
+                >
+                  <template slot-scope="scope">
+                    <span class="title" @click="openEdit(scope.row)">
+                      {{ scope.row.title }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="status" align="center" label="状态">
+                  <template slot-scope="scope">
+                    <span>{{
+                      scope.row.status === 1
+                        ? "open"
+                        : scope.row.status === 2
+                          ? "assigned"
+                          : scope.row.status === 3
+                            ? "fixed"
+                            : scope.row.status === 4
+                              ? "closed"
+                              : ""
+                    }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="version" align="center" label="版本" />
 
-            <el-table-column prop="feature" align="center" label="故事" />
+                <el-table-column prop="feature" align="center" label="故事" />
 
-            <el-table-column prop="test_env" align="center" label="测试环境" />
-            <el-table-column prop="test_platform" align="center" label="测试平台" />
-            <el-table-column prop="test_cycle" align="center" label="测试周期" />
-            <el-table-column
-              prop="createTime"
-              align="center"
-              label="创建日期"
-              min-width="120"
-              :show-overflow-tooltip="true"
-            />
+                <el-table-column
+                  prop="test_env"
+                  align="center"
+                  label="测试环境"
+                />
+                <el-table-column
+                  prop="test_platform"
+                  align="center"
+                  label="测试平台"
+                />
+                <el-table-column
+                  prop="test_cycle"
+                  align="center"
+                  label="测试周期"
+                />
+                <el-table-column
+                  prop="createTime"
+                  align="center"
+                  label="创建日期"
+                  min-width="120"
+                  :show-overflow-tooltip="true"
+                />
 
-            <el-table-column label="操作" min-width="160" align="center">
-              <template slot-scope="scope">
-                <span class="line">|</span> -->
-                <el-button
-                  type="text"
-                  class="table-btn"
-                  @click.stop="openEdit(scope.row)"
-                >克隆</el-button>
-                <el-button
-                  type="text"
-                  class="table-btn"
-                  @click.stop="delproject(scope.row.id)"
-                >删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+                <el-table-column label="操作" min-width="160" align="center">
+                  <template slot-scope="scope">
+                    <span class="line">|</span> -->
+                    <el-button
+                      type="text"
+                      class="table-btn"
+                      @click.stop="openEdit(scope.row)"
+                    >克隆</el-button>
+                    <el-button
+                      type="text"
+                      class="table-btn"
+                      @click.stop="delproject(scope.row.id)"
+                    >删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
 
-          <pagination
-            v-show="issueTotal > 0"
-            :total="issueTotal"
-            :page.sync="issueQuery.pageNum"
-            :limit.sync="issueQuery.pageSize"
-            @pagination="getIssueList"
-          />
-        </div></div></el-col>
+              <pagination
+                v-show="issueTotal > 0"
+                :total="issueTotal"
+                :page.sync="issueQuery.pageNum"
+                :limit.sync="issueQuery.pageSize"
+                @pagination="getIssueList"
+              />
+            </div>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
   </div>
 </template>

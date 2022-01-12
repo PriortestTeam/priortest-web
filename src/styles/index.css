@@ -97,6 +97,8 @@
   transition: margin-left 0.28s;
   margin-left: 0;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 #app .sidebar-container {
   transition: width 0.28s;
