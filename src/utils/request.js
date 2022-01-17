@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
 import router from '../router/index.js'
 
 // create an axios instance
@@ -37,6 +37,11 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
+      if (res.code === '401') {
+        removeToken()
+        router.replace(`/login?redirect=${router.app.$route.fullPath}`)
+        return
+      }
       return res
     } else {
       return res
@@ -45,7 +50,7 @@ service.interceptors.response.use(
   error => {
     console.log('err---', error.response) // for debug
     if (error.response.status === 401) {
-      router.redirect(`/login?redirect=${router.app.$route.fullPath}`)
+      router.replace(`/login?redirect=${router.app.$route.fullPath}`)
       return
     }
     if (error.config.url.indexOf('testCaseTemplate/importTestCase') === -1) {

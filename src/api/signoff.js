@@ -18,10 +18,10 @@ export function getProjectVersion(params) {
   })
 }
 
-//获取测试周期
+// 获取测试周期
 export function getTestCycleVersion(params) {
   return request({
-    url: '/signOff/getTestCycleVersion',
+    url: '/signOff/getTestCycleDetail',
     method: 'get',
     params
   })
@@ -53,5 +53,27 @@ export function getSignaturePath() {
   })
 }
 
+// 获取缺陷
+export function getIssue() {
+  return request({
+    url: '/signOff/getIssue',
+    method: 'get'
+  })
+}
 
+// 获取签收记录
+export function getRecord() {
+  return request({
+    url: '/signOff/getPdf',
+    method: 'get'
+  })
+}
 
+// 删除签名
+export function deleteSign(params) {
+  return request({
+    url: '/signOff/delete',
+    method: 'get',
+    params
+  })
+}

@@ -2,7 +2,7 @@
   <div class="signoff-container app-container">
     <el-card>
       <el-form
-        ref="from"
+        ref="createForm"
         :model="from"
         :rules="rules"
         label-width="100px"
@@ -30,15 +30,20 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="发布版本" prop="scope" class="form-small">
+        <el-form-item label="发布版本" prop="version" class="form-small">
           <el-row class="radiu">
-            <el-radio-group v-model="version">
-              <el-radio label="Latest Version">最新版本</el-radio>
-              <el-radio label="复选框 C">
+            <el-radio-group
+              v-model="baseInfo.version"
+              @change="versionTypeChange"
+            >
+              <el-radio :label="true">最新版本({{ lastVersion }})</el-radio>
+              <el-radio :label="false">
                 <el-select
                   v-model="from.version"
                   size="mini"
                   placeholder="测试版本"
+                  :disabled="baseInfo.version === true"
+                  @change="versionChange"
                 >
                   <el-option
                     v-for="(item, index) in projectVersionList.mergeValues"
@@ -51,9 +56,14 @@
             </el-radio-group>
           </el-row>
         </el-form-item>
-        <el-form-item label="测试环境" prop="scope" class="form-small">
+        <el-form-item label="测试环境" prop="env" class="form-small">
           <el-row class="radiu">
-            <el-select v-model="from.env" size="mini" placeholder="1.0">
+            <el-select
+              v-model="from.env"
+              size="mini"
+              placeholder="1.0"
+              @change="envChange"
+            >
               <el-option
                 v-for="(item, index) in projectEnvList.mergeValues"
                 :key="index"
@@ -64,21 +74,26 @@
             </el-select>
           </el-row>
         </el-form-item>
-        <el-form-item label="测试周期" prop="scope" class="form-small">
+        <el-form-item label="测试周期" prop="testCycle" class="form-small">
           <el-row class="radiu">
-            <el-radio-group v-model="Testle">
-              <el-radio label="Current Version">当前版本</el-radio>
-              <el-radio label="复选框 C">
+            <el-radio-group
+              v-model="baseInfo.testCycle"
+              @change="cycleTypeChange"
+            >
+              <el-radio label="curentReleaseVersion">当前版本</el-radio>
+              <el-radio :label="false">
                 <el-select
                   v-model="from.testCycle"
                   size="mini"
                   placeholder="测试周期标题"
+                  :disabled="baseInfo.testCycle === 'curentReleaseVersion'"
+                  multiple
                 >
                   <el-option
                     v-for="(item, index) in testCycleVersionList"
                     :key="index"
-                    :label="item"
-                    :value="item"
+                    :label="item.title"
+                    :value="item.title"
                     multiple
                   />
                 </el-select>
@@ -86,7 +101,7 @@
             </el-radio-group>
           </el-row>
         </el-form-item>
-        <el-form-item label="缺陷" prop="scope" class="form-small">
+        <el-form-item label="缺陷" prop="issue" class="form-small">
           <el-row>
             <el-row :span="4">
               <el-checkbox
@@ -95,51 +110,36 @@
                 @change="handleCheckAllChange"
               >全选</el-checkbox>
             </el-row>
-            <el-checkbox-group
-              v-model="lssueList"
-              @change="handleCheckedCitiesChange"
-            >
-              <el-row :span="4">
-                <el-checkbox label="修改" />
-              </el-row>
-              <el-row :span="4">
-                <el-checkbox label="关闭" />
-              </el-row>
-              <el-row :span="4">
-                <el-checkbox label="未分配" />
-              </el-row>
-              <el-row :span="4">
-                <el-checkbox label="已分配" />
-              </el-row>
-              <el-row :span="4">
-                <el-checkbox label="拒绝" />
-              </el-row>
-              <el-row :span="4">
-                <el-checkbox label="已验证" />
-              </el-row>
-              <el-row :span="4">
-                <el-checkbox label="验证成功" />
-              </el-row>
-              <el-row :span="4">
-                <el-checkbox label="验证失败" />
+            <el-checkbox-group v-model="from.issue" @change="issueChecked">
+              <el-row v-for="(item, i) in issues" :key="i" :span="4">
+                <el-checkbox :label="item" :value="item" />
               </el-row>
             </el-checkbox-group>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="签名" prop="scope" class="form-small">
+        <el-form-item label="签名" prop="fileUrl" class="form-small">
           <!-- Signi-Upload -->
           <el-row v-if="signiList.length > 0" class="radiu">
             <el-radio-group v-model="from.fileUrl">
-              <div
+              <!-- <el-radio
                 v-for="(item, index) in signiList"
-                :key="item.label"
-                class="mb-2 signi"
-              >
-                <el-radio :label="item">{{ item }}</el-radio>
+                :key="index"
+                :label="item.file_path"
+              >{{ item.uuid_file_name }}
                 <i
                   class="el-icon el-icon-error"
-                  @click="removeSigniList(index)"
+                  @click.stop="removeSigniList(index)"
+                /></el-radio> -->
+              <div
+                v-for="(item, index) in signiList"
+                :key="index"
+                class="mb-2 signi"
+              >
+                <el-radio :label="item.file_path">{{ item.uuid_file_name }}</el-radio>
+                <i
+                  class="el-icon el-icon-error"
+                  @click="removeSigniList(item)"
                 />
               </div>
             </el-radio-group>
@@ -156,6 +156,9 @@
         </el-form-item>
       </el-form>
     </el-card>
+    <el-card>
+      <div class="pdf-list" />
+    </el-card>
   </div>
 </template>
 
@@ -165,23 +168,28 @@ import {
   getProjectEnv,
   getProjectVersion,
   getTestCycleVersion,
-  createGenerate, getSignaturePath
+  createGenerate,
+  getSignaturePath,
+  getIssue,
+  getRecord,
+  deleteSign
 } from '@/api/signoff.js'
 import {
   queryForProjects
 } from '@/api/project.js'
 import UploadSigenatrue from '@/components/Upload/UploadSigenatrue.vue'
+import { getLastVersion } from '@/utils/compareVersion.js'
 // 缺陷参数
-const lssueList = [
-  '修改',
-  '关闭',
-  '未分配',
-  '已分配',
-  '拒绝',
-  '已验证',
-  '验证成功',
-  '验证失败'
-]
+// const lssueList = [
+//   '修改',
+//   '关闭',
+//   '未分配',
+//   '已分配',
+//   '拒绝',
+//   '已验证',
+//   '验证成功',
+//   '验证失败'
+// ]
 export default {
   name: 'Dashboard',
   components: {
@@ -189,29 +197,69 @@ export default {
   },
   data() {
     return {
+      searchFrom: {
+        verison: '',
+        env: '',
+        testCycle: ''
+      },
+      baseInfo: {
+        version: true,
+        env: true,
+        testCycle: 'curentReleaseVersion'
+      },
+      lastVersion: '',
+      currentCycle: '',
       projectList: [],
       from: {
         env: '',
         testCycle: [],
         version: '',
-        fileUrl: ''
+        fileUrl: '',
+        issue: []
       },
-      rules: {},
-      versionList: ['Current Version'],
-      version: 'Latest Version',
-      // TestleList: ['Current Version'],
-      Testle: 'Current Version',
-      // lssueList: ['', 'Fixed', 'Closed', 'Opend', 'Assigned', 'Rejected'],
-      lssueList: [],
+      rules: {
+        version: [
+          {
+            required: true, validator: (rule, val, callback) => {
+              if (!val && this.baseInfo.version === false) {
+                callback(new Error('请选择发布版本'))
+              } else {
+                callback()
+              }
+            }, message: '请选择发布版本', trigger: 'blur'
+          }
+        ],
+        env: [
+          { required: true, message: '请选择测试环境', trigger: 'blur' }
+        ],
+        testCycle: [
+          {
+            required: true, validator: (rule, val, callback) => {
+              if (!val && this.baseInfo.testCycle !== 'curentReleaseVersion') {
+                callback(new Error('请选择测试周期'))
+              } else {
+                callback()
+              }
+            }, message: '请选择测试周期', trigger: 'blur'
+          }
+        ],
+        fileUrl: [
+          { required: true, message: '请选择签名', trigger: 'blur' }
+        ],
+        issue: [
+          { required: true, message: '请选择缺陷', trigger: 'blur' }
+        ]
+      },
+      issues: [],
       signiList: [], // 签名列表
       signi: '',
-      allLssueList: lssueList,
       isIndeterminate: true,
       checkAll: false,
       projectEnvList: [],
       projectVersionList: [],
       testCycleVersionList: [],
-      projectId: ''
+      projectId: '',
+      records: []
     }
   },
   computed: {
@@ -223,31 +271,89 @@ export default {
     ])
   },
   async mounted() {
+    const loading = this.$loading({
+      lock: true,
+      text: 'Loading',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    })
     // 从缓存中获取 projectId
     // const projectId = localStorage.getItem('projectId')
     // 测试id号
     this.projectId = localStorage.getItem('projectId')
     // 获取测试环境
-    this.getSign()
-    this.getProject()
-    this.getProjectEnv()
-    this.getProjectVersion()
-    this.getTestCycleVersion()
+    await this.getProject()
+    await this.getProjectVersion()
+    await this.getProjectEnv()
+    await this.getTestCycleVersion()
+    await this.issueList()
+    await this.getSign()
+    await this.recordList()
+    loading.close()
   },
   methods: {
+    // 发布版本类型切换
+    versionTypeChange(val) {
+      this.baseInfo.verison = val
+      if (val === true) {
+        this.searchFrom.verison = this.lastVersion
+        this.from.version = ''
+      } else {
+        this.from.version = this.searchFrom.version = this.projectVersionList.mergeValues ? this.projectVersionList.mergeValues[0] : ''
+      }
+      this.getTestCycleVersion()
+    },
+    // 下拉框切换版本
+    versionChange(val) {
+      this.searchFrom.verison = val
+      this.getTestCycleVersion()
+    },
+    // 测试环境下拉切换
+    envChange(val) {
+      this.searchFrom.env = val
+      this.from.env = val
+      this.getTestCycleVersion()
+    },
+    // 测试周期切换
+    cycleTypeChange(val) {
+      if (val === 'curentReleaseVersion') {
+        this.baseInfo.testCycle = 'curentReleaseVersion'
+        this.searchFrom.testCycle = 'curentReleaseVersion'
+      } else {
+        this.baseInfo.testCycle = false
+        this.from.testCycle = this.searchFrom.testCycle = this.testCycleVersionList.mergeValues ? this.testCycleVersionList.mergeValues[0] : ''
+      }
+      this.getTestCycleVersion()
+    },
     handleCheckAllChange(val) {
-      this.lssueList = val ? lssueList : []
+      this.from.issue = val ? this.issues : []
       this.isIndeterminate = false
     },
-    handleCheckedCitiesChange(value) {
+    issueChecked(value) {
       const checkedCount = value.length
-      this.checkAll = checkedCount === this.allLssueList.length
-      this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.allLssueList.length
+      this.checkAll = checkedCount === this.issues.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.issues.length
     },
     // 删除签名信息
-    removeSigniList(i) {
-      this.signiList.splice(i, 1)
+    async removeSigniList(val) {
+      const loading = this.$loading({
+        lock: true,
+        text: '正在删除',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      console.log(val)
+      try {
+        const res = await deleteSign({ fileId: val.id })
+        loading.close()
+        if (res.code === '200') {
+          this.$message.success('删除成功')
+        }
+      } catch (err) {
+        console.log(err)
+        loading.close()
+      }
+      this.getSign()
     },
     // 上传签名
     // uploadSigni() {
@@ -257,18 +363,22 @@ export default {
     //   });
     // },
     async createFile() {
+      console.log(this.from)
+      this.$refs.createForm.validate(valid => {
+        console.log(valid)
+      })
       const data = {
         env: this.from.env,
         fileUrl: this.from.fileUrl,
-        issue: this.lssueList.toString(),
+        issue: this.from.issue.join(','),
         projectId: localStorage.getItem('projectId'),
-        testCycleVersion: this.from.testCycle.length ? this.from.testCycle.toString() : this.Testle,
-        version: this.from.version ? this.from.version : this.version
+        testCycle: this.baseInfo.testCycle === 'curentReleaseVersion' ? 'curentReleaseVersion' : this.from.testCycle.join(','),
+        version: this.baseInfo.version ? this.lastVersion : this.from.version
       }
-      console.log(this.signiList)
-      console.log(data)
-      const res = await createGenerate(data)
-      console.log('res', res)
+      console.log(data, this.signiList)
+      // console.log(data)
+      // const res = await createGenerate(data)
+      // console.log('res', res)
     },
     getImgUrl(url) {
       if (!url) return
@@ -277,18 +387,26 @@ export default {
     async getProjectEnv() {
       const res = await getProjectEnv({ projectId: this.projectId })
       this.projectEnvList = res.data
+      this.from.env = this.projectEnvList.mergeValues[0] || ''
+      this.baseInfo.env = this.projectEnvList.mergeValues[0] || ''
+      this.searchFrom.env = this.projectEnvList.mergeValues[0] || ''
     },
     async getProjectVersion() {
       const res = await getProjectVersion({ projectId: this.projectId })
       this.projectVersionList = res.data
+      this.lastVersion = getLastVersion(this.projectVersionList.mergeValues)
+      this.baseInfo.version = true
+      this.searchFrom.version = this.lastVersion
     },
     async getTestCycleVersion() {
-      const res = await getTestCycleVersion({ projectId: this.projectId, env: '12', version: 'v1.0' })
-      this.testCycleVersionList = res.data
+      console.log(this.baseInfo.version ? this.lastVersion : this.from.version)
+      const res = await getTestCycleVersion({ projectId: this.projectId, env: this.searchFrom.env, version: this.baseInfo.version ? this.lastVersion : this.from.version })
+      this.testCycleVersionList = res.data || []
     },
     async getSign() {
       const res = await getSignaturePath()
       this.signiList = res.data
+      this.from.fileUrl = res.data[0].file_path
     },
     async getProject() {
       const res = await queryForProjects({
@@ -301,13 +419,61 @@ export default {
       this.getProjectEnv()
       this.getProjectVersion()
       this.getTestCycleVersion()
+    },
+    async issueList() {
+      this.from.issue = []
+      try {
+        const res = await getIssue()
+        if (res.code === '200') {
+          this.issues = res.data.mergeValues || []
+        } else {
+          this.issues = []
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async recordList() {
+      this.records = []
+      try {
+        const res = await getRecord()
+        if (res.code === 200) {
+          this.records = res.data
+        } else {
+          this.records = []
+        }
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "index.scss";
+
+.signoff-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+
+  .el-card:nth-of-type(1) {
+    height: 100%;
+    flex: 1;
+  }
+
+  .el-card:nth-of-type(2) {
+    width: 30%;
+    margin-left: 20px;
+  }
+
+  .pdf-list {
+    width: 30%;
+  }
+}
 
 .signi {
   display: flex;
