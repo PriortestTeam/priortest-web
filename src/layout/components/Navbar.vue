@@ -123,7 +123,7 @@ export default {
   watch: {
     userInfo: function(newVal, oldVal) {
       if (newVal.userUseOpenProject) {
-        this.clickItem[0] = newVal.userUseOpenProject.title
+        this.menuList[0].name = newVal.userUseOpenProject.title
       }
     }
   },
