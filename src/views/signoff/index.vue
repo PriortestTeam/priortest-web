@@ -111,9 +111,7 @@
               >全选</el-checkbox>
             </el-row>
             <el-checkbox-group v-model="from.issue" @change="issueChecked">
-              <el-row v-for="(item, i) in issues" :key="i" :span="4">
-                <el-checkbox :label="item" :value="item" />
-              </el-row>
+              <el-checkbox v-for="(item, i) in issues" :key="i" :label="item" :value="item" />
             </el-checkbox-group>
           </el-row>
         </el-form-item>
@@ -135,6 +133,7 @@
                 v-for="(item, index) in signiList"
                 :key="index"
                 class="mb-2 signi"
+                style="height: 22px;"
               >
                 <el-radio :label="item.file_path">{{ item.uuid_file_name }}</el-radio>
                 <i
@@ -478,5 +477,15 @@ export default {
 .signi {
   display: flex;
   align-items: center;
+
+  & > i {
+    display: none;
+  }
+
+  &:hover {
+    & > i {
+      display: inline-block;
+    }
+  }
 }
 </style>
