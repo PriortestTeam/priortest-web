@@ -22,4 +22,8 @@ body{
   background: $bodybg;
 }
 
+.el-form-item .el-select, .el-form-item .el-date-editor {
+  width: auto;
+}
+
 </style>

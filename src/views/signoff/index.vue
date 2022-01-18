@@ -57,22 +57,22 @@
           </el-row>
         </el-form-item>
         <el-form-item label="测试环境" prop="env" class="form-small">
-          <el-row class="radiu">
-            <el-select
-              v-model="from.env"
-              size="mini"
-              placeholder="1.0"
-              @change="envChange"
-            >
-              <el-option
-                v-for="(item, index) in projectEnvList.mergeValues"
-                :key="index"
-                :label="item"
-                :value="item"
-              />
-              <!-- <el-option label="PRO" value="2.0" /> -->
-            </el-select>
-          </el-row>
+          <!-- <el-row class="radiu"> -->
+          <el-select
+            v-model="from.env"
+            size="mini"
+            placeholder="1.0"
+            @change="envChange"
+          >
+            <el-option
+              v-for="(item, index) in projectEnvList.mergeValues"
+              :key="index"
+              :label="item"
+              :value="item"
+            />
+            <!-- <el-option label="PRO" value="2.0" /> -->
+          </el-select>
+          <!-- </el-row> -->
         </el-form-item>
         <el-form-item label="测试周期" prop="testCycle" class="form-small">
           <el-row class="radiu">
@@ -399,7 +399,7 @@ export default {
       this.searchFrom.version = this.lastVersion
     },
     async getTestCycleVersion() {
-      console.log(this.baseInfo.version ? this.lastVersion : this.from.version)
+      this.from.testCycle = []
       const res = await getTestCycleVersion({ projectId: this.projectId, env: this.searchFrom.env, version: this.baseInfo.version ? this.lastVersion : this.from.version })
       this.testCycleVersionList = res.data || []
     },
