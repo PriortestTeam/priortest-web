@@ -241,12 +241,12 @@
 </template>
 <script>
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import { queryViews, lookView, addView, addViewRE, updateView, deleteView, getViewScopeChildParams, queryViewParents, getViewFilter } from '@/api/project'
+import { queryViews, lookView, addViewRE, updateView, deleteView, getViewScopeChildParams, queryViewParents, getViewFilter } from '@/api/project'
 // import { getSysCustomField } from '@/api/admincenter'
 import { mapState } from 'vuex'
 export default {
   name: 'Projectview',
-  data() {
+  data () {
     return {
       scopeOptions: [
         {
@@ -316,12 +316,12 @@ export default {
     ...mapState({
       nvaName: state => state.common.nvaName
     }),
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
   watch: {
-    'from.title': function(val) {
+    'from.title': function (val) {
       if (val) {
         this.savedisabled = false
       } else {
@@ -329,7 +329,7 @@ export default {
       }
     }
   },
-  async created() {
+  async created () {
     // this.viewBody.scope = this.$route.query.scope
     this.viewBody.projectId = this.projectInfo.userUseOpenProject.projectId
     await this.initScope()
@@ -337,12 +337,12 @@ export default {
     this.getViewFilter()
   },
   methods: {
-    handleFilterChange(val) {
+    handleFilterChange (val) {
       if (val) {
         this.from.oneFilters = []
       }
     },
-    async getViewFilter() {
+    async getViewFilter () {
       const res = await getViewFilter()
       if (res.code === '200') {
         res.data.forEach(item => {
@@ -355,7 +355,7 @@ export default {
       }
     },
     // 初始化scope
-    initScope() {
+    initScope () {
       const that = this
       that.viewBody.scope = that.nvaName
       if (that.nvaName !== 'Feature' && that.nvaName !== 'Sprint' && that.nvaName !== 'TestCase' && that.nvaName !== 'TestCycle' && that.nvaName !== 'Issue') {
@@ -363,7 +363,7 @@ export default {
       }
     },
     // 新增和修改确定表单
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.from.id) {
@@ -392,17 +392,17 @@ export default {
       })
     },
     // 取消返回
-    waiveForm() {
+    waiveForm () {
       returntomenu(this, 1000)
     },
     // 取消修改
-    cancelUpdate() {
+    cancelUpdate () {
       this.$refs.viewData.clearSelection()
       this.resetForm()
       this.viewId = ''
     },
     // 重置表单
-    resetForm() {
+    resetForm () {
       this.from = {
         id: undefined,
         isPrivate: '0',
@@ -413,11 +413,11 @@ export default {
       this.$refs['from'].resetFields()
     },
     // 表格多选
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.multipleSelection = val
       this.multiple = !val.length
     },
-    toEdit(row) {
+    toEdit (row) {
       this.$refs.viewData.clearSelection()
       this.viewId = row.id
 
@@ -438,7 +438,7 @@ export default {
       })
     },
     // 查询view信息
-    searchViewInfo() {
+    searchViewInfo () {
       lookView(this.viewId).then(res => {
         if (res.code === '200') {
           if (res.data.isPrivate === 0) {
@@ -453,7 +453,7 @@ export default {
       })
     },
     // 删除view
-    delview(id) {
+    delview (id) {
       if (id === 'all') {
         message('error', '暂未开发')
         return
@@ -465,7 +465,7 @@ export default {
       })
     },
     // view视图列表
-    getqueryViews() {
+    getqueryViews () {
       return new Promise((resolve, reject) => {
         queryViews(this.viewBody, this.viewQuery).then(res => {
           if (res.code === '200') {
@@ -477,14 +477,14 @@ export default {
       })
     },
     // 刷新view
-    async viewjectRefresh() {
+    async viewjectRefresh () {
       const res = await this.getqueryViews()
       if (res.code === '200') {
         message('success', '刷新成功')
       }
     },
     // 新增字段
-    addFliter() {
+    addFliter () {
       if (this.from.scope === undefined || this.from.scope.trim() === '') {
         message('warning', '请选择作用域')
         return
@@ -505,10 +505,10 @@ export default {
       this.from.oneFilters.push(obj)
     },
     // 移除字段
-    delRemove(index) {
+    delRemove (index) {
       this.from.oneFilters.splice(index, 1)
     },
-    getType: function(fieldName, index) {
+    getType: function (fieldName, index) {
       for (let i = 0; i < this.scopeDownChildParams.length; i++) {
         const entity = this.scopeDownChildParams[i]
         if (entity.filedName === fieldName) {
@@ -522,7 +522,7 @@ export default {
         }
       }
     },
-    viewScopeChildParams() {
+    viewScopeChildParams () {
       if (this.from.oneFilters.length > 0) {
         this.$confirm('重新选择可能会丢失页面内容请确认？', {
           title: '提示',
@@ -543,10 +543,10 @@ export default {
         this.scopeDownChildParams = res.data
       })
     },
-    dataFilter(val) {
+    dataFilter (val) {
       this.viewParentQuery = val
     },
-    queryViewParent() {
+    queryViewParent () {
       if (this.from.scope === undefined || this.from.scope === '') {
         message('success', '请选择作用域')
         this.viewParentQuery = '0'
@@ -560,7 +560,7 @@ export default {
         this.viewParents = res.data
       })
     },
-    fuzhiFrom(val) {
+    fuzhiFrom (val) {
       this.from.parentId = val
     }
   }

@@ -57,7 +57,7 @@
 import { message } from '@/utils/common'
 import { sendForgetEmail } from '@/api/user'
 export default {
-  data() {
+  data () {
     return {
       forgetForm: {
         email: ''
@@ -80,17 +80,17 @@ export default {
   },
   watch: {
     'forgetForm.email': {
-      handler: function(val) {
+      handler: function (val) {
         this.newEmail = val
       },
       deep: true
     }
   },
   methods: {
-    routerEmail() {
+    routerEmail () {
       window.open(this.gotoEmail())
     },
-    gotoEmail() {
+    gotoEmail () {
       var email = this.forgetForm.email.split('@')[1]
       email = email.toLowerCase()
       if (email === '163.com') {
@@ -140,7 +140,7 @@ export default {
       }
     },
     // 发送邮箱接口
-    sendEmail() {
+    sendEmail () {
       this.$refs.forgetForm.validate(valid => {
         if (valid) {
           sendForgetEmail(this.forgetForm).then((res) => {
@@ -157,7 +157,7 @@ export default {
         }
       })
     },
-    backLoginIndex() {
+    backLoginIndex () {
       this.forgetViable = true
       this.$emit('backLoginIndex')
     }

@@ -325,7 +325,7 @@ export default {
   components: {
     Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link, ViewPage, MyAccount, ServicePlan
   },
-  data() {
+  data () {
     return {
       activeName: '0',
       propSystem: '',
@@ -432,7 +432,7 @@ export default {
       emailDisabled: false
     }
   },
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     next(vm => {
       // 新增项目到自定义字段
       if (to.query.par) {
@@ -450,16 +450,16 @@ export default {
     })
   },
   computed: {
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
   watch: {
-    'fieldsfrom.type': function(val) {
+    'fieldsfrom.type': function (val) {
       this.chType(val)
       // this.PleaseType(val)
     },
-    'fieldsfrom.fieldName': function(val) {
+    'fieldsfrom.fieldName': function (val) {
       if (val) {
         this.fielddisabled = false
       } else {
@@ -467,7 +467,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId
     getUserRoles().then(res => {
       this.accountRoleOption = res.data
@@ -479,7 +479,7 @@ export default {
     // this.getSysCustomFieldByType()
   },
   methods: {
-    async getSysCustomFieldByType() {
+    async getSysCustomFieldByType () {
       const params = {
         'fieldName': 'type'
       }
@@ -495,7 +495,7 @@ export default {
         }) */
       }
     },
-    async getSysCustomFieldByScope() {
+    async getSysCustomFieldByScope () {
       const params = {
         'fieldName': 'scope'
       }
@@ -512,10 +512,10 @@ export default {
         }) */
       }
     },
-    setFieldName(data) {
+    setFieldName (data) {
       this.fieldName = data
     },
-    handleClick(val) {
+    handleClick (val) {
       if (val === '4') {
         if (!this.projectInfo.userUseOpenProject.projectId) {
           message('error', '请先选择项目')
@@ -525,14 +525,14 @@ export default {
     },
     /** ˙账户开始 */
     // 得到项目
-    getProject() {
+    getProject () {
       queryForProjectTitles().then(res => {
         this.accountProject = res.data
         this.accountProject.unshift({ title: 'ALL', id: '0' })
       })
     },
     // 项目互斥
-    accountChangePro(val) {
+    accountChangePro (val) {
       const that = this
       const index = val.indexOf('0')
       if (index !== -1) {

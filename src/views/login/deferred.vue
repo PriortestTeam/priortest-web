@@ -4,92 +4,92 @@
       <div class="one-logo">
         <img src="@/icons/img/one-logo.png" alt="" srcset="">
       </div>
-     <div class="one-tip">
-       感谢您申请延期试用OneClick, 您诚恳的意见是我们服务的品质保障
-     </div>
+      <div class="one-tip">
+        感谢您申请延期试用OneClick, 您诚恳的意见是我们服务的品质保障
+      </div>
       <el-form-item prop="email" label="邮箱地址">
-        <el-input disabled v-model="loginForm.email" />
+        <el-input v-model="loginForm.email" disabled />
       </el-form-item>
       <el-form-item prop="password" label="密码">
-        <el-input type="password" v-model="loginForm.password" />
+        <el-input v-model="loginForm.password" type="password" />
       </el-form-item>
-       <!-- <el-form-item prop="rePassword" label="确认密码">
+      <!-- <el-form-item prop="rePassword" label="确认密码">
         <el-input  type="password" v-model="loginForm.rePassword" />
       </el-form-item> -->
-        <div class="pass-allowed">
-          <el-link type="primary" style="margin-right: 10px;" @click="backLogin">返回登录</el-link>
-        </div>
-        <el-button
+      <div class="pass-allowed">
+        <el-link type="primary" style="margin-right: 10px;" @click="backLogin">返回登录</el-link>
+      </div>
+      <el-button
         class="acBtn"
-        
-            round
-            @click="goActivate"
-          >提交</el-button>
+
+        round
+        @click="goActivate"
+      >提交</el-button>
     </el-form>
   </div>
 </template>
 
 <script>
 import { message } from '@/utils/common'
-import { deferredPwd,verifyLinkString } from '@/api/user'
+import { deferredPwd, verifyLinkString } from '@/api/user'
 export default {
-  data() {
-     var validatePassword = (rule, value, callback) => {
-        if (!/\S/.test(value)) {
-          return callback(new Error('必填项不能为空'))
-        }
-        if(!/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*,\.])[0-9a-zA-Z!@#$%^&*,\\.]{8,12}$/.test(value)){
-           return callback(new Error('密码为8~12位且包含大写、小写、数字、特殊字符'))
-        }
-        callback()
+  data () {
+    var validatePassword = (rule, value, callback) => {
+      if (!/\S/.test(value)) {
+        return callback(new Error('必填项不能为空'))
       }
-      var validateConfirmPassword = (rule, value, callback) => {
-        console.log(value)
-        if (!/\S/.test(value)) {
-          return callback(new Error('必填项不能为空'))
-        }
-        if (this.loginForm.password&&this.loginForm.password !== value) {
-          return callback(new Error('确认密码与密码输入不一致'))
-        }
-        callback()
+      if (!/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*,\.])[0-9a-zA-Z!@#$%^&*,\\.]{8,12}$/.test(value)) {
+        return callback(new Error('密码为8~12位且包含大写、小写、数字、特殊字符'))
       }
+      callback()
+    }
+    // var validateConfirmPassword = (rule, value, callback) => {
+    //   console.log(value)
+    //   if (!/\S/.test(value)) {
+    //     return callback(new Error('必填项不能为空'))
+    //   }
+    //   if (this.loginForm.password && this.loginForm.password !== value) {
+    //     return callback(new Error('确认密码与密码输入不一致'))
+    //   }
+    //   callback()
+    // }
     return {
       loginForm: {
         email: '',
-        password: '',
+        password: ''
         // rePassword:""
       },
-            loginRules: {
+      loginRules: {
         username: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' }
           // { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
         ],
-         password: [
-           {validator: validatePassword, trigger: 'blur'}
-        ],
-      },
+        password: [
+          { validator: validatePassword, trigger: 'blur' }
+        ]
+      }
     }
   },
   watch: {
   },
-  mounted() {
-     this.loginForm.email=this.$route.query.email
-    this.loginForm.params=this.$route.query.params
-    if(!this.loginForm.email||!this.loginForm.params){
+  mounted () {
+    this.loginForm.email = this.$route.query.email
+    this.loginForm.params = this.$route.query.params
+    if (!this.loginForm.email || !this.loginForm.params) {
       this.$router.push({ path: '/' })
       return
     }
-    verifyLinkString({params:this.loginForm.params}).then(res=>{
-      if(res.code!=200){
-         this.$router.push({ path: '/' })
+    verifyLinkString({ params: this.loginForm.params }).then(res => {
+      if (res.code !== '200') {
+        this.$router.push({ path: '/' })
       }
     })
   },
   methods: {
-    backLogin(){
-     this.$router.push({ path: '/' })
+    backLogin () {
+      this.$router.push({ path: '/' })
     },
-     goActivate() {
+    goActivate () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           deferredPwd(this.loginForm).then((res) => {
@@ -104,7 +104,7 @@ export default {
           return false
         }
       })
-    },
+    }
   }
 }
 </script>

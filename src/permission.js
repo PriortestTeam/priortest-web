@@ -11,7 +11,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // no redirect whitelist
 const adminPath = '/manageUser/registerUser' // 管理员页面
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // start progress bar
   NProgress.start()
 
@@ -58,7 +58,7 @@ router.beforeEach(async(to, from, next) => {
       next()
     } else {
       console.log(to.path)
-      if(to.path === '/activate'||to.path === '/findpwd'||to.path === '/deferred'){
+      if (to.path === '/activate' || to.path === '/findpwd' || to.path === '/deferred') {
         next()
         return
       }

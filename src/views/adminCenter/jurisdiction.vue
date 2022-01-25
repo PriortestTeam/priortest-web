@@ -90,7 +90,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       jurisdictionOptions: [],
       projectId: '',
@@ -108,7 +108,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     if (this.id) {
       this.jurisdictionUpdate.subUserDto.id = this.id
       getProjects({ subUserId: this.id }).then(res => {
@@ -118,27 +118,27 @@ export default {
       })
     }
   },
-  mounted() {
+  mounted () {
 
   },
   methods: {
-    getPermissions() {
+    getPermissions () {
       getPermissions({ subUserId: this.id, projectId: this.projectId }).then(res => {
         this.jurisdictionItem = res.data.project.sysOperationAuthorities
         this.jurisdictioninfo = res.data.subUserDto
       })
     },
-    changeProject() {
+    changeProject () {
       this.getPermissions()
     },
-    formObj(item) {
+    formObj (item) {
       const temObj = {}
       temObj.projectId = this.projectId
       temObj.subUserId = this.id
       temObj.operationAuthId = item.id
       return temObj
     },
-    sureUpdate() {
+    sureUpdate () {
       this.jurisdictionUpdate.projectPermissions = []
       this.jurisdictionItem.filter(item => {
         if (item.isSelect === '1') {
@@ -161,7 +161,7 @@ export default {
         }
       })
     },
-    isAll(item) {
+    isAll (item) {
       var len = 0
       item.childList.filter(element => {
         if (element.isSelect === '1') {
@@ -170,7 +170,7 @@ export default {
       })
       return len
     },
-    allChange(checked, index) {
+    allChange (checked, index) {
       if (checked === '1') {
         this.jurisdictionItem[index].childList.filter(item => {
           item.isSelect = '1'
@@ -181,7 +181,7 @@ export default {
         })
       }
     },
-    itemChange(checked, index) {
+    itemChange (checked, index) {
       if (checked === '1') {
         this.jurisdictionItem[index].isSelect = '1'
       }

@@ -189,7 +189,7 @@ export default {
   name: 'Project',
   components: { viewTree },
 
-  data() {
+  data () {
     return {
       treeCol: 5,
       currentScope: 'Project',
@@ -223,26 +223,26 @@ export default {
   },
   computed: {
     ...mapGetters(['name']),
-    userUseOpenProject() {
+    userUseOpenProject () {
       return this.$store.state.user.userinfo.userUseOpenProject
     }
   },
-  created() {
+  created () {
     // 初始值
     this.getqueryForProjects() // 获取管理项目列表
   },
   methods: {
-    hadleTreeshow() {
+    hadleTreeshow () {
       this.treeCol = this.treeCol === 5 ? 0 : 5
     },
     // 新建项目
-    newproject() {
+    newproject () {
       const data = JSON.stringify({})
       this.$router.push({ name: 'Addproject', query: { info: data }})
     },
 
     /** 项目列表表格开始 */
-    getqueryForProjects() {
+    getqueryForProjects () {
       this.isLoading = true
       const query = {
         viewTreeDto: {
@@ -250,7 +250,7 @@ export default {
         }
       }
       return new Promise((resolve, reject) => {
-        queryForProjects(this.projectQuery, query).then(async(res) => {
+        queryForProjects(this.projectQuery, query).then(async (res) => {
           if (res.code === '200') {
             // 默认取第一条
             if (res.total > 0) {
@@ -268,7 +268,7 @@ export default {
       })
     },
     // 刷新
-    async projectRefresh() {
+    async projectRefresh () {
       const res = await this.getqueryForProjects()
       if (res.code === '200') {
         message('success', '刷新成功')
@@ -276,7 +276,7 @@ export default {
       }
     },
     // 切换项目
-    projectChange() {
+    projectChange () {
       checkProject(this.multipleSelection[0].id).then((res) => {
         if (res.code === '200') {
           this.$refs.projecttableData.clearSelection()
@@ -287,11 +287,11 @@ export default {
       })
     },
     // 克隆
-    projectClone() {
+    projectClone () {
       message('error', '暂未开发')
     },
     // 删除项目
-    delproject(id) {
+    delproject (id) {
       if (id === 'all') {
         message('error', '暂未开发')
         return
@@ -304,7 +304,7 @@ export default {
       })
     },
     // 表格多选
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.multipleSelection = val
       // 暂时不实现批量删除
       this.projectIds = ''
@@ -322,16 +322,16 @@ export default {
       }
     },
     // 表格行点击去编辑
-    openEdit(row) {
+    openEdit (row) {
       this.$router.push({ name: 'Addproject', query: { id: row.id }})
     },
     // 表格行点击
-    switcproject(row) {
+    switcproject (row) {
       this.projectBody.scope = row.scope
       this.projectBody.projectId = row.id
       // this.getqueryViews()
     },
-    closeAction(row) {
+    closeAction (row) {
       this.$prompt('请输入关闭理由：', '提示', {
         confirmButtonText: '确定',
         showCancelButton: false
@@ -346,7 +346,7 @@ export default {
         })
         .catch({})
     },
-    childByValue: function(query) {
+    childByValue: function (query) {
       console.log('query--', query)
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id

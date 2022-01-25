@@ -33,7 +33,7 @@
 import { message } from '@/utils/common'
 import { resetPwd, verifyLinkString } from '@/api/user'
 export default {
-  data() {
+  data () {
     var validatePassword = (rule, value, callback) => {
       if (!/\S/.test(value)) {
         return callback(new Error('必填项不能为空'))
@@ -76,7 +76,7 @@ export default {
   },
   watch: {
   },
-  created() {
+  created () {
     this.loginForm.email = this.$route.query.email
     this.loginForm.params = this.$route.query.params
     if (!this.loginForm.email || !this.loginForm.params) {
@@ -84,16 +84,16 @@ export default {
       return
     }
     verifyLinkString({ params: this.loginForm.params }).then(res => {
-      if (res.code != 200) {
+      if (res.code !== '200') {
         this.$router.push({ path: '/' })
       }
     })
   },
   methods: {
-    backLogin() {
+    backLogin () {
       this.$router.push({ path: '/' })
     },
-    goActivate() {
+    goActivate () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           resetPwd(this.loginForm).then((res) => {

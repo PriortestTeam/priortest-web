@@ -83,7 +83,7 @@ import { formatChangedPara } from '@/utils/common'
 
 export default {
   name: 'UserForm',
-  data() {
+  data () {
     var verifyPassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
@@ -138,20 +138,20 @@ export default {
     }
   },
   methods: {
-    showModal() {
+    showModal () {
       this.title = '新增用户'
       this.dialogVisible = true
     },
-    editUser(user) {
+    editUser (user) {
       this.form = { ...user }
       this.formerForm = { ...user }
       this.title = '编辑用户'
       this.dialogVisible = true
     },
-    handleClose(done) {
+    handleClose (done) {
       this.resetData()
     },
-    submitForm() {
+    submitForm () {
       this.$refs.form.validate((valid) => {
         if (valid) {
           console.log(this.form)
@@ -167,7 +167,7 @@ export default {
       })
     },
     // 编辑用户
-    updatePlatformUser() {
+    updatePlatformUser () {
       this.btnLoading = true
       const param = formatChangedPara(this.formerForm, this.form)
       updatePlatformUser(param).then(res => {
@@ -183,7 +183,7 @@ export default {
       })
     },
     // 新增用户
-    createPlatformUser() {
+    createPlatformUser () {
       this.btnLoading = true
       createPlatformUser(this.form).then(res => {
         if (res.code === '200') {
@@ -197,7 +197,7 @@ export default {
         this.btnLoading = false
       })
     },
-    resetData() {
+    resetData () {
       this.dialogVisible = false
       this.title = ''
       this.btnLoading = false

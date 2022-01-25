@@ -35,7 +35,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       form: {
         paymentType: '',
@@ -83,7 +83,7 @@ export default {
     })
   },
   watch: {
-    'form.paymentType': function(val) {
+    'form.paymentType': function (val) {
       if (val === '') {
         this.form.payCard = ''
         this.form.payName = ''
@@ -95,12 +95,12 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.init()
   },
   methods: {
     // 服务计划
-    init() {
+    init () {
       const that = this
       /* eslint-disable */
       _.forEach(that.servicePlanUiList, (item, key) => {

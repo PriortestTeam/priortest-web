@@ -1,4 +1,4 @@
-export function getLastVersion(versions) {
+export function getLastVersion (versions) {
   if (!versions || versions.length <= 0) {
     return ''
   }

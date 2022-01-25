@@ -8,7 +8,7 @@
  */
 import request from '@/utils/request'
 
-export function addAttachment(params, data) {
+export function addAttachment (params, data) {
   return request({
     url: '/attachment/addAttachment',
     method: 'post',
@@ -18,7 +18,7 @@ export function addAttachment(params, data) {
   })
 }
 // 获取文件
-export function fileList(params) {
+export function fileList (params) {
   return request({
     url: '/attachment/list',
     method: 'get',
@@ -26,7 +26,7 @@ export function fileList(params) {
   })
 }
 // 删除文件
-export function deleteAttachment(id) {
+export function deleteAttachment (id) {
   return request({
     url: '/attachment/deleteAttachment/' + id,
     method: 'delete'
@@ -34,7 +34,7 @@ export function deleteAttachment(id) {
 }
 
 // 修改文件
-export function updateAttachment(id, data) {
+export function updateAttachment (id, data) {
   return request({
     url: '/attachment/updateAttachment/' + id,
     method: 'post',

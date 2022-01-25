@@ -13,25 +13,24 @@
           type="primary"
           round
           @click="submitForm('featureFrom', false)"
-          >保存并新建</el-button
-        >
+        >保存并新建</el-button>
         <el-button
           v-if="!featureFrom.id"
           type="primary"
           round
           @click="submitForm('featureFrom', true)"
-          >保存并返回</el-button
-        >
+        >保存并返回</el-button>
         <el-button
           v-if="featureFrom.id"
           type="primary"
           round
           @click="submitForm('featureFrom')"
-          >确认修改</el-button
-        >
-        <el-button type="primary" round @click="giveupBack('featureFrom')"
-          >放弃</el-button
-        >
+        >确认修改</el-button>
+        <el-button
+          type="primary"
+          round
+          @click="giveupBack('featureFrom')"
+        >放弃</el-button>
         <router-link v-if="!featureFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
@@ -60,8 +59,7 @@
                   :key="item.id"
                   :label="item.userName"
                   :value="item.userName"
-                >
-                </el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -72,18 +70,17 @@
                 placeholder="请选择版本"
                 clearable
               >
-               <el-option
+                <el-option
                   v-for="item in versionsArr"
                   :key="item"
                   :label="item"
                   :value="item"
-                >
-                </el-option>
-                 <router-link
+                />
+                <router-link
                   to="/admincenter/admincenter?par=versions"
                 >
-                <el-option label="添加新值" :value="0" />
-                    </router-link>
+                  <el-option label="添加新值" :value="0" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -95,18 +92,17 @@
                 clearable
                 remote
                 reserve-keyword
-                @change="getTag"
                 placeholder="请选择迭代周期"
                 :remote-method="remoteMethod"
                 :loading="loading"
+                @change="getTag"
               >
                 <el-option
                   v-for="item in sprintArr"
                   :key="item.id"
                   :label="item.title"
                   :value="item.id"
-                >
-                </el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -119,18 +115,17 @@
                 placeholder="请选择epic"
                 clearable
               >
-               <el-option
+                <el-option
                   v-for="item in epicArr"
                   :key="item"
                   :label="item"
                   :value="item"
-                >
-                </el-option>
-               <router-link
+                />
+                <router-link
                   to="/admincenter/admincenter?par=epic"
                 >
-                <el-option label="Add New Value" :value="0" />
-                    </router-link>
+                  <el-option label="Add New Value" :value="0" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -141,18 +136,17 @@
                 placeholder="请选择模块"
                 clearable
               >
-               <el-option
+                <el-option
                   v-for="item in moudleArr"
                   :key="item"
                   :label="item"
                   :value="item"
-                >
-                </el-option>
+                />
                 <router-link
                   to="/admincenter/admincenter?par=moudle"
                 >
-                <el-option label="Add New Value" :value="0" />
-                    </router-link>
+                  <el-option label="Add New Value" :value="0" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -177,8 +171,8 @@
           v-for="tag in featureFrom.sprints"
           :key="tag.id"
           closable
-          @close="removeTag(tag.id)"
           type="success"
+          @close="removeTag(tag.id)"
         >
           {{ tag.title }}
         </el-tag>
@@ -187,8 +181,8 @@
         </div>
       </div>
     </el-form>
-    <div class="table" v-if="featureFrom.id">
-      <Upload :linkId="featureFrom.id" :type="featureFrom.scope" />
+    <div v-if="featureFrom.id" class="table">
+      <Upload :link-id="featureFrom.id" :type="featureFrom.scope" />
     </div>
   </div>
 </template>
@@ -198,20 +192,20 @@ import Upload from '@/components/Upload'
 import { queryByNameSubUsers } from '@/api/project'
 import { addFeature, detailFeature, editFeature, querySprintList } from '@/api/feature'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import { sysCustomField } from "@/api/systemArr";
+import { sysCustomField } from '@/api/systemArr'
 
 export default {
   name: 'Addfeature',
   components: {
     Upload
   },
-  data() {
+  data () {
     return {
       optionsArr: [],
-      getOptionsArr:['versions' ,'epic', 'moudle'],
-      versionsArr:[],
-      epicArr:[],
-      moudleArr:[],
+      getOptionsArr: ['versions', 'epic', 'moudle'],
+      versionsArr: [],
+      epicArr: [],
+      moudleArr: [],
       loading: false,
       sprintArr: [],
       featureFrom: {
@@ -226,7 +220,7 @@ export default {
         ],
         reportTo: [
           { required: true, message: '请输入负责人', trigger: 'blur' }
-        ],
+        ]
       },
 
       // 文件
@@ -257,11 +251,11 @@ export default {
         lang: state => state.header.lang
       }
     ),
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
-  created() {
+  created () {
     if (this.$route.query.id) {
       detailFeature(this.$route.query.id).then(res => {
         this.featureFrom = res.data
@@ -269,33 +263,30 @@ export default {
         this.fileParams.type = res.data.scope
         this.fileParams.linkId = res.data.id
       })
-
     } else {
       this.featureFrom.projectId = this.projectInfo.userUseOpenProject.projectId
       this.fileParams.linkId = this.projectInfo.userUseOpenProject.projectId
     }
     this.getOptionsArr.forEach(element => {
-       sysCustomField({ fieldName: element}).then((res) => {
-        let data=res.data.mergeValues?res.data.mergeValues:[]
-        if(element==='moudle'){
-          this.moudleArr=data
+      sysCustomField({ fieldName: element }).then((res) => {
+        const data = res.data.mergeValues ? res.data.mergeValues : []
+        if (element === 'moudle') {
+          this.moudleArr = data
         }
-         if(element==='epic'){
-          this.epicArr=data
+        if (element === 'epic') {
+          this.epicArr = data
         }
-         if(element==='versions'){
-          this.versionsArr=data
+        if (element === 'versions') {
+          this.versionsArr = data
         }
-    });
-
-    });
-
+      })
+    })
   },
-  mounted() {
+  mounted () {
   },
   methods: {
     // 重置表单
-    resetFields() {
+    resetFields () {
       this.featureFrom = {
         id: undefined,
 
@@ -312,50 +303,49 @@ export default {
       }
       this.$refs['featureFrom'].resetFields()
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       if (query !== '') {
-        this.loading = true;
+        this.loading = true
         setTimeout(() => {
-          this.loading = false;
+          this.loading = false
           querySprintList({ title: query }).then(res => {
             this.sprintArr = res.data
           })
-        }, 200);
+        }, 200)
       } else {
-        this.sprintArr = [];
+        this.sprintArr = []
       }
     },
-    remoteReport(query) {
+    remoteReport (query) {
       if (query !== '') {
-        this.loading = true;
+        this.loading = true
         setTimeout(() => {
-          this.loading = false;
+          this.loading = false
           queryByNameSubUsers({ subUserName: query }).then(res => {
             this.optionsArr = res.data
           })
-        }, 200);
+        }, 200)
       } else {
-        this.optionsArr = [];
+        this.optionsArr = []
       }
     },
-    getTag() {
-      //先看下标签sprints里面是否存在
-      let haveIndex = this.featureFrom.sprints.findIndex(item => item.id === this.featureFrom.sprintId)
+    getTag () {
+      // 先看下标签sprints里面是否存在
+      const haveIndex = this.featureFrom.sprints.findIndex(item => item.id === this.featureFrom.sprintId)
       if (haveIndex === -1) {
-        let item = this.sprintArr.findIndex(item => item.id === this.featureFrom.sprintId)
+        const item = this.sprintArr.findIndex(item => item.id === this.featureFrom.sprintId)
         this.featureFrom.sprints.push(this.sprintArr[item])
       } else {
         message('error', '该迭代周期已选择')
       }
       this.featureFrom.sprintId = ''
-
     },
-    removeTag(id) {
-      let index = this.sprintArr.findIndex(item => item.id === id)
+    removeTag (id) {
+      const index = this.sprintArr.findIndex(item => item.id === id)
       this.featureFrom.sprints.splice(index, 1)
     },
     // 提交
-    submitForm(formName, type) {
+    submitForm (formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           delete this.featureFrom.sprintId
@@ -393,12 +383,12 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack() {
+    giveupBack () {
       if (!this.featureFrom.id) {
         this.resetFields()
       }
       this.returntomenu(this)
-    },
+    }
 
   }
 

@@ -105,7 +105,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       tableHeader: {
         color: '#d4dce3',
@@ -142,16 +142,16 @@ export default {
     }
   },
   computed: {
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
   watch: {
-    'customname': function(val) {
+    'customname': function (val) {
       this.setForm()
     }
   },
-  created() {
+  created () {
     /* eslint-disable */
     this.cloneFieldsForm = _.cloneDeep(this.fieldsfrom)
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId

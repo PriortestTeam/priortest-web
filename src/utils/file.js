@@ -3,7 +3,7 @@
  * @param _options
  * @returns {Promise<unknown>}
  */
-export function selectFile(_options) {
+export function selectFile (_options) {
   return new Promise((res, rej) => {
     const options = {
       accept: 'image/*',

@@ -68,7 +68,7 @@
 <script>
 export default {
   name: 'PaymentDetails',
-  data() {
+  data () {
     return {
       tableHeader: {
         color: '#d4dce3',
@@ -92,17 +92,17 @@ export default {
   },
   methods: {
     // 分期多选
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.multipleSelection = val
     },
     // 全款多选
-    handleSelectionChange2(val) {
+    handleSelectionChange2 (val) {
       this.multipleSelection = val
     },
-    queryInstallment() {
+    queryInstallment () {
       console.log('queryInstallment---')
     },
-    queryFull() {
+    queryFull () {
       console.log('queryFull---')
     }
   }

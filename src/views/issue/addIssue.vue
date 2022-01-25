@@ -13,25 +13,24 @@
           type="primary"
           round
           @click="submitForm('issueFrom', false)"
-          >保存并新建</el-button
-        >
+        >保存并新建</el-button>
         <el-button
           v-if="!issueFrom.id"
           type="primary"
           round
           @click="submitForm('issueFrom', true)"
-          >保存并返回</el-button
-        >
+        >保存并返回</el-button>
         <el-button
           v-if="issueFrom.id"
           type="primary"
           round
           @click="submitForm('issueFrom')"
-          >确认修改</el-button
-        >
-        <el-button type="primary" round @click="giveupBack('issueFrom')"
-          >放弃</el-button
-        >
+        >确认修改</el-button>
+        <el-button
+          type="primary"
+          round
+          @click="giveupBack('issueFrom')"
+        >放弃</el-button>
         <router-link v-if="!issueFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
@@ -54,9 +53,7 @@
                   :key="item.id"
                   :label="item.title"
                   :value="item.id"
-                >
-                </el-option> </el-select></el-form-item
-          ></el-col>
+                /> </el-select></el-form-item></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="开发人员" prop="developer">
               <el-select
@@ -74,24 +71,18 @@
                   :key="item.id"
                   :label="item.userName"
                   :value="item.userName"
-                >
-                </el-option>
+                />
               </el-select>
-              </el-form-item
-          >
+            </el-form-item>
           </el-col>
-
-
 
           <el-col :span="8">
             <el-form-item size="small" label="测试分类" prop="caseCategory">
-              <el-input v-model="issueFrom.caseCategory" /> </el-form-item
-          ></el-col>
+              <el-input v-model="issueFrom.caseCategory" /> </el-form-item></el-col>
 
           <el-col :span="8">
-                      <el-form-item size="small" label="测试分类" prop="caseCategory">
-                        <el-input v-model="issueFrom.caseCategory" /> </el-form-item
-                    ></el-col>
+            <el-form-item size="small" label="测试分类" prop="caseCategory">
+              <el-input v-model="issueFrom.caseCategory" /> </el-form-item></el-col>
 
         </el-row>
         <el-row>
@@ -104,8 +95,7 @@
                 <el-option label="高" value="高" />
                 <el-option label="中" value="中" />
                 <el-option label="低" value="低" />
-              </el-select> </el-form-item
-          ></el-col>
+              </el-select> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="状态" prop="status">
               <el-select
@@ -122,27 +112,22 @@
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="测试环境" prop="env">
-              <el-select v-model="issueFrom.env" placeholder="请选择环境"/> </el-form-item
-          ></el-col>
+              <el-select v-model="issueFrom.env" placeholder="请选择环境" /> </el-form-item></el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="浏览器" prop="browser">
-              <el-select v-model="issueFrom.browser" placeholder="请选择浏览器">
-              </el-select> </el-form-item
-          ></el-col>
+              <el-select v-model="issueFrom.browser" placeholder="请选择浏览器" /> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="平台" prop="platform">
-              <el-select v-model="issueFrom.platform" placeholder="请选择平台">
-              </el-select> </el-form-item
-          ></el-col>
+              <el-select v-model="issueFrom.platform" placeholder="请选择平台" /> </el-form-item></el-col>
           <el-col :span="8">
             <el-form-item size="small" label="版本" prop="version">
-              <el-select v-model="issueFrom.version" placeholder="请选择版本"/>
+              <el-select v-model="issueFrom.version" placeholder="请选择版本" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row> </el-row>
+        <el-row />
         <el-form-item
           :label="$t('lang.Project.Description')"
           prop="description"
@@ -165,16 +150,15 @@ import { mapGetters } from 'vuex'
 import { addIssue, detailIssue, editIssue } from '@/api/issue'
 import { testCaseListAll } from '@/api/testcase'
 
-
 import { queryByNameSubUsers } from '@/api/project'
 
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addissue',
-  data() {
+  data () {
     return {
-        optionsArr: [],
-        loading: false,
+      optionsArr: [],
+      loading: false,
       issueFrom: {
       },
       issueFromTemp: {},
@@ -186,18 +170,16 @@ export default {
           { required: true, message: '请选择状态', trigger: 'change' }
         ],
 
-
         testCase: [
           { required: true, message: '请选择关联测试案例', trigger: 'change' }
         ],
 
         priority: [
           { required: true, message: '请选择优先级', trigger: 'change' }
-        ],
+        ]
 
       },
-      testCaseData: [],
-
+      testCaseData: []
 
     }
   },
@@ -207,16 +189,14 @@ export default {
         lang: state => state.header.lang
       }
     ),
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
-  created() {
-
+  created () {
     if (this.$route.query.id) {
       detailIssue(this.$route.query.id).then(res => {
         this.issueFrom = res.data
-
 
         this.issueFrom.testCase = Number(this.issueFrom.testCase)
         this.issueFromTemp = Object.assign({}, this.issueFrom)
@@ -225,27 +205,26 @@ export default {
       this.issueFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
     this.gettestCaseListAll()
-
   },
-  mounted() {
+  mounted () {
 
   },
   methods: {
-     remoteReport(query) {
+    remoteReport (query) {
       if (query !== '') {
-        this.loading = true;
+        this.loading = true
         setTimeout(() => {
-          this.loading = false;
+          this.loading = false
           queryByNameSubUsers({ subUserName: query }).then(res => {
             this.optionsArr = res.data
           })
-        }, 200);
+        }, 200)
       } else {
-        this.optionsArr = [];
+        this.optionsArr = []
       }
     },
     // 重置表单
-    resetFields() {
+    resetFields () {
       this.issueFrom = {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -258,21 +237,19 @@ export default {
         browser: undefined,
         platform: undefined,
         version: undefined,
-        caseCategory: undefined,
+        caseCategory: undefined
       }
-      this.$refs['issueFrom'].resetFields();
+      this.$refs['issueFrom'].resetFields()
     },
-    //得到所有测试案例
-    gettestCaseListAll() {
+    // 得到所有测试案例
+    gettestCaseListAll () {
       testCaseListAll({ projectId: this.projectInfo.userUseOpenProject.projectId, title: '' }).then(res => {
         this.testCaseData = res.data
       })
     },
 
-
-
     // 提交
-    submitForm(formName, type) {
+    submitForm (formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.issueFrom.id) {
@@ -308,13 +285,12 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack() {
+    giveupBack () {
       if (!this.issueFrom.id) {
         this.resetFields()
       }
       this.returntomenu(this)
-    },
-
+    }
 
   }
 

@@ -5,7 +5,7 @@ import request from '@/utils/request'
  * @param params
  * @returns {AxiosPromise}
  */
-export function getQueryPlatformUser(params) {
+export function getQueryPlatformUser (params) {
   return request({
     url: '/platformUser/queryPlatformUser',
     method: 'post',
@@ -18,7 +18,7 @@ export function getQueryPlatformUser(params) {
  * @param params
  * @returns {AxiosPromise}
  */
-export function createPlatformUser(params) {
+export function createPlatformUser (params) {
   return request({
     url: '/platformUser/createPlatformUser',
     method: 'post',
@@ -31,7 +31,7 @@ export function createPlatformUser(params) {
  * @param params
  * @returns {AxiosPromise}
  */
-export function updatePlatformUser(params) {
+export function updatePlatformUser (params) {
   return request({
     url: '/platformUser/updatePlatformUser',
     method: 'post',
@@ -44,7 +44,7 @@ export function updatePlatformUser(params) {
  * @param params
  * @returns {AxiosPromise}
  */
-export function deletePlatformUser(id) {
+export function deletePlatformUser (id) {
   return request({
     url: '/platformUser/deletePlatformUser/' + id,
     method: 'delete'

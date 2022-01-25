@@ -95,14 +95,15 @@
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 import { makeToken, listTokens, deleteToken } from '@/api/user'
 // import { getSysCustomField } from '@/api/admincenter'
+import { queryViewParents, queryViews, addViewRE, updateView, getViewScopeChildParams, lookView } from '@/api/project.js'
 import { mapState } from 'vuex'
 export default {
   name: 'GenerateToken',
-  data() {
+  data () {
     return {
       pickerOptions: {
         // 限制预约时间
-        disabledDate(time) {
+        disabledDate (time) {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         }
       },
@@ -152,23 +153,23 @@ export default {
     ...mapState({
       nvaName: state => state.common.nvaName
     }),
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
   watch: {
-    'email': function(val) {
+    'email': function (val) {
       console.log('val---', val)
     }
   },
-  async created() {
+  async created () {
     this.email = this.$route.query.email
     console.log('email--', this.email)
     this.queryListTokens()
   },
   methods: {
     // 生成token
-    async generateToken() {
+    async generateToken () {
       const that = this
       const form = that.form
       console.log('form---', form)
@@ -184,7 +185,7 @@ export default {
       }
     },
     // 查询token列表
-    async queryListTokens() {
+    async queryListTokens () {
       const params = {
         // emailId: this.email
       }
@@ -195,7 +196,7 @@ export default {
       }
     },
     // 删除token
-    delToken(id) {
+    delToken (id) {
       const that = this
       if (id === 'all') {
         message('error', '暂未开发')
@@ -222,7 +223,7 @@ export default {
       }).catch(() => {})
     },
     // 回显token
-    toEdit(row) {
+    toEdit (row) {
       const that = this
       that.$refs.viewData.clearSelection()
       row.id ? that.disable = true : that.disable = false
@@ -243,16 +244,16 @@ export default {
       }) */
     },
     // 取消返回
-    waiveForm() {
+    waiveForm () {
       returntomenu(this, 1000)
     },
     // 取消修改
-    cancelUpdate() {
+    cancelUpdate () {
       this.$refs.viewData.clearSelection()
       this.resetForm()
     },
     // 重置表单
-    resetForm() {
+    resetForm () {
       this.form = {
         tokenName: '',
         expirationTime: ''
@@ -260,7 +261,7 @@ export default {
       this.$refs['form'].resetFields()
     },
     // 新增和修改确定表单
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.from.id) {
@@ -289,12 +290,12 @@ export default {
       })
     },
     // 表格多选
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.multipleSelection = val
       this.multiple = !val.length
     },
     // 查询view信息
-    searchViewInfo() {
+    searchViewInfo () {
       lookView(this.viewId).then(res => {
         if (res.code === '200') {
           if (res.data.isPrivate === 0) {
@@ -309,7 +310,7 @@ export default {
       })
     },
     // token列表
-    getqueryViews() {
+    getqueryViews () {
       return new Promise((resolve, reject) => {
         queryViews(this.viewBody, this.viewQuery).then(res => {
           if (res.code === '200') {
@@ -321,14 +322,14 @@ export default {
       })
     },
     // 刷新view
-    async viewjectRefresh() {
+    async viewjectRefresh () {
       const res = await this.getqueryViews()
       if (res.code === '200') {
         message('success', '刷新成功')
       }
     },
     // 新增字段
-    addFliter() {
+    addFliter () {
       if (this.from.scope === undefined || this.from.scope.trim() === '') {
         message('warning', '请选择作用域')
         return
@@ -349,10 +350,10 @@ export default {
       this.from.oneFilters.push(obj)
     },
     // 移除字段
-    delRemove(index) {
+    delRemove (index) {
       this.from.oneFilters.splice(index, 1)
     },
-    getType: function(fieldName, index) {
+    getType: function (fieldName, index) {
       for (let i = 0; i < this.scopeDownChildParams.length; i++) {
         const entity = this.scopeDownChildParams[i]
         if (entity.filedName === fieldName) {
@@ -366,7 +367,7 @@ export default {
         }
       }
     },
-    viewScopeChildParams() {
+    viewScopeChildParams () {
       if (this.from.oneFilters.length > 0) {
         this.$confirm('重新选择可能会丢失页面内容请确认？', {
           title: '提示',
@@ -387,10 +388,10 @@ export default {
         this.scopeDownChildParams = res.data
       })
     },
-    dataFilter(val) {
+    dataFilter (val) {
       this.viewParentQuery = val
     },
-    queryViewParent() {
+    queryViewParent () {
       if (this.from.scope === undefined || this.from.scope === '') {
         message('success', '请选择作用域')
         this.viewParentQuery = '0'
@@ -404,7 +405,7 @@ export default {
         this.viewParents = res.data
       })
     },
-    fuzhiFrom(val) {
+    fuzhiFrom (val) {
       this.from.parentId = val
     }
   }

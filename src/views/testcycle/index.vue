@@ -165,7 +165,7 @@ import { testCycleList, delTestCycle } from '@/api/testcycle'
 export default {
   name: 'Testcycle',
   components: { viewTree },
-  data() {
+  data () {
     return {
       treeCol: 5,
       currentScope: 'TestCycle',
@@ -196,22 +196,22 @@ export default {
     }
   },
   computed: {
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
 
-  created() {
+  created () {
     this.getfeatureList()// 获取管理项目列表
   },
   methods: {
     // 新建项目
-    newproject() {
+    newproject () {
       this.$router.push({ name: 'Addtestcycle' })
     },
 
     /** 项目列表表格开始 */
-    getfeatureList() {
+    getfeatureList () {
       this.isLoading = true
       const query = {
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -236,7 +236,7 @@ export default {
       })
     },
     // 刷新
-    async projectRefresh() {
+    async projectRefresh () {
       const res = await this.getfeatureList()
       if (res.code === '200') {
         message('success', '刷新成功')
@@ -245,11 +245,11 @@ export default {
     },
 
     // 克隆
-    projectClone() {
+    projectClone () {
       message('error', '暂未开发')
     },
     // 删除项目
-    delproject(id) {
+    delproject (id) {
       if (id === 'all') {
         message('error', '暂未开发')
         return
@@ -262,7 +262,7 @@ export default {
       })
     },
     // 表格多选
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.multipleSelection = val
       // 暂时不实现批量删除
       this.featureIds = ''
@@ -274,10 +274,10 @@ export default {
       this.single = val.length !== 1
     },
     // 表格行点击去编辑
-    openEdit(row) {
+    openEdit (row) {
       this.$router.push({ name: 'Addtestcycle', query: { id: row.id }})
     },
-    childByValue: function(query) {
+    childByValue: function (query) {
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id
       testCycleList(this.featureQuery, query).then(res => {
@@ -286,7 +286,7 @@ export default {
         this.isLoading = false
       })
     },
-    hadleTreeshow() {
+    hadleTreeshow () {
       this.treeCol = this.treeCol === 5 ? 0 : 5
     }
   }

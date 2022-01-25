@@ -4,10 +4,10 @@ const state = {
 }
 
 const mutations = {
-  setNavName(state, payload) {
+  setNavName (state, payload) {
     state.nvaName = payload
   },
-  setServicePlan(state, payload) {
+  setServicePlan (state, payload) {
     state.servicePlan = payload
   }
 }

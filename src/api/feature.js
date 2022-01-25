@@ -8,7 +8,7 @@
  */
 import request from '@/utils/request'
 
-export function featureList(params, data) {
+export function featureList (params, data) {
   return request({
     url: '/feature/queryList',
     method: 'post',
@@ -17,8 +17,8 @@ export function featureList(params, data) {
     data: data
   })
 }
-//没有分页的
-export function featureListAll(data) {
+// 没有分页的
+export function featureListAll (data) {
   return request({
     url: '/leftJoin/queryFeatureTitles',
     method: 'get',
@@ -26,7 +26,7 @@ export function featureListAll(data) {
   })
 }
 // 添加项目
-export function addFeature(data) {
+export function addFeature (data) {
   return request({
     url: '/feature/insert',
     method: 'post',
@@ -34,14 +34,14 @@ export function addFeature(data) {
   })
 }
 // 获取详情
-export function detailFeature(id) {
+export function detailFeature (id) {
   return request({
     url: '/feature/queryById/' + id,
     method: 'get'
   })
 }
 // 删除项目
-export function delFeature(id) {
+export function delFeature (id) {
   return request({
     url: '/feature/delete/' + id,
     method: 'delete'
@@ -49,7 +49,7 @@ export function delFeature(id) {
 }
 
 // 修改项目
-export function editFeature(data) {
+export function editFeature (data) {
   return request({
     url: '/feature/update',
     method: 'post',
@@ -57,7 +57,7 @@ export function editFeature(data) {
   })
 }
 // 列表操作切换项目
-export function closeUpdate(data) {
+export function closeUpdate (data) {
   return request({
     url: '/feature/closeUpdate',
     method: 'post',
@@ -65,14 +65,14 @@ export function closeUpdate(data) {
   })
 }
 // 切换项目
-export function checkProject(id) {
+export function checkProject (id) {
   return request({
     url: '/project/checkProject/' + id,
     method: 'get'
   })
 }
-//获取开发周期
-export function querySprintList(data) {
+// 获取开发周期
+export function querySprintList (data) {
   return request({
     url: '/feature/querySprintList',
     method: 'post',

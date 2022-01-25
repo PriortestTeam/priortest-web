@@ -73,7 +73,7 @@ import { getQueryPlatformUser, deletePlatformUser } from '@/api/manageUser'
 export default {
   name: 'RegisterUser',
   components: { userForm },
-  data() {
+  data () {
     return {
       loading: false,
       tableData: [],
@@ -91,29 +91,29 @@ export default {
     }
   },
   computed: {
-    userInfo() {
+    userInfo () {
       return this.$store.state.user.userinfo
     }
   },
-  created() {
+  created () {
     this.getQueryPlatformUser()
   },
   methods: {
     // 刷新
-    refresh() {
+    refresh () {
       this.fieldsQuery.pageNum = 1
       this.getQueryPlatformUser()
     },
     // 新增用户
-    addUser() {
+    addUser () {
       this.$refs.userForm.showModal()
       this.getQueryPlatformUser()
     },
     // 批量删除
-    deleteUser() {
+    deleteUser () {
     },
     // 单个删除
-    userDel(row) {
+    userDel (row) {
       this.$confirm('是否确认删除用户?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -128,21 +128,21 @@ export default {
       })
     },
     // 双击编辑用户
-    userEdit(row) {
+    userEdit (row) {
       console.log(row)
       this.$refs.userForm.editUser(row)
     },
-    userSelectionChange(val) {
+    userSelectionChange (val) {
       this.selectData = val
       this.dbfields = !val.length
     },
     // 退出
-    async logout() {
+    async logout () {
       this.remove('activeIndex')
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
-    getQueryPlatformUser() {
+    getQueryPlatformUser () {
       this.loading = true
       getQueryPlatformUser(this.fieldsQuery).then(res => {
         if (res.code === '200') {

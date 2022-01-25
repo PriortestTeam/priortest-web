@@ -8,7 +8,7 @@
  */
 import request from '@/utils/request'
 
-export function sprintList(params, data) {
+export function sprintList (params, data) {
   return request({
     url: '/sprint/queryList',
     method: 'post',
@@ -17,8 +17,8 @@ export function sprintList(params, data) {
     data: data
   })
 }
-//没有分页的
-export function sprintListAll(data) {
+// 没有分页的
+export function sprintListAll (data) {
   return request({
     url: '/leftJoin/querySprintTitles',
     method: 'get',
@@ -26,7 +26,7 @@ export function sprintListAll(data) {
   })
 }
 // 添加项目
-export function addSprint(data) {
+export function addSprint (data) {
   return request({
     url: '/sprint/insert',
     method: 'post',
@@ -34,14 +34,14 @@ export function addSprint(data) {
   })
 }
 // 获取详情
-export function detailSprint(id) {
+export function detailSprint (id) {
   return request({
     url: '/sprint/queryById/' + id,
-    method: 'get',
+    method: 'get'
   })
 }
 // 删除项目
-export function delSprint(id) {
+export function delSprint (id) {
   return request({
     url: '/sprint/delete/' + id,
     method: 'delete'
@@ -49,12 +49,11 @@ export function delSprint(id) {
 }
 
 // 修改项目
-export function editSprint(data) {
+export function editSprint (data) {
   return request({
     url: '/sprint/update',
     method: 'post',
     data
   })
 }
-
 

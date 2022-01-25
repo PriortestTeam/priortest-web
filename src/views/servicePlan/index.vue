@@ -6,8 +6,8 @@
       <el-step title="用户信息" />
     </el-steps>
     <keep-alive>
-      <StepOne v-if="active === 0 && servicePlanUiList.length > 0" v-bind="$attrs" @activeNum="activeNum" v-on="$listeners" :servicePlanUiList="servicePlanUiList"/>
-      <StepTwo v-if="active === 1" v-bind="$attrs" @activeNum="activeNum" v-on="$listeners" :servicePlanUiList="servicePlanUiList" />
+      <StepOne v-if="active === 0 && servicePlanUiList.length > 0" v-bind="$attrs" :service-plan-ui-list="servicePlanUiList" @activeNum="activeNum" v-on="$listeners" />
+      <StepTwo v-if="active === 1" v-bind="$attrs" :service-plan-ui-list="servicePlanUiList" @activeNum="activeNum" v-on="$listeners" />
       <StepThree v-if="active === 2" v-bind="$attrs" @activeNum="activeNum" v-on="$listeners" />
     </keep-alive>
   </div>
@@ -25,18 +25,18 @@ export default {
     StepTwo,
     StepThree
   },
-  data() {
+  data () {
     return {
       active: 0,
       servicePlanUiList: []
     }
   },
-  created() {
+  created () {
     this.getServicePlanUi()
   },
   methods: {
     // 服务计划
-    async getServicePlanUi() {
+    async getServicePlanUi () {
       const that = this
       const res = await systemConfigAPI.getServicePlanUi()
       if (res.code === '200') {

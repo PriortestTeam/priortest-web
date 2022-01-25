@@ -13,25 +13,24 @@
           type="primary"
           round
           @click="submitForm('sprintFrom', false)"
-          >保存并新建</el-button
-        >
+        >保存并新建</el-button>
         <el-button
           v-if="!sprintFrom.id"
           type="primary"
           round
           @click="submitForm('sprintFrom', true)"
-          >保存并返回</el-button
-        >
+        >保存并返回</el-button>
         <el-button
           v-if="sprintFrom.id"
           type="primary"
           round
           @click="submitForm('sprintFrom')"
-          >确认修改</el-button
-        >
-        <el-button type="primary" round @click="giveupBack('sprintFrom')"
-          >放弃</el-button
-        >
+        >确认修改</el-button>
+        <el-button
+          type="primary"
+          round
+          @click="giveupBack('sprintFrom')"
+        >放弃</el-button>
         <router-link v-if="!sprintFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
             $t("lang.PublicBtn.CreateCustomField")
@@ -55,8 +54,7 @@
                   :key="item"
                   :label="item"
                   :value="item"
-                >
-                </el-option>
+                />
                 <router-link to="/admincenter/admincenter?par=epic">
                   <el-option label="Add New Value" :value="0" />
                 </router-link>
@@ -76,9 +74,7 @@
                 end-placeholder="结束日期"
                 unlink-panels
                 :default-time="['00:00:00', '23:59:00']"
-              >
-              </el-date-picker> </el-form-item
-          ></el-col>
+              /> </el-form-item></el-col>
         </el-row>
 
         <el-form-item
@@ -99,79 +95,79 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import { sysCustomField } from "@/api/systemArr";
+import { mapGetters } from 'vuex'
+import { sysCustomField } from '@/api/systemArr'
 
-import { addSprint, editSprint, detailSprint } from "@/api/sprint";
-import { message, returntomenu, formatChangedPara } from "@/utils/common";
+import { addSprint, editSprint, detailSprint } from '@/api/sprint'
+import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
-  name: "Addsprint",
-  data() {
+  name: 'Addsprint',
+  data () {
     return {
       pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7; //如果没有后面的-8.64e7就是不可以选择今天的
+        disabledDate (time) {
+          return time.getTime() < Date.now() - 8.64e7 // 如果没有后面的-8.64e7就是不可以选择今天的
         },
-        shortcuts: [         
+        shortcuts: [
           {
-            text: "15个工作日",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 14);
-              picker.$emit("pick", [start, end]);
-            },
+            text: '15个工作日',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              end.setTime(end.getTime() + 3600 * 1000 * 24 * 14)
+              picker.$emit('pick', [start, end])
+            }
           },
           {
-            text: "28个工作日",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-        ],
+            text: '28个工作日',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              end.setTime(end.getTime() + 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          }
+        ]
       },
       epicArr: [],
       sprintFrom: {},
       sprintFromTem: {},
       sprintrules: {
-        title: [{ required: true, message: "请输入迭代标题", trigger: "blur" }],
-        timeArr: [{ required: true, message: "请选择日期", trigger: "change" }],
-      },
-    };
+        title: [{ required: true, message: '请输入迭代标题', trigger: 'blur' }],
+        timeArr: [{ required: true, message: '请选择日期', trigger: 'change' }]
+      }
+    }
   },
   computed: {
     ...mapGetters({
-      lang: (state) => state.header.lang,
+      lang: (state) => state.header.lang
     }),
-    projectInfo() {
-      return this.$store.state.user.userinfo;
-    },
+    projectInfo () {
+      return this.$store.state.user.userinfo
+    }
   },
-  created() {
+  created () {
     if (this.$route.query.id) {
       detailSprint(this.$route.query.id).then((res) => {
-        this.sprintFrom = res.data;
-        this.$set(this.sprintFrom, "timeArr", [
+        this.sprintFrom = res.data
+        this.$set(this.sprintFrom, 'timeArr', [
           this.sprintFrom.startDate,
-          this.sprintFrom.endDate,
-        ]);
-        this.sprintFromTem = Object.assign({}, this.sprintFrom);
-      });
+          this.sprintFrom.endDate
+        ])
+        this.sprintFromTem = Object.assign({}, this.sprintFrom)
+      })
     } else {
-      this.sprintFrom.projectId = this.projectInfo.userUseOpenProject.projectId;
+      this.sprintFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
     sysCustomField({ fieldName: 'epic' }).then((res) => {
-      let data = res.data.mergeValues ? res.data.mergeValues : [];
-      this.epicArr = data;
-    });
+      const data = res.data.mergeValues ? res.data.mergeValues : []
+      this.epicArr = data
+    })
   },
 
   methods: {
     // 重置表单
-    resetFields() {
+    resetFields () {
       this.sprintFrom = {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -180,67 +176,67 @@ export default {
         startDate: undefined,
         endDate: undefined,
         epic: undefined,
-        timeArr: "",
-        fileList: [],
-      };
-      this.$refs["sprintFrom"].resetFields();
+        timeArr: '',
+        fileList: []
+      }
+      this.$refs['sprintFrom'].resetFields()
     },
     // 提交
-    submitForm(formName, type) {
+    submitForm (formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.sprintFrom.id) {
             const param = formatChangedPara(
               this.sprintFromTem,
               this.sprintFrom
-            );
-            param.projectId = this.sprintFrom.projectId;
-            param.startDate = this.sprintFrom.timeArr[0];
-            param.endDate = this.sprintFrom.timeArr[1];
+            )
+            param.projectId = this.sprintFrom.projectId
+            param.startDate = this.sprintFrom.timeArr[0]
+            param.endDate = this.sprintFrom.timeArr[1]
 
             editSprint(param)
               .then((res) => {
-                if (res.code === "200") {
-                  message("success", res.msg);
-                  returntomenu(this, 1000);
+                if (res.code === '200') {
+                  message('success', res.msg)
+                  returntomenu(this, 1000)
                 }
               })
               .catch((error) => {
-                console.log(error);
-              });
+                console.log(error)
+              })
           } else {
-            this.sprintFrom.startDate = this.sprintFrom.timeArr[0];
-            this.sprintFrom.endDate = this.sprintFrom.timeArr[1];
-            delete this.sprintFrom.timeArr;
+            this.sprintFrom.startDate = this.sprintFrom.timeArr[0]
+            this.sprintFrom.endDate = this.sprintFrom.timeArr[1]
+            delete this.sprintFrom.timeArr
             addSprint(this.sprintFrom)
               .then((res) => {
-                if (res.code === "200") {
-                  message("success", res.msg);
-                  this.resetFields();
+                if (res.code === '200') {
+                  message('success', res.msg)
+                  this.resetFields()
                   if (type) {
-                    returntomenu(this, 1000);
+                    returntomenu(this, 1000)
                   }
                 }
               })
               .catch((error) => {
-                console.log(error);
-              });
+                console.log(error)
+              })
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     // 放弃并且返回
-    giveupBack() {
+    giveupBack () {
       if (!this.sprintFrom.id) {
-        this.resetFields();
+        this.resetFields()
       }
-      this.returntomenu(this);
-    },
-  },
-};
+      this.returntomenu(this)
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import "index.scss";

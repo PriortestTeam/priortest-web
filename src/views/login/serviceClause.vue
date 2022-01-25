@@ -175,7 +175,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       bool: false
     }
@@ -185,28 +185,28 @@ export default {
       user: (state) => state.user
     }),
     visible2: {
-      get() {
+      get () {
         return this.visible
       },
-      set(val) {
+      set (val) {
         this.$emit('update:visible', val)
       }
     }
   },
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
       console.log('clientHeight', this.$refs.scrollView.clientHeight)
     })
   },
   methods: {
-    cancel() {
+    cancel () {
       this.visible2 = false
     },
-    save() {
+    save () {
       this.$emit('getServiceClause', this.bool)
       this.visible2 = false
     },
-    handleScroll(e) {
+    handleScroll (e) {
       const { scrollTop, clientHeight, scrollHeight } = e.target
       if (scrollTop + clientHeight === scrollHeight) {
         this.bool = true

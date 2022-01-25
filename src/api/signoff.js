@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 获取测试环境
-export function getProjectEnv(params) {
+export function getProjectEnv (params) {
   return request({
     url: '/signOff/getProjectEnv',
     method: 'get',
@@ -10,7 +10,7 @@ export function getProjectEnv(params) {
 }
 
 // 获取发布版本
-export function getProjectVersion(params) {
+export function getProjectVersion (params) {
   return request({
     url: '/signOff/getProjectVersion',
     method: 'get',
@@ -19,7 +19,7 @@ export function getProjectVersion(params) {
 }
 
 // 获取测试周期
-export function getTestCycleVersion(params) {
+export function getTestCycleVersion (params) {
   return request({
     url: '/signOff/getTestCycleDetail',
     method: 'get',
@@ -28,7 +28,7 @@ export function getTestCycleVersion(params) {
 }
 
 // 生成验收文档
-export function createGenerate(data) {
+export function createGenerate (data) {
   return request({
     url: '/signOff/generate',
     method: 'post',
@@ -37,7 +37,7 @@ export function createGenerate(data) {
 }
 
 // 上传签名
-export function uploadSignature(data) {
+export function uploadSignature (data) {
   return request({
     url: '/signOff/upload',
     method: 'post',
@@ -46,7 +46,7 @@ export function uploadSignature(data) {
 }
 
 // 获取签名文件路径
-export function getSignaturePath() {
+export function getSignaturePath () {
   return request({
     url: '/signOff/getUserAttachmentSign',
     method: 'get'
@@ -54,7 +54,7 @@ export function getSignaturePath() {
 }
 
 // 获取缺陷
-export function getIssue() {
+export function getIssue () {
   return request({
     url: '/signOff/getIssue',
     method: 'get'
@@ -62,7 +62,7 @@ export function getIssue() {
 }
 
 // 获取签收记录
-export function getRecord() {
+export function getRecord () {
   return request({
     url: '/signOff/getPdf',
     method: 'get'
@@ -70,7 +70,7 @@ export function getRecord() {
 }
 
 // 删除签名
-export function deleteSign(params) {
+export function deleteSign (params) {
   return request({
     url: '/signOff/delete',
     method: 'get',

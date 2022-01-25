@@ -1,12 +1,7 @@
 <template>
   <div class="app-container my-account">
     <div class="add-account">
-      <el-form
-        ref="form"
-        :model="form"
-        :rules="rules"
-        label-width="130px"
-      >
+      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
         <div class="scopeView">
           <el-form-item label="账户邮箱:" prop="email" class="form-small">
             {{ form.email }}
@@ -14,10 +9,18 @@
           <el-form-item label="账户名称:" prop="userName" class="form-small">
             <el-input v-model="form.userName" size="small" />
           </el-form-item>
-          <el-form-item label="账户类型:" prop="userType" class="form-small radio-blue">
+          <el-form-item
+            label="账户类型:"
+            prop="userType"
+            class="form-small radio-blue"
+          >
             {{ userTypeList[form.userType] }}
           </el-form-item>
-          <el-form-item label="注册日期:" prop="registerDate" class="form-small">
+          <el-form-item
+            label="注册日期:"
+            prop="registerDate"
+            class="form-small"
+          >
             {{ form.registerDate }}
           </el-form-item>
           <el-form-item label="管理项目:" prop="project" class="form-small">
@@ -26,16 +29,32 @@
           <el-form-item label="失效日期:" prop="expireDate" class="form-small">
             {{ form.expireDate }}
           </el-form-item>
-          <el-form-item label="账户状态:" prop="health" class="form-small radio-blue">
+          <el-form-item
+            label="账户状态:"
+            prop="health"
+            class="form-small radio-blue"
+          >
             {{ userStatus }}
           </el-form-item>
-          <el-form-item v-if="projectUserInfo.identifier !== ''" label="密钥:" class="form-small">
+          <el-form-item
+            v-if="projectUserInfo.identifier !== ''"
+            label="密钥:"
+            class="form-small"
+          >
             <el-button type="primary">
               <router-link :to="tokenUrl">查看编辑</router-link>
             </el-button>
           </el-form-item>
-          <el-form-item v-if="form.userType !== 'Trialer'" label="支付截止日期:" class="form-small">
-            <el-button type="primary"><router-link to="/project/paymentDetails">续费</router-link></el-button>
+          <el-form-item
+            v-if="form.userType !== 'Trialer'"
+            label="支付截止日期:"
+            class="form-small"
+          >
+            <el-button
+              type="primary"
+            ><router-link
+              to="/project/paymentDetails"
+            >续费</router-link></el-button>
           </el-form-item>
           <el-form-item v-else label="延期申请:" class="form-small">
             <el-button
@@ -52,23 +71,29 @@
             :disabled="!serviceCheck"
             @click.stop="stopService"
           >
-            <el-checkbox v-model="serviceCheck" style="margin-top: 10px;margin-right: 5px;" />
-            我已知悉，如果点击此按钮 <终止服务>，我的数据会立即从OneClick 服务器中永久册除。
-          </el-button></div>
-      </el-form></div>
-    </el-form>
-  </div>
+            <el-checkbox
+              v-model="serviceCheck"
+              style="margin-top: 10px; margin-right: 5px"
+            />
+            <!-- eslint-disable-next-line vue/no-parsing-error -->
+            我已知悉，如果点击此按钮 <终止服务>，我的数据会立即从OneClick
+            服务器中永久册除。
+          </el-button>
+        </div>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
-import { message } from '@/utils/common'
+import { message, returntomenu, formatChangedPara } from '@/utils/common'
 import { getUserActivNumber } from '@/api/user'
 // import GenerateToken from '@/views/project/generateToken'
+import { queryViewParents, queryViews, addViewRE, updateView, getViewScopeChildParams, lookView, deleteView } from '@/api/project.js'
 import { mapState } from 'vuex'
 export default {
   name: 'MyAccount',
   // components: { GenerateToken },
-  data() {
+  data () {
     return {
       form: {
         email: '',
@@ -101,12 +126,12 @@ export default {
     ...mapState({
       nvaName: state => state.common.nvaName
     }),
-    projectUserInfo() {
+    projectUserInfo () {
       return this.$store.state.user.userinfo
     }
   },
   watch: {
-    'form.title': function(val) {
+    'form.title': function (val) {
       if (val) {
         this.savedisabled = false
       } else {
@@ -114,13 +139,13 @@ export default {
       }
     }
   },
-  async created() {
+  async created () {
     this.tokenUrl = '/project/generateToken?email=' + this.projectUserInfo.email
     this.init()
     // this.getActivNumber()
   },
   methods: {
-    init() {
+    init () {
       const that = this
       that.activitiNumber = that.projectUserInfo.activitiNumber
       const newDate = new Date()
@@ -143,7 +168,7 @@ export default {
       }
     },
     // 返回用户的激活次数
-    async getActivNumber() {
+    async getActivNumber () {
       const that = this
       const params = {
         'email': that.projectUserInfo.email
@@ -154,11 +179,11 @@ export default {
       }
     },
     // 生成token
-    generateToken() {
+    generateToken () {
       this.dialogVisible = true
     },
     // token列表
-    getqueryViews() {
+    getqueryViews () {
       return new Promise((resolve, reject) => {
         queryViews(this.viewBody, this.viewQuery).then(res => {
           if (res.code === '200') {
@@ -169,13 +194,13 @@ export default {
         })
       })
     },
-    handleFilterChange(val) {
+    handleFilterChange (val) {
       if (val) {
         this.form.oneFilters = []
       }
     },
     // 初始化scope
-    initScope() {
+    initScope () {
       const that = this
       that.viewBody.scope = that.nvaName
       if (that.nvaName !== 'Feature' && that.nvaName !== 'Sprint' && that.nvaName !== 'TestCase' && that.nvaName !== 'TestCycle' && that.nvaName !== 'Issue') {
@@ -183,7 +208,7 @@ export default {
       }
     },
     // 新增和修改确定表单
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.form.id) {
@@ -212,17 +237,17 @@ export default {
       })
     },
     // 取消返回
-    waiveForm() {
+    waiveForm () {
       returntomenu(this, 1000)
     },
     // 取消修改
-    cancelUpdate() {
+    cancelUpdate () {
       this.$refs.viewData.clearSelection()
       this.resetForm()
       this.viewId = ''
     },
     // 重置表单
-    resetForm() {
+    resetForm () {
       this.form = {
         id: undefined,
         isPrivate: '0',
@@ -233,11 +258,11 @@ export default {
       this.$refs['form'].resetFields()
     },
     // 表格多选
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.multipleSelection = val
       this.multiple = !val.length
     },
-    toEdit(row) {
+    toEdit (row) {
       this.$refs.viewData.clearSelection()
       this.viewId = row.id
 
@@ -258,7 +283,7 @@ export default {
       })
     },
     // 查询view信息
-    searchViewInfo() {
+    searchViewInfo () {
       lookView(this.viewId).then(res => {
         if (res.code === '200') {
           if (res.data.isPrivate === 0) {
@@ -273,7 +298,7 @@ export default {
       })
     },
     // 删除view
-    delview(id) {
+    delview (id) {
       if (id === 'all') {
         message('error', '暂未开发')
         return
@@ -285,14 +310,14 @@ export default {
       })
     },
     // 刷新view
-    async viewjectRefresh() {
+    async viewjectRefresh () {
       const res = await this.getqueryViews()
       if (res.code === '200') {
         message('success', '刷新成功')
       }
     },
     // 新增字段
-    addFliter() {
+    addFliter () {
       if (this.form.scope === undefined || this.form.scope.trim() === '') {
         message('warning', '请选择作用域')
         return
@@ -313,10 +338,10 @@ export default {
       this.form.oneFilters.push(obj)
     },
     // 移除字段
-    delRemove(index) {
+    delRemove (index) {
       this.form.oneFilters.splice(index, 1)
     },
-    getType: function(fieldName, index) {
+    getType: function (fieldName, index) {
       for (let i = 0; i < this.scopeDownChildParams.length; i++) {
         const entity = this.scopeDownChildParams[i]
         if (entity.filedName === fieldName) {
@@ -330,7 +355,7 @@ export default {
         }
       }
     },
-    viewScopeChildParams() {
+    viewScopeChildParams () {
       if (this.form.oneFilters.length > 0) {
         this.$confirm('重新选择可能会丢失页面内容请确认？', {
           title: '提示',
@@ -351,10 +376,10 @@ export default {
         this.scopeDownChildParams = res.data
       })
     },
-    dataFilter(val) {
+    dataFilter (val) {
       this.viewParentQuery = val
     },
-    queryViewParent() {
+    queryViewParent () {
       if (this.form.scope === undefined || this.form.scope === '') {
         message('success', '请选择作用域')
         this.viewParentQuery = '0'
@@ -368,7 +393,7 @@ export default {
         this.viewParents = res.data
       })
     },
-    fuzhiFrom(val) {
+    fuzhiFrom (val) {
       this.form.parentId = val
     }
   }
@@ -379,11 +404,11 @@ export default {
 
 .my-account {
   display: flex;
-  margin-top:20px;
-  .add-account{
+  margin-top: 20px;
+  .add-account {
     width: 38%;
-    .el-select{
-      width:100%;
+    .el-select {
+      width: 100%;
     }
   }
   .service-plan {

@@ -186,7 +186,7 @@ export default {
   components: {
     Upload
   },
-  data() {
+  data () {
     return {
       disabled: false,
       optionsArr: [],
@@ -206,7 +206,7 @@ export default {
         status: [{ required: true, message: '请选择状态', trigger: 'change' }]
       },
       pickerOptions: {
-        disabledDate(time) {
+        disabledDate (time) {
           return time.getTime() < Date.now() - 8.64e7// 设置选择今天以及今天之后的日
           // return time.getTime() > Date.now(); //设置选择今天以及今天以前的日期
           // return time.getTime() < Date.now();//设置选择今天之后的日期（不能选择当天时间）
@@ -222,18 +222,18 @@ export default {
     ...mapGetters({
       lang: (state) => state.header.lang
     }),
-    userUseOpenProject() {
+    userUseOpenProject () {
       return this.$store.state.user.userinfo.userUseOpenProject
     }
   },
-  async created() {
+  async created () {
     await this.edit()
     await this.setAllSysCustomField()
     await this.queryAllCustomField()
   },
   methods: {
     // 获取字段
-    async queryAllCustomField() {
+    async queryAllCustomField () {
       const that = this
       const params = {
         'projectId': that.userUseOpenProject.projectId,
@@ -245,7 +245,7 @@ export default {
       }
     },
     // 编辑
-    async edit() {
+    async edit () {
       const that = this
       if (that.$route.query.id) {
         console.log('edit---', that.$route.query.id)
@@ -256,7 +256,7 @@ export default {
       }
     },
     // 系统字段赋值
-    async setAllSysCustomField() {
+    async setAllSysCustomField () {
       const that = this
       const res = await getAllSysCustomField()
       res.data.forEach((v, k) => {
@@ -279,7 +279,7 @@ export default {
         }
       })
     },
-    remoteReport(query) {
+    remoteReport (query) {
       if (query !== '') {
         this.loading = true
         setTimeout(() => {
@@ -293,7 +293,7 @@ export default {
       }
     },
     // 重置表单
-    resetFields() {
+    resetFields () {
       this.projectFrom = {
         id: undefined,
         title: undefined,
@@ -308,7 +308,7 @@ export default {
       this.$refs['projectFrom'].resetFields()
     },
     // 提交
-    submitForm(formName, type) {
+    submitForm (formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.projectFrom.id) {
@@ -348,7 +348,7 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack() {
+    giveupBack () {
       if (!this.projectFrom.id) {
         this.resetFields()
       }

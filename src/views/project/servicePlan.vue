@@ -17,19 +17,18 @@
 </template>
 
 <script>
-import { message } from '@/utils/common'
 import { systemConfigAPI } from '@/api/systemConfig'
 
 export default {
   name: 'ServicePlan',
-  data() {
+  data () {
     return {
 
     }
   },
   methods: {
     // 服务计划
-    async getServicePlanUi() {
+    async getServicePlanUi () {
       const res = await systemConfigAPI.getServicePlanUi()
       if (res.code === '200') {
         console.log('getServicePlanUi--', res)

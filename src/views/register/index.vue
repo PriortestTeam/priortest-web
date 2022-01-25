@@ -23,7 +23,7 @@
 
 export default {
   name: 'Register',
-  data() {
+  data () {
     return {
       loginForm: {
         username: 'admin',
@@ -43,14 +43,14 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
     }
   },
   methods: {
-    showPwd() {
+    showPwd () {
       if (this.passwordType === 'password') {
         this.passwordType = ''
       } else {
@@ -60,7 +60,7 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -77,7 +77,7 @@ export default {
       })
     },
     // 忘记密码
-    forgetPwd() {
+    forgetPwd () {
       this.$router.push({ name: 'Project' })
     }
   }

@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export const systemConfigAPI = {
   // 服务计划
-  getServicePlanUi() {
+  getServicePlanUi () {
     return request({
       url: '/systemConfig/getAllUi',
       method: 'get'
     })
   },
   // 服务计划-订单折扣模块
-  calculateOrderPrice(data) {
+  calculateOrderPrice (data) {
     return request({
       url: '/userOrderdisCount/calculateOrderPrice',
       method: 'post',
@@ -17,11 +17,11 @@ export const systemConfigAPI = {
     })
   },
   // 服务计划-新增订单
-  insertOrder(data) {
+  insertOrder (data) {
     return request({
       url: '/userOrder/insertOrder',
       method: 'post',
       data: data
     })
-  },
+  }
 }

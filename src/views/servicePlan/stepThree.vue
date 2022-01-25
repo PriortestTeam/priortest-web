@@ -91,12 +91,9 @@
 </template>
 
 <script>
-import { message } from '@/utils/common'
-import { systemConfigAPI } from '@/api/systemConfig'
-import { mapState } from 'vuex'
 export default {
-  name: 'stepThree',
-  data() {
+  name: 'StepThree',
+  data () {
     return {
       form: {
         email: '',
@@ -145,17 +142,17 @@ export default {
     }
   },
   computed: {
-    projectUserInfo() {
+    projectUserInfo () {
       return this.$store.state.user.userinfo
     }
   },
-  created() {
+  created () {
     console.log('stepTwo--', this.projectUserInfo)
     this.init()
   },
   methods: {
     // 服务计划
-    init() {
+    init () {
       const that = this
       // const projectUserInfo = that.projectUserInfo
       for (const key in that.form) {
@@ -164,10 +161,10 @@ export default {
         }
       }
     },
-    pre() {
+    pre () {
       this.$emit('activeNum', 0)
     },
-    next() {
+    next () {
       this.$emit('activeNum', 1)
     }
   }

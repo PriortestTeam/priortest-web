@@ -23,13 +23,13 @@
       </el-form-item>
       <el-form-item :label="subscribtionList[0].groupLabelCN+':'" prop="subScription">
         <el-radio-group v-model="form.subScription">
-        <el-radio
-          v-for="item in subscribtionList"
-          v-show="subscribtionObj[item.value]"
-          :key="item.value"
-          :label="item.value"
-        >{{ item.key }}
-        </el-radio>
+          <el-radio
+            v-for="item in subscribtionList"
+            v-show="subscribtionObj[item.value]"
+            :key="item.value"
+            :label="item.value"
+          >{{ item.key }}
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="现价:" prop="currentPrice">
@@ -55,7 +55,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       form: {
         dataStrorage: '',
@@ -93,33 +93,33 @@ export default {
     }
   },
   computed: {
-    projectUserInfo() {
+    projectUserInfo () {
       return this.$store.state.user.userinfo
     }
   },
   watch: {
-    'form.dataStrorage': function(val) {
+    'form.dataStrorage': function (val) {
       this.calculateOrderPrice()
     },
-    'form.apiCall': function(val) {
+    'form.apiCall': function (val) {
       this.calculateOrderPrice()
     },
-    'form.serviceDuration': function(val) {
+    'form.serviceDuration': function (val) {
       this.form.subScription = ''
       this.form.currentPrice = ''
       this.form.originalPrice = ''
       this.changeServiceDuration()
       this.calculateOrderPrice()
     },
-    'form.subScription': function(val) {
+    'form.subScription': function (val) {
       this.calculateOrderPrice()
     }
   },
-  created() {
+  created () {
     this.intServicePlanUi()
   },
   methods: {
-    changeServiceDuration() {
+    changeServiceDuration () {
       const that = this
       const serviceDuration = that.form.serviceDuration
       switch (serviceDuration) {
@@ -161,7 +161,7 @@ export default {
       }
     },
     // 服务计划
-    async intServicePlanUi() {
+    async intServicePlanUi () {
       const that = this
       /* eslint-disable */
       _.forEach(that.servicePlanUiList, (item, key) => {

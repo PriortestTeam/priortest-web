@@ -18,104 +18,104 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="模板名称">
-                <el-input v-model.trim="testTemplate.templateName" :maxlength="10" placeholder="模板名称"/>
+                <el-input v-model.trim="testTemplate.templateName" :maxlength="10" placeholder="模板名称" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="选中的文件">
-                <el-input v-model.trim="testTemplate.selectFile" placeholder="选中的文件" :readonly="true"/>
+                <el-input v-model.trim="testTemplate.selectFile" placeholder="选中的文件" :readonly="true" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="测试用例标题" prop="testTitleCol">
-                <el-input v-model.trim="testTemplate.testTitleCol" v-Alphabet placeholder="测试用例标题列"/>
+                <el-input v-model.trim="testTemplate.testTitleCol" v-Alphabet placeholder="测试用例标题列" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="状态" prop="statusCol">
-                <el-input v-model.trim="testTemplate.statusCol" v-Alphabet placeholder="测试用例标题列"/>
+                <el-input v-model.trim="testTemplate.statusCol" v-Alphabet placeholder="测试用例标题列" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="描述" prop="descriptionCol">
-                <el-input v-model.trim="testTemplate.descriptionCol" v-Alphabet placeholder="描述列"/>
+                <el-input v-model.trim="testTemplate.descriptionCol" v-Alphabet placeholder="描述列" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="关联故事" prop="featureCol">
-                <el-input v-model.trim="testTemplate.featureCol" v-Alphabet placeholder="关联故事列"/>
+                <el-input v-model.trim="testTemplate.featureCol" v-Alphabet placeholder="关联故事列" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="优先级" prop="priorityCol">
-                <el-input v-model.trim="testTemplate.priorityCol" v-Alphabet placeholder="优先级"/>
+                <el-input v-model.trim="testTemplate.priorityCol" v-Alphabet placeholder="优先级" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="浏览器" prop="browserCol">
-                <el-input v-model.trim="testTemplate.browserCol" v-Alphabet placeholder="浏览器"/>
+                <el-input v-model.trim="testTemplate.browserCol" v-Alphabet placeholder="浏览器" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="平台" prop="platformCol">
-                <el-input v-model.trim="testTemplate.platformCol" v-Alphabet placeholder="平台"/>
+                <el-input v-model.trim="testTemplate.platformCol" v-Alphabet placeholder="平台" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="版本" prop="versionCol">
-                <el-input v-model.trim="testTemplate.versionCol" v-Alphabet placeholder="版本"/>
+                <el-input v-model.trim="testTemplate.versionCol" v-Alphabet placeholder="版本" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试分类" prop="caseCategoryCol">
-                <el-input v-model.trim="testTemplate.caseCategoryCol" v-Alphabet placeholder="测试分类"/>
+                <el-input v-model.trim="testTemplate.caseCategoryCol" v-Alphabet placeholder="测试分类" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试类型" prop="caseTypeCol">
-                <el-input v-model.trim="testTemplate.caseTypeCol" v-Alphabet placeholder="测试类型"/>
+                <el-input v-model.trim="testTemplate.caseTypeCol" v-Alphabet placeholder="测试类型" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="ExternalID" prop="externalIdCol">
-                <el-input v-model.trim="testTemplate.externalIdCol" v-Alphabet placeholder="ExternalID"/>
+                <el-input v-model.trim="testTemplate.externalIdCol" v-Alphabet placeholder="ExternalID" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试环境" prop="envCol">
-                <el-input v-model.trim="testTemplate.envCol" v-Alphabet placeholder="测试环境"/>
+                <el-input v-model.trim="testTemplate.envCol" v-Alphabet placeholder="测试环境" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试设备" prop="deviceTypeCol">
-                <el-input v-model.trim="testTemplate.deviceTypeCol" v-Alphabet placeholder="测试设备"/>
+                <el-input v-model.trim="testTemplate.deviceTypeCol" v-Alphabet placeholder="测试设备" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="模块" prop="moduleCol">
-                <el-input v-model.trim="testTemplate.moduleCol" v-Alphabet placeholder="模块"/>
+                <el-input v-model.trim="testTemplate.moduleCol" v-Alphabet placeholder="模块" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="Automation" prop="automationCol">
-                <el-input v-model.trim="testTemplate.automationCol" v-Alphabet placeholder="Automation"/>
+                <el-input v-model.trim="testTemplate.automationCol" v-Alphabet placeholder="Automation" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试条件" prop="preConditionCol">
-                <el-input v-model.trim="testTemplate.preConditionCol" v-Alphabet placeholder="测试条件"/>
+                <el-input v-model.trim="testTemplate.preConditionCol" v-Alphabet placeholder="测试条件" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试数据" prop="preDataCol">
-                <el-input v-model.trim="testTemplate.preDataCol" v-Alphabet placeholder="测试数据"/>
+                <el-input v-model.trim="testTemplate.preDataCol" v-Alphabet placeholder="测试数据" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="Comments" prop="commentsCol">
-                <el-input v-model.trim="testTemplate.commentsCol" v-Alphabet placeholder="Comments"/>
+                <el-input v-model.trim="testTemplate.commentsCol" v-Alphabet placeholder="Comments" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -123,17 +123,17 @@
           <el-row :gutter="20">
             <el-col :span="6">
               <el-form-item label="步骤" prop="stepCol">
-                <el-input v-model.trim="testTemplate.stepCol" v-Alphabet placeholder="步骤"/>
+                <el-input v-model.trim="testTemplate.stepCol" v-Alphabet placeholder="步骤" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="测试数据" prop="stepTestDataCol">
-                <el-input v-model.trim="testTemplate.stepTestDataCol" v-Alphabet placeholder="测试数据"/>
+                <el-input v-model.trim="testTemplate.stepTestDataCol" v-Alphabet placeholder="测试数据" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="预期结果" prop="stepExpectResultCol">
-                <el-input v-model.trim="testTemplate.stepExpectResultCol" v-Alphabet placeholder="预期结果"/>
+                <el-input v-model.trim="testTemplate.stepExpectResultCol" v-Alphabet placeholder="预期结果" />
               </el-form-item>
             </el-col>
             <!--            <el-col :span="6">-->
@@ -149,7 +149,7 @@
                 <el-checkbox v-model.trim="testTemplate.ifSplitTestStep">步骤分隔符</el-checkbox>
               </el-form-item>
               <el-form-item v-if="testTemplate.ifSplitTestStep" label-width="10px" prop="splitTestStep">
-                <el-input v-model.trim="testTemplate.splitTestStep" placeholder="分隔符只能为逗号','或者分号';'"/>
+                <el-input v-model.trim="testTemplate.splitTestStep" placeholder="分隔符只能为逗号','或者分号';'" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -202,8 +202,11 @@
       <el-col :span="5">
         <div class="temp">
           <el-radio-group v-model="selectTemp" style="min-width: 100%">
-            <div v-for="item in tempList" :key="item.id" class="select-item"
-                 :style="{marginBottom: item.ifDefault==0?0: '15px'}"
+            <div
+              v-for="item in tempList"
+              :key="item.id"
+              class="select-item"
+              :style="{marginBottom: item.ifDefault==0?0: '15px'}"
             >
               <el-radio :label="item.id" @click.native.prevent="onRadioChange(item)">
                 {{ item.templateName }}
@@ -237,7 +240,7 @@ let timer = null
 
 export default {
   name: 'ImportTestCases',
-  data() {
+  data () {
     // 验证列是否重复出现
     const verificationDuplicate = (rule, value, callback) => {
       const _that = this
@@ -250,7 +253,7 @@ export default {
           }
         }
         if (timer == null) {
-          timer = setTimeout(function() {
+          timer = setTimeout(function () {
             _that.$refs.testTemplateForm.validate()
             timer = null
           }, 300)
@@ -374,12 +377,12 @@ export default {
       notifyPromise: Promise.resolve()
     }
   },
-  created() {
+  created () {
     this.queryListByUserId()
   },
   methods: {
     // 通知，解决element-ui，同时调用notify时，通知重叠的问题
-    notify({
+    notify ({
       type = 'success',
       title,
       message,
@@ -394,7 +397,7 @@ export default {
       })
     },
     // 选择文件
-    selectFile() {
+    selectFile () {
       selectFile({ accept: '.et,.xlsx,.xls,.csv', multiple: false }).then(file => {
         const fileFormat = file.file.name.substring(file.file.name.lastIndexOf('.') + 1)
         if (fileFormat !== 'et' && fileFormat !== 'xlsx' && fileFormat !== 'xls' && fileFormat !== 'csv') {
@@ -406,7 +409,7 @@ export default {
       })
     },
     // 导入
-    importFile() {
+    importFile () {
       this.$refs.testTemplateForm.validate((valid) => {
         console.log('**************')
         if (valid) {
@@ -483,7 +486,7 @@ export default {
       })
     },
     // 保存模板
-    saveTemp() {
+    saveTemp () {
       if (this.selectTempDetail && this.selectTempDetail.ifDefault === 1) {
         this.$message.warning('当前模板是默认模板，不可修改')
         return
@@ -516,10 +519,9 @@ export default {
           return false
         }
       })
-    }
-    ,
+    },
     // 新增模板
-    addTemp(data) {
+    addTemp (data) {
       const loading = this.$loading({
         lock: true,
         text: '模板保存中',
@@ -536,10 +538,9 @@ export default {
       }).finally(() => {
         loading.close()
       })
-    }
-    ,
+    },
     // 更新模板
-    updateTemp(data) {
+    updateTemp (data) {
       const loading = this.$loading({
         lock: true,
         text: '模板更新中',
@@ -556,10 +557,9 @@ export default {
       }).finally(() => {
         loading.close()
       })
-    }
-    ,
+    },
     // 删除模板
-    delTemp(temp) {
+    delTemp (temp) {
       this.$confirm('请问是否确认删除该模板?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -585,11 +585,10 @@ export default {
         })
       }).catch(() => {
       })
-    }
-    ,
+    },
 
     // 获取当前登录人模板和默认模板
-    queryListByUserId() {
+    queryListByUserId () {
       queryListByUserId().then(res => {
         if (res.code === '200') {
           const defaultTempList = res.data.filter(item => {
@@ -601,10 +600,9 @@ export default {
           this.tempList = [...defaultTempList, ...tempList]
         }
       })
-    }
-    ,
+    },
     // 点击模板
-    onRadioChange(e) {
+    onRadioChange (e) {
       // 当点击已经选中的把 activeModel 置空，就是取消选中，并返回
       if (this.selectTemp === e.id) {
         this.selectTemp = ''
@@ -618,10 +616,9 @@ export default {
       const selectFile = this.testTemplate.selectFile
       const jsonContent = JSON.parse(e.jsonContent)
       this.testTemplate = { selectFile, templateName: e.templateName, ...jsonContent }
-    }
-    ,
+    },
     // 初始化表单
-    initialize() {
+    initialize () {
       const selectFile = this.testTemplate.selectFile
       this.testTemplate = {
         selectFile: selectFile,

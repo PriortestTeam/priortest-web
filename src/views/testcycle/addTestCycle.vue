@@ -43,8 +43,8 @@
         </el-form-item>
         <el-row>
           <el-col :span="8">
-          <el-checkbox label="当前发布版本" size="small" prop="currentVersion" />
-                      <el-checkbox label="发布版本" size="small" prop="releaseVersion" />
+            <el-checkbox label="当前发布版本" size="small" prop="currentVersion" />
+            <el-checkbox label="发布版本" size="small" prop="releaseVersion" />
           </el-col>
           <el-col :span="8">
             <el-form-item label="版本" size="small" prop="version">
@@ -64,8 +64,8 @@
                   <el-option label="Add New Value" value="" />
                 </router-link>
               </el-select>
-              </el-form-item></el-col>
-         
+            </el-form-item></el-col>
+
         </el-row>
         <el-row>
 
@@ -114,35 +114,35 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-                              <el-form-item size="small" label="测试平台" prop="platform">
-                                <el-select v-model="testCycleFrom.platform" placeholder="请选择测试平台">
-                                  <el-option
-                                                                                   v-for="item in testPlatformArr"
-                                                                                   :key="item"
-                                                                                   :label="item"
-                                                                                   :value="item"
-                                                                                 />
-                                                                                 <router-link to="/admincenter/admincenter?par=test_platform">
-                                                                                                   <el-option label="Add New Value" value="" />
-                                                                                                 </router-link>
-                                </el-select>
-                              </el-form-item>
-                            </el-col>
-       <el-col :span="8">
-                            <el-form-item size="small" label="测试环境" prop="testEnv">
-                              <el-select v-model="testCycleFrom.testEnv" placeholder="请选择测试环境">
-                                 <el-option
-                                                  v-for="item in testEnvArr"
-                                                  :key="item"
-                                                  :label="item"
-                                                  :value="item"
-                                                />
-                                                <router-link to="/admincenter/admincenter?par=test_env">
-                                                                  <el-option label="Add New Value" value="" />
-                                                                </router-link>
-                              </el-select>
-                            </el-form-item>
-                          </el-col>
+            <el-form-item size="small" label="测试平台" prop="platform">
+              <el-select v-model="testCycleFrom.platform" placeholder="请选择测试平台">
+                <el-option
+                  v-for="item in testPlatformArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+                <router-link to="/admincenter/admincenter?par=test_platform">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item size="small" label="测试环境" prop="testEnv">
+              <el-select v-model="testCycleFrom.testEnv" placeholder="请选择测试环境">
+                <el-option
+                  v-for="item in testEnvArr"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+                <router-link to="/admincenter/admincenter?par=test_env">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-form-item label="自动化编译">
           <el-input v-model="testCycleFrom.autoJob" maxlength="30" size="small" />
@@ -151,8 +151,8 @@
           <el-input v-model="testCycleFrom.allureReport" maxlength="30" size="small" />
         </el-form-item>
         <el-form-item label="远程自动化编译">
-                  <el-input v-model="testCycleFrom.remoteJob" maxlength="30" size="small" />
-                </el-form-item>
+          <el-input v-model="testCycleFrom.remoteJob" maxlength="30" size="small" />
+        </el-form-item>
         <el-form-item
           :label="$t('lang.Project.Description')"
           prop="description"
@@ -167,19 +167,16 @@
           />
         </el-form-item>
         <el-form-item size="small" label="重复运行" prop="frenquency">
-        <el-select v-model="testCycleFrom.frenquency" placeholder="请选择重复运行">
-         <el-option
-         v-for="item in frenquencyArr"
-          :key="item"
-          :label="item"
-       :value="item"
-       />
-       <router-link to="/admincenter/admincenter?par=schedule_run_frequency">
-                                                    
-       </router-link>
-        </el-select>
-       </el-form-item>
-                
+          <el-select v-model="testCycleFrom.frenquency" placeholder="请选择重复运行">
+            <el-option
+              v-for="item in frenquencyArr"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+            <router-link to="/admincenter/admincenter?par=schedule_run_frequency" />
+          </el-select>
+        </el-form-item>
 
       </div>
     </el-form>
@@ -204,64 +201,60 @@
           align="center"
         />
         <el-table-column
-                  prop="linkedIssue"
-                  label="关联缺陷"
-                  :show-overflow-tooltip="true"
-                  align="center"
-                />
-                 <el-table-column
-                                  prop="Module"
-                                  label="模块"
-                                  :show-overflow-tooltip="true"
-                                  align="center"
-                                />
+          prop="linkedIssue"
+          label="关联缺陷"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
+        <el-table-column
+          prop="Module"
+          label="模块"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
 
-                                 <el-table-column
-                                                                  prop="AutoStatus"
-                                                                  label="自动化"
-                                                                  :show-overflow-tooltip="true"
-                                                                  align="center"
-                                                                />
+        <el-table-column
+          prop="AutoStatus"
+          label="自动化"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
 
-                                                                   <el-table-column
-                                                                                                                                  prop="RunTimes"
-                                                                                                                                  label="运行次数"
-                                                                                                                                  :show-overflow-tooltip="true"
-                                                                                                                                  align="center"
-                                                                                                                               />
-  <el-table-column
-                                                                  prop="lastRun"
-                                                                  label="运行日期"
-                                                                  :show-overflow-tooltip="true"
-                                                                  align="center"
-                                                                />
+        <el-table-column
+          prop="RunTimes"
+          label="运行次数"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
+        <el-table-column
+          prop="lastRun"
+          label="运行日期"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
         <el-table-column
           prop="lastRunStatus"
           label="运行状态"
           :show-overflow-tooltip="true"
-         
         >
+          <el-table-column
+            prop="stepStatus"
+            :show-overflow-tooltip="true"
+            label="步骤运行状态"
+          />
+        </el-table-column>
+
         <el-table-column
-                       prop="stepStatus"                      
-                       :show-overflow-tooltip="true"
-                       label="步骤运行状态"
-                       />
-         </el-table-column>
+          prop="lastRunDuration"
+          label="运行时长"
+          :show-overflow-tooltip="true"
+        />
 
-         <el-table-column
-                  prop="lastRunDuration"
-                  label="运行时长"
-                  :show-overflow-tooltip="true"                 
-                >
-                </el-table-column>
-
-             <el-table-column
-                  prop="lastRunner"
-                  label="运行人"
-                  :show-overflow-tooltip="true"
-                 
-                >
-                </el-table-column>
+        <el-table-column
+          prop="lastRunner"
+          label="运行人"
+          :show-overflow-tooltip="true"
+        />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -330,7 +323,7 @@ import { sysCustomField } from '@/api/systemArr'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addtestcycle',
-  data() {
+  data () {
     return {
       optionsArr: [],
       versionsArr: [],
@@ -370,11 +363,11 @@ export default {
     ...mapGetters({
       lang: (state) => state.header.lang
     }),
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
-  created() {
+  created () {
     if (this.$route.query.id) {
       this.testCaseFrom.testCycleId = this.$route.query.id
       detailTestCycle(this.$route.query.id).then((res) => {
@@ -397,29 +390,27 @@ export default {
       this.versionsArr = data
     })
     sysCustomField({ fieldName: 'status' }).then((res) => {
-          const data = res.data.mergeValues ? res.data.mergeValues : []
-          this.statusArr = data
-        })
+      const data = res.data.mergeValues ? res.data.mergeValues : []
+      this.statusArr = data
+    })
 
+    sysCustomField({ fieldName: 'test_env' }).then((res) => {
+      const data = res.data.mergeValues ? res.data.mergeValues : []
+      this.testEnvArr = data
+    })
 
-
-     sysCustomField({ fieldName: 'test_env' }).then((res) => {
-          const data = res.data.mergeValues ? res.data.mergeValues : []
-          this.testEnvArr = data
-        })
-
-  sysCustomField({ fieldName: 'frenquency' }).then((res) => {
-          const data = res.data.mergeValues ? res.data.mergeValues : []
-          this.frenquencyArr = data
-        })        
-         sysCustomField({ fieldName: 'test_platform' }).then((res) => {
-                  const data = res.data.mergeValues ? res.data.mergeValues : []
-                  this.testPlatformArr = data
-                })
+    sysCustomField({ fieldName: 'frenquency' }).then((res) => {
+      const data = res.data.mergeValues ? res.data.mergeValues : []
+      this.frenquencyArr = data
+    })
+    sysCustomField({ fieldName: 'test_platform' }).then((res) => {
+      const data = res.data.mergeValues ? res.data.mergeValues : []
+      this.testPlatformArr = data
+    })
   },
-  mounted() {},
+  mounted () {},
   methods: {
-    remoteReport(query) {
+    remoteReport (query) {
       if (query !== '') {
         this.loading = true
         setTimeout(() => {
@@ -433,7 +424,7 @@ export default {
       }
     },
     // 重置表单
-    resetFields() {
+    resetFields () {
       this.testCycleFrom = {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -450,7 +441,7 @@ export default {
     },
 
     // 提交
-    submitForm(formName, type) {
+    submitForm (formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.testCycleFrom.id) {
@@ -493,7 +484,7 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack() {
+    giveupBack () {
       if (!this.testCycleFrom.id) {
         this.resetFields()
       }
@@ -501,14 +492,14 @@ export default {
     },
 
     /** *编辑的表格 */
-    resettestCaseFrom() {
+    resettestCaseFrom () {
       this.testCaseFrom = {
         testCycleId: this.testCycleFrom.id,
         testCaseId: undefined
       }
       this.$refs['testCaseFrom'].resetFields()
     },
-    gettestCycleCase() {
+    gettestCycleCase () {
       testCycleCase(
         {
           pageNum: 1,
@@ -520,10 +511,10 @@ export default {
         this.testCaseData = res.data
       })
     },
-    newStep() {
+    newStep () {
       this.openDia = true
     },
-    submittestCaseFrom() {
+    submittestCaseFrom () {
       this.$refs['testCaseFrom'].validate((valid) => {
         if (valid) {
           addtestCycle(this.testCaseFrom).then((res) => {
@@ -537,17 +528,17 @@ export default {
         }
       })
     },
-    canceltestCaseFrom() {
+    canceltestCaseFrom () {
       this.resettestCaseFrom()
       this.openDia = false
     },
-    runview(row) {
+    runview (row) {
       this.$router.push({
         name: 'Execute',
         query: { id: row.id, testCycleId: this.testCycleFrom.id }
       })
     },
-    delview(row) {
+    delview (row) {
       bindCaseDelete(row.id).then((res) => {
         if (res.code === '200') {
           message('success', res.msg)

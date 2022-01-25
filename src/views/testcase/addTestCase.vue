@@ -74,14 +74,14 @@
                 v-model="testCaseFrom.priority"
                 placeholder="请选择优先级"
               >
-              <el-option
+                <el-option
                   v-for="item in getOptionsArrData.priority"
                   :key="item"
                   :label="item"
                   :value="item"
- /> <router-link to="/admincenter/admincenter?par=priority">
-                                     <el-option label="Add New Value" value="" />
-                                   </router-link>
+                /> <router-link to="/admincenter/admincenter?par=priority">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -89,15 +89,16 @@
             <el-form-item size="small" label="浏览器" prop="browser" clearable>
               <el-select
                 v-model="testCaseFrom.browser"
-                placeholder="请选择浏览器"              >
-<el-option
+                placeholder="请选择浏览器"
+              >
+                <el-option
                   v-for="item in getOptionsArrData.browser"
-                   :key="item"
+                  :key="item"
                   :label="item"
                   :value="item"
- /> <router-link to="/admincenter/admincenter?par=browser">
-                                     <el-option label="Add New Value" value="" />
-                                   </router-link>
+                /> <router-link to="/admincenter/admincenter?par=browser">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
@@ -106,22 +107,22 @@
           <el-col :span="8">
             <el-form-item size="small" label="平台" prop="testPlatform">
               <el-select v-model="testCaseFrom.testPlatform" placeholder="请选择测试平台" clearable>
-<el-option
+                <el-option
                   v-for="item in getOptionsArrData.testPlatform"
                   :key="item"
                   :label="item"
                   :value="item"
                 />
-                 <router-link to="/admincenter/admincenter?par=test_platform">
-                                  <el-option label="Add New Value" value="" />
-                                </router-link>
+                <router-link to="/admincenter/admincenter?par=test_platform">
+                  <el-option label="Add New Value" value="" />
+                </router-link>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="状态" prop="status">
               <el-select v-model="testCaseFrom.status" placeholder="请选择状态" clearable>
- <el-option
+                <el-option
                   v-for="item in getOptionsArrData.status"
                   :key="item"
                   :label="item"
@@ -305,7 +306,7 @@
         </el-form-item>
       </div>
     </el-form>
-    <div v-if="this.testCaseFrom.id" class="table">
+    <div v-if="testCaseFrom.id" class="table">
       <el-button type="text" @click="newStep">新建步骤</el-button>
       <el-table
         ref="stepData"
@@ -325,7 +326,7 @@
           :show-overflow-tooltip="true"
           align="center"
         />
-        <el-table-column prop="stepData" label="运行数据"/>
+        <el-table-column prop="stepData" label="运行数据" />
         <el-table-column
           prop="expectedResult"
           label="预计结果"
@@ -371,12 +372,12 @@
         </el-form-item>
 
         <el-form-item label="运行数据" prop="stepData" size="small">
-                  <el-input
-                    v-model="stepFrom.stepData"
-                    maxlength="20"
-                    placeholder="请输入步骤运行数据"
-                  />
-                </el-form-item>
+          <el-input
+            v-model="stepFrom.stepData"
+            maxlength="20"
+            placeholder="请输入步骤运行数据"
+          />
+        </el-form-item>
 
         <el-form-item label="预期结果" prop="expectedResult" size="small">
           <el-input
@@ -416,7 +417,7 @@ import { message, returntomenu, formatChangedPara } from '@/utils/common'
 
 export default {
   name: 'Addtestcase',
-  data() {
+  data () {
     return {
       getOptionsArr: [
         'versions',
@@ -474,11 +475,11 @@ export default {
     ...mapGetters({
       lang: (state) => state.header.lang
     }),
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
-  created() {
+  created () {
     if (this.$route.query.id) {
       this.stepFrom.testCaseId = this.$route.query.id
       detailTestCase(this.$route.query.id).then((res) => {
@@ -506,7 +507,7 @@ export default {
 
   methods: {
     // 编辑获取步骤
-    getTestStep() {
+    getTestStep () {
       testCaseStep(
         { pageNum: 1, pageSize: 10 },
         {
@@ -518,7 +519,7 @@ export default {
     },
 
     // 重置表单
-    resetFields() {
+    resetFields () {
       this.testCaseFrom = {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -544,7 +545,7 @@ export default {
       this.$refs['testCaseFrom'].resetFields()
     },
     // 提交
-    submitForm(formName, type) {
+    submitForm (formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.testCaseFrom.id) {
@@ -585,26 +586,26 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack() {
+    giveupBack () {
       if (!this.testCaseFrom.id) {
         this.resetFields()
       }
       this.returntomenu(this)
     },
     // 新建步骤
-    resetStepFrom() {
+    resetStepFrom () {
       this.stepFrom = {
         testCaseId: undefined,
         step: undefined,
         stepData: undefined,
-        expectedResult: undefined,
+        expectedResult: undefined
       }
       this.$refs['stepFrom'].resetFields()
     },
-    newStep() {
+    newStep () {
       this.openDia = true
     },
-    submitStepFrom() {
+    submitStepFrom () {
       this.$refs['stepFrom'].validate((valid) => {
         if (valid) {
           if (this.stepFrom.id) {
@@ -632,16 +633,16 @@ export default {
         }
       })
     },
-    cancelStepFrom() {
+    cancelStepFrom () {
       this.resetStepFrom()
       this.openDia = false
     },
-    toEdit(row) {
+    toEdit (row) {
       this.stepFrom = Object.assign({}, row)
       this.openDia = true
       this.stepFromTemp = Object.assign({}, row)
     },
-    delview(row) {
+    delview (row) {
       delTestCaseStep(row.id).then((res) => {
         if (res.code === '200') {
           message('success', res.msg)
@@ -649,7 +650,7 @@ export default {
         }
       })
     },
-    getFeatureLikeArgs(row) {
+    getFeatureLikeArgs (row) {
       if ((this.testCaseFrom.module !== undefined && this.testCaseFrom.module !== '') ||
         (this.testCaseFrom.version !== undefined && this.testCaseFrom.version !== '')) {
         this.$confirm('重新选择可能会丢失内容请确认？', {

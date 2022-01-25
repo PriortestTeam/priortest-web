@@ -38,12 +38,12 @@
 <script>
 // import { addProjects } from '@/api/project'
 import { message } from '@/utils/common'
-import { activateAccount, verifyLinkString } from '@/api/user'
+import { activateAccount } from '@/api/user'
 import serviceClause from '../login/serviceClause.vue'
 export default {
   name: 'Active',
   components: { serviceClause },
-  data() {
+  data () {
     var validatePassword = (rule, value, callback) => {
       if (!/\S/.test(value)) {
         return callback(new Error('必填项不能为空'))
@@ -88,7 +88,7 @@ export default {
   },
   watch: {
   },
-  mounted() {
+  mounted () {
     this.loginForm.email = this.$route.query.email
     /* this.loginForm.params = this.$route.query.params
     if (!this.loginForm.email || !this.loginForm.params) {
@@ -102,14 +102,14 @@ export default {
     }) */
   },
   methods: {
-    getServiceClause(data) {
+    getServiceClause (data) {
       this.isViewServiceClause = data
     },
-    backLogin() {
+    backLogin () {
       this.$router.push({ path: '/' })
     },
     // 激活账户
-    async goActivate() {
+    async goActivate () {
       const that = this
       try {
         const bool = await that.$refs.loginForm.validate()

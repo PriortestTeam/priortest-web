@@ -165,7 +165,7 @@ import serviceClause from './serviceClause.vue'
 export default {
   name: 'Login',
   components: { forget, deferred, serviceClause },
-  data() {
+  data () {
     return {
       loginForm: {
         username: 'hjyhappy_03@163.com',
@@ -219,7 +219,7 @@ export default {
     }
   },
   computed: {
-    passRigister() {
+    passRigister () {
       if (this.registerForm.email && this.checked) {
         const reg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/
         return !reg.test(this.registerForm.email)
@@ -230,13 +230,13 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
     }
   },
-  created() {
+  created () {
     /* eslint-disable */
     this.cloneRegisterForm = _.cloneDeep(this.registerForm)
   },

@@ -8,7 +8,7 @@
  */
 import request from '@/utils/request'
 
-export function login(data) {
+export function login (data) {
   return request({
     url: 'login',
     method: 'post',
@@ -16,28 +16,28 @@ export function login(data) {
   })
 }
 
-export function getInfo() {
+export function getInfo () {
   return request({
     url: '/user/queryUserInfo',
     method: 'get'
   })
 }
 
-export function logout() {
+export function logout () {
   return request({
     url: '/logout',
     method: 'get'
   })
 }
 // 发送邮箱验证
-export function sendEmailRegisterCode(email) {
+export function sendEmailRegisterCode (email) {
   return request({
     url: '/user/sendEmailRegisterCode?email=' + email,
     method: 'get'
   })
 }
 // 注册
-export function userRegiste(data) {
+export function userRegiste (data) {
   return request({
     url: '/user/register',
     method: 'post',
@@ -45,7 +45,7 @@ export function userRegiste(data) {
   })
 }
 // 激活账户
-export function activateAccount(data) {
+export function activateAccount (data) {
   return request({
     url: '/user/activateAccount',
     method: 'post',
@@ -53,7 +53,7 @@ export function activateAccount(data) {
   })
 }
 // 忘记密码填写邮箱
-export function sendForgetEmail(params) {
+export function sendForgetEmail (params) {
   return request({
     url: '/user/forgetThePassword',
     method: 'post',
@@ -61,7 +61,7 @@ export function sendForgetEmail(params) {
   })
 }
 // 忘记密码重置密码
-export function resetPwd(data) {
+export function resetPwd (data) {
   return request({
     url: '/user/forgetThePasswordIn',
     method: 'post',
@@ -69,7 +69,7 @@ export function resetPwd(data) {
   })
 }
 // 申请延期填写邮箱
-export function senddeferredEmail(params) {
+export function senddeferredEmail (params) {
   return request({
     url: '/user/applyForAnExtension',
     method: 'post',
@@ -77,7 +77,7 @@ export function senddeferredEmail(params) {
   })
 }
 // 申请延期填写密码
-export function deferredPwd(data) {
+export function deferredPwd (data) {
   return request({
     url: '/user/applyForAnExtensionIn',
     method: 'post',
@@ -85,7 +85,7 @@ export function deferredPwd(data) {
   })
 }
 // 验证链接字符串
-export function verifyLinkString(params) {
+export function verifyLinkString (params) {
   return request({
     url: '/user/verifyLinkString',
     method: 'post',
@@ -93,14 +93,14 @@ export function verifyLinkString(params) {
   })
 }
 // 生成token
-export function makeToken(data) {
+export function makeToken (data) {
   return request({
     url: '/user/makeToken',
     method: 'post',
     data
   })
 }
-export function listTokens(params, data) {
+export function listTokens (params, data) {
   return request({
     url: '/user/listTokens',
     method: 'post',
@@ -110,7 +110,7 @@ export function listTokens(params, data) {
   })
 }
 // 删除token
-export function deleteToken(data) {
+export function deleteToken (data) {
   return request({
     url: '/user/deleteToken',
     // method: 'delete'
@@ -119,7 +119,7 @@ export function deleteToken(data) {
   })
 }
 // 返回用户的激活次数
-export function getUserActivNumber(data) {
+export function getUserActivNumber (data) {
   return request({
     url: '/user/getUserActivNumber',
     method: 'post',

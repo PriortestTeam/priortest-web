@@ -68,7 +68,7 @@
 import { mapGetters } from 'vuex'
 import { message } from '@/utils/common'
 export default {
-  data() {
+  data () {
     return {
       menuList: [{
         index: 'Project',
@@ -116,18 +116,18 @@ export default {
         // navName: state => state.common.nvaName
       }
     ]),
-    userInfo() {
+    userInfo () {
       return this.$store.state.user.userinfo
     }
   },
   watch: {
-    userInfo: function(newVal, oldVal) {
+    userInfo: function (newVal, oldVal) {
       if (newVal.userUseOpenProject) {
         this.menuList[0].name = newVal.userUseOpenProject.title
       }
     }
   },
-  mounted() {
+  mounted () {
     this.menuList[0].name = this.userInfo.userUseOpenProject.title
     if (window.localStorage.currentMenu) {
       this.activeIndex = window.localStorage.currentMenu
@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     // 菜单切换事件
-    menuSelect(name) {
+    menuSelect (name) {
       const index = this.menuList.findIndex(v => v.index === name)
       window.localStorage.setItem('currentMenu', name)
       if (name === 'Project') {
@@ -156,15 +156,15 @@ export default {
         this.$router.push({ name })
       }
     },
-    toggleSideBar() {
+    toggleSideBar () {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
+    async logout () {
       this.remove('activeIndex')
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
-    goOther(item, index) {
+    goOther (item, index) {
       this.$store.commit('common/setNavName', item)
       this.activeIndex = index
       this.set('activeIndex', index)
@@ -176,12 +176,12 @@ export default {
         this.$router.push({ name: item })
       }
     },
-    gohome() {
+    gohome () {
       this.$router.push({ name: 'Dashboard' })
     },
 
     // 切换语言
-    changeLang(command) {
+    changeLang (command) {
       if (command === 'zh-CN') {
         this.$i18n.locale = 'zh-CN'
       }

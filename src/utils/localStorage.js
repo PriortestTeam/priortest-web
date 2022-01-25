@@ -1,11 +1,11 @@
 const storage = {
-  set(key, value) {
+  set (key, value) {
     sessionStorage.setItem(key, JSON.stringify(value))
   },
-  get(key) {
+  get (key) {
     return JSON.parse(sessionStorage.getItem(key))
   },
-  remove(key) {
+  remove (key) {
     sessionStorage.removeItem(key)
   }
 

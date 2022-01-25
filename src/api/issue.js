@@ -8,7 +8,7 @@
  */
 import request from '@/utils/request'
 
-export function issueList(params, data) {
+export function issueList (params, data) {
   return request({
     url: '/issue/queryList',
     method: 'post',
@@ -18,7 +18,7 @@ export function issueList(params, data) {
   })
 }
 // 添加项目
-export function addIssue(data) {
+export function addIssue (data) {
   return request({
     url: '/issue/insert',
     method: 'post',
@@ -26,14 +26,14 @@ export function addIssue(data) {
   })
 }
 // 获取详情
-export function detailIssue(id) {
+export function detailIssue (id) {
   return request({
     url: '/issue/queryById/' + id,
-    method: 'get',
+    method: 'get'
   })
 }
 // 删除项目
-export function delIssue(id) {
+export function delIssue (id) {
   return request({
     url: '/issue/delete/' + id,
     method: 'delete'
@@ -41,13 +41,13 @@ export function delIssue(id) {
 }
 
 // 修改项目
-export function editIssue(data) {
+export function editIssue (data) {
   return request({
     url: '/issue/update',
     method: 'post',
     data
   })
 }
-/***弹框 新增步骤
+/** *弹框 新增步骤
  *
  */

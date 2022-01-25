@@ -213,7 +213,7 @@ export default {
   components: {
     UploadSigenatrue
   },
-  data() {
+  data () {
     return {
       searchFrom: {
         verison: '',
@@ -288,7 +288,7 @@ export default {
       }
     ])
   },
-  async mounted() {
+  async mounted () {
     const loading = this.$loading({
       lock: true,
       text: 'Loading',
@@ -316,12 +316,12 @@ export default {
   },
   methods: {
     // 查看pdf
-    lookPdf(file) {
+    lookPdf (file) {
       this.$message.warning('敬请期待')
       // window.open('http://124.71.142.223:8082' + file.filePath)
     },
     // 发布版本类型切换
-    versionTypeChange(val) {
+    versionTypeChange (val) {
       this.baseInfo.verison = val
       if (val === true) {
         this.searchFrom.verison = this.lastVersion
@@ -332,18 +332,18 @@ export default {
       this.getTestCycleVersion()
     },
     // 下拉框切换版本
-    versionChange(val) {
+    versionChange (val) {
       this.searchFrom.verison = val
       this.getTestCycleVersion()
     },
     // 测试环境下拉切换
-    envChange(val) {
+    envChange (val) {
       this.searchFrom.env = val
       this.from.env = val
       this.getTestCycleVersion()
     },
     // 测试周期切换
-    cycleTypeChange(val) {
+    cycleTypeChange (val) {
       if (val === 'curentReleaseVersion') {
         this.baseInfo.testCycle = 'curentReleaseVersion'
         this.searchFrom.testCycle = 'curentReleaseVersion'
@@ -353,17 +353,17 @@ export default {
       }
       this.getTestCycleVersion()
     },
-    handleCheckAllChange(val) {
+    handleCheckAllChange (val) {
       this.from.issue = val ? this.issues : []
       this.isIndeterminate = false
     },
-    issueChecked(value) {
+    issueChecked (value) {
       const checkedCount = value.length
       this.checkAll = checkedCount === this.issues.length
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.issues.length
     },
     // 删除签名信息
-    async removeSigniList(val) {
+    async removeSigniList (val) {
       const loading = this.$loading({
         lock: true,
         text: '正在删除',
@@ -389,9 +389,9 @@ export default {
     //     name: "签名" + Math.floor(Math.random()*10000000)
     //   });
     // },
-    createFile() {
+    createFile () {
       console.log(this.from)
-      this.$refs.createForm.validate(async(valid) => {
+      this.$refs.createForm.validate(async (valid) => {
         if (valid) {
           try {
             const data = {
@@ -419,47 +419,47 @@ export default {
         }
       })
     },
-    getImgUrl(url) {
+    getImgUrl (url) {
       if (!url) return
       this.getSign()
     },
-    async getProjectEnv() {
+    async getProjectEnv () {
       const res = await getProjectEnv({ projectId: this.projectId })
       this.projectEnvList = res.data
       this.from.env = this.projectEnvList.mergeValues[0] || ''
       this.baseInfo.env = this.projectEnvList.mergeValues[0] || ''
       this.searchFrom.env = this.projectEnvList.mergeValues[0] || ''
     },
-    async getProjectVersion() {
+    async getProjectVersion () {
       const res = await getProjectVersion({ projectId: this.projectId })
       this.projectVersionList = res.data
       this.lastVersion = getLastVersion(this.projectVersionList.mergeValues)
       this.baseInfo.version = true
       this.searchFrom.version = this.lastVersion
     },
-    async getTestCycleVersion() {
+    async getTestCycleVersion () {
       this.from.testCycle = []
       const res = await getTestCycleVersion({ projectId: this.projectId, env: this.searchFrom.env, version: this.baseInfo.version ? this.lastVersion : this.from.version })
       this.testCycleVersionList = res.data || []
     },
-    async getSign() {
+    async getSign () {
       const res = await getSignaturePath()
       this.signiList = res.data
       this.from.fileUrl = res.data[0] ? res.data[0].file_path : ''
     },
-    async getProject() {
+    async getProject () {
       const res = await queryForProjects({
         pageNum: 1,
         pageSize: 10
       }, {})
       this.projectList = res.data
     },
-    getProjectInfo() {
+    getProjectInfo () {
       this.getProjectEnv()
       this.getProjectVersion()
       this.getTestCycleVersion()
     },
-    async issueList() {
+    async issueList () {
       this.from.issue = []
       try {
         const res = await getIssue()
@@ -472,7 +472,7 @@ export default {
         console.log(err)
       }
     },
-    async recordList() {
+    async recordList () {
       this.records = []
       try {
         const res = await getRecord()

@@ -9,7 +9,7 @@
 import request from '@/utils/request'
 
 // 查询all自定义字段列表
-export function queryCustomList(data, page) {
+export function queryCustomList (data, page) {
   return request({
     url: '/customField/queryCustomList',
     method: 'post',
@@ -19,14 +19,14 @@ export function queryCustomList(data, page) {
 }
 
 // 查看radio详情
-export function queryFieldRadioById(data) {
+export function queryFieldRadioById (data) {
   return request({
     url: '/customField/queryFieldRadioById/' + data,
     method: 'get'
   })
 }
 // 新增radio字段
-export function addCustomRadio(data) {
+export function addCustomRadio (data) {
   return request({
     url: '/customField/addCustomRadio',
     method: 'post',
@@ -34,7 +34,7 @@ export function addCustomRadio(data) {
   })
 }
 // 修改radio字段
-export function updateCustomRadio(data) {
+export function updateCustomRadio (data) {
   return request({
     url: '/customField/updateCustomRadio',
     method: 'post',
@@ -43,7 +43,7 @@ export function updateCustomRadio(data) {
 }
 // 删除radio字段
 
-export function deleteCustomRadio(data) {
+export function deleteCustomRadio (data) {
   return request({
     url: '/customField/deleteCustomRadio/' + data,
     method: 'delete'
@@ -53,14 +53,14 @@ export function deleteCustomRadio(data) {
 // 文本
 
 // 查看text详情
-export function queryFieldTextById(data) {
+export function queryFieldTextById (data) {
   return request({
     url: '/customField/queryFieldTextById/' + data,
     method: 'get'
   })
 }
 // 新增Text字段
-export function addCustomText(data) {
+export function addCustomText (data) {
   return request({
     url: '/customField/addCustomText',
     method: 'post',
@@ -69,7 +69,7 @@ export function addCustomText(data) {
 }
 
 // 修改Text字段
-export function updateCustomText(data) {
+export function updateCustomText (data) {
   return request({
     url: '/customField/updateCustomText',
     method: 'post',
@@ -78,7 +78,7 @@ export function updateCustomText(data) {
 }
 // 删除Text字段
 
-export function deleteCustomText(data) {
+export function deleteCustomText (data) {
   return request({
     url: '/customField/deleteCustomText/' + data,
     method: 'delete'
@@ -86,7 +86,7 @@ export function deleteCustomText(data) {
 }
 
 // 新增memo字段
-export function addCustomRichText(data) {
+export function addCustomRichText (data) {
   return request({
     url: '/customField/addCustomRichText',
     method: 'post',
@@ -94,7 +94,7 @@ export function addCustomRichText(data) {
   })
 }
 // 修改memo字段
-export function updateCustomRichText(data) {
+export function updateCustomRichText (data) {
   return request({
     url: '/customField/updateCustomRichText',
     method: 'post',
@@ -104,7 +104,7 @@ export function updateCustomRichText(data) {
 // dropDown下拉框
 
 // 新增dropDown字段
-export function addCustomDropDown(data) {
+export function addCustomDropDown (data) {
   return request({
     url: '/customField/addCustomDropDown',
     method: 'post',
@@ -112,7 +112,7 @@ export function addCustomDropDown(data) {
   })
 }
 // 修改dropDown字段
-export function updateCustomDropDown(data) {
+export function updateCustomDropDown (data) {
   return request({
     url: '/customField/updateCustomDropDown',
     method: 'post',
@@ -122,7 +122,7 @@ export function updateCustomDropDown(data) {
 
 // 删除dropDown字段
 
-export function deleteCustomDropDown(data) {
+export function deleteCustomDropDown (data) {
   return request({
     url: '/customField/deleteCustomDropDown/' + data,
     method: 'delete'
@@ -130,7 +130,7 @@ export function deleteCustomDropDown(data) {
 }
 
 // 查看dropDown详情
-export function queryFieldDropDownById(data) {
+export function queryFieldDropDownById (data) {
   return request({
     url: '/customField/queryFieldDropDownById/' + data,
     method: 'get'

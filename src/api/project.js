@@ -8,7 +8,7 @@
  */
 import request from '@/utils/request'
 
-export function queryForProjects(params, data) {
+export function queryForProjects (params, data) {
   return request({
     url: '/project/queryForProjects',
     method: 'post',
@@ -18,7 +18,7 @@ export function queryForProjects(params, data) {
   })
 }
 // 添加项目
-export function addProjects(data) {
+export function addProjects (data) {
   return request({
     url: '/project/addProject',
     method: 'post',
@@ -26,7 +26,7 @@ export function addProjects(data) {
   })
 }
 // 删除项目
-export function delProjects(data) {
+export function delProjects (data) {
   return request({
     url: '/project/deleteProject/' + data,
     method: 'delete'
@@ -34,7 +34,7 @@ export function delProjects(data) {
 }
 
 // 修改项目
-export function editProjects(data) {
+export function editProjects (data) {
   return request({
     url: '/project/updateProject',
     method: 'post',
@@ -42,14 +42,14 @@ export function editProjects(data) {
   })
 }
 // 切换项目
-export function checkProject(id) {
+export function checkProject (id) {
   return request({
     url: '/project/checkProject/' + id,
     method: 'get'
   })
 }
 //  *************************   项目view   *********************//
-export function queryViews(data, page) {
+export function queryViews (data, page) {
   return request({
     url: '/view/queryViews',
     method: 'post',
@@ -58,21 +58,21 @@ export function queryViews(data, page) {
   })
 }
 // 查看view
-export function lookView(data) {
+export function lookView (data) {
   return request({
     url: '/view/queryById/' + data,
     method: 'get'
   })
 }
 // 添加view
-export function addView(data) {
+export function addView (data) {
   return request({
     url: '/view/addView',
     method: 'post',
     data
   })
 }
-export function addViewRE(data) {
+export function addViewRE (data) {
   return request({
     url: '/view/addViewRE',
     method: 'post',
@@ -80,7 +80,7 @@ export function addViewRE(data) {
   })
 }
 // 更新view
-export function updateView(data) {
+export function updateView (data) {
   return request({
     url: '/view/updateView',
     method: 'post',
@@ -88,21 +88,21 @@ export function updateView(data) {
   })
 }
 // 删除view
-export function deleteView(data) {
+export function deleteView (data) {
   return request({
     url: '/view/deleteView/' + data,
     method: 'delete'
   })
 }
 // view-查询条件
-export function getViewFilter() {
+export function getViewFilter () {
   return request({
     url: '/view/getViewFilter',
     method: 'post'
   })
 }
 // 获取负责人
-export function queryByNameSubUsers(data) {
+export function queryByNameSubUsers (data) {
   return request({
     url: '/user/queryByNameSubUsers',
     method: 'post',
@@ -110,14 +110,14 @@ export function queryByNameSubUsers(data) {
   })
 }
 // 获取详情
-export function getFeature(id) {
+export function getFeature (id) {
   return request({
     url: '/project/queryById/' + id,
     method: 'get'
   })
 }
 // 关闭
-export function getCloseProject(data) {
+export function getCloseProject (data) {
   return request({
     url: '/project/getCloseProject',
     method: 'get',
@@ -126,7 +126,7 @@ export function getCloseProject(data) {
 }
 
 // 获取view 创建是的下拉框
-export function getViewScopeChildParams(scope) {
+export function getViewScopeChildParams (scope) {
   return request({
     url: '/view/getViewScopeChildParams',
     method: 'get',
@@ -135,7 +135,7 @@ export function getViewScopeChildParams(scope) {
 }
 
 // 查询父view
-export function queryViewParents(params) {
+export function queryViewParents (params) {
   return request({
     url: '/view/queryViewParents',
     method: 'get',
@@ -144,7 +144,7 @@ export function queryViewParents(params) {
 }
 
 // 查询view 树状结构
-export function queryViewTrees(params) {
+export function queryViewTrees (params) {
   return request({
     url: '/view/queryViewTrees',
     method: 'get',
@@ -152,7 +152,7 @@ export function queryViewTrees(params) {
   })
 }
 // 查询view 树状结构
-export function getAllSysCustomField() {
+export function getAllSysCustomField () {
   return request({
     url: '/project/getAllSysCustomField',
     method: 'get'
@@ -160,7 +160,7 @@ export function getAllSysCustomField() {
 }
 
 // 查询字段
-export function getAllCustomField(params) {
+export function getAllCustomField (params) {
   return request({
     url: '/project/getAllCustomField',
     method: 'post',

@@ -83,7 +83,7 @@ import { message } from '@/utils/common'
 
 export default {
   name: 'Execute',
-  data() {
+  data () {
     return {
       tableHeader: {
         color: '#d4dce3',
@@ -99,18 +99,18 @@ export default {
     }
   },
   computed: {
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
 
-  created() {
+  created () {
     this.testCaseId = this.$route.query.id
     this.testCycleId = this.$route.query.testCycleId
     this.getTestStep()
   },
   methods: {
-    getTestStep() {
+    getTestStep () {
       return new Promise((resolve, reject) => {
         testCaseStep(this.stepQuery, {
           testCaseId: this.testCaseId
@@ -121,18 +121,18 @@ export default {
         })
       })
     },
-    async refresh() {
+    async refresh () {
       const res = await this.getTestStep()
       console.log(res)
       if (res.code === '200') {
         message('success', '刷新成功')
       }
     },
-    inputValidatorInput(value) {
+    inputValidatorInput (value) {
       return value !== '' && value.replace(/(^\s*)|(\s*$)/g, '') !== ''
     },
 
-    action(row, num) {
+    action (row, num) {
       this.$prompt('', '请输入实际结果', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

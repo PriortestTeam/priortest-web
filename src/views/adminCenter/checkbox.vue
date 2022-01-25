@@ -157,7 +157,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       tableHeader: {
         color: '#d4dce3',
@@ -192,22 +192,22 @@ export default {
     }
   },
   computed: {
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
   watch: {
-    'customname': function(val) {
+    'customname': function (val) {
       this.setForm()
     }
   },
-  created() {
+  created () {
     this.fieldsfrom.projectId = this.projectInfo.userUseOpenProject.projectId
     this.initScopeValue()
     this.setForm()
   },
   methods: {
-    setForm() {
+    setForm () {
       const that = this
       for (const key in that.fieldsfrom) {
         if (that.customname[key]) {
@@ -216,7 +216,7 @@ export default {
       }
     },
     // 初始化范围值、是否必填、初始值
-    initScopeValue() {
+    initScopeValue () {
       const that = this
       that.scopeList.forEach((item, index) => {
         that.fieldsfrom.scope[index] = false
@@ -225,7 +225,7 @@ export default {
       })
     },
     // 字段表单提交
-    submitfdForm(formName) {
+    submitfdForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const radio = this.fieldsfrom
@@ -265,23 +265,23 @@ export default {
         }
       })
     },
-    PleaseType(val) {
+    PleaseType (val) {
       this.$emit('setFieldName', this.fieldsfrom.fieldName)
       this.$emit('PleaseType', val)
     },
     // drop表格选中
-    dropselect(val) {
+    dropselect (val) {
       this.droprow = val
     },
     // 添加drop值
-    addDrop() {
+    addDrop () {
       const obj = {
         name: this.fieldsfrom.Value
       }
       this.dropData.push(obj)
     },
     // 删除drop值
-    delDrop() {
+    delDrop () {
       const val = this.droprow
       this.dropData.filter((item, index) => {
         if (item === val) {

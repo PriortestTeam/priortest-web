@@ -6,7 +6,7 @@
         <div @click="toViewManage"> 新建/管理视图 </div>
       </el-button>
       <span class="icon-box">
-         <i class="el-icon-d-arrow-left" title="折叠" @click="hadleShow"></i>
+        <i class="el-icon-d-arrow-left" title="折叠" @click="hadleShow" />
       </span>
     </div>
     <div class="comp-data">
@@ -18,7 +18,7 @@
           default-expand-all
           :expand-on-click-node="false"
         >
-          <span class="custom-tree-node" slot-scope="{ node }">
+          <span slot-scope="{ node }" class="custom-tree-node">
             <span @click="getList(node.data)">{{ node.label }}</span>
           </span>
         </el-tree>
@@ -28,68 +28,67 @@
 </template>
 
 <script>
-import { queryViewTrees } from "@/api/project";
+import { queryViewTrees } from '@/api/project'
 export default {
-  name: "ViewTree",
+  name: 'ViewTree',
   props: {
     childScope: {
       type: String,
-      require: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
       setTree: [], // tree数据,
       defaultProps: {
-        children: "childViews",
-        label: "title",
+        children: 'childViews',
+        label: 'title'
       },
-      viewUrl: "/project/projectview?scope=" + this.childScope,
-        projectQuery: {
+      viewUrl: '/project/projectview?scope=' + this.childScope,
+      projectQuery: {
         pageNum: 1,
         pageSize: 10
-      },
-    };
-  },
-
-  created() {
-    this.queryViewTree();
+      }
+    }
   },
   computed: {
-    projectInfo() {
+    projectInfo () {
       return this.$store.state.user.userinfo
     }
   },
+
+  created () {
+    this.queryViewTree()
+  },
   methods: {
-    toViewManage() {
+    toViewManage () {
       this.$store.commit('common/setNavName', this.childScope)
-      this.$router.push("/project/projectview")
+      this.$router.push('/project/projectview')
     },
-    hadleShow(){
+    hadleShow () {
       this.$emit('hadleTree')
     },
     getList: function (data) {
       console.log(data)
       const query = {
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        viewTreeDto : {
+        viewTreeDto: {
           id: data.id
         }
       }
-      this.$emit('childByValue',query)
+      this.$emit('childByValue', query)
     },
-    queryViewTree() {
+    queryViewTree () {
       const params = {
-        scope: this.childScope,
-      };
+        scope: this.childScope
+      }
       queryViewTrees(params).then((res) => {
-        this.setTree = res.data;
+        this.setTree = res.data
         // 先找父节点
-      });
-
-    },
-  },
-};
+      })
+    }
+  }
+}
 </script>
 <style scoped lang="scss">
 @import "index.scss";

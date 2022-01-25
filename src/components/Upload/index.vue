@@ -37,14 +37,12 @@
             type="text"
             class="table-btn"
             @click.stop="openfildEdit(scope.row.id)"
-            >编辑</el-button
-          >
+          >编辑</el-button>
           <el-button
             type="text"
             class="table-btn"
             @click.stop="openfildDel(scope.row.id)"
-            >删除</el-button
-          >
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -98,9 +96,9 @@ export default {
     type: {
       required: true,
       type: String
-    },
+    }
   },
-  data() {
+  data () {
     return {
       profileOpen: false,
       tableHeader: {
@@ -119,10 +117,10 @@ export default {
         pageSize: 10,
         type: '',
         linkId: ''
-      },
+      }
     }
   },
-  created() {
+  created () {
     this.fileParams.type = this.type
     this.fileParams.linkId = this.linkId
     console.log(this.type, this.linkId)
@@ -130,7 +128,7 @@ export default {
   },
   methods: {
     // 新增file
-    HandleUploadSelf(file) {
+    HandleUploadSelf (file) {
       const params = {
         type: this.type,
         linkId: this.linkId
@@ -143,7 +141,7 @@ export default {
       })
     },
     // 获取文件列表
-    getfileList() {
+    getfileList () {
       fileList(this.fileParams).then(res => {
         if (res.code === '200') {
           res.data.filter(item => {
@@ -155,21 +153,21 @@ export default {
       })
     },
     // 修改文件
-    openfildEdit(id) {
+    openfildEdit (id) {
       this.profileOpen = true
       this.onefileId = id
     },
-    editExceed(files, fileList) {
+    editExceed (files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
-    editbeforeRemove(file, fileList) {
+    editbeforeRemove (file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
-    editUploadSelf(file, fileList) {
+    editUploadSelf (file, fileList) {
       this.onefileList = file
     },
     // 确认修改file
-    fileSubForm() {
+    fileSubForm () {
       this.profileOpen = false
       updateAttachment(this.onefileId, formData({ file: this.onefileList.file })).then(res => {
         if (res.code === '200') {
@@ -181,11 +179,11 @@ export default {
       })
     },
     // 确认修改
-    calloff() {
+    calloff () {
       this.profileOpen = false
     },
     // 删除文件
-    openfildDel(id) {
+    openfildDel (id) {
       deleteAttachment(id).then(res => {
         if (res.code === '200') {
           message('success', res.msg)
