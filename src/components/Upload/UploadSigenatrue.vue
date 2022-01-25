@@ -34,7 +34,7 @@ export default {
   methods: {
     handleChange (file, fileList) {
       console.log(file)
-      if (file.raw.type !== 'image/png' && (file.raw.type !== 'image/jpg' || file.raw.type !== 'image/jpeg')) {
+      if (file.raw.type !== 'image/png' && file.raw.type !== 'image/jpg' && file.raw.type !== 'image/jpeg') {
         this.$message.warning('仅支持JPG和PNG格式')
         this.$refs.upload.clearFiles()
       } else if (file.size > 1024 * 1024 * 5) {
@@ -44,7 +44,10 @@ export default {
         const formData = new FormData()
         formData.append('file', file.raw)
         uploadSignature(formData).then(res => {
-          this.$emit('getImgUrl', res)
+          if (res.code === '200') {
+            this.$message.success('上传成功')
+            this.$emit('getImgUrl', res)
+          }
         })
       }
     }

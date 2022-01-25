@@ -253,7 +253,7 @@ export default {
         testCycle: [
           {
             required: true, validator: (rule, val, callback) => {
-              if (!val && this.baseInfo.testCycle !== 'curentReleaseVersion') {
+              if ((!val || val.length <= 0) && this.baseInfo.testCycle !== 'curentReleaseVersion') {
                 callback(new Error('请选择测试周期'))
               } else {
                 callback()
@@ -416,6 +416,7 @@ export default {
           } catch (err) {
             console.log(err)
           }
+          console.log('success')
         }
       })
     },
