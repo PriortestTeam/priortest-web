@@ -10,7 +10,7 @@
       <div :class="{ 'fixed-header': fixedHeader }">
         <navbar />
       </div>
-      <app-main />
+      <app-main style="flex: 1;" />
     </div>
   </div>
 </template>

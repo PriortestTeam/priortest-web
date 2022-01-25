@@ -1,5 +1,5 @@
 <template>
-  <section class="app-main">
+  <div class="app-main">
     <transition name="fade-transform" mode="out-in">
       <router-view />
     </transition>
@@ -7,21 +7,21 @@
       <router-view v-if="$route.meta.noCache" :key="key"></router-view>
     </keep-alive>
     <router-view v-if="!$route.meta.noCache" :key="key"></router-view> -->
-  </section>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'AppMain',
   computed: {
-    key () {
+    key() {
       return this.$route.path
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 .app-main {
   /*50 = navbar  */
   /* min-height: calc(100vh - 50px); */
@@ -30,14 +30,16 @@ export default {
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  height: 100%;
 }
 </style>
 
 <style lang="scss">
 // fix css style bug in open el-dialog
-.el-popup-parent--hidden {
-  .fixed-header {
-    padding-right: 15px;
-  }
-}
+// .el-popup-parent--hidden {
+//   .fixed-header {
+//     padding-right: 15px;
+//   }
+// }
 </style>

@@ -168,8 +168,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '1220186101@qq.com',
-        password: '12345678A'
+        username: 'hjyhappy_03@163.com',
+        password: 'Hjyhappy123!'
       },
       loginRules: {
         username: [
@@ -239,6 +239,11 @@ export default {
   created() {
     /* eslint-disable */
     this.cloneRegisterForm = _.cloneDeep(this.registerForm)
+  },
+  mounted () {
+    if (window.localStorage.currentMenu) {
+      window.localStorage.currentMenu
+    }
   },
   methods: {
     getServiceClause(data) {

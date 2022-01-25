@@ -19,14 +19,13 @@
 <script>
 import { uploadSignature } from '../../api/signoff.js'
 export default {
-  props: ['signPaath'],
-  data () {
+  data() {
     return {
       url: process.env.VUE_APP_BASE_API + '/signOff/upload'
     }
   },
   computed: {
-    headers () {
+    headers() {
       return {
         Authorization: 'Bearer ' + localStorage.getItem('token')// 本地获取token,添加到headers里面
       }
@@ -35,7 +34,7 @@ export default {
   methods: {
     handleChange(file, fileList) {
       console.log(file)
-      if (file.raw.type !== 'image/png' && file.raw.type !== 'image/jpg' || file.raw.type !== 'image/jpeg') {
+      if (file.raw.type !== 'image/png' && (file.raw.type !== 'image/jpg' || file.raw.type !== 'image/jpeg')) {
         this.$message.warning('仅支持JPG和PNG格式')
         this.$refs.upload.clearFiles()
       } else if (file.size > 1024 * 1024 * 5) {

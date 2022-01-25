@@ -62,7 +62,8 @@ div:focus {
 // main-container global css
 .app-container {
   padding: $spacing;
-
+  flex: 1;
+  height: 100%;
 }
 // 布局总设置
 .el-row {

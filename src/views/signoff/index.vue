@@ -1,5 +1,5 @@
 <template>
-  <div class="signoff-container app-container">
+  <div class="signoff-container">
     <el-card>
       <el-form
         ref="createForm"
@@ -111,7 +111,12 @@
               >全选</el-checkbox>
             </el-row>
             <el-checkbox-group v-model="from.issue" @change="issueChecked">
-              <el-checkbox v-for="(item, i) in issues" :key="i" :label="item" :value="item" />
+              <el-checkbox
+                v-for="(item, i) in issues"
+                :key="i"
+                :label="item"
+                :value="item"
+              />
             </el-checkbox-group>
           </el-row>
         </el-form-item>
@@ -133,9 +138,11 @@
                 v-for="(item, index) in signiList"
                 :key="index"
                 class="mb-2 signi"
-                style="height: 22px;"
+                style="height: 22px"
               >
-                <el-radio :label="item.file_path">{{ item.uuid_file_name }}</el-radio>
+                <el-radio :label="item.file_path">{{
+                  item.uuid_file_name
+                }}</el-radio>
                 <i
                   class="el-icon el-icon-error"
                   @click="removeSigniList(item)"
@@ -156,7 +163,19 @@
       </el-form>
     </el-card>
     <el-card>
-      <div class="pdf-list" />
+      <div class="pdf-list">
+        <div class="pdf-title">签收记录</div>
+        <el-empty
+          v-if="records.length <= 0"
+          description="暂无签收记录"
+        />
+        <div v-for="(item, index) in records" :key="item.id" class="pdf-name">
+          {{ index + 1 }}.
+          <el-button type="text" @click="lookPdf(item)">{{
+            item.fileName
+          }}</el-button>
+        </div>
+      </div>
     </el-card>
   </div>
 </template>
@@ -274,23 +293,33 @@ export default {
       lock: true,
       text: 'Loading',
       spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
+      background: 'rgba(0, 0, 0, 0.7)',
+      target: document.querySelector('.app-main')
     })
     // 从缓存中获取 projectId
     // const projectId = localStorage.getItem('projectId')
     // 测试id号
     this.projectId = localStorage.getItem('projectId')
     // 获取测试环境
-    await this.getProject()
-    await this.getProjectVersion()
-    await this.getProjectEnv()
-    await this.getTestCycleVersion()
-    await this.issueList()
-    await this.getSign()
-    await this.recordList()
+    try {
+      await this.getProject()
+      await this.getProjectVersion()
+      await this.getProjectEnv()
+      await this.getTestCycleVersion()
+      await this.issueList()
+      await this.getSign()
+      await this.recordList()
+    } catch (err) {
+      console.log(err)
+    }
     loading.close()
   },
   methods: {
+    // 查看pdf
+    lookPdf(file) {
+      this.$message.warning('敬请期待')
+      // window.open('http://124.71.142.223:8082' + file.filePath)
+    },
     // 发布版本类型切换
     versionTypeChange(val) {
       this.baseInfo.verison = val
@@ -341,7 +370,6 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      console.log(val)
       try {
         const res = await deleteSign({ fileId: val.id })
         loading.close()
@@ -361,23 +389,35 @@ export default {
     //     name: "签名" + Math.floor(Math.random()*10000000)
     //   });
     // },
-    async createFile() {
+    createFile() {
       console.log(this.from)
-      this.$refs.createForm.validate(valid => {
-        console.log(valid)
+      this.$refs.createForm.validate(async(valid) => {
+        if (valid) {
+          try {
+            const data = {
+              env: this.from.env,
+              fileUrl: this.from.fileUrl,
+              issue: this.from.issue.join(','),
+              projectId: localStorage.getItem('projectId'),
+              testCycle: this.baseInfo.testCycle === 'curentReleaseVersion' ? 'curentReleaseVersion' : this.from.testCycle.join(','),
+              version: this.baseInfo.version ? this.lastVersion : this.from.version
+            }
+            const res = await createGenerate(data)
+            if (res.code === '200') {
+              this.$message.success('生成成功')
+              await this.getProject()
+              await this.getProjectVersion()
+              await this.getProjectEnv()
+              await this.getTestCycleVersion()
+              await this.issueList()
+              await this.getSign()
+              await this.recordList()
+            }
+          } catch (err) {
+            console.log(err)
+          }
+        }
       })
-      const data = {
-        env: this.from.env,
-        fileUrl: this.from.fileUrl,
-        issue: this.from.issue.join(','),
-        projectId: localStorage.getItem('projectId'),
-        testCycle: this.baseInfo.testCycle === 'curentReleaseVersion' ? 'curentReleaseVersion' : this.from.testCycle.join(','),
-        version: this.baseInfo.version ? this.lastVersion : this.from.version
-      }
-      console.log(data, this.signiList)
-      // console.log(data)
-      // const res = await createGenerate(data)
-      // console.log('res', res)
     },
     getImgUrl(url) {
       if (!url) return
@@ -405,7 +445,7 @@ export default {
     async getSign() {
       const res = await getSignaturePath()
       this.signiList = res.data
-      this.from.fileUrl = res.data[0].file_path
+      this.from.fileUrl = res.data[0] ? res.data[0].file_path : ''
     },
     async getProject() {
       const res = await queryForProjects({
@@ -436,7 +476,7 @@ export default {
       this.records = []
       try {
         const res = await getRecord()
-        if (res.code === 200) {
+        if (res.code === '200') {
           this.records = res.data
         } else {
           this.records = []
@@ -454,10 +494,18 @@ export default {
 
 .signoff-container {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 61px);
+  flex: 1;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
+  box-sizing: border-box;
+  padding: 15px;
+
+  .el-card {
+    height: 100%;
+    overflow: auto;
+  }
 
   .el-card:nth-of-type(1) {
     height: 100%;
@@ -470,7 +518,19 @@ export default {
   }
 
   .pdf-list {
-    width: 30%;
+    width: 100%;
+    .pdf-title {
+      font-size: 16px;
+      color: #5f6e8e;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .pdf-name {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
 
