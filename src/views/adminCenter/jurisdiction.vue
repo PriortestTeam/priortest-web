@@ -2,9 +2,13 @@
   <div class="tab-box tab-box1">
     <div class="left">
       <div>
-        <el-button type="primary" round>QA 账户</el-button>
-        <el-button type="primary" round>Developer 账户</el-button>
-        <el-button type="primary" round>Admin 账户</el-button>
+        <el-radio-group v-model="roleName" size="mini" @change="roleChange">
+          <el-radio-button label="all" border>所有账户</el-radio-button>
+          <el-radio-button label="系统管理员" border>QA 账户</el-radio-button>
+          <el-radio-button label="测试" border>Test 账户</el-radio-button>
+          <el-radio-button label="开发" border>Developer 账户</el-radio-button>
+          <el-radio-button label="管理员" border>Admin 账户</el-radio-button>
+        </el-radio-group>
       </div>
       <div class="role-item">
         <div class="item-left">
@@ -81,7 +85,7 @@
 
 <script>
 import { message } from '@/utils/common'
-import { getProjects, getPermissions, updatePermissions } from '@/api/admincenter'
+import { getPermissions, updatePermissions, getUsers } from '@/api/admincenter'
 export default {
   name: 'Jurisdiction',
   props: {
@@ -105,23 +109,38 @@ export default {
           id: ''
         },
         projectPermissions: []
-      }
+      },
+      roleName: 'all', // 用户类型
+      userList: []
     }
   },
   created () {
-    if (this.id) {
-      this.jurisdictionUpdate.subUserDto.id = this.id
-      getProjects({ subUserId: this.id }).then(res => {
-        this.jurisdictionOptions = res.data
-        this.projectId = this.jurisdictionOptions[0].id
-        this.getPermissions()
-      })
-    }
+    // if (this.id) {
+    //   this.jurisdictionUpdate.subUserDto.id = this.id
+    //   getProjects({ subUserId: this.id }).then(res => {
+    //     this.jurisdictionOptions = res.data
+    //     this.projectId = this.jurisdictionOptions[0].id
+    //     this.getPermissions()
+    //   })
+    // }
   },
   mounted () {
-
+    this.getUserList(this.roleName)
   },
   methods: {
+    roleChange (val) {
+      this.getUserList(val)
+    },
+    async getUserList (type) {
+      try {
+        const res = await getUsers({ roleName: type })
+        if (res.code === '200') {
+          this.userList = res.data
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
     getPermissions () {
       getPermissions({ subUserId: this.id, projectId: this.projectId }).then(res => {
         this.jurisdictionItem = res.data.project.sysOperationAuthorities

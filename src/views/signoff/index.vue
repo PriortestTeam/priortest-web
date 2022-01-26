@@ -10,7 +10,7 @@
         label-position="left"
       >
         <div>
-          <div class="set_btn_type set_btn_2" @click="createFile">
+          <div v-loading="createLoading" class="set_btn_type set_btn_2" @click="createFile">
             {{ $t("lang.SignOff.Generate") }}
           </div>
         </div>
@@ -215,6 +215,7 @@ export default {
   },
   data () {
     return {
+      createLoading: false,
       searchFrom: {
         verison: '',
         env: '',
@@ -390,7 +391,7 @@ export default {
     //   });
     // },
     createFile () {
-      console.log(this.from)
+      this.createLoading = true
       this.$refs.createForm.validate(async (valid) => {
         if (valid) {
           try {
@@ -399,7 +400,7 @@ export default {
               fileUrl: this.from.fileUrl,
               issue: this.from.issue.join(','),
               projectId: localStorage.getItem('projectId'),
-              testCycle: this.baseInfo.testCycle === 'curentReleaseVersion' ? 'curentReleaseVersion' : this.from.testCycle.join(','),
+              testCycle: this.baseInfo.testCycle === 'curentReleaseVersion' ? 'curentReleaseVersion=1' : this.from.testCycle.join(','),
               version: this.baseInfo.version ? this.lastVersion : this.from.version
             }
             const res = await createGenerate(data)
@@ -419,6 +420,7 @@ export default {
           console.log('success')
         }
       })
+      this.createLoading = false
     },
     getImgUrl (url) {
       if (!url) return

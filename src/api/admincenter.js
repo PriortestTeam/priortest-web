@@ -108,3 +108,12 @@ export function getUserRoles () {
     method: 'get'
   })
 }
+
+// 获取用户列表
+export function getUsers (params) {
+  return request({
+    url: '/role/getAccountRole',
+    method: 'get',
+    params
+  })
+}

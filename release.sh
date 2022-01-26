@@ -1,3 +1,4 @@
 #!/bin/bash
 yarn build:prod
-rsync -avr --delete-after dist/* root@139.199.1.252/usr/local/nginx/html/website/
+ssh root@124.71.142.223 'cd /usr/local/nginx/html/website/ && rm -rf *'
+scp -r dist/* root@124.71.142.223:/usr/local/nginx/html/website/

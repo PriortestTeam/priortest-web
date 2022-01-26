@@ -24,11 +24,12 @@
  }
 //权限管理
  .tab-box1{
+   display: flex;
    .left,.right{
     float: left;
    }
    .left{
-     width:25%;
+     width:50%;
      .role-item{
        display: flex;
        padding-top:$spacing;
@@ -43,7 +44,7 @@
      }
    }
    .right{
-      width:75%;
+      width:50%;
      .top-info{
        display: flex;
        justify-content: space-between;
