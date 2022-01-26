@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-center app-container">
+  <div class="admin-center">
     <el-tabs v-model="activeName" :before-leave="handleClick">
       <el-tab-pane label="用户管理" name="0">
         <div class="tab-box">
@@ -153,6 +153,7 @@
         <Jurisdiction
           v-if="jurisdictionAccountId"
           :id="jurisdictionAccountId"
+          @userChange="userChange"
         />
       </el-tab-pane>
       <el-tab-pane label="项目管理" name="2">项目管理</el-tab-pane>
@@ -479,6 +480,9 @@ export default {
     // this.getSysCustomFieldByType()
   },
   methods: {
+    // 权限管理，左侧选择用户
+    userChange (user) {
+    },
     async getSysCustomFieldByType () {
       const params = {
         'fieldName': 'type'
@@ -789,6 +793,10 @@ export default {
 @import "@/styles/color.scss"; //按钮
 //标签页切换样式
 .el-tabs {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   .el-tabs__item.is-active,
   .el-tabs__item:hover {
     color: $btnbgcolor;
@@ -800,6 +808,16 @@ export default {
     height: 25px;
     line-height: 14px;
   }
+  .el-tabs__content {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    .el-tab-pane {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+  }
 }
 </style>
 <style lang="scss" scoped>
@@ -808,6 +826,11 @@ export default {
 </style>
 <style lang="scss">
 .admin-center {
+  width: 100%;
+  height: calc(100vh - 61px);
+  box-sizing: border-box;
+  padding: 20px;
+  overflow: hidden;
   .el-form-item .el-form-item__label {
     padding-right: 8px;
   }

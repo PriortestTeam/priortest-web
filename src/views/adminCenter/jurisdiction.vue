@@ -10,7 +10,15 @@
           <el-radio-button label="管理员" border>Admin 账户</el-radio-button>
         </el-radio-group>
       </div>
-      <div class="role-item">
+      <div class="userTbale">
+        <el-table :data="userList" height="100%" highlight-current-row @current-change="currentChange">
+          <el-table-column prop="userName" label="Name" />
+          <el-table-column prop="email" label="Email" />
+          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="roleDesc" label="Group" />
+        </el-table>
+      </div>
+      <!-- <div class="role-item">
         <div class="item-left">
           <div class="item">
             <b> {{ jurisdictioninfo.roleName }}</b>
@@ -35,7 +43,7 @@
             {{ jurisdictioninfo.email }}
           </span>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="right">
       <div class="top-info">
@@ -110,7 +118,7 @@ export default {
         },
         projectPermissions: []
       },
-      roleName: 'all', // 用户类型
+      roleName: '开发', // 用户类型
       userList: []
     }
   },
@@ -128,6 +136,10 @@ export default {
     this.getUserList(this.roleName)
   },
   methods: {
+    // 当前用户选择改变
+    currentChange (val) {
+      this.$emit('userChange', val)
+    },
     roleChange (val) {
       this.getUserList(val)
     },

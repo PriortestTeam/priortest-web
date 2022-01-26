@@ -4,7 +4,9 @@
 .admin-center {
  .tab-box{
    width:100%;
-   overflow: hidden;
+   height: 100%;
+   overflow-x: hidden;
+   overflow-y: auto;
    .add-account{
      width: 30%;
      margin-top:$spacing;
@@ -25,11 +27,18 @@
 //权限管理
  .tab-box1{
    display: flex;
-   .left,.right{
-    float: left;
-   }
    .left{
-     width:50%;
+     margin-right: 40px;
+     display: flex;
+     flex-direction: column;
+     .userTbale {
+       flex: 1;
+       overflow: hidden;
+       margin-top: 20px;
+       box-sizing: border-box;
+       padding: 15px;
+       background-color: #ffffff;
+     }
      .role-item{
        display: flex;
        padding-top:$spacing;
@@ -44,7 +53,7 @@
      }
    }
    .right{
-      width:50%;
+      flex: 1;
      .top-info{
        display: flex;
        justify-content: space-between;
