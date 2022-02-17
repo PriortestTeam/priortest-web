@@ -267,7 +267,9 @@
               <el-table-column prop="fieldName" label="字段名称" />
               <el-table-column prop="type" label="类型" />
               <el-table-column prop="scope" label="范围" />
-              <el-table-column prop="mandatory" label="是否必填" />
+              <el-table-column  label="是否必填">
+               <template slot-scope="scope">{{scope.row.mandatory}}</template>
+                 </el-table-column>
               <el-table-column label="Action">
                 <template slot-scope="scope">
                   <el-button
@@ -698,12 +700,62 @@ export default {
       queryCustomList(this.fieldsId, this.fieldsQuery).then(res => {
         if (res.code === '200') {
           this.fieldsData = res.data
+          for(let item of this.fieldsData){
+             let mandatorys=''
+             let scopes=''
+           if(item.mandatory.indexOf(',')){
+             for(let item of item.mandatory){
+               if(item==1){
+                 mandatorys+="是"
+               }else if(item==0){
+                 mandatorys+="否"
+               }else if(item==","){
+                  mandatorys+=","
+               }
+             }
+           }else{
+            item.mandatory= mandatorys
+           }
+           item.mandatory=mandatorys
+          //  范围
+          //  if(item.scope.indexOf(',')){
+          //     for(let item of item.scope){
+          //      if(item==1){
+          //        scopes+="否"
+          //      }else if(item==0){
+          //        scopes+="是"
+          //      }else if(item==","){
+          //         scopes+=","
+          //      }
+          //    }
+          //  }else{
+          //    item.scope=scopes
+          //  }
+          //   item.scope=scopes
+          //     switch(item.type){
+          //   case "radio":
+          //     item.type='单选框';
+          //     break;
+          //   case "DropDown":
+          //     item.type="下拉框";
+          //     break;
+          //   case "text":
+          //     item.type="文本";
+          //     break;
+          //   case "RichText":
+          //     item.type="备注";
+          //     break;
+          // }
+          }
+          // 类型
+            console.log(res.data);
           this.fieldsTotal = res.total
         }
       })
     },
     // 删除自定义字段
     delfield(row) {
+      console.log("*********");
       if (row.type === 'text' || row.type === 'memo') {
         this.deltext(row.id)
       } else if (row.type === 'radio') {

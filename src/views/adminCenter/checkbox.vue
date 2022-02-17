@@ -233,9 +233,9 @@ export default {
             if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
               for (let i = 0; i < radio[key].length; i++) {
                 if (radio[key][i] === false) {
-                  radio[key][i] = '0'
+                  radio[key][i] = '是'
                 } else {
-                  radio[key][i] = '1'
+                  radio[key][i] = '否'
                 }
               }
             }
