@@ -55,9 +55,9 @@
         >
           <el-option
             v-for="item in jurisdictionOptions"
-            :key="item.id"
-            :value="item.id"
-            :label="item.title"
+            :key="item"
+            :value="item"
+            :label="item"
           />
         </el-select>
         <el-button type="text" @click="sureUpdate">确定修改</el-button>
@@ -93,7 +93,7 @@
 
 <script>
 import { message } from '@/utils/common'
-import { getPermissions, updatePermissions, getUsers } from '@/api/admincenter'
+import { getPermissions, updatePermissions, getUsers, getProjectList } from '@/api/admincenter'
 export default {
   name: 'Jurisdiction',
   props: {
@@ -108,7 +108,6 @@ export default {
       projectId: '',
       jurisdictionItem: [],
       jurisdictioninfo: {},
-
       isIndeterminate: true,
       checkAll: [],
       checkedCities: [],
@@ -134,6 +133,7 @@ export default {
   },
   mounted () {
     this.getUserList(this.roleName)
+    console.log(this.userList)
   },
   methods: {
     // 当前用户选择改变
@@ -141,6 +141,7 @@ export default {
       this.$emit('userChange', val)
     },
     roleChange (val) {
+      // console.log(val)
       this.getUserList(val)
     },
     async getUserList (type) {
@@ -148,6 +149,19 @@ export default {
         const res = await getUsers({ roleName: type })
         if (res.code === '200') {
           this.userList = res.data
+          console.log(this.userList[0].id)
+          this.getProjectList(this.userList[0].id)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async getProjectList (userid) {
+      try {
+        const res = await getProjectList(userid)
+        if (res.code === '200') {
+          console.log(res.data)
+          this.jurisdictionOptions.push(res.data.projectId)
         }
       } catch (err) {
         console.log(err)

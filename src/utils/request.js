@@ -48,7 +48,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err---', error.response) // for debug
+    console.log('err---', error) // for debug
     if (error.response.status === 401) {
       router.replace(`/login?redirect=${router.app.$route.fullPath}`)
       return

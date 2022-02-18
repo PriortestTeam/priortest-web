@@ -227,42 +227,21 @@ export default {
         that.fieldsfrom.scope[index] = false
         that.fieldsfrom.defaultValue[index] = false
         that.fieldsfrom.mandatory[index] = false
-        if(that.fieldsfrom.scope[index] = false){
-
-
-        }
       })
     },
     // 字段表单提交
     submitfdForm(formName) {
-      console.log(this.fieldsfrom);
       this.$refs[formName].validate((valid) => {
-        // 修改单选框保存发送给后台的数据
         if (valid) {
           const radio = this.fieldsfrom
-          console.log(radio);
-          console.log(this.scopeList);
-          const copyList=this.scopeList
           for (const key in radio) {
-            console.log(key);
-            // if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
-            //   for (let i = 0; i < radio[key].length; i++) {
-            //     if (radio[key][i] === false) {
-            //       radio[key][i] = ''
-            //     } else {
-            //       radio[key][i] = '1'
-            //     }
-            //   }
-            // }
-              if(key==="scope" || key==="mandatory"|| key==="defaultValue"){
-                  for(let i=0;i<radio.scope.length; i++){
-                 if(radio[key][i]===true && key==="scope"){
-                     radio[key][i]=copyList[i]
-                 }else if(radio[key][i]&& key==="mandatory"){
-                        radio[key][i] = '1'
-                 }else {
-                   radio[key][i] = '0'
-                 }
+            if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
+              for (let i = 0; i < radio[key].length; i++) {
+                if (radio[key][i] === false) {
+                  radio[key][i] = '0'
+                } else {
+                  radio[key][i] = '1'
+                }
               }
             }
           }
