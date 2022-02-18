@@ -118,7 +118,8 @@ export default {
         projectPermissions: []
       },
       roleName: '开发', // 用户类型
-      userList: []
+      userList: [],
+      ids: ''
     }
   },
   created () {
@@ -161,20 +162,22 @@ export default {
         const res = await getProjectList(userid)
         if (res.code === '200') {
           console.log(res.data)
-          this.jurisdictionOptions.push(res.data.projectId)
+          this.ids = res.data.projectId
+          this.getPermissions(this.ids)
         }
       } catch (err) {
         console.log(err)
       }
     },
-    getPermissions () {
-      getPermissions({ subUserId: this.id, projectId: this.projectId }).then(res => {
-        this.jurisdictionItem = res.data.project.sysOperationAuthorities
-        this.jurisdictioninfo = res.data.subUserDto
+    getPermissions (id) {
+      getPermissions(id).then(res => {
+        // this.jurisdictionItem = res.data.project.sysOperationAuthorities
+        // this.jurisdictioninfo = res.data.subUserDto
+        console.log(res)
       })
     },
     changeProject () {
-      this.getPermissions()
+      this.getPermissions(this.ids)
     },
     formObj (item) {
       const temObj = {}
