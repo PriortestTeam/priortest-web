@@ -152,7 +152,7 @@
       <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
         <Jurisdiction
           v-if="jurisdictionAccountId"
-          :id="jurisdictionAccountId"
+          :user-infos="userinfo"
           @userChange="userChange"
         />
       </el-tab-pane>
@@ -378,7 +378,7 @@ export default {
       accountMultiple: true, // 非多个禁用
       accountUpdate: true,
 
-      jurisdictionAccountId: '',
+      userinfo: {},
       // 父传子数据
       fieldsfrom: {
         type: 'radio'
@@ -565,6 +565,11 @@ export default {
           if (res.code === '200') {
             this.accountData = res.data
             this.accountTotal = res.total
+           // console.log(res.data)
+            this.accountData.forEach(item => {
+              item.isSelect = false;
+            });
+            console.log(this.accountData);
             resolve(res)
           }
         })
@@ -628,7 +633,10 @@ export default {
     },
     // 行点击编辑
     accountEdit(row) {
+      console.log(row)
+      row.isSelect = !row.isSelect
       this.emailDisabled = true
+      this. userinfo= row;
       this.openProjectByDefaultIdList = []
       this.$refs.accountData.clearSelection()
       this.$refs.accountData.toggleRowSelection(row)

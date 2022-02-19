@@ -71,7 +71,13 @@ export function getProjectList (data) {
     method: 'get'
   })
 }
-
+// 查询角色列表
+export function rolelist () {
+  return request({
+    url: '/role/allList',
+    method: 'get'
+  })
+}
 export function getPermissions (data) {
   return request({
     url: '/project/queryById/' + data,
