@@ -152,7 +152,7 @@
       <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
         <Jurisdiction
           v-if="jurisdictionAccountId"
-          :id="jurisdictionAccountId"
+          :user-infos="userinfo"
           @userChange="userChange"
         />
       </el-tab-pane>
@@ -267,9 +267,7 @@
               <el-table-column prop="fieldName" label="字段名称" />
               <el-table-column prop="type" label="类型" />
               <el-table-column prop="scope" label="范围" />
-              <el-table-column  label="是否必填">
-               <template slot-scope="scope">{{scope.row.mandatory}}</template>
-                 </el-table-column>
+              <el-table-column prop="mandatory" label="是否必填" />
               <el-table-column label="Action">
                 <template slot-scope="scope">
                   <el-button
@@ -380,7 +378,7 @@ export default {
       accountMultiple: true, // 非多个禁用
       accountUpdate: true,
 
-      jurisdictionAccountId: '',
+      userinfo: {},
       // 父传子数据
       fieldsfrom: {
         type: 'radio'
@@ -567,6 +565,11 @@ export default {
           if (res.code === '200') {
             this.accountData = res.data
             this.accountTotal = res.total
+           // console.log(res.data)
+            this.accountData.forEach(item => {
+              item.isSelect = false;
+            });
+            console.log(this.accountData);
             resolve(res)
           }
         })
@@ -630,7 +633,10 @@ export default {
     },
     // 行点击编辑
     accountEdit(row) {
+      console.log(row)
+      row.isSelect = !row.isSelect
       this.emailDisabled = true
+      this. userinfo= row;
       this.openProjectByDefaultIdList = []
       this.$refs.accountData.clearSelection()
       this.$refs.accountData.toggleRowSelection(row)
@@ -700,62 +706,12 @@ export default {
       queryCustomList(this.fieldsId, this.fieldsQuery).then(res => {
         if (res.code === '200') {
           this.fieldsData = res.data
-          for(let item of this.fieldsData){
-             let mandatorys=''
-             let scopes=''
-           if(item.mandatory.indexOf(',')){
-             for(let item of item.mandatory){
-               if(item==1){
-                 mandatorys+="是"
-               }else if(item==0){
-                 mandatorys+="否"
-               }else if(item==","){
-                  mandatorys+=","
-               }
-             }
-           }else{
-            item.mandatory= mandatorys
-           }
-           item.mandatory=mandatorys
-          //  范围
-          //  if(item.scope.indexOf(',')){
-          //     for(let item of item.scope){
-          //      if(item==1){
-          //        scopes+="否"
-          //      }else if(item==0){
-          //        scopes+="是"
-          //      }else if(item==","){
-          //         scopes+=","
-          //      }
-          //    }
-          //  }else{
-          //    item.scope=scopes
-          //  }
-          //   item.scope=scopes
-          //     switch(item.type){
-          //   case "radio":
-          //     item.type='单选框';
-          //     break;
-          //   case "DropDown":
-          //     item.type="下拉框";
-          //     break;
-          //   case "text":
-          //     item.type="文本";
-          //     break;
-          //   case "RichText":
-          //     item.type="备注";
-          //     break;
-          // }
-          }
-          // 类型
-            console.log(res.data);
           this.fieldsTotal = res.total
         }
       })
     },
     // 删除自定义字段
     delfield(row) {
-      console.log("*********");
       if (row.type === 'text' || row.type === 'memo') {
         this.deltext(row.id)
       } else if (row.type === 'radio') {
