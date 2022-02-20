@@ -57,7 +57,7 @@ module.exports = {
       'SwitchCase': 1
     }],
     'jsx-quotes': [2, 'prefer-single'],
-    'key-spacing': [2, {
+    'key-spacing': [0, {
       'beforeColon': false,
       'afterColon': true
     }],
@@ -161,6 +161,7 @@ module.exports = {
         ':': 'before'
       }
     }],
+    'no-tabs': 'off',
     'padded-blocks': [2, 'never'],
     'quotes': [2, 'single', {
       'avoidEscape': true,
@@ -171,8 +172,8 @@ module.exports = {
       'before': false,
       'after': true
     }],
-    'space-before-blocks': [2, 'always'],
-    'space-before-function-paren': [2, 'always'],
+    'space-before-blocks': [0, 'always'],
+    'space-before-function-paren': [0, 'always'],
     'space-in-parens': [2, 'never'],
     'space-infix-ops': 2,
     'space-unary-ops': [2, {
