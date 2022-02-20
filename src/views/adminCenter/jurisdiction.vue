@@ -3,11 +3,11 @@
     <div class="left">
       <div>
         <el-radio-group v-model="roleName" size="mini" @change="roleChange">
-          <el-radio-button v-for='item in role' :key=item.id :label="item.roleName" border :name=item.roleName>{{item.roleName}}账户</el-radio-button>
+          <el-radio-button v-for="item in role" :key="item.roleName" :label="item.roleName" border :name="item.roleName">{{ item.roleName }}账户</el-radio-button>
         </el-radio-group>
       </div>
       <div class="userTbale">
-        <el-table :data="userList" height="100%" highlight-current-row @current-change="currentChange">
+        <el-table :data="userList" height="100%" highlight-current-row @row-click="currentChange">
           <el-table-column prop="userName" label="Name" />
           <el-table-column prop="email" label="Email" />
           <el-table-column prop="id" label="ID" />
@@ -84,8 +84,8 @@ export default {
     },
     // 当前用户选择改变
     currentChange (val) {
-      // console.log(val)
-      this.getUserList(val.id)
+      console.log(val.id)
+      this.getUserList(val.roleName, val.id)
       this.$emit('userChange', val)
     },
     roleChange (val) {
@@ -93,11 +93,11 @@ export default {
       this.roleName = val
       this.getUserList(val)
     },
-    async getUserList (type) {
+    async getUserList (type, id = '') {
       try {
         const res = await getUsers({ roleName: type })
         if (res.code === '200') {
-          // console.log(res.data)
+          console.log(type)
           res.data.forEach((item, index) => {
             console.log(item.id === this.userInfos.id)
             if (item.id === this.userInfos.id) {
@@ -107,8 +107,8 @@ export default {
             }
           })
           this.userList = res.data
-
-          this.getProjectList(this.userList[0].id)
+          console.log(this.userList)
+          this.getProjectList(id || this.userList[0].id)
         }
       } catch (err) {
         console.log(err)
@@ -132,9 +132,6 @@ export default {
     },
     getPermissions (id) {
       getPermissions(id).then(res => {
-        // this.jurisdictionItem = res.data.project.sysOperationAuthorities
-        // this.jurisdictioninfo = res.data.subUserDto
-        //  console.log(res)
         this.jurisdictionOptions.push(res.data.title)
       })
     },
