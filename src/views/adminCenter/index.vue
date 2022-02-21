@@ -1,6 +1,6 @@
 <template>
   <div class="admin-center">
-    <el-tabs v-model="activeName" :before-leave="handleClick">
+    <el-tabs v-model="activeName" :before-leave="handleClick" class="admin-Control">
       <el-tab-pane label="用户管理" name="0">
         <div class="tab-box">
           <el-form
@@ -703,7 +703,8 @@ export default {
 
     // 获取自定义字段列表
     getqueryCustomList() {
-      queryCustomList(this.fieldsId, this.fieldsQuery).then(res => {
+      queryCustomList(this.fieldsId,this.fieldsQuery).then(res => {
+        console.log(res);
         if (res.code === '200') {
           this.fieldsData = res.data
           this.fieldsTotal = res.total

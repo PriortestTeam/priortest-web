@@ -2,11 +2,15 @@
 @import "@/styles/color.scss";//按钮
 
 .admin-center {
-  .manage-view {
-    width: 100%;
+   width: 100%;
       height: 100%;
       overflow-x: hidden;
-      overflow-y: auto
+      overflow-y: auto;
+  .manage-view {
+    // width: 100%;
+    //   height: 100%;
+    //   overflow-x: hidden;
+    //   overflow-y: auto
   }
  .tab-box{
    width:100%;
