@@ -833,12 +833,6 @@ export default {
 // @import "field.scss";
 </style>
 <style lang="scss">
-.manage-view {
-  width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto
-}
 .admin-center {
   width: 100%;
   height: calc(100vh - 61px);
