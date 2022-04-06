@@ -64,11 +64,24 @@ export function getProjects (data) {
     params: data
   })
 }
+// 获取用户的项目id
+export function getProjectList (data) {
+  return request({
+    url: '/subUser/getSubUserProject/' + data,
+    method: 'get'
+  })
+}
+// 查询角色列表
+export function rolelist () {
+  return request({
+    url: '/role/allList',
+    method: 'get'
+  })
+}
 export function getPermissions (data) {
   return request({
-    url: '/settingPermission/getPermissions',
-    method: 'get',
-    params: data
+    url: '/project/queryById/' + data,
+    method: 'get'
   })
 }
 

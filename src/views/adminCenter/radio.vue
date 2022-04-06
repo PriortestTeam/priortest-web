@@ -233,7 +233,9 @@ export default {
     submitfdForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log(valid);
           const radio = this.fieldsfrom
+          console.log(radio);
           for (const key in radio) {
             if (key === 'scope' || key === 'defaultValue' || key === 'mandatory') {
               for (let i = 0; i < radio[key].length; i++) {
