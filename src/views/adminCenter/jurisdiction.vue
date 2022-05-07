@@ -153,9 +153,11 @@ export default {
       this.modelList = []
     },
     roleChange(val) {
-      // console.log(val)
       this.roleName = val
       this.getUserList(val)
+      this.projectId = ''
+      this.modelList = []
+      this.jurisdictionOptions = []
     },
     async getUserList(type, id = '') {
       try {
@@ -169,10 +171,13 @@ export default {
             }
           })
           this.userList = res.data
-          this.getProjectList(id || this.userList[0].id)
-          this.roleId = this.userList[0].sysRoleId
-          this.userId = id || this.userList[0].id
-          this.userName = this.userList[0].userName
+          if (this.userList.length > 0) {
+            this.getProjectList(id || this.userList[0].id)
+            this.roleId = this.userList[0].sysRoleId || this.userList[0].roleId
+            this.userId = id || this.userList[0].id
+            this.userName = this.userList[0].userName
+            console.log('user', this.userList[0])
+          }
         }
       } catch (err) {
         console.log(err)
