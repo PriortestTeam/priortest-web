@@ -1,6 +1,7 @@
 export const lang = {
   menuTitle: {
     Project: '项目',
+    Welcome: '欢迎',
     Feature: '故事',
     Sprint: '迭代',
     TestCase: '测试用例',

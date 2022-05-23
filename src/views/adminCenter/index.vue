@@ -1,6 +1,10 @@
 <template>
   <div class="admin-center">
-    <el-tabs v-model="activeName" :before-leave="handleClick" class="admin-Control">
+    <el-tabs
+      v-model="activeName"
+      :before-leave="handleClick"
+      class="admin-Control"
+    >
       <el-tab-pane label="用户管理" name="0">
         <div class="tab-box">
           <el-form
@@ -16,19 +20,22 @@
                 round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-              >新建账户</el-button>
+                >新建账户</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="submitForm('accountForm')"
-              >确认修改</el-button>
+                >确认修改</el-button
+              >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 round
                 @click="cancelUpdate('accountForm')"
-              >取消修改</el-button>
+                >取消修改</el-button
+              >
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -74,7 +81,11 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item label="默认登录项目" prop="openProjectByDefaultId" size="small">
+              <el-form-item
+                label="默认登录项目"
+                prop="openProjectByDefaultId"
+                size="small"
+              >
                 <el-select
                   v-model="accountForm.openProjectByDefaultId"
                   placeholder="请选择"
@@ -90,15 +101,15 @@
             </div>
             <div class="table">
               <el-button type="text" @click="accountRefresh">刷新</el-button>
-              <el-button
-                type="text"
-                :disabled="accountMultiple"
-              >批量删除</el-button>
+              <el-button type="text" :disabled="accountMultiple"
+                >批量删除</el-button
+              >
               <el-button
                 type="text"
                 :disabled="accountSingle"
                 @click="accountJurisdiction"
-              >权限</el-button>
+                >权限</el-button
+              >
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -112,29 +123,19 @@
                 <el-table-column label="序号" type="index" />
 
                 <el-table-column prop="email" label="邮箱" />
-                <el-table-column
-                  prop="userName"
-
-                  label="用户名"
-                />
+                <el-table-column prop="userName" label="用户名" />
                 <el-table-column
                   prop="projectsSts"
-
                   label="项目"
                   :show-overflow-tooltip="true"
                 />
-                <el-table-column
-                  prop="registerDate"
-
-                  label="注册日期"
-                />
+                <el-table-column prop="registerDate" label="注册日期" />
                 <el-table-column prop="roleName" label="角色" />
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                    <span
-                      class="table-btn"
-                      @click.stop="accountDel(scope.row)"
-                    >删除</span>
+                    <span class="table-btn" @click.stop="accountDel(scope.row)"
+                      >删除</span
+                    >
                   </template>
                 </el-table-column>
               </el-table>
@@ -231,7 +232,7 @@
           />
 
           <Checkbox
-            v-else-if="customType==='Checkbox'"
+            v-else-if="customType === 'Checkbox'"
             :scope-list="scopeList"
             :custom-type="customType"
             :customname="fieldsfrom"
@@ -274,7 +275,8 @@
                     type="text"
                     class="table-btn"
                     @click.stop="delfield(scope.row)"
-                  >删除</el-button>
+                    >删除</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
@@ -305,7 +307,12 @@
   </div>
 </template>
 <script>
-import { message, formatChangedPara, customradioData, customtextData } from '@/utils/common'
+import {
+  message,
+  formatChangedPara,
+  customradioData,
+  customtextData
+} from '@/utils/common'
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import System from '@/views/adminCenter/system'
 import ViewPage from '@/views/project/view'
@@ -319,14 +326,42 @@ import Checkbox from '@/views/adminCenter/checkbox'
 import Userindex from '@/views/adminCenter/user'
 import Link from '@/views/adminCenter/link'
 import ServicePlan from '@/views/servicePlan/index'
-import { getUserRoles, queryForProjectTitles, querySubUsers, createSubUser, deleteSubUser, updateSubUser, getSysCustomField } from '@/api/admincenter'
-import { queryCustomList, queryFieldRadioById, deleteCustomRadio, queryFieldTextById, deleteCustomText, queryFieldDropDownById, deleteCustomDropDown } from '@/api/customField'
+import {
+  getUserRoles,
+  queryForProjectTitles,
+  querySubUsers,
+  createSubUser,
+  deleteSubUser,
+  updateSubUser,
+  getSysCustomField
+} from '@/api/admincenter'
+import {
+  queryCustomList,
+  queryFieldRadioById,
+  deleteCustomRadio,
+  queryFieldTextById,
+  deleteCustomText,
+  queryFieldDropDownById,
+  deleteCustomDropDown
+} from '@/api/customField'
 export default {
   name: 'Admincenter',
   components: {
-    Jurisdiction, Dateindex, Radioindex, Textindex, Memoindex, Dropdown, System, Checkbox, Userindex, Link, ViewPage, MyAccount, ServicePlan
+    Jurisdiction,
+    Dateindex,
+    Radioindex,
+    Textindex,
+    Memoindex,
+    Dropdown,
+    System,
+    Checkbox,
+    Userindex,
+    Link,
+    ViewPage,
+    MyAccount,
+    ServicePlan
   },
-  data () {
+  data() {
     return {
       activeName: '0',
       propSystem: '',
@@ -349,7 +384,11 @@ export default {
       accountRules: {
         email: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
+          {
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['blur', 'blur']
+          }
         ],
         password: [
           { required: true, message: '请设置初始密码', trigger: 'blur' }
@@ -402,56 +441,78 @@ export default {
       fieldName: '',
       scopeList: [],
       openProjectByDefaultIdList: [],
-      fieldsOptions: [{
-        value: 'DropDown',
-        label: '下拉框'
-      }, {
-        value: 'text',
-        label: '文本'
-      }, {
-        value: 'RichText',
-        label: '备注'
-      }, {
-        value: 'Checkbox',
-        label: '复选框'
-      }, {
-        value: 'radio',
-        label: '单选框'
-      }, {
-        value: '链接',
-        label: '链接'
-      }, {
-        value: '多选项',
-        label: '多选项'
-      }, {
-        value: '用户',
-        label: '用户'
-      }, {
-        value: '日期',
-        label: '日期'
-      }],
+      fieldsOptions: [
+        {
+          value: 'DropDown',
+          label: '下拉框'
+        },
+        {
+          value: 'text',
+          label: '文本'
+        },
+        {
+          value: 'RichText',
+          label: '备注'
+        },
+        {
+          value: 'Checkbox',
+          label: '复选框'
+        },
+        {
+          value: 'radio',
+          label: '单选框'
+        },
+        {
+          value: '链接',
+          label: '链接'
+        },
+        {
+          value: '多选项',
+          label: '多选项'
+        },
+        {
+          value: '用户',
+          label: '用户'
+        },
+        {
+          value: '日期',
+          label: '日期'
+        }
+      ],
       emailDisabled: false
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
       // 新增项目到自定义字段
       if (to.query.par) {
-        if ((from.name === 'Addproject') || from.name === 'Addfeature' || from.name === 'Addsprint' ||
-          from.name === 'Addtestcycle' || from.name === 'Addissue' || from.name === 'Addtestcase') {
+        if (
+          from.name === 'Addproject' ||
+          from.name === 'Addfeature' ||
+          from.name === 'Addsprint' ||
+          from.name === 'Addtestcycle' ||
+          from.name === 'Addissue' ||
+          from.name === 'Addtestcase'
+        ) {
           vm.activeName = '4'
           vm.propSystem = to.query.par
         }
       } else {
-        if ((from.name === 'Addproject') || from.name === 'Addfeature' || from.name === 'Addsprint' ||
-          from.name === 'Addtestcycle' || from.name === 'Addissue' || from.name === 'Addtestcase') {
+        if (
+          from.name === 'Addproject' ||
+          from.name === 'Addfeature' ||
+          from.name === 'Addsprint' ||
+          from.name === 'Addtestcycle' ||
+          from.name === 'Addissue' ||
+          from.name === 'Addtestcase'
+        ) {
           vm.activeName = '3'
         }
       }
     })
   },
   computed: {
-    projectInfo () {
+    projectInfo() {
       return this.$store.state.user.userinfo
     }
   },
@@ -468,9 +529,9 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId
-    getUserRoles().then(res => {
+    getUserRoles().then((res) => {
       this.accountRoleOption = res.data
     })
     this.getquerySubUsers()
@@ -481,11 +542,10 @@ export default {
   },
   methods: {
     // 权限管理，左侧选择用户
-    userChange (user) {
-    },
-    async getSysCustomFieldByType () {
+    userChange(user) {},
+    async getSysCustomFieldByType() {
       const params = {
-        'fieldName': 'type'
+        fieldName: 'type'
       }
       const res = await getSysCustomField(params)
       if (res.code === '200') {
@@ -499,9 +559,9 @@ export default {
         }) */
       }
     },
-    async getSysCustomFieldByScope () {
+    async getSysCustomFieldByScope() {
       const params = {
-        'fieldName': 'scope'
+        fieldName: 'scope'
       }
       const res = await getSysCustomField(params)
       if (res.code === '200') {
@@ -516,27 +576,27 @@ export default {
         }) */
       }
     },
-    setFieldName (data) {
+    setFieldName(data) {
       this.fieldName = data
     },
-    handleClick (val) {
+    handleClick(val) {
       if (val === '4') {
         if (!this.projectInfo.userUseOpenProject.projectId) {
           message('error', '请先选择项目')
-          throw new Error('')
+          // throw new Error('')
         }
       }
     },
     /** ˙账户开始 */
     // 得到项目
-    getProject () {
-      queryForProjectTitles().then(res => {
+    getProject() {
+      queryForProjectTitles().then((res) => {
         this.accountProject = res.data
         this.accountProject.unshift({ title: 'ALL', id: '0' })
       })
     },
     // 项目互斥
-    accountChangePro (val) {
+    accountChangePro(val) {
       const that = this
       const index = val.indexOf('0')
       if (index !== -1) {
@@ -548,10 +608,10 @@ export default {
         that.openProjectByDefaultIdList.splice(0, 1)
         return
       }
-      that.openProjectByDefaultIdList = that.accountProject.filter(item => {
+      that.openProjectByDefaultIdList = that.accountProject.filter((item) => {
         return that.accountForm.projectIdStr.indexOf(item.id) !== -1
       })
-      const arr = that.openProjectByDefaultIdList.filter(item => {
+      const arr = that.openProjectByDefaultIdList.filter((item) => {
         return item.id === that.accountForm.openProjectByDefaultId
       })
       if (arr.length === 0) {
@@ -561,15 +621,15 @@ export default {
     // 得到账户列表
     getquerySubUsers() {
       return new Promise((resolve, reject) => {
-        querySubUsers(this.accountQuery).then(res => {
+        querySubUsers(this.accountQuery).then((res) => {
           if (res.code === '200') {
             this.accountData = res.data
             this.accountTotal = res.total
-           // console.log(res.data)
-            this.accountData.forEach(item => {
-              item.isSelect = false;
-            });
-            console.log(this.accountData);
+            // console.log(res.data)
+            this.accountData.forEach((item) => {
+              item.isSelect = false
+            })
+            console.log(this.accountData)
             resolve(res)
           }
         })
@@ -594,11 +654,14 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.accountForm.id) {
-            const param = formatChangedPara(this.accountTempForm, this.accountForm)
+            const param = formatChangedPara(
+              this.accountTempForm,
+              this.accountForm
+            )
             if (param.projectIdStr) {
               param.projectIdStr = param.projectIdStr.join(',')
             }
-            updateSubUser(param).then(res => {
+            updateSubUser(param).then((res) => {
               message('success', res.msg)
               this.resetAccountForm()
               this.$refs.accountData.clearSelection()
@@ -608,7 +671,7 @@ export default {
           } else {
             var form = JSON.parse(JSON.stringify(this.accountForm))
             form.projectIdStr = form.projectIdStr.join(',')
-            createSubUser(form).then(res => {
+            createSubUser(form).then((res) => {
               if (res.code !== '200') {
                 return
               }
@@ -636,7 +699,7 @@ export default {
       console.log(row)
       row.isSelect = !row.isSelect
       this.emailDisabled = true
-      this. userinfo= row;
+      this.userinfo = row
       this.openProjectByDefaultIdList = []
       this.$refs.accountData.clearSelection()
       this.$refs.accountData.toggleRowSelection(row)
@@ -652,7 +715,7 @@ export default {
         this.openProjectByDefaultIdList.splice(0, 1)
         return
       }
-      this.openProjectByDefaultIdList = this.accountProject.filter(item => {
+      this.openProjectByDefaultIdList = this.accountProject.filter((item) => {
         return form.projectIdStr.indexOf(item.id) !== -1
       })
     },
@@ -677,14 +740,16 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        deleteSubUser(val.id).then(res => {
-          if (res.code === '200') {
-            this.getquerySubUsers()
-            message('success', '删除成功')
-          }
+      })
+        .then(() => {
+          deleteSubUser(val.id).then((res) => {
+            if (res.code === '200') {
+              this.getquerySubUsers()
+              message('success', '删除成功')
+            }
+          })
         })
-      }).catch(function() { })
+        .catch(function () {})
     },
     // 权限
     accountJurisdiction() {
@@ -703,8 +768,8 @@ export default {
 
     // 获取自定义字段列表
     getqueryCustomList() {
-      queryCustomList(this.fieldsId,this.fieldsQuery).then(res => {
-        console.log(res);
+      queryCustomList(this.fieldsId, this.fieldsQuery).then((res) => {
+        console.log(res)
         if (res.code === '200') {
           this.fieldsData = res.data
           this.fieldsTotal = res.total
@@ -723,7 +788,7 @@ export default {
     },
     // 删除radio类型
     delradio(id) {
-      deleteCustomRadio(id).then(res => {
+      deleteCustomRadio(id).then((res) => {
         if (res.code === '200') {
           message('success', res.msg)
           this.getqueryCustomList()
@@ -732,7 +797,7 @@ export default {
     },
     // 删除text，Remarks备注类型
     deltext(id) {
-      deleteCustomText(id).then(res => {
+      deleteCustomText(id).then((res) => {
         if (res.code === '200') {
           message('success', res.msg)
           this.getqueryCustomList()
@@ -741,7 +806,7 @@ export default {
     },
     // 删除dropDown备注类型
     deldropDown(id) {
-      deleteCustomDropDown(id).then(res => {
+      deleteCustomDropDown(id).then((res) => {
         if (res.code === '200') {
           message('success', res.msg)
           this.getqueryCustomList()
@@ -762,7 +827,7 @@ export default {
     },
     // 获取radio详情
     getradioInfo(id) {
-      queryFieldRadioById(id).then(res => {
+      queryFieldRadioById(id).then((res) => {
         if (res.code === '200') {
           const data = customradioData(res.data)
           this.fieldsfrom = data
@@ -771,7 +836,7 @@ export default {
     },
     // 获取text，Remarks详情
     gettextInfo(id) {
-      queryFieldTextById(id).then(res => {
+      queryFieldTextById(id).then((res) => {
         const data = customtextData(res.data)
         this.fieldsfrom = data
       })
@@ -779,7 +844,7 @@ export default {
 
     // 获取dropdown详情
     getdropdownInfo(id) {
-      queryFieldDropDownById(id).then(res => {
+      queryFieldDropDownById(id).then((res) => {
         const data = customtextData(res.data)
         this.fieldsfrom = data
         console.log('获取dropdown详情')
@@ -798,8 +863,8 @@ export default {
 }
 </script>
 <style lang="scss">
-@import "@/styles/mixin.scss"; //颜色
-@import "@/styles/color.scss"; //按钮
+@import '@/styles/mixin.scss'; //颜色
+@import '@/styles/color.scss'; //按钮
 //标签页切换样式
 .el-tabs {
   width: 100%;
@@ -830,7 +895,7 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-@import "index.scss";
+@import 'index.scss';
 // @import "field.scss";
 </style>
 <style lang="scss">

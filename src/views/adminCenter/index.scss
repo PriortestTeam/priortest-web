@@ -22,6 +22,7 @@
      margin-top:$spacing;
      .el-select{
        width:100%;
+       margin-right: 5px;
      }
    }
    .table{
@@ -48,6 +49,8 @@
        box-sizing: border-box;
        padding: 15px;
        background-color: #ffffff;
+       height: 600px;
+       width: 352px;
      }
      .role-item{
        display: flex;
@@ -65,7 +68,7 @@
    .right{
       flex: 1;
      .top-info{
-       display: flex;
+      //  display: flex;
        justify-content: space-between;
      }
      .juris-item{
@@ -142,4 +145,12 @@
       }
     }
   }
+}
+.function {
+  display: flex;
+  margin-top: 21px;
+}
+::v-deep .el-checkbox-group {
+  display: flex;
+  flex-direction: column;
 }

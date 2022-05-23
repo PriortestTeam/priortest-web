@@ -1,6 +1,7 @@
 export const lang = {
     menuTitle: {
         Project: 'Project',
+         Welcome: 'Welcome',
         Feature: 'Feature',
         Sprint: 'Sprint',
         TestCase: 'TestCase',
@@ -14,7 +15,7 @@ export const lang = {
         send:"Send",
         deferredBtn:"Trial Extensions"
     },
-    //项目 
+    //项目
     Project: {
         ManageProject:'Manage Project',
         // 新建项目
@@ -72,13 +73,13 @@ export const lang = {
         NewView:'New View',
         AllItem:'All Item',
         ManageView :'Manage View',
-        // 
+        //
         Save: 'Save',
         GiveUp : 'Give Up',
         SaveAndNew : 'Save And New',
         SaveAndBack : 'Save And Back',
         CreateCustomField : 'Create Custom Field',
-        // 
+        //
         CreateAsTestCycle: 'CreateAsTestCycle',
         ExportTestCase:'Export TestCase',
         PutIntoaTestCycle:"Put IntoaTestCycle",

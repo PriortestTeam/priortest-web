@@ -68,10 +68,18 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: 'Welcome',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
-    }]
+      meta: { title: 'Welcome', icon: 'dashboard' }
+
+  },
+    //  新增报表
+    {
+      path: '/addChart',
+      name: 'AddChart',
+      component: () => import('@/views/dashboard/chartOperation/AddChart'),
+      meta: { title: 'AddChart'}
+    },]
   },
 
   {

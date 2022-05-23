@@ -70,7 +70,12 @@ import { message } from '@/utils/common'
 export default {
   data () {
     return {
-      menuList: [{
+      menuList: [
+       {
+              index: 'Welcome',
+              name: 'Welcome'
+            },
+            {
         index: 'Project',
         name: ''
       }, {
@@ -123,12 +128,12 @@ export default {
   watch: {
     userInfo: function (newVal, oldVal) {
       if (newVal.userUseOpenProject) {
-        this.menuList[0].name = newVal.userUseOpenProject.title
+        this.menuList[1].name = newVal.userUseOpenProject.title
       }
     }
   },
   mounted () {
-    this.menuList[0].name = this.userInfo.userUseOpenProject.title
+    this.menuList[1].name = this.userInfo.userUseOpenProject.title
     if (window.localStorage.currentMenu) {
       this.activeIndex = window.localStorage.currentMenu
       if (this.activeIndex === 'Project') {

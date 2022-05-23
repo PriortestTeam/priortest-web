@@ -46,11 +46,12 @@ module.exports = {
         // target: `http://129.211.74.250:8500`,
         // target: `http://10.4.252.212:8500`,
         // target: `http://10.4.252.199:8500`,
-        target: `http://124.71.142.223:8081`,
+        // target: `http://124.71.142.223:8081`,
+        target: `http://10.10.5.99:8082`,
         changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
+        // pathRewrite: {
+        //   '^/api': ''
+        // }
       }
     },
     before: require('./mock/mock-server.js')

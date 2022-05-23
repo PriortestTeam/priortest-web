@@ -28,10 +28,12 @@ Vue.prototype.resetForm = resetForm
 Vue.prototype.handleTree = handleTree
 Vue.prototype.returntomenu = returntomenu
 import storage from '@/utils/localStorage'
+let echarts = require('echarts')
 
 Vue.prototype.set = storage.set
 Vue.prototype.get = storage.get
 Vue.prototype.remove = storage.remove
+Vue.prototype.$echarts = echarts
 
 import VueI18n from 'vue-i18n'
 
