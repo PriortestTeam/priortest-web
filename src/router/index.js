@@ -209,7 +209,14 @@ export const constantRoutes = [
       meta: {
         title: 'Project', icon: 'Project'
       }
-    }]
+        },{
+          path: 'useCase',
+          name: 'useCase',
+          component: () => import('@/views/testcycle/useCase'),
+          meta: {
+            title: 'Project', icon: 'Project'
+          }
+   }]
   },
   {
     path: '/issue',

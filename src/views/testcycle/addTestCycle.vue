@@ -182,6 +182,7 @@
     </el-form>
     <div class="table">
       <el-button type="text" @click="newStep">添加用例</el-button>
+        <el-button type="text" @click="useCase">执行用例</el-button>
       <el-table
         ref="testCaseData"
         :data="testCaseData"
@@ -410,6 +411,10 @@ export default {
   },
   mounted () {},
   methods: {
+   // 跳转到执行用例
+      useCase(){
+        this.$router.push('/testcycle/useCase')
+      },
     remoteReport (query) {
       if (query !== '') {
         this.loading = true
