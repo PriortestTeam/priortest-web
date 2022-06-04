@@ -57,6 +57,7 @@
 
         <el-form-item label="父级视图:" prop="parent" class="form-small">
           <el-select
+            clearable
             v-model="viewParentQuery"
             size="small"
             filterable
@@ -70,18 +71,19 @@
               :key="i.id"
               :label="i.title"
               :value="i.id"
-            />
-            <el-option
+            >
+            </el-option>
+            <!-- <el-option
               label="无"
               value="0"
-            />
+            /> -->
           </el-select>
         </el-form-item>
       </div>
       <el-form-item label="自动创建子视图基于选项值:" prop="filter" class="form-small wd200">
         <el-checkbox v-model="filter" @change="handleFilterChange" />
       </el-form-item>
-      <el-form-item v-if="!filter" label="查询条件:" prop="oneFilters">
+      <el-form-item  label="查询条件:" prop="oneFilters">
         <div class="filter-item">
           <el-col v-if="from.oneFilters.length === 0" :span="1">
             <span @click="addFliter">
@@ -90,7 +92,7 @@
           </el-col>
           <el-row v-for="(item, index) in from.oneFilters" :key="index">
             <el-row>
-              <el-col :span="2">
+              <el-col :span="2" v-if="!filter">
                 <span @click="addFliter">
                   <i class="el-icon-circle-plus  circle" />
                 </span>
@@ -114,7 +116,7 @@
                   />
                 </el-select>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="4" v-if="!filter">
                 <el-select
                   ref="selectFiled"
                   v-model="item.condition"
@@ -130,7 +132,7 @@
                 </el-select>
               </el-col>
               <!-- input -->
-              <el-col v-if="item.type === 'fString'" :span="4">
+              <el-col v-show="!filter" v-if="item.type === 'fString'" :span="4">
                 <el-input v-model="item.textVal" size="small" />
               </el-col>
               <!-- select -->
@@ -164,7 +166,7 @@
                 />
               </el-col>
             </el-row>
-            <el-row>
+            <el-row v-if="!filter">  
               <el-col :span="2">~ </el-col>
               <el-col :span="3">
                 <el-radio v-model="item.andOr" label="and">并且</el-radio>
@@ -242,12 +244,14 @@
 <script>
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 import { queryViews, lookView, addViewRE, updateView, deleteView, getViewScopeChildParams, queryViewParents, getViewFilter } from '@/api/project'
+import { getQueryViewParents } from '@/api/view.js';
 // import { getSysCustomField } from '@/api/admincenter'
 import { mapState } from 'vuex'
 export default {
   name: 'Projectview',
   data () {
     return {
+      parentView:false,
       scopeOptions: [
         {
           value: 'Project',
@@ -301,7 +305,7 @@ export default {
         scope: '',
         projectId: ''
       },
-      viewParentQuery: '0',
+      viewParentQuery: '',
       viewParents: [],
       viewTotal: 0,
       viewData: [], // 表格数据
@@ -339,7 +343,7 @@ export default {
   methods: {
     handleFilterChange (val) {
       if (val) {
-        this.from.oneFilters = []
+        // this.from.oneFilters = []
       }
     },
     async getViewFilter () {
@@ -541,6 +545,14 @@ export default {
       }
       getViewScopeChildParams(scope).then(res => {
         this.scopeDownChildParams = res.data
+      })
+      const params = {
+        scope: this.from.scope,
+        projectId	: this.projectInfo.userUseOpenProject.projectId,
+        emailId: ''
+      }
+      getQueryViewParents(params).then(response => {
+        this.viewParents = response.data || []
       })
     },
     dataFilter (val) {
