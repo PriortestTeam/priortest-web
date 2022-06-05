@@ -111,7 +111,7 @@
                   <el-option
                     v-for="i in scopeDownChildParams"
                     :key="i.filedName"
-                    :label="i.filedNameCn"
+                    :label="i.fieldNameCn"
                     :value="i.filedName"
                   />
                 </el-select>
@@ -215,7 +215,11 @@
         </el-table-column>
 
         <el-table-column prop="scope" label="范围" />
-        <el-table-column prop="status" label="视图状态" />
+        <el-table-column prop="status" label="视图状态" >
+          <template slot-scope="scope">
+          {{ scope.row.isPrivate == 0 ? '仅自己' : '公开' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="parentTitle" label="父级视图" />
         <el-table-column prop="owner" label="创建者" />
         <el-table-column prop="createTime" label="创建日期" />
@@ -243,7 +247,7 @@
 </template>
 <script>
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import { queryViews, lookView, addViewRE, updateView, deleteView, getViewScopeChildParams, queryViewParents, getViewFilter } from '@/api/project'
+import { queryViews, lookView, addViewRE, updateView, deleteView, getViewScopeChildParams, getViewAllScopeParams,queryViewParents, getViewFilter } from '@/api/project'
 import { getQueryViewParents } from '@/api/view.js';
 // import { getSysCustomField } from '@/api/admincenter'
 import { mapState } from 'vuex'
@@ -344,6 +348,7 @@ export default {
     handleFilterChange (val) {
       if (val) {
         // this.from.oneFilters = []
+        this.scopeDownChildParams = this.scopeDownChildParams.filter(item => item.type === 'dropDown')
       }
     },
     async getViewFilter () {
@@ -376,6 +381,7 @@ export default {
                 this.resetForm()
                 message('success', res.msg)
                 this.getqueryViews()
+                this.viewParentQuery = ''
               }
             })
           } else {
@@ -387,6 +393,7 @@ export default {
                 message('success', res.msg)
                 this.cancelUpdate()
                 this.getqueryViews()
+                this.viewParentQuery = ''
               }
             })
           }
@@ -543,8 +550,15 @@ export default {
       const scope = {
         scope: this.from.scope
       }
-      getViewScopeChildParams(scope).then(res => {
-        this.scopeDownChildParams = res.data
+      getViewAllScopeParams(scope).then(res => {
+        const {customField, sysCustomField} = res.data
+        const _customField = (customField||[]).map(item => {
+          return {
+            ...item,
+            fieldNameCn: item.fieldName
+          }
+        })
+        this.scopeDownChildParams = _customField.concat(sysCustomField)
       })
       const params = {
         scope: this.from.scope,

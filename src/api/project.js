@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 16:38:28
- * @LastEditTime: 2021-01-28 15:01:09
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-06-05 11:01:12
+ * @LastEditors: Mic
  * @Description: In User Settings Edit
  * @FilePath: \oneclick-web\src\api\project.js
  */
@@ -133,6 +133,15 @@ export function getViewScopeChildParams (scope) {
     params: scope
   })
 }
+
+export function getViewAllScopeParams (scope) {
+  return request({
+    url: '/view/getViewScope',
+    method: 'get',
+    params: scope
+  })
+}
+///view/getViewScope
 
 // 查询父view
 export function queryViewParents (params) {
