@@ -583,6 +583,7 @@ export default {
       }
     },
     viewScopeChildParams() {
+      this.viewParentQuery = ''
       if (this.from.oneFilters.length > 0) {
         this.$confirm("重新选择可能会丢失页面内容请确认？", {
           title: "提示",
