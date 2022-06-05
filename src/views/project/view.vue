@@ -365,25 +365,30 @@ export default {
   },
   methods: {
     handleFilterChange(val) {
-      if (val) {
-        // this.from.oneFilters = []
-        this.scopeDownChildParams = this.scopeDownChildParams.filter(
-          (item) => item.type === "dropDown"
-        );
+      if (this.from.scope == undefined) {
+       message("warning", "请选择作用域");
+        return;
       } else {
-        const scope = {
-          scope: this.from.scope,
-        };
-        getViewAllScopeParams(scope).then((res) => {
-          const { customField, sysCustomField } = res.data;
-          const _customField = (customField || []).map((item) => {
-            return {
-              ...item,
-              fieldNameCn: item.fieldName,
-            };
+        if (val) {
+          this.from.oneFilters = []
+          this.scopeDownChildParams = this.scopeDownChildParams.filter(
+            (item) => item.type === "dropDown"
+          );
+        } else {
+          const scope = {
+            scope: this.from.scope,
+          };
+          getViewAllScopeParams(scope).then((res) => {
+            const { customField, sysCustomField } = res.data;
+            const _customField = (customField || []).map((item) => {
+              return {
+                ...item,
+                fieldNameCn: item.fieldName,
+              };
+            });
+            this.scopeDownChildParams = _customField.concat(sysCustomField);
           });
-          this.scopeDownChildParams = _customField.concat(sysCustomField);
-        });
+        }
       }
     },
     async getViewFilter() {
@@ -583,7 +588,7 @@ export default {
       }
     },
     viewScopeChildParams() {
-      this.viewParentQuery = ''
+      this.viewParentQuery = "";
       if (this.from.oneFilters.length > 0) {
         this.$confirm("重新选择可能会丢失页面内容请确认？", {
           title: "提示",
