@@ -44,6 +44,7 @@
       <div class="scopeView">
         <el-form-item label="范围:" prop="scope" class="form-small">
           <el-select
+            clearable
             v-model="from.scope"
             size="small"
             :disabled="scopeDis"
@@ -110,6 +111,7 @@
               </el-col>
               <el-col :span="4">
                 <el-select
+                  clearable
                   ref="selectFiled"
                   v-model="item.fieldName"
                   size="small"
@@ -126,6 +128,7 @@
               </el-col>
               <el-col :span="4" v-if="!filter">
                 <el-select
+                  clearable
                   ref="selectFiled"
                   v-model="item.condition"
                   size="small"
@@ -146,6 +149,7 @@
               <!-- select -->
               <el-col v-else-if="item.type === 'fInteger'" :span="4">
                 <el-select
+                  clearable
                   v-model="item.textVal"
                   size="small"
                   placeholder="请选择状态"
@@ -469,7 +473,7 @@ export default {
       this.$refs.viewData.clearSelection();
       this.viewId = row.id;
 
-      this.viewParentQuery = "0";
+      this.viewParentQuery = "";
 
       this.$refs.viewData.toggleRowSelection(row);
       this.searchViewInfo();
@@ -482,7 +486,12 @@ export default {
         scope: row.scope,
       };
       getViewScopeChildParams(scope).then((res) => {
-        this.scopeDownChildParams = res.data;
+        this.scopeDownChildParams = (res.data || []).map((item) => {
+          return {
+            ...item,
+            fieldNameCn: item.filedNameCn,
+          };
+        });
       });
     },
     // 查询view信息
@@ -600,7 +609,13 @@ export default {
             fieldNameCn: item.fieldName,
           };
         });
-        this.scopeDownChildParams = _customField.concat(sysCustomField);
+        if (!this.filter) {
+          this.scopeDownChildParams = _customField.concat(sysCustomField);
+        } else {
+          this.scopeDownChildParams = _customField
+            .concat(sysCustomField)
+            .filter((item) => item.type === "dropDown");
+        }
       });
       const params = {
         scope: this.from.scope,
