@@ -414,6 +414,9 @@ export default {
       });
     },
     handleScopeChange(val) {
+      this.XValue = "";
+      this.YValue = "";
+      this.FilterValue = "";
       console.log("val :>> ", val);
       let result = [];
       const scope = {
@@ -451,7 +454,7 @@ export default {
           };
         });
         console.log("re0000000000000 :>> ", returnData);
-        this.FilterOptions = returnData
+        this.FilterOptions = returnData;
         function fn(data = []) {
           let treesData = [];
           data.forEach((item) => {
