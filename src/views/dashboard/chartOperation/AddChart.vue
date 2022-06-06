@@ -281,7 +281,7 @@ export default {
           label: "项目",
         },
         {
-          value: "Requirement",
+          value: "Feature",
           label: "故事",
         },
         {
@@ -431,16 +431,9 @@ export default {
             fieldNameCn: item.fieldName,
           };
         });
-        // this.FilterOptions = _customField
-        //   .concat(sysCustomField)
-        //   .filter((item) => item.type === "dropDown");
-
-        this.XOptions = _customField
-          .concat(sysCustomField)
-          .filter((item) => item.type === "dropDown");
-        this.YOptions = _customField
-          .concat(sysCustomField)
-          .filter((item) => item.type === "dropDown");
+        const concatData = _customField.concat(sysCustomField).filter(item => item.type === 'dropDown');
+        this.XOptions = concatData;
+        this.YOptions = concatData;
       });
       queryViewTrees(scope).then((res) => {
         console.log("queryViewTrees", res);
