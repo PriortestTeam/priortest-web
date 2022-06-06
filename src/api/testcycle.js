@@ -8,7 +8,7 @@
  */
 import request from '@/utils/request'
 
-export function testCycleList (params, data) {
+export function testCycleList(params, data) {
   return request({
     url: '/testCycle/queryList',
     method: 'post',
@@ -18,7 +18,7 @@ export function testCycleList (params, data) {
   })
 }
 // 没有分页的
-export function testCycleListAll (data) {
+export function testCycleListAll(data) {
   return request({
     url: '/leftJoin/queryFestCycleTitles',
     method: 'get',
@@ -26,7 +26,7 @@ export function testCycleListAll (data) {
   })
 }
 // 添加项目
-export function addTestCycle (data) {
+export function addTestCycle(data) {
   return request({
     url: '/testCycle/insert',
     method: 'post',
@@ -34,14 +34,14 @@ export function addTestCycle (data) {
   })
 }
 // 获取详情
-export function detailTestCycle (id) {
+export function detailTestCycle(id) {
   return request({
     url: '/testCycle/queryById/' + id,
     method: 'get'
   })
 }
 // 删除项目
-export function delTestCycle (id) {
+export function delTestCycle(id) {
   return request({
     url: '/testCycle/delete/' + id,
     method: 'delete'
@@ -49,7 +49,7 @@ export function delTestCycle (id) {
 }
 
 // 修改项目
-export function editTestCycle (data) {
+export function editTestCycle(data) {
   return request({
     url: '/testCycle/update',
     method: 'post',
@@ -59,7 +59,7 @@ export function editTestCycle (data) {
 /** *弹框 新增步骤
  *
  */
-export function testCycleCase (params, data) {
+export function testCycleCase(params, data) {
   return request({
     url: '/testCycle/queryBindCaseList',
     method: 'post',
@@ -69,7 +69,7 @@ export function testCycleCase (params, data) {
   })
 }
 // 添加
-export function addtestCycle (data) {
+export function addtestCycle(data) {
   return request({
     url: '/testCycle/bindCaseInsert',
     method: 'post',
@@ -77,17 +77,33 @@ export function addtestCycle (data) {
   })
 }
 // 删除
-export function bindCaseDelete (id) {
+export function bindCaseDelete(id) {
   return request({
     url: '/testCycle/bindCaseDelete/' + id,
     method: 'delete'
   })
 }
 // 执行测试力
-export function executeTestCase (data) {
+export function executeTestCase(data) {
   return request({
     url: '/testCycle/executeTestCase',
     method: 'post',
     data
+  })
+}
+// 获取新建周期字段
+export function getAllCustomField(data) {
+  return request({
+    url: '/CustomFieldData/getAllCustomField',
+    method: 'post',
+    data
+  })
+}
+
+export function getAllSysCustomFields(params) {
+  return request({
+    url: '/CustomFieldData/getAllSysCustomField',
+    method: 'get',
+    params
   })
 }

@@ -4,7 +4,6 @@
       ref="testCycleFrom"
       :model="testCycleFrom"
       :rules="testCyclerules"
-      label-width="120px"
       class="demo-ruleForm"
     >
       <div>
@@ -26,163 +25,199 @@
           round
           @click="submitForm('testCycleFrom')"
         >确认修改</el-button>
-        <el-button
-          type="primary"
-          round
-          @click="giveupBack('testCycleFrom')"
-        >放弃</el-button>
+        <el-button type="primary" round @click="giveupBack('testCycleFrom')">放弃</el-button>
         <router-link v-if="!testCycleFrom.id" to="/admincenter/admincenter">
-          <el-button type="text">{{
+          <el-button type="text">
+            {{
             $t("lang.PublicBtn.CreateCustomField")
-          }}</el-button>
+            }}
+          </el-button>
         </router-link>
       </div>
       <div class="form-box">
-        <el-form-item label="测试周期标题" prop="title">
+        <!-- <el-form-item label="测试周期标题" prop="title">
           <el-input v-model="testCycleFrom.title" maxlength="30" size="small" />
-        </el-form-item>
+        </el-form-item>-->
         <el-row>
-          <el-col :span="8">
-            <el-checkbox label="当前发布版本" size="small" prop="currentVersion" />
-            <el-checkbox label="发布版本" size="small" prop="releaseVersion" />
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="版本" size="small" prop="version">
-              <el-select
-                v-model="testCycleFrom.version"
-                placeholder="请选择版本"
-              >
-                <el-option
-                  v-for="item in versionsArr"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-                <router-link
-                  to="/admincenter/admincenter?par=versions"
-                >
-                  <el-option label="Add New Value" value="" />
-                </router-link>
-              </el-select>
-            </el-form-item></el-col>
-
-        </el-row>
-        <el-row>
-
-          <el-col :span="8">
-            <el-form-item label="用例执行人" size="small" prop="assignTo">
-              <el-select
-                v-model="testCycleFrom.assignTo"
-                filterable
-                remote
-                reserve-keyword
-                placeholder="请选择用例执行人"
+          <el-col
+            v-for="field in sysCustomFields"
+            :key="field.id"
+            :xs="12"
+            :sm="12"
+            :md="12"
+            :lg="8"
+            :xl="8"
+          >
+            <!-- 输入框 -->
+            <el-form-item
+              v-if="field.type === 'text'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-input v-model="testCycleFrom[field.fieldName]" type="text" />
+            </el-form-item>
+            <!-- textarea -->
+            <el-form-item
+              v-if="field.type === 'memo'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-input
+                v-model="testCycleFrom[field.fieldName]"
+                type="textarea"
+                :rows="2"
+                placeholder="请输入内容"
+              />
+            </el-form-item>
+            <!-- 单选框 -->
+            <el-form-item
+              v-if="field.type === 'checkbox'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-checkbox v-model="testCycleFrom[field.fieldName]">{{ field.fieldNameCn }}</el-checkbox>
+            </el-form-item>
+            <!-- 日期 -->
+            <el-form-item
+              v-if="field.type === 'Date'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-date-picker
+                v-model="testCycleFrom[field.fieldName]"
                 clearable
-                :remote-method="remoteReport"
-                :loading="loading"
-              >
-                <el-option
-                  v-for="item in optionsArr"
-                  :key="item.id"
-                  :label="item.userName"
-                  :value="item.userName"
-                />
-              </el-select>
+                type="datetime"
+                :placeholder="`请选择${field.fieldNameCn}`"
+              />
             </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="关注者" size="small" prop="notifiyList ">
+            <!-- 单选 -->
+            <el-form-item
+              v-if="field.type === 'radio'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
               <el-select
-                v-model="testCycleFrom.notifiyList"
+                v-model="testCycleFrom[field.fieldName]"
                 filterable
-                remote
-                reserve-keyword
-                placeholder="请选择关注者"
                 clearable
-                :remote-method="remoteReport"
-                :loading="loading"
+                :placeholder="`请选择${field.fieldNameCn}`"
               >
                 <el-option
-                  v-for="item in optionsArr"
-                  :key="item.id"
-                  :label="item.userName"
-                  :value="item.userName"
+                  v-for="(item,index) in field.defaultValues.split(',')"
+                  :key="index"
+                  :label="field.defaultValues.split(',')[index]"
+                  :value="field.defaultValues.split(',')[index]"
                 />
+                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                  <el-option label="Add New Value" value />
+                </router-link>
               </el-select>
             </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item size="small" label="测试平台" prop="platform">
-              <el-select v-model="testCycleFrom.platform" placeholder="请选择测试平台">
+            <!-- 多选 -->
+            <el-form-item
+              v-if="field.type === 'dropDown'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-select
+                v-model="testCycleFrom[field.fieldName]"
+                multiple
+                filterable
+                clearable
+                :placeholder="`请选择${field.fieldNameCn}`"
+              >
                 <el-option
-                  v-for="item in testPlatformArr"
-                  :key="item"
-                  :label="item"
-                  :value="item"
+                  v-for="(item,index) in field.defaultValues.split(',')"
+                  :key="index"
+                  :label="field.defaultValues.split(',')[index]"
+                  :value="field.defaultValues.split(',')[index]"
                 />
-                <router-link to="/admincenter/admincenter?par=test_platform">
-                  <el-option label="Add New Value" value="" />
+                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                  <el-option label="Add New Value" value />
                 </router-link>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item size="small" label="测试环境" prop="testEnv">
-              <el-select v-model="testCycleFrom.testEnv" placeholder="请选择测试环境">
+          <el-col
+            v-for="field in customFields"
+            :key="field.id"
+            :xs="8"
+            :sm="6"
+            :md="6"
+            :lg="6"
+            :xl="6"
+          >
+            <el-form-item
+              v-if="field.type === 'text'"
+              :label="field.fieldName"
+              size="small"
+              :prop="field.fieldName"
+            >
+              <el-input v-model="field.fieldName" type="text" />
+            </el-form-item>
+            <el-form-item
+              v-if="field.type === 'memo'"
+              :label="field.fieldName"
+              size="small"
+              :prop="field.fieldName"
+            >
+              <el-input v-model="field.fieldName" type="textarea" :rows="2" placeholder="请输入内容" />
+            </el-form-item>
+            <el-form-item
+              v-if="field.type === 'radio'"
+              :label="field.fieldName"
+              size="small"
+              :prop="field.fieldName"
+            >
+              <el-select v-model="field.fieldName" :placeholder="`请选择${field.fieldName}`">
                 <el-option
-                  v-for="item in testEnvArr"
-                  :key="item"
-                  :label="item"
-                  :value="item"
+                  v-for="(item,index) in field.defaultValues"
+                  :key="index"
+                  :label="field.mergeValues[index]"
+                  :value="field.mergeValues[index]"
                 />
-                <router-link to="/admincenter/admincenter?par=test_env">
-                  <el-option label="Add New Value" value="" />
+                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                  <el-option label="Add New Value" value />
+                </router-link>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              v-if="field.type === 'DropDown'"
+              :label="field.fieldName"
+              size="small"
+              filterable
+              :prop="field.fieldName"
+            >
+              <el-select v-model="field.fieldName" :placeholder="`请选择${field.fieldName}`">
+                <el-option
+                  v-for="(item,index) in field.defaultValues"
+                  :key="index"
+                  :label="field.mergeValues[index]"
+                  :value="field.mergeValues[index]"
+                />
+                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                  <el-option label="Add New Value" value />
                 </router-link>
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="自动化编译">
-          <el-input v-model="testCycleFrom.autoJob" maxlength="30" size="small" />
-        </el-form-item>
-        <el-form-item label="Allure报表">
-          <el-input v-model="testCycleFrom.allureReport" maxlength="30" size="small" />
-        </el-form-item>
-        <el-form-item label="远程自动化编译">
-          <el-input v-model="testCycleFrom.remoteJob" maxlength="30" size="small" />
-        </el-form-item>
-        <el-form-item
-          :label="$t('lang.Project.Description')"
-          prop="description"
-          size="small"
-        >
-          <el-input
-            v-model="testCycleFrom.description"
-            type="textarea"
-            maxlength="1000"
-            show-word-limit
-            :autosize="{ minRows: 3, maxRows: 8 }"
-          />
-        </el-form-item>
-        <el-form-item size="small" label="重复运行" prop="frenquency">
-          <el-select v-model="testCycleFrom.frenquency" placeholder="请选择重复运行">
-            <el-option
-              v-for="item in frenquencyArr"
-              :key="item"
-              :label="item"
-              :value="item"
-            />
-            <router-link to="/admincenter/admincenter?par=schedule_run_frequency" />
-          </el-select>
-        </el-form-item>
-
       </div>
     </el-form>
     <div class="table">
       <el-button type="text" @click="newStep">添加用例</el-button>
-        <el-button type="text" @click="useCase">执行用例</el-button>
       <el-table
         ref="testCaseData"
         :data="testCaseData"
@@ -191,28 +226,16 @@
         style="width: 100%"
       >
         <el-table-column type="index" align="center" label="序号">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
+          <template slot-scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
-        <el-table-column
-          prop="title"
-          label="标题"
-          :show-overflow-tooltip="true"
-          align="center"
-        />
+        <el-table-column prop="title" label="标题" :show-overflow-tooltip="true" align="center" />
         <el-table-column
           prop="linkedIssue"
           label="关联缺陷"
           :show-overflow-tooltip="true"
           align="center"
         />
-        <el-table-column
-          prop="Module"
-          label="模块"
-          :show-overflow-tooltip="true"
-          align="center"
-        />
+        <el-table-column prop="Module" label="模块" :show-overflow-tooltip="true" align="center" />
 
         <el-table-column
           prop="AutoStatus"
@@ -221,74 +244,27 @@
           align="center"
         />
 
-        <el-table-column
-          prop="RunTimes"
-          label="运行次数"
-          :show-overflow-tooltip="true"
-          align="center"
-        />
-        <el-table-column
-          prop="lastRun"
-          label="运行日期"
-          :show-overflow-tooltip="true"
-          align="center"
-        />
-        <el-table-column
-          prop="lastRunStatus"
-          label="运行状态"
-          :show-overflow-tooltip="true"
-        >
-          <el-table-column
-            prop="stepStatus"
-            :show-overflow-tooltip="true"
-            label="步骤运行状态"
-          />
+        <el-table-column prop="RunTimes" label="运行次数" :show-overflow-tooltip="true" align="center" />
+        <el-table-column prop="lastRun" label="运行日期" :show-overflow-tooltip="true" align="center" />
+        <el-table-column prop="lastRunStatus" label="运行状态" :show-overflow-tooltip="true">
+          <el-table-column prop="stepStatus" :show-overflow-tooltip="true" label="步骤运行状态" />
         </el-table-column>
 
-        <el-table-column
-          prop="lastRunDuration"
-          label="运行时长"
-          :show-overflow-tooltip="true"
-        />
+        <el-table-column prop="lastRunDuration" label="运行时长" :show-overflow-tooltip="true" />
 
-        <el-table-column
-          prop="lastRunner"
-          label="运行人"
-          :show-overflow-tooltip="true"
-        />
+        <el-table-column prop="lastRunner" label="运行人" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              class="table-btn"
-              @click.stop="delview(scope.row)"
-            >删除</el-button>
-            <el-button
-              type="text"
-              class="table-btn"
-              @click.stop="runview(scope.row)"
-            >运行</el-button>
+            <el-button type="text" class="table-btn" @click.stop="delview(scope.row)">删除</el-button>
+            <el-button type="text" class="table-btn" @click.stop="runview(scope.row)">运行</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <el-dialog
-      title="添加测试用例"
-      :visible.sync="openDia"
-      width="500px"
-      append-to-body
-    >
-      <el-form
-        ref="testCaseFrom"
-        :model="testCaseFrom"
-        :rules="testCaseFromRules"
-        label-width="120px"
-      >
+    <el-dialog title="添加测试用例" :visible.sync="openDia" width="500px" append-to-body>
+      <el-form ref="testCaseFrom" :model="testCaseFrom" :rules="testCaseFromRules">
         <el-form-item label="选择测试用例" prop="testCaseId" size="small">
-          <el-select
-            v-model="testCaseFrom.testCaseId"
-            placeholder="请选择测试用例"
-          >
+          <el-select v-model="testCaseFrom.testCaseId" placeholder="请选择测试用例">
             <el-option
               v-for="item in testCaseDataSelect"
               :key="item.id"
@@ -313,18 +289,16 @@ import {
   editTestCycle,
   testCycleCase,
   addtestCycle,
-  bindCaseDelete
+  bindCaseDelete,
+  getAllCustomField,
+  getAllSysCustomFields,
 } from '@/api/testcycle'
-
 import { testCaseListAll } from '@/api/testcase'
-
 import { queryByNameSubUsers } from '@/api/project'
-import { sysCustomField } from '@/api/systemArr'
-
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
   name: 'Addtestcycle',
-  data () {
+  data() {
     return {
       optionsArr: [],
       versionsArr: [],
@@ -334,41 +308,43 @@ export default {
       testPlatformArr: [],
       loading: false,
       testCycleFrom: {
-        currentVersion: 0
+        currentVersion: 0,
       },
       testCycleFromTemp: {},
       testCyclerules: {
-        title: [{ required: true, message: '请输入故事标题', trigger: 'blur' }]
+        title: [{ required: true, message: '请输入故事标题', trigger: 'blur' }],
       },
 
       tableHeader: {
         color: '#d4dce3',
-        background: '#003d79'
+        background: '#003d79',
       },
 
       openDia: false,
       testCaseFrom: {
         testCycleId: undefined,
-        testCaseId: undefined
+        testCaseId: undefined,
       },
       testCaseData: [],
       testCaseDataSelect: [],
       testCaseFromRules: {
         testCaseId: [
-          { required: true, message: '请选择测试用例', trigger: 'change' }
-        ]
-      }
+          { required: true, message: '请选择测试用例', trigger: 'change' },
+        ],
+      },
+      sysCustomFields: [],
+      customFields: [],
     }
   },
   computed: {
     ...mapGetters({
-      lang: (state) => state.header.lang
+      lang: (state) => state.header.lang,
     }),
-    projectInfo () {
+    projectInfo() {
       return this.$store.state.user.userinfo
-    }
+    },
   },
-  created () {
+  created() {
     if (this.$route.query.id) {
       this.testCaseFrom.testCycleId = this.$route.query.id
       detailTestCycle(this.$route.query.id).then((res) => {
@@ -378,44 +354,38 @@ export default {
       this.gettestCycleCase()
       testCaseListAll({
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        title: ''
+        title: '',
       }).then((res) => {
         this.testCaseDataSelect = res.data
       })
     } else {
-      this.testCycleFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+      this.testCycleFrom.projectId =
+        this.projectInfo.userUseOpenProject.projectId
     }
-
-    sysCustomField({ fieldName: 'versions' }).then((res) => {
-      const data = res.data.mergeValues ? res.data.mergeValues : []
-      this.versionsArr = data
+    // 获取系统字段
+    getAllSysCustomFields({
+      scope: 'testCycle',
+    }).then((res) => {
+      if (res.code === '200') {
+        this.$nextTick(() => {
+          this.sysCustomFields = res.data
+          this.sysCustomFields = res.data
+        })
+      }
     })
-    sysCustomField({ fieldName: 'status' }).then((res) => {
-      const data = res.data.mergeValues ? res.data.mergeValues : []
-      this.statusArr = data
-    })
-
-    sysCustomField({ fieldName: 'test_env' }).then((res) => {
-      const data = res.data.mergeValues ? res.data.mergeValues : []
-      this.testEnvArr = data
-    })
-
-    sysCustomField({ fieldName: 'frenquency' }).then((res) => {
-      const data = res.data.mergeValues ? res.data.mergeValues : []
-      this.frenquencyArr = data
-    })
-    sysCustomField({ fieldName: 'test_platform' }).then((res) => {
-      const data = res.data.mergeValues ? res.data.mergeValues : []
-      this.testPlatformArr = data
+    // 获取自定义字段
+    getAllCustomField({
+      projectId: this.projectInfo.userUseOpenProject.projectId,
+      scope: 'testCycle',
+    }).then((res) => {
+      if (res.code === '200') {
+        this.customFields = res.data
+      }
     })
   },
-  mounted () {},
+  mounted() {},
   methods: {
-   // 跳转到执行用例
-      useCase(){
-        this.$router.push('/testcycle/useCase')
-      },
-    remoteReport (query) {
+    remoteReport(query) {
       if (query !== '') {
         this.loading = true
         setTimeout(() => {
@@ -429,7 +399,7 @@ export default {
       }
     },
     // 重置表单
-    resetFields () {
+    resetFields() {
       this.testCycleFrom = {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -440,13 +410,13 @@ export default {
         version: undefined,
         assignTo: undefined,
         notifiyList: undefined,
-        description: undefined
+        description: undefined,
       }
       this.$refs['testCycleFrom'].resetFields()
     },
 
     // 提交
-    submitForm (formName, type) {
+    submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.testCycleFrom.id) {
@@ -489,7 +459,7 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack () {
+    giveupBack() {
       if (!this.testCycleFrom.id) {
         this.resetFields()
       }
@@ -497,29 +467,29 @@ export default {
     },
 
     /** *编辑的表格 */
-    resettestCaseFrom () {
+    resettestCaseFrom() {
       this.testCaseFrom = {
         testCycleId: this.testCycleFrom.id,
-        testCaseId: undefined
+        testCaseId: undefined,
       }
       this.$refs['testCaseFrom'].resetFields()
     },
-    gettestCycleCase () {
+    gettestCycleCase() {
       testCycleCase(
         {
           pageNum: 1,
           pageSize: 10,
-          testCycleId: this.testCaseFrom.testCycleId
+          testCycleId: this.testCaseFrom.testCycleId,
         },
         {}
       ).then((res) => {
         this.testCaseData = res.data
       })
     },
-    newStep () {
+    newStep() {
       this.openDia = true
     },
-    submittestCaseFrom () {
+    submittestCaseFrom() {
       this.$refs['testCaseFrom'].validate((valid) => {
         if (valid) {
           addtestCycle(this.testCaseFrom).then((res) => {
@@ -533,27 +503,27 @@ export default {
         }
       })
     },
-    canceltestCaseFrom () {
+    canceltestCaseFrom() {
       this.resettestCaseFrom()
       this.openDia = false
     },
-    runview (row) {
+    runview(row) {
       this.$router.push({
         name: 'Execute',
-        query: { id: row.id, testCycleId: this.testCycleFrom.id }
+        query: { id: row.id, testCycleId: this.testCycleFrom.id },
       })
     },
-    delview (row) {
+    delview(row) {
       bindCaseDelete(row.id).then((res) => {
         if (res.code === '200') {
           message('success', res.msg)
           this.gettestCycleCase()
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
-@import "index.scss";
+@import 'index.scss';
 </style>
