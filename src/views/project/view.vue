@@ -366,11 +366,11 @@ export default {
   methods: {
     handleFilterChange(val) {
       if (this.from.scope == undefined) {
-       message("warning", "请选择作用域");
+        message("warning", "请选择作用域");
         return;
       } else {
         if (val) {
-          this.from.oneFilters = []
+          this.from.oneFilters = [];
           this.scopeDownChildParams = this.scopeDownChildParams.filter(
             (item) => item.type === "dropDown"
           );
@@ -428,6 +428,7 @@ export default {
                 message("success", res.msg);
                 this.getqueryViews();
                 this.viewParentQuery = "";
+                this.filter = false;
               }
             });
           } else {
@@ -440,6 +441,7 @@ export default {
                 this.cancelUpdate();
                 this.getqueryViews();
                 this.viewParentQuery = "";
+                this.filter = false;
               }
             });
           }
