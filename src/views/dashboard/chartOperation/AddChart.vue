@@ -300,10 +300,10 @@ export default {
           value: "Issue",
           label: "缺陷",
         },
-        {
-          value: "SignOff",
-          label: "签收",
-        },
+        // {
+        //   value: "SignOff",
+        //   label: "签收",
+        // },
       ],
       FilterValue: "",
       FilterOptions: [],
