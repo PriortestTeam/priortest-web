@@ -42,7 +42,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="链接" prop="linkedFileId" class="form-small">
+        <el-form-item label="链接字段" prop="linkedFileId" class="form-small">
           <el-select
             v-model="fieldsfrom.linkedFileId"
             size="small"
@@ -73,8 +73,8 @@
           <div class="linkData_label">{{item.label}}</div>
           <div class="linkData_value">
             <div class="linkData_top">
-              <el-button type="primary" size="small" @click="add(item)">Add</el-button>
-              <el-button type="primary" size="small" @click="remove(item)">Remove</el-button>
+              <el-button type="primary" size="small" @click="add(item)">添加</el-button>
+              <el-button type="primary" size="small" @click="remove(item)">删除</el-button>
             </div>
             <el-input v-model="item.input"></el-input>
             <div class="arrayBox">
@@ -170,7 +170,6 @@
           linkedFileId:'',
           concat: '',
           scope: [],
-          defaultValues: [],
           mandatory: [],
           projectId: '',
           fieldName: this.fieldName
