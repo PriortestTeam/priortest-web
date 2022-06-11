@@ -42,6 +42,21 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item label="链接" prop="linkedFileId" class="form-small">
+          <el-select
+            v-model="fieldsfrom.linkedFileId"
+            size="small"
+            placeholder="请选择链接"
+            @change="PleaseType"
+          >
+            <el-option
+              v-for="item in fieldsOptions2"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
         <!--<el-form-item-->
         <!--label="长度"-->
         <!--prop="length"-->
@@ -135,6 +150,11 @@
     },
     data() {
       return {
+        fieldsOptions2:[
+          {value:1,label:'链接1'},
+          {value:2,label:'链接1'},
+          {value:3,label:'链接3'},
+        ],
         linkData: [
           {label: 'STD', input: '',current:"", array: ['link1', 'link2', 'link3']},
           {label: 'PRD', input: '',current:"", array: ['link1', 'link2', 'link3']},
@@ -147,6 +167,7 @@
         // 自定义字段
         fieldsfrom: {
           type: this.customType,
+          linkedFileId:'',
           concat: '',
           scope: [],
           defaultValues: [],
