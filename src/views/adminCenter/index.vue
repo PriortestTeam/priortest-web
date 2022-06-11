@@ -230,6 +230,17 @@
             @executeQueryCustomList="getqueryCustomList"
             @setFieldName="setFieldName"
           />
+          <Link2
+            v-else-if="customType === '链接下拉框'"
+            :scope-list="scopeList"
+            :custom-type="customType"
+            :customname="fieldsfrom"
+            :fields-options="fieldsOptions"
+            :field-name="fieldName"
+            @PleaseType="chType"
+            @executeQueryCustomList="getqueryCustomList"
+            @setFieldName="setFieldName"
+          />
 
           <Checkbox
             v-else-if="customType === 'Checkbox'"
@@ -325,6 +336,7 @@ import Dropdown from '@/views/adminCenter/dropDown'
 import Checkbox from '@/views/adminCenter/checkbox'
 import Userindex from '@/views/adminCenter/user'
 import Link from '@/views/adminCenter/link'
+import Link2 from '@/views/adminCenter/link2'
 import ServicePlan from '@/views/servicePlan/index'
 import {
   getUserRoles,
@@ -357,6 +369,7 @@ export default {
     Checkbox,
     Userindex,
     Link,
+    Link2,
     ViewPage,
     MyAccount,
     ServicePlan
@@ -465,6 +478,10 @@ export default {
         {
           value: '链接',
           label: '链接'
+        },
+        {
+          value: '链接下拉框',
+          label: '链接下拉框'
         },
         {
           value: '多选项',
