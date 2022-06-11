@@ -279,27 +279,27 @@ export default {
       parentView: false,
       scopeOptions: [
         {
-          value: "Project",
+          value: "project",
           label: "项目",
         },
         {
-          value: "Feature",
+          value: "feature",
           label: "故事",
         },
         {
-          value: "Sprint",
+          value: "sprint",
           label: "迭代",
         },
         {
-          value: "TestCase",
+          value: "testCase",
           label: "测试用例",
         },
         {
-          value: "TestCycle",
+          value: "testCycle",
           label: "测试周期",
         },
         {
-          value: "Issue",
+          value: "issue",
           label: "缺陷",
         },
       ],
