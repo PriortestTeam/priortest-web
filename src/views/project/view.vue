@@ -44,7 +44,7 @@
       <div class="scopeView">
         <el-form-item label="范围:" prop="scope" class="form-small">
           <el-select
-            clearable
+
             v-model="from.scope"
             size="small"
             :disabled="scopeDis"
@@ -111,7 +111,6 @@
               </el-col>
               <el-col :span="4">
                 <el-select
-                  clearable
                   ref="selectFiled"
                   v-model="item.fieldName"
                   size="small"
@@ -128,7 +127,6 @@
               </el-col>
               <el-col :span="4" v-if="!filter">
                 <el-select
-                  clearable
                   ref="selectFiled"
                   v-model="item.condition"
                   size="small"
@@ -366,7 +364,7 @@ export default {
   methods: {
     handleFilterChange(val) {
       if (this.from.scope == undefined) {
-        message("warning", "请选择作用域");
+        message("warning", "请选择范围");
         return;
       } else {
         if (val) {
@@ -550,7 +548,7 @@ export default {
     // 新增字段
     addFliter() {
       if (this.from.scope === undefined || this.from.scope.trim() === "") {
-        message("warning", "请选择作用域");
+        message("warning", "请选择范围");
         return;
       }
 
@@ -639,7 +637,7 @@ export default {
     },
     queryViewParent() {
       if (this.from.scope === undefined || this.from.scope === "") {
-        message("success", "请选择作用域");
+        message("success", "请选择范围");
         this.viewParentQuery = "0";
         return;
       }

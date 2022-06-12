@@ -1,1 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0b6c0f"],{"1f04":function(e,n,t){"use strict";t.r(n);var r=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("router-view")},a=[],c={name:"ManageUser"},u=c,s=t("2877"),o=Object(s["a"])(u,r,a,!1,null,"62900112",null);n["default"]=o.exports}}]);
