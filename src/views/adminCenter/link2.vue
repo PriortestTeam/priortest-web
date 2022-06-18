@@ -47,7 +47,7 @@
             v-model="fieldsfrom.linkedFileId"
             size="small"
             placeholder="请选择链接"
-            @change="PleaseType"
+            @change="PleaseLink"
           >
             <el-option
               v-for="item in fieldsOptions2"
@@ -66,7 +66,7 @@
         <!--</el-form-item> -->
       </el-form>
     </el-col>
-    <el-col  v-if="true" :span="6">
+    <el-col  v-if="fieldsfrom.linkedFileId" :span="6">
 
       <el-row class="sen-row" :gutter="20" style="margin-bottom: 20px;" >
         <div  class="linkData" v-for="item in linkData">
@@ -285,6 +285,10 @@
       PleaseType(val) {
         this.$emit('setFieldName', this.fieldsfrom.fieldName)
         this.$emit('PleaseType', val)
+      },
+      //链接
+      PleaseLink(val){
+
       },
       // drop表格选中
       dropselect(val) {

@@ -152,7 +152,8 @@
       </el-tab-pane>
       <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
         <Jurisdiction
-          v-if="jurisdictionAccountId"
+          v-if="jurisdictionAccount"
+          :jurisdictionAccount="jurisdictionAccount"
           :user-infos="userinfo"
           @userChange="userChange"
         />
@@ -770,9 +771,9 @@ export default {
     },
     // 权限
     accountJurisdiction() {
-      this.jurisdictionAccountId = ''
+      // this.jurisdictionAccountId = ''
       this.activeName = '1'
-      this.jurisdictionAccountId = this.accountSelection[0].id
+      this.jurisdictionAccount = this.accountSelection[0]
     },
     /** ˙账户结束 */
 

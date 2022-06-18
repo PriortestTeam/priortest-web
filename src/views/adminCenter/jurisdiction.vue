@@ -35,7 +35,7 @@
     <div class="right">
       <div class="top-info">
         <el-select
-          v-model="projectId"
+          v-model="projectName"
           size="mini"
           placeholder="请选择项目"
           @change="changeProject"
@@ -44,7 +44,7 @@
           <el-option
             v-for="(item, index) in jurisdictionOptions"
             :key="index"
-            :value="item.value + '-' + item.label"
+            :value="item"
             :label="item.label"
           />
         </el-select>
@@ -94,14 +94,18 @@ export default {
     userInfos: {
       type: Object,
       required: true
+    },
+    jurisdictionAccount: {
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
       keys: 0,
       jurisdictionOptions: [],
-      projectId: '',
-      projectName: '',
+      selectProject:{},
+      projectName:'',
       jurisdictionItem: [],
       jurisdictioninfo: {},
       isIndeterminate: true,
@@ -132,6 +136,17 @@ export default {
     this.chageName()
   },
   mounted() {
+    this.roleName = this.jurisdictionAccount.roleName;
+    if(this.jurisdictionAccount){
+      console.log(this.jurisdictionAccount)
+      let projectId = this.jurisdictionAccount.projectIdStr.split(',')[0]
+      let projectName = this.jurisdictionAccount.projectsSts.split(';')[0]
+      this.selectProject = {
+        label:projectName,
+        value:projectId
+      };
+      this.projectName = projectName;
+    }
     this.getUserList(this.roleName)
     // console.log(this.userList)
     // console.log(this.userInfos)
@@ -149,13 +164,15 @@ export default {
       this.roleName = val.roleName
       this.userName = val.userName
       this.userId = val.id
-      this.projectId = ''
+      this.projectName = ''
+      this.selectProject = {}
       this.modelList = []
     },
     roleChange(val) {
       this.roleName = val
       this.getUserList(val)
-      this.projectId = ''
+      this.projectName = ''
+      this.selectProject = {}
       this.modelList = []
       this.jurisdictionOptions = []
     },
@@ -208,9 +225,16 @@ export default {
         option.label = res.data.title
         option.value = id
         this.jurisdictionOptions.push(option)
+        if(!this.projectName && this.jurisdictionOptions.length) {
+          this.projectName = this.jurisdictionOptions[0].label
+          this.selectProject = this.jurisdictionOptions[0]
+        }
+        if(this.projectName) this.getRoleTree();
       })
     },
-    changeProject() {
+    changeProject(item) {
+      this.selectProject = item;
+      this.projectName = item.label;
       this.functionList = []
       this.modelList = []
       if (
@@ -222,9 +246,9 @@ export default {
         return
       }
       if (
-        this.projectId === null ||
-        this.projectId == undefined ||
-        this.projectId == ''
+        this.projectName === null ||
+        this.projectName == undefined ||
+        this.projectName == ''
       ) {
         this.$message.warning('项目id不能为空')
         return
@@ -237,10 +261,15 @@ export default {
         this.$message.warning('无法获取用户id，请先点击左侧用户')
         return
       }
+      this.getRoleTree();
+
+      // this.getPermissions(this.ids)
+    },
+    getRoleTree(){
       this.loading = true
       Api.findRoleFunction({
         roleId: this.roleId,
-        projectId: this.projectId.split('-')[0],
+        projectId: this.selectProject.value,
         userId: this.userId
       }).then((res) => {
         if (res.code === '200') {
@@ -267,8 +296,6 @@ export default {
           this.loading = false
         }
       })
-
-      // this.getPermissions(this.ids)
     },
     // formObj (item) {
     //   const temObj = {}
@@ -302,8 +329,8 @@ export default {
       let params = {
         roleId: this.roleId,
         roleName: this.roleName,
-        projectId: this.projectId.split('-')[0],
-        projectName: this.projectId.split('-')[1],
+        projectId: this.selectProject.value,
+        projectName: this.selectProject.label,
         userId: this.userId,
         userName: this.userName,
         value: this.value,

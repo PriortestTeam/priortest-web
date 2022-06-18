@@ -123,7 +123,7 @@
                 </router-link>
               </el-select>
             </el-form-item>
-            <!-- 多选 -->
+            <!-- 下拉选择 -->
             <el-form-item
               v-if="field.type === 'dropDown'"
               :label="field.fieldNameCn"
@@ -133,7 +133,6 @@
             >
               <el-select
                 v-model="testCycleFrom[field.fieldName]"
-                multiple
                 filterable
                 clearable
                 :placeholder="`请选择${field.fieldNameCn}`"
@@ -218,7 +217,7 @@
     </el-form>
     <div class="table">
       <el-button type="text" @click="newStep">添加用例</el-button>
-       <el-button type="text" @click="useCase">执行用例</el-button>
+      <el-button type="text" @click="useCase">执行用例</el-button>
       <el-table
         ref="testCaseData"
         :data="testCaseData"
@@ -386,10 +385,10 @@ export default {
   },
   mounted() {},
   methods: {
-   // 跳转到执行用例
-      useCase(){
-        this.$router.push('/testcycle/useCase')
-        },
+    // 跳转到执行用例
+    useCase() {
+      this.$router.push('/testcycle/useCase')
+    },
     remoteReport(query) {
       if (query !== '') {
         this.loading = true
