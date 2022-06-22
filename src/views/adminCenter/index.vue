@@ -309,12 +309,16 @@
       <el-tab-pane label="视图管理" name="5">
         <ViewPage v-if="activeName === '5'" />
       </el-tab-pane>
-      <el-tab-pane label="我的账户" name="6">
-        <MyAccount v-if="activeName === '6'" />
+      <el-tab-pane label="在线报表" name="6">
+        <AddNew v-if="activeName === '6'" />
       </el-tab-pane>
-      <el-tab-pane label="服务计划" name="7">
-        <ServicePlan v-if="activeName === '7'" />
+      <el-tab-pane label="我的账户" name="7">
+        <MyAccount v-if="activeName === '7'" />
       </el-tab-pane>
+      <el-tab-pane label="服务计划" name="8">
+        <ServicePlan v-if="activeName === '8'" />
+      </el-tab-pane>
+
     </el-tabs>
   </div>
 </template>
@@ -327,6 +331,7 @@ import {
 } from '@/utils/common'
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import System from '@/views/adminCenter/system'
+import AddNew from '@/views/project/addNew'
 import ViewPage from '@/views/project/view'
 import MyAccount from '@/views/project/myAccount'
 import Dateindex from '@/views/adminCenter/date'
@@ -371,6 +376,7 @@ export default {
     Userindex,
     Link,
     Link2,
+    AddNew,
     ViewPage,
     MyAccount,
     ServicePlan
