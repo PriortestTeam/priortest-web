@@ -10,22 +10,20 @@
         <el-button
           v-if="!testCycleFrom.id"
           type="primary"
-          round
           @click="submitForm('testCycleFrom', false)"
         >保存并新建</el-button>
         <el-button
           v-if="!testCycleFrom.id"
           type="primary"
-          round
+
           @click="submitForm('testCycleFrom', true)"
         >保存并返回</el-button>
         <el-button
           v-if="testCycleFrom.id"
           type="primary"
-          round
           @click="submitForm('testCycleFrom')"
         >确认修改</el-button>
-        <el-button type="primary" round @click="giveupBack('testCycleFrom')">放弃</el-button>
+        <el-button type="primary" @click="giveupBack('testCycleFrom')">放弃</el-button>
         <router-link v-if="!testCycleFrom.id" to="/admincenter/admincenter">
           <el-button type="text">
             {{
@@ -81,7 +79,7 @@
               :prop="field.fieldName"
               label-width="140px"
             >
-              <el-checkbox v-model="testCycleFrom[field.fieldName]">{{ field.fieldNameCn }}</el-checkbox>
+              <el-checkbox v-model="testCycleFrom[field.fieldName]"></el-checkbox>
             </el-form-item>
             <!-- 日期 -->
             <el-form-item

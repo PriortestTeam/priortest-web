@@ -3,10 +3,10 @@
     <!-- 顶部上方两个按钮 -->
     <el-row :gutter="24">
       <el-col :span="3">
-        <el-tag type="danger" effect="dark">在线图表管理</el-tag>
+        <el-button type="danger"  @click="handleChart" >在线图表管理</el-button>
       </el-col>
       <el-col :span="3">
-        <el-tag type="warning" effect="dark">视图对比</el-tag>
+        <el-button type="warning" effect="dark">视图对比</el-button>
       </el-col>
 
     </el-row>
@@ -347,6 +347,10 @@ export default {
     }
   },
   methods: {
+    handleChart(){
+      this.$router.push('/admincenter/admincenter')
+      // this.$router.push('/AddNew')
+    },
     // 新增tag
     addTag(data){
       console.log(data);
