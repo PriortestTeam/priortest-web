@@ -533,6 +533,9 @@ export default {
           vm.activeName = '3'
         }
       }
+      if (to.params.id === '6') {
+        vm.activeName = '6'
+      }
     })
   },
   computed: {
