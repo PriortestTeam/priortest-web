@@ -310,7 +310,7 @@
         <ViewPage v-if="activeName === '5'" />
       </el-tab-pane>
       <el-tab-pane label="在线报表" name="6">
-        <AddNew v-if="activeName === '6'" />
+        <Dashboard v-if="activeName === '6'" />
       </el-tab-pane>
       <el-tab-pane label="我的账户" name="7">
         <MyAccount v-if="activeName === '7'" />
@@ -331,9 +331,9 @@ import {
 } from '@/utils/common'
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import System from '@/views/adminCenter/system'
-import AddNew from '@/views/project/addNew'
+import Dashboard from '@/views/adminCenter/dashboard'
 import ViewPage from '@/views/project/view'
-import MyAccount from '@/views/project/myAccount'
+import MyAccount from '@/views/adminCenter/myAccount'
 import Dateindex from '@/views/adminCenter/date'
 import Radioindex from '@/views/adminCenter/radio'
 import Textindex from '@/views/adminCenter/text'
@@ -376,7 +376,7 @@ export default {
     Userindex,
     Link,
     Link2,
-    AddNew,
+    Dashboard,
     ViewPage,
     MyAccount,
     ServicePlan

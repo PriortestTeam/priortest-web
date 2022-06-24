@@ -1,13 +1,13 @@
 <template>
   <div class="app-container manage-view view">
     <div>
-      <el-button type="primary" plain @click="viewjectRefresh">新建报表</el-button>
+      <el-button type="primary" plain @click="viewjectRefresh">新建</el-button>
       <el-button type="primary" plain @click="viewjectRefresh">保存</el-button>
       <el-button type="primary" plain @click="back">返回报表</el-button>
     </div>
     <div class="form-box">
       <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="新建报表">
+        <el-form-item label="报表标题">
           <el-input v-model="form.tittle" class="input-form"></el-input>
         </el-form-item>
         <el-form-item label="类型">
