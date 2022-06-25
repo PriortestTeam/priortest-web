@@ -17,6 +17,7 @@
         <el-table
           :data="userList"
           height="100%"
+          :row-style="showRow"
           highlight-current-row
           @row-click="currentChange"
           tooltip-effect="light"
@@ -63,6 +64,7 @@
             <template v-if="item.children">
               <el-checkbox
                 v-for="(subItem, subIndex) in item.children"
+                v-model="subItem.checked"
                 :label="subItem.id"
                 :key="subIndex"
                 >{{ subItem.title }}</el-checkbox
@@ -148,8 +150,6 @@ export default {
       this.projectName = projectName;
     }
     this.getUserList(this.roleName)
-    // console.log(this.userList)
-    // console.log(this.userInfos)
   },
   methods: {
     chageName() {
@@ -158,15 +158,18 @@ export default {
     // 当前用户选择改变
     currentChange(val) {
       this.jurisdictionOptions = []
-      this.getUserList(val.roleName, val.id)
-      this.$emit('userChange', val)
+      this.modelList = []
+      this.functionList = []
+      this.selectProject = {}
       this.roleId = val.roleId || val.sysRoleId
       this.roleName = val.roleName
       this.userName = val.userName
       this.userId = val.id
       this.projectName = ''
-      this.selectProject = {}
-      this.modelList = []
+      this.getUserList(val.roleName, val.id)
+      // this.getRoleTree()
+      // this.getUserList(val.roleName, val.id)
+      this.$emit('userChange', val)
     },
     roleChange(val) {
       this.roleName = val
@@ -189,6 +192,7 @@ export default {
           })
           this.userList = res.data
           if (this.userList.length > 0) {
+            // console.log(this.userList,'======111');
             this.getProjectList(id || this.userList[0].id)
             this.roleId = this.userList[0].sysRoleId || this.userList[0].roleId
             this.userId = id || this.userList[0].id
@@ -199,6 +203,15 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    showRow({row, rowIndwx}) {
+      let styleJson = {}
+      if (row.id == this.jurisdictionAccount.id) {
+        styleJson = {
+          'color': '#4286CD'
+        }
+      }
+      return styleJson
     },
     async getProjectList(userid) {
       try {
