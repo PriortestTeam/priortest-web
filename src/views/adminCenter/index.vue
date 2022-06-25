@@ -784,6 +784,7 @@ export default {
       // this.jurisdictionAccountId = ''
       this.activeName = '1'
       this.jurisdictionAccount = this.accountSelection[0]
+      console.log(this.jurisdictionAccount,this.userinfo,'=======111');
     },
     /** ˙账户结束 */
 

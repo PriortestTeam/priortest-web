@@ -140,9 +140,11 @@ export default {
   mounted() {
     this.roleName = this.jurisdictionAccount.roleName;
     if(this.jurisdictionAccount){
-      console.log(this.jurisdictionAccount)
+      // console.log(this.jurisdictionAccount)
       let projectId = this.jurisdictionAccount.projectIdStr.split(',')[0]
       let projectName = this.jurisdictionAccount.projectsSts.split(';')[0]
+      this.userId = this.jurisdictionAccount.id;
+
       this.selectProject = {
         label:projectName,
         value:projectId
