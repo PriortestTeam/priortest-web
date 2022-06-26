@@ -140,10 +140,10 @@ export default {
   mounted() {
     this.roleName = this.jurisdictionAccount.roleName;
     if(this.jurisdictionAccount){
-      // console.log(this.jurisdictionAccount)
       let projectId = this.jurisdictionAccount.projectIdStr.split(',')[0]
       let projectName = this.jurisdictionAccount.projectsSts.split(';')[0]
       this.userId = this.jurisdictionAccount.id;
+      console.log(this.userId,this.jurisdictionAccount,'====child')
 
       this.selectProject = {
         label:projectName,
@@ -194,10 +194,10 @@ export default {
           })
           this.userList = res.data
           if (this.userList.length > 0) {
-            // console.log(this.userList,'======111');
+            console.log(this.userList,'======userList');
             this.getProjectList(id || this.userList[0].id)
             this.roleId = this.userList[0].sysRoleId || this.userList[0].roleId
-            this.userId = id || this.userList[0].id
+            // this.userId = id || this.userList[0].id
             this.userName = this.userList[0].userName
             console.log('user', this.userList[0])
           }
@@ -281,6 +281,7 @@ export default {
       // this.getPermissions(this.ids)
     },
     getRoleTree(){
+      console.log(this.userId,'========this.userId');
       this.loading = true
       Api.findRoleFunction({
         roleId: this.roleId,
@@ -312,35 +313,7 @@ export default {
         }
       })
     },
-    // formObj (item) {
-    //   const temObj = {}
-    //   temObj.projectId = this.projectId
-    //   temObj.subUserId = this.id
-    //   temObj.operationAuthId = item.id
-    //   return temObj
-    // },
     sureUpdate() {
-      // this.jurisdictionUpdate.projectPermissions = []
-      // this.jurisdictionItem.filter((item) => {
-      //   if (item.isSelect === '1') {
-      //     const obj = this.formObj(item)
-      //     this.jurisdictionUpdate.projectPermissions.push(obj)
-      //     if (item.childList.length > 0) {
-      //       item.childList.filter((item1) => {
-      //         if (item1.isSelect === '1') {
-      //           const obj1 = this.formObj(item1)
-      //           this.jurisdictionUpdate.projectPermissions.push(obj1)
-      //         }
-      //       })
-      //     }
-      //   }
-      // })
-      // updatePermissions(this.jurisdictionUpdate).then((res) => {
-      //   if (res.code === '200') {
-      //     message('success', '修改成功')
-      //     this.getPermissions()
-      //   }
-      // })
       let params = {
         roleId: this.roleId,
         roleName: this.roleName,
