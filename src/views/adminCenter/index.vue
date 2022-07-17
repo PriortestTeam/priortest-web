@@ -279,8 +279,16 @@
               <el-table-column type="selection" width="55" />
               <el-table-column prop="fieldName" label="字段名称" />
               <el-table-column prop="type" label="类型" />
-              <el-table-column prop="scope" label="范围" />
-              <el-table-column prop="mandatory" label="是否必填" />
+               <el-table-column prop="scope" label="范围" >
+                              <template slot-scope="scope">
+                                <span>{{ translator($staticEnums.getBoolean(),scope.row.scope,true) }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column prop="mandatory" label="是否必填">
+                              <template slot-scope="scope">
+                                <span>{{ translator($staticEnums.getBoolean(),scope.row.mandatory,true) }}</span>
+                              </template>
+               </el-table-column>
               <el-table-column label="Action">
                 <template slot-scope="scope">
                   <el-button

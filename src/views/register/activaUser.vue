@@ -12,7 +12,7 @@
       </el-form-item>
       <el-form-item>
         <div class="btnForget">
-          <el-button type="primary" round @click="handleLogin('loginForm')">Login</el-button>
+          <el-button type="primary" @click="handleLogin('loginForm')">Login</el-button>
           <!-- @click="forgetPwd()" -->
           <div class="Forget-frist">
             Forget & Set Password

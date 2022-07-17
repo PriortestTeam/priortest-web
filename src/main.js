@@ -67,6 +67,11 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
+import global from '@/utils/global.js'
+Vue.use(global)
+import * as staticEnums from '@/utils/static-enums'
+Vue.prototype.$staticEnums = staticEnums;
+
 new Vue({
   el: '#app',
   i18n,

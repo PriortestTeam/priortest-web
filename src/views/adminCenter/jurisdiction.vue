@@ -9,7 +9,7 @@
             :label="item.roleName"
             border
             :name="item.roleName"
-            >{{ item.roleName }}账户</el-radio-button
+            >{{ item.roleName }}</el-radio-button
           >
         </el-radio-group>
       </div>
@@ -22,12 +22,12 @@
           @row-click="currentChange"
           tooltip-effect="light"
         >
-          <el-table-column prop="userName" label="Name" show-overflow-tooltip />
-          <el-table-column prop="email" label="Email" show-overflow-tooltip />
-          <el-table-column prop="id" label="ID" show-overflow-tooltip />
+          <el-table-column prop="userName" label="账号" show-overflow-tooltip />
+          <el-table-column prop="email" label="邮箱" show-overflow-tooltip />
+          <el-table-column prop="id" label="账号ID" show-overflow-tooltip />
           <el-table-column
             prop="roleDesc"
-            label="Group"
+            label="角色"
             show-overflow-tooltip
           />
         </el-table>

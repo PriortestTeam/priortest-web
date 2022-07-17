@@ -11,24 +11,21 @@
         <el-button
           v-if="!featureFrom.id"
           type="primary"
-          round
+
           @click="submitForm('featureFrom', false)"
         >保存并新建</el-button>
         <el-button
           v-if="!featureFrom.id"
           type="primary"
-          round
           @click="submitForm('featureFrom', true)"
         >保存并返回</el-button>
         <el-button
           v-if="featureFrom.id"
           type="primary"
-          round
           @click="submitForm('featureFrom')"
         >确认修改</el-button>
         <el-button
           type="primary"
-          round
           @click="giveupBack('featureFrom')"
         >放弃</el-button>
         <router-link v-if="!featureFrom.id" to="/admincenter/admincenter">

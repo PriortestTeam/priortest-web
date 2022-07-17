@@ -11,27 +11,23 @@
         <el-button
           v-if="!testCaseFrom.id"
           type="primary"
-          round
           @click="submitForm('testCaseFrom', false)"
         >保存并新建
         </el-button>
         <el-button
           v-if="!testCaseFrom.id"
           type="primary"
-          round
           @click="submitForm('testCaseFrom', true)"
         >保存并返回
         </el-button>
         <el-button
           v-if="testCaseFrom.id"
           type="primary"
-          round
           @click="submitForm('testCaseFrom')"
         >确认修改
         </el-button>
         <el-button
           type="primary"
-          round
           @click="giveupBack('testCaseFrom')"
         >放弃
         </el-button>

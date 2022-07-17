@@ -12,28 +12,24 @@
           v-if="!from.id"
           type="primary"
           :disabled="savedisabled"
-          round
           @click.stop="submitForm('from')"
           >新增</el-button
         >
         <el-button
           v-if="!from.id"
           type="primary"
-          round
           @click.stop="waiveForm('from')"
           >取消</el-button
         >
         <el-button
           v-if="from.id"
           type="primary"
-          round
           @click.stop="submitForm('from')"
           >确定修改</el-button
         >
         <el-button
           v-if="from.id"
           type="primary"
-          round
           @click.stop="cancelUpdate('from')"
           >取消修改</el-button
         >

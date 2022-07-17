@@ -26,7 +26,6 @@
       <el-button
         class="acBtn"
         :disabled="!checked"
-        round
         @click="goActivate"
       >激活账户</el-button>
     </el-form>

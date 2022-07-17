@@ -26,13 +26,11 @@
         <el-button
           type="primary"
           size="medium"
-          round
           style="width:48%"
           @click="handleLogin('loginForm')"
         >登录</el-button>
         <el-button
           type="primary"
-          round
           class="registerBtn"
           style="width:48%"
           @click="handleregister('loginForm')"

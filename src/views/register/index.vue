@@ -12,7 +12,7 @@
       </el-form-item>
       <el-form-item>
         <div class="btnForget">
-          <el-button type="primary" round @click="handleLogin('loginForm')">Register</el-button>
+          <el-button type="primary"  @click="handleLogin('loginForm')">Register</el-button>
         </div>
       </el-form-item>
     </el-form>
