@@ -13,12 +13,10 @@
         <div class="fieldbtn">
           <el-button
             type="primary"
-            round
             @click="submitfdForm('fieldsfrom')"
           >保存</el-button>
           <el-button
             type="primary"
-            round
           >放弃</el-button>
         </div>
         <el-form-item label="字段名称" prop="fieldName" class="form-small">

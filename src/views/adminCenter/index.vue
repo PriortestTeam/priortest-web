@@ -17,7 +17,6 @@
             <div>
               <el-button
                 type="primary"
-                round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
                 >新建账户</el-button
@@ -25,14 +24,12 @@
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
-                round
                 @click="submitForm('accountForm')"
                 >确认修改</el-button
               >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
-                round
                 @click="cancelUpdate('accountForm')"
                 >取消修改</el-button
               >

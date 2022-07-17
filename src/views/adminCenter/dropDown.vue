@@ -14,13 +14,11 @@
         <div class="fieldbtn">
           <el-button
             type="primary"
-            round
             @click="submitfdForm('fieldsfrom')"
           >保存
           </el-button>
           <el-button
             type="primary"
-            round
           >放弃
           </el-button>
         </div>
@@ -75,7 +73,6 @@
               <div style="margin-left: 5px">
                 <el-button
                   type="primary"
-                  round
                   :disabled="!fieldsfrom.Value"
                   @click="addDrop"
                 >添加
@@ -106,7 +103,6 @@
           <div style="marginleft: 5px">
             <el-button
               type="primary"
-              round
               :disabled="!droprow"
               @click="delDrop"
             >删除
