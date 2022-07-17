@@ -21,8 +21,6 @@
       </div>
       <el-button
         class="acBtn"
-
-        round
         @click="goActivate"
       >提交</el-button>
     </el-form>

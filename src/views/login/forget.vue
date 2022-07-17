@@ -20,7 +20,6 @@
         <el-button
           type="primary"
           size="medium"
-          round
           style="width: 100%"
           @click="sendEmail()"
         >{{ $t("lang.login.send") }}</el-button>

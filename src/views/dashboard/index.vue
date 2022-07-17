@@ -348,8 +348,8 @@ export default {
   },
   methods: {
     handleChart(){
-      this.$router.push('/admincenter/admincenter')
-      // this.$router.push('/AddNew')
+      this.$router.push({name:'Admincenter', params: {id:'6'}})
+      // this.$router.push('/admincenter/admincenter')
     },
     // 新增tag
     addTag(data){

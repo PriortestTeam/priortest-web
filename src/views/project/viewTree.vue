@@ -1,7 +1,7 @@
 <template>
   <div class="comp-tree">
     <div class="new_project">
-      <el-button type="primary" round>
+      <el-button type="primary">
         <!-- <router-link :to="viewUrl"> 新建/管理视图 </router-link> -->
         <div @click="toViewManage"> 新建/管理视图 </div>
       </el-button>

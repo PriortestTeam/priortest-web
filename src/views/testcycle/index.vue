@@ -15,7 +15,7 @@
         <el-card>
           <div class="project_table">
             <div class="new_project">
-              <el-button type="primary" round @click="newproject">
+              <el-button type="primary" @click="newproject">
                 新建测试周期
               </el-button>
             </div>

@@ -14,13 +14,11 @@
         <div class="fieldbtn">
           <el-button
             type="primary"
-            round
             @click="submitfdForm('fieldsfrom')"
           >保存
           </el-button>
           <el-button
             type="primary"
-            round
           >放弃
           </el-button>
         </div>
@@ -57,6 +55,30 @@
             />
           </el-select>
         </el-form-item>
+
+            <el-form-item v-show="fieldsfrom.linkedFileId">
+                  <el-row class="sen-row" :gutter="20">
+                    <el-col :span="4">
+                      <el-checkbox v-model="checkedAll"/>
+                    </el-col>
+                    <el-col :span="8" class="blob">范围</el-col>
+                    <el-col :span="8" class="blob">必填</el-col>
+                  </el-row>
+                  <el-row v-for="(item, index) in checkList" :key="index" class="sen-row" :gutter="20">
+                    <el-col :span="4">
+                      <el-checkbox v-model="item.checked" @change="checkChange"/>
+                    </el-col>
+                    <el-col :span="4">{{ item.scope }}</el-col>
+                    <el-col :span="4" class="ml20">
+                      <div class="ng-red">
+                        <el-checkbox v-model="item.mandatory" />
+                      </div>
+                    </el-col>
+
+                  </el-row>
+
+                </el-form-item>
+
         <!--<el-form-item-->
         <!--label="长度"-->
         <!--prop="length"-->
@@ -66,7 +88,12 @@
         <!--</el-form-item> -->
       </el-form>
     </el-col>
-    <el-col  v-if="fieldsfrom.linkedFileId" :span="6">
+
+    <el-col v-if="fieldsfrom.linkedFileId" :span="6">
+     <!--<el-row class="sen-row" :gutter="20" style="margin-bottom: 20px;" >-->
+            <!--<div>当用户选项添加时：显示输入框，允许用户输入并添加新值</div>-->
+            <!--<div>当用户选择其他列表时：后台返回系统中属于列表的字段标题</div>-->
+          <!--</el-row>-->
 
       <el-row class="sen-row" :gutter="20" style="margin-bottom: 20px;" >
         <div  class="linkData" v-for="item in linkData">
@@ -159,6 +186,15 @@
           {label: 'STD', input: '',current:"", array: ['link1', 'link2', 'link3']},
           {label: 'PRD', input: '',current:"", array: ['link1', 'link2', 'link3']},
         ],
+         checkedAll:false,
+                checkList:[
+                  {check:false,scope:'Project',mandatory:false},
+                  {check:false,scope:'Feature',mandatory:false},
+                  {check:false,scope:'TestCase',mandatory:false},
+                  {check:false,scope:'TestCycle',mandatory:false},
+                  {check:false,scope:'Issue',mandatory:false},
+                ],
+
         tableHeader: {
           color: '#d4dce3',
           background: '#4286CD'
@@ -201,7 +237,12 @@
     watch: {
       'customname': function (val) {
         this.setForm()
-      }
+       },
+           checkedAll(val){
+             if(val==true){
+               this.checkList.forEach(item=>item.checked=true)
+             }
+             }
     },
     created() {
       /* eslint-disable */
@@ -322,7 +363,12 @@
         item.array.splice(current,1)
         item.current=""
       },
-
+    /**
+       * checkBox改变事件
+       * */
+      checkChange(value){
+        this.$forceUpdate()
+      }
     }
   }
 
@@ -366,4 +412,10 @@
     color: #fff;
     background: #4286CD;
   }
-</style>
+  .ml20{
+      margin-left: 20px;
+    }
+    .blob{
+      font-weight: bold;
+    }
+    </style>

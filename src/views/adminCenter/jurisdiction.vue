@@ -9,7 +9,7 @@
             :label="item.roleName"
             border
             :name="item.roleName"
-            >{{ item.roleName }}账户</el-radio-button
+            >{{ item.roleName }}</el-radio-button
           >
         </el-radio-group>
       </div>
@@ -17,16 +17,17 @@
         <el-table
           :data="userList"
           height="100%"
+          :row-style="showRow"
           highlight-current-row
           @row-click="currentChange"
           tooltip-effect="light"
         >
-          <el-table-column prop="userName" label="Name" show-overflow-tooltip />
-          <el-table-column prop="email" label="Email" show-overflow-tooltip />
-          <el-table-column prop="id" label="ID" show-overflow-tooltip />
+          <el-table-column prop="userName" label="账号" show-overflow-tooltip />
+          <el-table-column prop="email" label="邮箱" show-overflow-tooltip />
+          <el-table-column prop="id" label="账号ID" show-overflow-tooltip />
           <el-table-column
             prop="roleDesc"
-            label="Group"
+            label="角色"
             show-overflow-tooltip
           />
         </el-table>
@@ -63,6 +64,7 @@
             <template v-if="item.children">
               <el-checkbox
                 v-for="(subItem, subIndex) in item.children"
+                v-model="subItem.checked"
                 :label="subItem.id"
                 :key="subIndex"
                 >{{ subItem.title }}</el-checkbox
@@ -138,9 +140,11 @@ export default {
   mounted() {
     this.roleName = this.jurisdictionAccount.roleName;
     if(this.jurisdictionAccount){
-      console.log(this.jurisdictionAccount)
       let projectId = this.jurisdictionAccount.projectIdStr.split(',')[0]
       let projectName = this.jurisdictionAccount.projectsSts.split(';')[0]
+      this.userId = this.jurisdictionAccount.id;
+      console.log(this.userId,this.jurisdictionAccount,'====child')
+
       this.selectProject = {
         label:projectName,
         value:projectId
@@ -148,8 +152,6 @@ export default {
       this.projectName = projectName;
     }
     this.getUserList(this.roleName)
-    // console.log(this.userList)
-    // console.log(this.userInfos)
   },
   methods: {
     chageName() {
@@ -158,15 +160,18 @@ export default {
     // 当前用户选择改变
     currentChange(val) {
       this.jurisdictionOptions = []
-      this.getUserList(val.roleName, val.id)
-      this.$emit('userChange', val)
+      this.modelList = []
+      this.functionList = []
+      this.selectProject = {}
       this.roleId = val.roleId || val.sysRoleId
       this.roleName = val.roleName
       this.userName = val.userName
       this.userId = val.id
       this.projectName = ''
-      this.selectProject = {}
-      this.modelList = []
+      this.getUserList(val.roleName, val.id)
+      // this.getRoleTree()
+      // this.getUserList(val.roleName, val.id)
+      this.$emit('userChange', val)
     },
     roleChange(val) {
       this.roleName = val
@@ -189,9 +194,10 @@ export default {
           })
           this.userList = res.data
           if (this.userList.length > 0) {
+            console.log(this.userList,'======userList');
             this.getProjectList(id || this.userList[0].id)
             this.roleId = this.userList[0].sysRoleId || this.userList[0].roleId
-            this.userId = id || this.userList[0].id
+            // this.userId = id || this.userList[0].id
             this.userName = this.userList[0].userName
             console.log('user', this.userList[0])
           }
@@ -199,6 +205,15 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    showRow({row, rowIndwx}) {
+      let styleJson = {}
+      if (row.id == this.jurisdictionAccount.id) {
+        styleJson = {
+          'color': '#4286CD'
+        }
+      }
+      return styleJson
     },
     async getProjectList(userid) {
       try {
@@ -266,6 +281,7 @@ export default {
       // this.getPermissions(this.ids)
     },
     getRoleTree(){
+      console.log(this.userId,'========this.userId');
       this.loading = true
       Api.findRoleFunction({
         roleId: this.roleId,
@@ -297,35 +313,7 @@ export default {
         }
       })
     },
-    // formObj (item) {
-    //   const temObj = {}
-    //   temObj.projectId = this.projectId
-    //   temObj.subUserId = this.id
-    //   temObj.operationAuthId = item.id
-    //   return temObj
-    // },
     sureUpdate() {
-      // this.jurisdictionUpdate.projectPermissions = []
-      // this.jurisdictionItem.filter((item) => {
-      //   if (item.isSelect === '1') {
-      //     const obj = this.formObj(item)
-      //     this.jurisdictionUpdate.projectPermissions.push(obj)
-      //     if (item.childList.length > 0) {
-      //       item.childList.filter((item1) => {
-      //         if (item1.isSelect === '1') {
-      //           const obj1 = this.formObj(item1)
-      //           this.jurisdictionUpdate.projectPermissions.push(obj1)
-      //         }
-      //       })
-      //     }
-      //   }
-      // })
-      // updatePermissions(this.jurisdictionUpdate).then((res) => {
-      //   if (res.code === '200') {
-      //     message('success', '修改成功')
-      //     this.getPermissions()
-      //   }
-      // })
       let params = {
         roleId: this.roleId,
         roleName: this.roleName,

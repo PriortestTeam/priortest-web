@@ -32,7 +32,6 @@
           :disabled="!(checked && forgetForm.email != '')"
           type="primary"
           size="medium"
-          round
           style="width: 100%"
           @click="sendEmail()"
         >{{ $t("lang.login.deferredBtn") }}</el-button>

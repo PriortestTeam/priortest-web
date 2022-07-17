@@ -17,7 +17,6 @@
             <div>
               <el-button
                 type="primary"
-                round
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
                 >新建账户</el-button
@@ -25,14 +24,12 @@
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
-                round
                 @click="submitForm('accountForm')"
                 >确认修改</el-button
               >
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
-                round
                 @click="cancelUpdate('accountForm')"
                 >取消修改</el-button
               >
@@ -279,8 +276,16 @@
               <el-table-column type="selection" width="55" />
               <el-table-column prop="fieldName" label="字段名称" />
               <el-table-column prop="type" label="类型" />
-              <el-table-column prop="scope" label="范围" />
-              <el-table-column prop="mandatory" label="是否必填" />
+               <el-table-column prop="scope" label="范围" >
+                              <template slot-scope="scope">
+                                <span>{{ translator($staticEnums.getBoolean(),scope.row.scope,true) }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column prop="mandatory" label="是否必填">
+                              <template slot-scope="scope">
+                                <span>{{ translator($staticEnums.getBoolean(),scope.row.mandatory,true) }}</span>
+                              </template>
+               </el-table-column>
               <el-table-column label="Action">
                 <template slot-scope="scope">
                   <el-button
@@ -533,6 +538,9 @@ export default {
           vm.activeName = '3'
         }
       }
+      if (to.params.id === '6') {
+        vm.activeName = '6'
+      }
     })
   },
   computed: {
@@ -750,6 +758,7 @@ export default {
       this.resetAccountForm()
     },
     accountSelectionChange(val) {
+      console.log(val,'===1');
       this.accountSelection = val
       this.accountMultiple = !val.length
       this.accountSingle = val.length !== 1
@@ -780,6 +789,7 @@ export default {
       // this.jurisdictionAccountId = ''
       this.activeName = '1'
       this.jurisdictionAccount = this.accountSelection[0]
+      console.log(this.jurisdictionAccount,this.userinfo,'=======111');
     },
     /** ˙账户结束 */
 

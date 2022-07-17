@@ -11,24 +11,20 @@
         <el-button
           v-if="!sprintFrom.id"
           type="primary"
-          round
           @click="submitForm('sprintFrom', false)"
         >保存并新建</el-button>
         <el-button
           v-if="!sprintFrom.id"
           type="primary"
-          round
           @click="submitForm('sprintFrom', true)"
         >保存并返回</el-button>
         <el-button
           v-if="sprintFrom.id"
           type="primary"
-          round
           @click="submitForm('sprintFrom')"
         >确认修改</el-button>
         <el-button
           type="primary"
-          round
           @click="giveupBack('sprintFrom')"
         >放弃</el-button>
         <router-link v-if="!sprintFrom.id" to="/admincenter/admincenter">
