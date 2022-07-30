@@ -11,23 +11,24 @@
           v-if="!testCycleFrom.id"
           type="primary"
           @click="submitForm('testCycleFrom', false)"
-        >保存并新建</el-button>
+          >保存并新建</el-button
+        >
         <el-button
           v-if="!testCycleFrom.id"
           type="primary"
           @click="submitForm('testCycleFrom', true)"
-        >保存并返回</el-button>
+          >保存并返回</el-button
+        >
         <el-button
           v-if="testCycleFrom.id"
           type="primary"
           @click="submitForm('testCycleFrom')"
-        >确认修改</el-button>
+          >确认修改</el-button
+        >
         <el-button type="primary" @click="giveupBack('testCycleFrom')">放弃</el-button>
         <router-link v-if="!testCycleFrom.id" to="/admincenter/admincenter">
           <el-button type="text">
-            {{
-            $t("lang.PublicBtn.CreateCustomField")
-            }}
+            {{ $t('lang.PublicBtn.CreateCustomField') }}
           </el-button>
         </router-link>
       </div>
@@ -39,11 +40,21 @@
           <el-col
             v-for="field in sysCustomFields"
             :key="field.id"
-            :xs="12"
-            :sm="12"
-            :md="12"
-            :lg="8"
-            :xl="8"
+            :xs="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 12
+            "
+            :sm="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 12
+            "
+            :md="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 12
+            "
+            :lg="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 8
+            "
+            :xl="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 8
+            "
           >
             <!-- 输入框 -->
             <el-form-item
@@ -78,7 +89,7 @@
               :prop="field.fieldName"
               label-width="140px"
             >
-              <el-checkbox v-model="testCycleFrom[field.fieldName]"></el-checkbox>
+              <el-checkbox v-model="testCycleFrom[field.fieldName]" />
             </el-form-item>
             <!-- 日期 -->
             <el-form-item
@@ -110,7 +121,7 @@
                 :placeholder="`请选择${field.fieldNameCn}`"
               >
                 <el-option
-                  v-for="(item,index) in field.defaultValues.split(',')"
+                  v-for="(item, index) in field.defaultValues.split(',')"
                   :key="index"
                   :label="field.defaultValues.split(',')[index]"
                   :value="field.defaultValues.split(',')[index]"
@@ -135,12 +146,15 @@
                 :placeholder="`请选择${field.fieldNameCn}`"
               >
                 <el-option
-                  v-for="(item,index) in field.defaultValues.split(',')"
+                  v-for="(item, index) in field.defaultValues.split(',')"
                   :key="index"
                   :label="field.defaultValues.split(',')[index]"
                   :value="field.defaultValues.split(',')[index]"
                 />
-                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                <router-link
+                  v-if="field.fieldName !== 'schedule_run_frequency'"
+                  :to="`/admincenter/admincenter?par=${field.fieldName}`"
+                >
                   <el-option label="Add New Value" value />
                 </router-link>
               </el-select>
@@ -169,7 +183,12 @@
               size="small"
               :prop="field.fieldName"
             >
-              <el-input v-model="field.fieldName" type="textarea" :rows="2" placeholder="请输入内容" />
+              <el-input
+                v-model="field.fieldName"
+                type="textarea"
+                :rows="2"
+                placeholder="请输入内容"
+              />
             </el-form-item>
             <el-form-item
               v-if="field.type === 'radio'"
@@ -177,9 +196,12 @@
               size="small"
               :prop="field.fieldName"
             >
-              <el-select v-model="field.fieldName" :placeholder="`请选择${field.fieldName}`">
+              <el-select
+                v-model="field.fieldName"
+                :placeholder="`请选择${field.fieldName}`"
+              >
                 <el-option
-                  v-for="(item,index) in field.defaultValues"
+                  v-for="(item, index) in field.defaultValues"
                   :key="index"
                   :label="field.mergeValues[index]"
                   :value="field.mergeValues[index]"
@@ -196,14 +218,20 @@
               filterable
               :prop="field.fieldName"
             >
-              <el-select v-model="field.fieldName" :placeholder="`请选择${field.fieldName}`">
+              <el-select
+                v-model="field.fieldName"
+                :placeholder="`请选择${field.fieldName}`"
+              >
                 <el-option
-                  v-for="(item,index) in field.defaultValues"
+                  v-for="(item, index) in field.defaultValues"
                   :key="index"
                   :label="field.mergeValues[index]"
                   :value="field.mergeValues[index]"
                 />
-                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                <router-link
+                  v-if="field.fieldName !== 'schedule_run_frequency'"
+                  :to="`/admincenter/admincenter?par=${field.fieldName}`"
+                >
                   <el-option label="Add New Value" value />
                 </router-link>
               </el-select>
@@ -225,14 +253,24 @@
         <el-table-column type="index" align="center" label="序号">
           <template slot-scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
-        <el-table-column prop="title" label="标题" :show-overflow-tooltip="true" align="center" />
+        <el-table-column
+          prop="title"
+          label="标题"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
         <el-table-column
           prop="linkedIssue"
           label="关联缺陷"
           :show-overflow-tooltip="true"
           align="center"
         />
-        <el-table-column prop="Module" label="模块" :show-overflow-tooltip="true" align="center" />
+        <el-table-column
+          prop="Module"
+          label="模块"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
 
         <el-table-column
           prop="AutoStatus"
@@ -241,24 +279,59 @@
           align="center"
         />
 
-        <el-table-column prop="RunTimes" label="运行次数" :show-overflow-tooltip="true" align="center" />
-        <el-table-column prop="lastRun" label="运行日期" :show-overflow-tooltip="true" align="center" />
-        <el-table-column prop="lastRunStatus" label="运行状态" :show-overflow-tooltip="true">
-          <el-table-column prop="stepStatus" :show-overflow-tooltip="true" label="步骤运行状态" />
+        <el-table-column
+          prop="RunTimes"
+          label="运行次数"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
+        <el-table-column
+          prop="lastRun"
+          label="运行日期"
+          :show-overflow-tooltip="true"
+          align="center"
+        />
+        <el-table-column
+          prop="lastRunStatus"
+          label="运行状态"
+          :show-overflow-tooltip="true"
+        >
+          <el-table-column
+            prop="stepStatus"
+            :show-overflow-tooltip="true"
+            label="步骤运行状态"
+          />
         </el-table-column>
 
-        <el-table-column prop="lastRunDuration" label="运行时长" :show-overflow-tooltip="true" />
+        <el-table-column
+          prop="lastRunDuration"
+          label="运行时长"
+          :show-overflow-tooltip="true"
+        />
 
-        <el-table-column prop="lastRunner" label="运行人" :show-overflow-tooltip="true" />
+        <el-table-column
+          prop="lastRunner"
+          label="运行人"
+          :show-overflow-tooltip="true"
+        />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="text" class="table-btn" @click.stop="delview(scope.row)">删除</el-button>
-            <el-button type="text" class="table-btn" @click.stop="runview(scope.row)">运行</el-button>
+            <el-button type="text" class="table-btn" @click.stop="delview(scope.row)"
+              >删除</el-button
+            >
+            <el-button type="text" class="table-btn" @click.stop="runview(scope.row)"
+              >运行</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <el-dialog title="添加测试用例" :visible.sync="openDia" width="500px" append-to-body>
+    <el-dialog
+      title="添加测试用例"
+      :visible.sync="openDia"
+      width="500px"
+      append-to-body
+    >
       <el-form ref="testCaseFrom" :model="testCaseFrom" :rules="testCaseFromRules">
         <el-form-item label="选择测试用例" prop="testCaseId" size="small">
           <el-select v-model="testCaseFrom.testCaseId" placeholder="请选择测试用例">
@@ -325,9 +398,7 @@ export default {
       testCaseData: [],
       testCaseDataSelect: [],
       testCaseFromRules: {
-        testCaseId: [
-          { required: true, message: '请选择测试用例', trigger: 'change' },
-        ],
+        testCaseId: [{ required: true, message: '请选择测试用例', trigger: 'change' }],
       },
       sysCustomFields: [],
       customFields: [],
@@ -356,8 +427,7 @@ export default {
         this.testCaseDataSelect = res.data
       })
     } else {
-      this.testCycleFrom.projectId =
-        this.projectInfo.userUseOpenProject.projectId
+      this.testCycleFrom.projectId = this.projectInfo.userUseOpenProject.projectId
     }
     // 获取系统字段
     getAllSysCustomFields({
@@ -365,8 +435,24 @@ export default {
     }).then((res) => {
       if (res.code === '200') {
         this.$nextTick(() => {
-          this.sysCustomFields = res.data
-          this.sysCustomFields = res.data
+          if (res.data) {
+            var arr1 = []
+            var arr2 = res.data.filter((item, index) => {
+              if (
+                item.fieldName === 'scheduleStartDate' ||
+                item.fieldName === 'scheduleEndDate' ||
+                item.fieldName === 'jenkinsJob'
+              ) {
+                arr1.push(item)
+                return false
+              } else {
+                return true
+              }
+            })
+            arr1.unshift(12, 0)
+            Array.prototype.splice.apply(arr2, arr1)
+            this.sysCustomFields = arr2
+          }
         })
       }
     })
@@ -421,10 +507,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.testCycleFrom.id) {
-            const param = formatChangedPara(
-              this.testCycleFromTemp,
-              this.testCycleFrom
-            )
+            const param = formatChangedPara(this.testCycleFromTemp, this.testCycleFrom)
             param.projectId = this.testCycleFromTemp.projectId
             editTestCycle(param)
               .then((res) => {
