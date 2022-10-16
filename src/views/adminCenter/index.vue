@@ -712,7 +712,18 @@ export default {
             })
           } else {
             var form = JSON.parse(JSON.stringify(this.accountForm))
-            form.projectIdStr = form.projectIdStr.join(',')
+            if (form.projectIdStr && form.projectIdStr != 0) {
+              form.projectIdStr = form.projectIdStr.join(',')
+            } else {
+              const projectIdArr = []
+              Object.values(this.accountProject).forEach(val => {
+                if (val.id != 0) {
+                  projectIdArr.push(val.id)
+                }
+              })
+              form.projectIdStr = projectIdArr.join(',')
+            }
+            // form.projectIdStr = form.projectIdStr.join(',')
             createSubUser(form).then((res) => {
               if (res.code !== '200') {
                 return
