@@ -682,16 +682,26 @@ export default {
       this.openProjectByDefaultIdList = []
       this.$refs['accountForm'].resetFields()
     },
-    submitForm(formName) {
+     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.accountForm.id) {
-            const param = formatChangedPara(
-              this.accountTempForm,
-              this.accountForm
-            )
-            if (param.projectIdStr) {
+            // 
+            // const param = formatChangedPara(
+            //   this.accountTempForm,
+            //   this.accountForm
+            // )
+            const param = this.accountForm
+            if (param.projectIdStr && param.projectIdStr != 0) {
               param.projectIdStr = param.projectIdStr.join(',')
+            } else {
+              const projectIdArr = []
+              Object.values(this.accountProject).forEach(val => {
+                if (val.id != 0) {
+                  projectIdArr.push(val.id)
+                }
+              })
+              param.projectIdStr = projectIdArr.join(',')
             }
             updateSubUser(param).then((res) => {
               message('success', res.msg)
@@ -702,7 +712,18 @@ export default {
             })
           } else {
             var form = JSON.parse(JSON.stringify(this.accountForm))
-            form.projectIdStr = form.projectIdStr.join(',')
+            if (form.projectIdStr && form.projectIdStr != 0) {
+              form.projectIdStr = form.projectIdStr.join(',')
+            } else {
+              const projectIdArr = []
+              Object.values(this.accountProject).forEach(val => {
+                if (val.id != 0) {
+                  projectIdArr.push(val.id)
+                }
+              })
+              form.projectIdStr = projectIdArr.join(',')
+            }
+            // form.projectIdStr = form.projectIdStr.join(',')
             createSubUser(form).then((res) => {
               if (res.code !== '200') {
                 return
@@ -728,6 +749,7 @@ export default {
     },
     // 行点击编辑
     accountEdit(row) {
+      // debugger
       console.log(row)
       row.isSelect = !row.isSelect
       this.emailDisabled = true
