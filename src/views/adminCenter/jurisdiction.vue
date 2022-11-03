@@ -140,8 +140,8 @@ export default {
   mounted() {
     this.roleName = this.jurisdictionAccount.roleName;
     if(this.jurisdictionAccount){
-      let projectId = this.jurisdictionAccount.projectIdStr.split(',')[0]
-      let projectName = this.jurisdictionAccount.projectsSts.split(';')[0]
+      let projectId = this.jurisdictionAccount.openProjectByDefaultId
+      let projectName = this.jurisdictionAccount.openProjectByDefaultName
       this.userId = this.jurisdictionAccount.id;
       console.log(this.userId,this.jurisdictionAccount,'====child')
 
