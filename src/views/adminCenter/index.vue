@@ -686,7 +686,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.accountForm.id) {
-            // 
+            //
             // const param = formatChangedPara(
             //   this.accountTempForm,
             //   this.accountForm
@@ -759,6 +759,7 @@ export default {
       this.$refs.accountData.toggleRowSelection(row)
       const form = JSON.parse(JSON.stringify(row))
       form.projectIdStr = form.projectIdStr.split(',')
+      form.sysRoleId = String(form.sysRoleId)
       for (var x in this.accountForm) {
         this.accountForm[x] = form[x]
       }
@@ -784,10 +785,10 @@ export default {
       this.accountSelection = val
       this.accountMultiple = !val.length
       this.accountSingle = val.length !== 1
-      if (this.accountSingle) {
-        this.resetAccountForm()
-        this.accountUpdate = true
-      }
+      //if (this.accountSingle) {
+      //  this.resetAccountForm()
+      //  this.accountUpdate = true
+     // }
     },
     // 删除
     accountDel(val) {
@@ -801,6 +802,7 @@ export default {
             if (res.code === '200') {
               this.getquerySubUsers()
               message('success', '删除成功')
+              this.resetAccountForm()
             }
           })
         })

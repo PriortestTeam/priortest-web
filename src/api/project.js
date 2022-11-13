@@ -160,19 +160,21 @@ export function queryViewTrees (params) {
     params: params
   })
 }
-// 查询view 树状结构
-export function getAllSysCustomField () {
+
+
+export function getAllCustomField(data) {
   return request({
-    url: '/project/getAllSysCustomField',
-    method: 'get'
+    url: '/CustomFieldData/getAllCustomField',
+    method: 'post',
+    data
   })
 }
 
-// 查询字段
-export function getAllCustomField (params) {
+// 获取系统字段
+export function getAllSysCustomFields(params) {
   return request({
-    url: '/project/getAllCustomField',
-    method: 'post',
-    data: params
+    url: '/CustomFieldData/getAllSysCustomField',
+    method: 'get',
+    params
   })
 }
