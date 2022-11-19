@@ -33,9 +33,7 @@
              </router-link>
            </div>
       <div class="form-box">
-        <!-- <el-form-item label="测试周期标题" prop="title">
-          <el-input v-model="projectFrom.title" maxlength="30" size="small" />
-        </el-form-item>-->
+
         <el-row>
           <el-col
             v-for="field in sysCustomFields"
@@ -253,10 +251,10 @@ import {
   getAllSysCustomFields,
 } from '@/api/project'
 
-import { queryByNameSubUsers } from '@/api/project'
+import { queryNameUsersByRoomId } from '@/api/project'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
-  name: 'Addproject',
+  name: 'addProject',
   data() {
     return {
       disabled: false,
@@ -284,22 +282,7 @@ export default {
     },
   },
   created() {
-    if (this.$route.query.id) {
-      this.testCaseFrom.testCycleId = this.$route.query.id
-      detailTestCycle(this.$route.query.id).then((res) => {
-        this.projectFrom = res.data
-        this.projectFromTemp = Object.assign({}, this.projectFrom)
-      })
-      this.gettestCycleCase()
-      testCaseListAll({
-        projectId: this.projectInfo.userUseOpenProject.projectId,
-        title: '',
-      }).then((res) => {
-        this.testCaseDataSelect = res.data
-      })
-    } else {
       this.projectFrom.projectId = this.projectInfo.userUseOpenProject.projectId
-    }
     // 获取系统字段
     getAllSysCustomFields({
       scope: 'Project',
@@ -330,7 +313,7 @@ export default {
     // 获取自定义字段
     getAllCustomField({
       projectId: this.projectInfo.userUseOpenProject.projectId,
-      scope: 'testCycle',
+      scope: 'Project',
     }).then((res) => {
       if (res.code === '200') {
         this.customFields = res.data
@@ -391,7 +374,7 @@ export default {
                 console.log(error)
               })
           } else {
-            addProject(this.projectFrom)
+            addProjects(this.projectFrom)
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -419,64 +402,8 @@ export default {
         this.resetFields()
       }
       this.returntomenu(this)
-    },
-
-    /** *编辑的表格 */
-    resettestCaseFrom() {
-      this.testCaseFrom = {
-        testCycleId: this.projectFrom.id,
-        testCaseId: undefined,
-      }
-      this.$refs['testCaseFrom'].resetFields()
-    },
-    gettestCycleCase() {
-      testCycleCase(
-        {
-          pageNum: 1,
-          pageSize: 10,
-          testCycleId: this.testCaseFrom.testCycleId,
-        },
-        {}
-      ).then((res) => {
-        this.testCaseData = res.data
-      })
-    },
-    newStep() {
-      this.openDia = true
-    },
-    submittestCaseFrom() {
-      this.$refs['testCaseFrom'].validate((valid) => {
-        if (valid) {
-          addProject(this.testCaseFrom).then((res) => {
-            if (res.code === '200') {
-              this.gettestCycleCase()
-              message('success', res.msg)
-              this.openDia = false
-              this.resettestCaseFrom()
-            }
-          })
-        }
-      })
-    },
-    canceltestCaseFrom() {
-      this.resettestCaseFrom()
-      this.openDia = false
-    },
-    runview(row) {
-      this.$router.push({
-        name: 'Execute',
-        query: { id: row.id, testCycleId: this.projectFrom.id },
-      })
-    },
-    delview(row) {
-      bindCaseDelete(row.id).then((res) => {
-        if (res.code === '200') {
-          message('success', res.msg)
-          this.gettestCycleCase()
-        }
-      })
-    },
-  },
+    }
+}
 }
 </script>
 <style lang="scss" scoped>

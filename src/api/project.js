@@ -109,6 +109,16 @@ export function queryByNameSubUsers (data) {
     params: data
   })
 }
+
+// 获取负责人
+export function queryNameUsersByRoomId (data) {
+  return request({
+    url: '/user/queryNameUsersByRoomId',
+    method: 'post',
+    params: data
+  })
+}
+
 // 获取详情
 export function getFeature (id) {
   return request({
