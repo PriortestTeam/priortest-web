@@ -324,7 +324,7 @@ export default {
     })
     // 获取自定义字段
     getAllCustomField({
-      featureId: this.projectInfo.userUseOpenProject.featureId,
+      projectId: this.projectInfo.userUseOpenProject.projectId,
       scope: 'TestCase',
     }).then((res) => {
       if (res.code === '200') {
@@ -333,11 +333,8 @@ export default {
     })
   },
   mounted() {},
+
   methods: {
-    // 跳转到执行用例
-    useCase() {
-      this.$router.push('/testcycle/useCase')
-    },
     remoteReport(query) {
       if (query !== '') {
         this.loading = true
@@ -351,6 +348,19 @@ export default {
         this.optionsArr = []
       }
     },
+
+     // 编辑获取步骤
+        getTestStep () {
+          testCaseStep(
+            { pageNum: 1, pageSize: 10 },
+            {
+              testCaseId: this.stepFrom.testCaseId
+            }
+          ).then((res) => {
+            this.stepData = res.data
+          })
+        },
+
     // 重置表单
     resetFields() {
       this.testCaseFrom = {
@@ -414,7 +424,88 @@ export default {
         this.resetFields()
       }
       this.returntomenu(this)
-    }
+    },
+     // 新建步骤
+        resetStepFrom () {
+          this.stepFrom = {
+            testCaseId: undefined,
+            step: undefined,
+            stepData: undefined,
+            expectedResult: undefined
+          }
+          this.$refs['stepFrom'].resetFields()
+        },
+        newStep () {
+          this.openDia = true
+        },
+        submitStepFrom () {
+          this.$refs['stepFrom'].validate((valid) => {
+            if (valid) {
+              if (this.stepFrom.id) {
+                const param = formatChangedPara(this.stepFromTemp, this.stepFrom)
+                param.testCaseId = this.stepFrom.testCaseId
+                editTestCaseStep(param).then((res) => {
+                  if (res.code === '200') {
+                    this.getTestStep()
+                    message('success', res.msg)
+                    this.openDia = false
+                    this.stepFromTemp = {}
+                    this.stepFrom = {}
+                  }
+                })
+              } else {
+                addTestCaseStep(this.stepFrom).then((res) => {
+                  if (res.code === '200') {
+                    this.getTestStep()
+                    message('success', res.msg)
+                    this.openDia = false
+                    this.resetStepFrom()
+                  }
+                })
+              }
+            }
+          })
+        },
+        cancelStepFrom () {
+          this.resetStepFrom()
+          this.openDia = false
+        },
+        toEdit (row) {
+          this.stepFrom = Object.assign({}, row)
+          this.openDia = true
+          this.stepFromTemp = Object.assign({}, row)
+        },
+        delview (row) {
+          delTestCaseStep(row.id).then((res) => {
+            if (res.code === '200') {
+              message('success', res.msg)
+              this.getTestStep()
+            }
+          })
+        },
+         getFeatureLikeArgs (row) {
+              if ((this.testCaseFrom.module !== undefined && this.testCaseFrom.module !== '') ||
+                (this.testCaseFrom.version !== undefined && this.testCaseFrom.version !== '')) {
+                this.$confirm('重新选择可能会丢失内容请确认？', {
+                  title: '提示',
+                  showCancelButton: true,
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(s => {
+                  this.testCaseFrom.module = ''
+                  this.testCaseFrom.version = ''
+                }).catch(e => {
+                  return
+                })
+              }
+
+              getFeatureLikeArgs(row).then((res) => {
+                const data = res.data
+                this.$set(this.testCaseFrom, 'version', data.version)
+                this.$set(this.testCaseFrom, 'module', data.moudle)
+              })
+            }
 }
 }
 </script>

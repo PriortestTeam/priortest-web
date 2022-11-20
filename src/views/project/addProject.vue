@@ -322,10 +322,7 @@ export default {
   },
   mounted() {},
   methods: {
-    // 跳转到执行用例
-    useCase() {
-      this.$router.push('/testcycle/useCase')
-    },
+
     remoteReport(query) {
       if (query !== '') {
         this.loading = true
