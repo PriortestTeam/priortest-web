@@ -56,7 +56,7 @@
           >
             <!-- 输入框 -->
             <el-form-item
-              v-if="field.type === 'text'"
+              v-if="field.fieldType === 'text'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -66,7 +66,7 @@
             </el-form-item>
             <!-- textarea -->
             <el-form-item
-              v-if="field.type === 'memo'"
+              v-if="field.fieldType === 'memo'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -81,7 +81,7 @@
             </el-form-item>
             <!-- 单选框 -->
             <el-form-item
-              v-if="field.type === 'checkbox'"
+              v-if="field.fieldType === 'checkbox'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -91,7 +91,7 @@
             </el-form-item>
             <!-- 日期 -->
             <el-form-item
-              v-if="field.type === 'Date'"
+              v-if="field.fieldType === 'Date'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -106,7 +106,7 @@
             </el-form-item>
             <!-- 单选 -->
             <el-form-item
-              v-if="field.type === 'radio'"
+              v-if="field.fieldType === 'radio'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -131,7 +131,7 @@
             </el-form-item>
             <!-- 下拉选择 -->
             <el-form-item
-              v-if="field.type === 'dropDown'"
+              v-if="field.fieldType === 'dropDown'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -168,7 +168,7 @@
             :xl="6"
           >
             <el-form-item
-              v-if="field.type === 'text'"
+              v-if="field.fieldType === 'text'"
               :label="field.fieldName"
               size="small"
               :prop="field.fieldName"
@@ -176,7 +176,7 @@
               <el-input v-model="field.fieldName" type="text" />
             </el-form-item>
             <el-form-item
-              v-if="field.type === 'memo'"
+              v-if="field.fieldType === 'memo'"
               :label="field.fieldName"
               size="small"
               :prop="field.fieldName"
@@ -189,7 +189,7 @@
               />
             </el-form-item>
             <el-form-item
-              v-if="field.type === 'radio'"
+              v-if="field.fieldType === 'radio'"
               :label="field.fieldName"
               size="small"
               :prop="field.fieldName"
@@ -210,7 +210,7 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              v-if="field.type === 'DropDown'"
+              v-if="field.fieldType === 'DropDown'"
               :label="field.fieldName"
               size="small"
               filterable
