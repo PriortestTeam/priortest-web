@@ -52,7 +52,7 @@
                   :value="item"
                 />
                 <router-link to="/admincenter/admincenter?par=epic">
-                  <el-option label="Add New Value" :value="0" />
+                  <el-option label="添加新值" :value="0" />
                 </router-link>
               </el-select>
             </el-form-item>

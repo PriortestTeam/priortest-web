@@ -125,7 +125,7 @@
                   :value="field.defaultValues.split(',')[index]"
                 />
                 <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                  <el-option label="Add New Value" value />
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
@@ -153,7 +153,7 @@
                   v-if="field.fieldName !== 'schedule_run_frequency'"
                   :to="`/admincenter/admincenter?par=${field.fieldName}`"
                 >
-                  <el-option label="Add New Value" value />
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
@@ -205,7 +205,7 @@
                   :value="field.mergeValues[index]"
                 />
                 <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                  <el-option label="Add New Value" value />
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
@@ -230,7 +230,7 @@
                   v-if="field.fieldName !== 'schedule_run_frequency'"
                   :to="`/admincenter/admincenter?par=${field.fieldName}`"
                 >
-                  <el-option label="Add New Value" value />
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
