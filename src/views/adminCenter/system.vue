@@ -9,11 +9,9 @@
       >
         <div class="item one-item">
           <i class="el-icon-circle-plus" @click="addValue(item)" />
-          <el-button
-            type="primary"
-            :disabled="flag"
-            @click="submitValue(item)"
-          >确定</el-button>
+          <el-button type="primary" :disabled="flag" @click="submitValue(item)"
+            >确定</el-button
+          >
         </div>
         <div class="big-height">
           <div
@@ -30,82 +28,85 @@
   </div>
 </template>
 <script>
-import { querySysCustomFields, updateSysCustomFields } from '@/api/admincenter'
+import { querySysCustomFields, updateSysCustomFields } from "@/api/admincenter";
 
 export default {
-  name: 'System',
+  name: "System",
   props: {
     paramValue: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
-  data () {
+  data() {
     return {
-      activeName: '0',
+      activeName: "0",
       systemData: [],
-      flag: true
-    }
+      flag: true,
+    };
   },
-  created () {
-    this.getData()
+  created() {
+    this.getData();
   },
   methods: {
-    getData () {
+    getData() {
       querySysCustomFields().then((res) => {
-        this.systemData = res.data
-        const index = this.systemData.findIndex(item => item.sysCustomField.fieldName === this.paramValue)
-        console.log(this.systemData, index, this.paramValue)
+        this.systemData = res.data;
+        const index = this.systemData.findIndex(
+          (item) => item.sysCustomField.fieldName === this.paramValue
+        );
+        console.log(this.systemData, index, this.paramValue);
+        console.log(`systemData`, res.data);
         if (index > -1) {
-          this.activeName = `${index}`
+          this.activeName = `${index}`;
         }
-      })
+      });
     },
-    removeValue (item, index) {
-      this.flag = false
-      item.mergeValues.splice(index, 1)
+    removeValue(item, index) {
+      this.flag = false;
+      item.mergeValues.splice(index, 1);
     },
-    addValue (item) {
-      console.log(item)
-      this.$prompt('请填写值：', {
-        confirmButtonText: '确定',
-        showCancelButton: false
+    addValue(item) {
+      console.log(item);
+      this.$prompt("请填写值：", {
+        confirmButtonText: "确定",
+        showCancelButton: false,
       })
         .then(({ value }) => {
           if (value) {
-            item.mergeValues.push(value)
-            this.flag = false
+            item.mergeValues.push(value);
+            this.flag = false;
           }
         })
-        .catch({})
+        .catch({});
     },
-    submitValue (item) {
-      const data = {}
-      data.sysCustomField = item.sysCustomField
-      data.mergeValues = item.mergeValues
-      updateSysCustomFields(data).then(res => {
-        this.getData()
-        this.flag = true
-      })
+    submitValue(item) {
+      const data = {};
+      data.sysCustomField = item.sysCustomField;
+      data.mergeValues = item.mergeValues;
+      updateSysCustomFields(data).then((res) => {
+        this.getData();
+        this.flag = true;
+      });
     },
-    tabClick () {
+    tabClick() {
       if (!this.flag) {
-        return this.$confirm('离开将不保存当前修改', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+        return this.$confirm("离开将不保存当前修改", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         })
           .then(() => {
-            this.flag = true
-            this.getData()
+            this.flag = true;
+            this.getData();
           })
           .catch(() => {
-            throw new Error('取消成功！')
-          })
+            throw new Error("取消成功！");
+          });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style scoped lang="scss">
 @import "index.scss";
@@ -128,5 +129,16 @@ i {
 .big-height {
   max-height: 70vh;
   overflow: auto;
+}
+
+.el-tabs {
+  display: unset !important;
+  flex-direction: unset !important;
+  .el-tabs__content {
+    width: unset !important;
+    // flex: .1;
+    // width: 100%;
+    // overflow: hidden;
+  }
 }
 </style>
