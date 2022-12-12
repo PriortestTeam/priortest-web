@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="system">
     <el-tabs v-model="activeName" tab-position="left" :before-leave="tabClick">
       <el-tab-pane
         v-for="(item, index) in systemData"
@@ -134,11 +134,10 @@ i {
 .el-tabs {
   display: unset !important;
   flex-direction: unset !important;
-  .el-tabs__content {
+  ::v-deep .el-tabs__content {
     width: unset !important;
-    // flex: .1;
-    // width: 100%;
-    // overflow: hidden;
   }
 }
+
 </style>
+
