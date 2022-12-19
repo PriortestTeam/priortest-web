@@ -1,166 +1,245 @@
 <template>
-  <div class="app-container add-form add-project">
-    <el-form
-      ref="projectFrom"
-      :model="projectFrom"
-      :rules="ProjectRules"
-      label-width="120px"
-      label-position="top"
-      class="demo-ruleForm"
-    >
+ <div class="app-container add-form add-project">
+     <el-form
+       ref="projectFrom"
+       :model="projectFrom"
+       :rules="projectRules"
+       class="demo-ruleForm"
+     >
       <div>
-        <el-button
-          v-if="!projectFrom.id"
-          type="primary"
-          @click="submitForm('projectFrom', false)"
-        >保存并新建</el-button>
-        <el-button
-          v-if="!projectFrom.id"
-          type="primary"
-          @click="submitForm('projectFrom', true)"
-        >保存并返回</el-button>
-        <el-button
-          v-if="projectFrom.id"
-          type="primary"
-          @click="submitForm('projectFrom')"
-        >确认修改</el-button>
-        <el-button
-          type="primary"
-          @click="giveupBack('projectFrom')"
-        >放弃</el-button>
-        <router-link v-if="projectFrom.id" to="/admincenter/admincenter">
-          <el-button type="text">{{
-            $t("lang.PublicBtn.CreateCustomField")
-          }}</el-button>
-        </router-link>
-      </div>
+             <el-button
+               v-if="!projectFrom.id"
+               type="primary"
+               @click="submitForm('projectFrom', false)"
+               >保存并新建</el-button
+             >
+             <el-button
+               v-if="!projectFrom.id"
+               type="primary"
+               @click="submitForm('projectFrom', true)"
+               >保存并返回</el-button
+             >
+             <el-button
+               v-if="projectFrom.id"
+               type="primary"
+               @click="submitForm('projectFrom')"
+               >确认修改</el-button
+             >
+             <el-button type="primary" @click="giveupBack('projectFrom')">放弃</el-button>
+             <router-link v-if="!projectFrom.id" to="/admincenter/admincenter">
+               <el-button type="text">
+                 {{ $t('lang.PublicBtn.CreateCustomField') }}
+               </el-button>
+             </router-link>
+           </div>
       <div class="form-box">
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item :label="$t('lang.Project.ProjectTitle')" prop="title">
-              <el-input v-model="projectFrom.title" maxlength="20" />
+
+        <el-row>
+          <el-col
+            v-for="field in sysCustomFields"
+            :key="field.id"
+            :xs="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 12
+            "
+            :sm="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 12
+            "
+            :md="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 12
+            "
+            :lg="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 8
+            "
+            :xl="
+              field.fieldName === 'title' || field.fieldName === 'description' ? 24 : 8
+            "
+          >
+            <!-- 输入框 -->
+            <el-form-item
+              v-if="field.fieldType === 'text'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-input v-model="projectFrom[field.fieldName]" type="text" />
             </el-form-item>
-          </el-col>
-
-        </el-row>
-
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.Status')" prop="status">
-              <el-select
-                v-model="projectFrom.status"
-                placeholder="请选择项目状态"
+            <!-- textarea -->
+            <el-form-item
+              v-if="field.fieldType === 'memo'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-input
+                v-model="projectFrom[field.fieldName]"
+                type="textarea"
+                :rows="2"
+                placeholder="请输入内容"
+              />
+            </el-form-item>
+            <!-- 单选框 -->
+            <el-form-item
+              v-if="field.fieldType === 'checkbox'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-checkbox v-model="projectFrom[field.fieldName]" />
+            </el-form-item>
+            <!-- 日期 -->
+            <el-form-item
+              v-if="field.fieldType === 'Date'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-date-picker
+                v-model="projectFrom[field.fieldName]"
                 clearable
-              >
-                <el-option v-for="item in statusListArr" :key="item" :label="item" :value="item" />
-                <router-link to="/admincenter/admincenter?par=customer_list">
-                  <el-option label="添加新值" value="0" />
-                </router-link>
-              </el-select> </el-form-item></el-col>
-          <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.ReportTo')" prop="reportToName">
+                type="datetime"
+                :placeholder="`请选择${field.fieldNameCn}`"
+              />
+            </el-form-item>
+            <!-- 单选 -->
+            <el-form-item
+              v-if="field.fieldType === 'radio'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
               <el-select
-                v-model="projectFrom.reportToName"
+                v-model="projectFrom[field.fieldName]"
                 filterable
                 clearable
-                remote
-                reserve-keyword
-                placeholder="请选择负责人"
+                :placeholder="`请选择${field.fieldNameCn}`"
               >
                 <el-option
-                  v-for="(item, index) in reportToNameArr"
+                  v-for="(item, index) in field.defaultValues.split(',')"
                   :key="index"
-                  :label="item"
-                  :value="item"
+                  :label="field.defaultValues.split(',')[index]"
+                  :value="field.defaultValues.split(',')[index]"
                 />
-                <router-link to="/admincenter/admincenter?par=report_name">
-                  <el-option label="添加新值" value="0" />
+                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                  <el-option label="添加新值" value />
                 </router-link>
-              </el-select> </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.Customer')" prop="customer">
-              <el-select v-model="projectFrom.customer" placeholder="请选择客户" clearable>
-                <el-option v-for="item in customerListArr" :key="item" :label="item" :value="item" />
-                <!-- <el-option label="测试客户" value="0" /> -->
-                <router-link to="/admincenter/admincenter?par=customer_list">
-                  <el-option label="添加新值" value="0" />
+              </el-select>
+            </el-form-item>
+            <!-- 下拉选择 -->
+            <el-form-item
+              v-if="field.fieldType === 'dropDown'"
+              :label="field.fieldNameCn"
+              size="small"
+              :prop="field.fieldName"
+              label-width="140px"
+            >
+              <el-select
+                v-model="projectFrom[field.fieldName]"
+                filterable
+                clearable
+                :placeholder="`请选择${field.fieldNameCn}`"
+              >
+                <el-option
+                  v-for="(item, index) in field.defaultValues.split(',')"
+                  :key="index"
+                  :label="field.defaultValues.split(',')[index]"
+                  :value="field.defaultValues.split(',')[index]"
+                />
+                <router-link
+                  v-if="field.fieldName !== 'schedule_run_frequency'"
+                  :to="`/admincenter/admincenter?par=${field.fieldName}`"
+                >
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.TestFrame')" prop="testFrame">
-              <el-select v-model="projectFrom.testFrame" placeholder="请选择测试框架" clearable>
-                <el-option v-for="item in testFrameArr" :key="item" :label="item" :value="item" />
-                <router-link to="/admincenter/admincenter?par=test_frame">
-                  <el-option label="添加新值" value="0" />
-                </router-link>
-              </el-select> </el-form-item></el-col>
-
-        </el-row>
-
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.ProjectCategory')" prop="projectCategory">
-              <el-select
-                v-model="projectFrom.projectCategory"
-                placeholder="请选择项目类别"
-                clearable
-              >
-                <el-option v-for="item in projectCategory" :key="item" :label="item" :value="item" />
-                <router-link to="/admincenter/admincenter?par=project_category">
-                  <el-option label="添加新值" value="0" />
-                </router-link>
-              </el-select> </el-form-item></el-col>
-          <el-col :span="12">
-            <el-form-item :label="$t('lang.Project.planReleaseDate')" prop="planReleaseDate">
-              <el-date-picker
-                v-model="projectFrom.planReleaseDate"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                :picker-options="pickerOptions"
-                type="date"
-                placeholder="选择上线日期"
-              /> </el-form-item></el-col>
-        </el-row>
-        <el-row v-if="projectFrom.id">
-          <el-col :span="8">
-            <el-form-item label="key" prop="key">
-              <el-input
-                v-model="projectFrom.foreignId"
-                :disabled="true"
-
-                maxlength="20"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="24">
+          <el-col
+            v-for="field in customFields"
+            :key="field.id"
+            :xs="8"
+            :sm="6"
+            :md="6"
+            :lg="6"
+            :xl="6"
+          >
             <el-form-item
-              :label="$t('lang.Project.Description')"
-              prop="description"
+              v-if="field.fieldType === 'text'"
+              :label="field.fieldName"
+              size="small"
+              :prop="field.fieldName"
+            >
+              <el-input v-model="field.fieldName" type="text" />
+            </el-form-item>
+            <el-form-item
+              v-if="field.fieldType === 'memo'"
+              :label="field.fieldName"
+              size="small"
+              :prop="field.fieldName"
             >
               <el-input
-                v-model="projectFrom.description"
+                v-model="field.fieldName"
                 type="textarea"
-                maxlength="1000"
-                show-word-limit
-                :autosize="{ minRows: 3, maxRows: 8 }"
+                :rows="2"
+                placeholder="请输入内容"
               />
             </el-form-item>
+            <el-form-item
+              v-if="field.fieldType === 'radio'"
+              :label="field.fieldName"
+              size="small"
+              :prop="field.fieldName"
+            >
+              <el-select
+                v-model="field.fieldName"
+                :placeholder="`请选择${field.fieldName}`"
+              >
+                <el-option
+                  v-for="(item, index) in field.defaultValues"
+                  :key="index"
+                  :label="field.mergeValues[index]"
+                  :value="field.mergeValues[index]"
+                />
+                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                  <el-option label="添加新值" value />
+                </router-link>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              v-if="field.fieldType === 'DropDown'"
+              :label="field.fieldName"
+              size="small"
+              filterable
+              :prop="field.fieldName"
+            >
+              <el-select
+                v-model="field.fieldName"
+                :placeholder="`请选择${field.fieldName}`"
+              >
+                <el-option
+                  v-for="(item, index) in field.defaultValues"
+                  :key="index"
+                  :label="field.mergeValues[index]"
+                  :value="field.mergeValues[index]"
+                />
+                <router-link
+                  v-if="field.fieldName !== 'schedule_run_frequency'"
+                  :to="`/admincenter/admincenter?par=${field.fieldName}`"
+                >
+                  <el-option label="添加新值" value />
+                </router-link>
+              </el-select>
+            </el-form-item>
           </el-col>
-
         </el-row>
-
       </div>
     </el-form>
-    <div v-if="projectFrom.id" class="table">
-      <Upload :link-id="projectFrom.id" :type="projectFrom.scope" />
-    </div>
+
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -168,151 +247,120 @@ import { mapGetters } from 'vuex'
 import {
   addProjects,
   editProjects,
-  queryByNameSubUsers,
-  getFeature,
-  getAllSysCustomField,
-  getAllCustomField
+  getAllCustomField,
+  getAllSysCustomFields,
 } from '@/api/project'
-// import { sysCustomField } from '@/api/systemArr'
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
-import Upload from '@/components/Upload'
 
+import { queryNameUsersByRoomId } from '@/api/project'
+import { message, returntomenu, formatChangedPara } from '@/utils/common'
 export default {
-  name: 'Addproject',
-  components: {
-    Upload
-  },
-  data () {
+  name: 'addProject',
+  data() {
     return {
       disabled: false,
       optionsArr: [],
-      testFrameArr: [],
-      reportToNameArr: [],
-      customerListArr: [],
-      projectCategory: [],
-      statusListArr: [],
+      versionsArr: [],
+      statusArr: [],
+      testEnvArr: [],
       loading: false,
       projectFrom: {},
-      projectFromTem: {},
-      ProjectRules: {
-        title: [{ required: true, message: '请输入项目标题', trigger: 'blur' }],
-        reportToName: [
-          { required: true, message: '请选择负责人', trigger: 'blur' }
-        ],
-        status: [{ required: true, message: '请选择状态', trigger: 'change' }]
+      projectFromTemp: {},
+      projectRules: {
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
       },
-      pickerOptions: {
-        disabledDate (time) {
-          return time.getTime() < Date.now() - 8.64e7// 设置选择今天以及今天之后的日
-          // return time.getTime() > Date.now(); //设置选择今天以及今天以前的日期
-          // return time.getTime() < Date.now();//设置选择今天之后的日期（不能选择当天时间）
-          // return time.getTime() > Date.now() - 8.64e7 //设置选择今天之前的日期（不能选择当天）
-          // 设置当天23：59：59可选
-          // let currentTime = this.getNowMonthDay() + ` 23:59:59`
-          // return time.getTime() > new Date(currentTime).getTime()
-        }
-      }
+      openDia: false,
+      sysCustomFields: [],
+      customFields: [],
     }
   },
   computed: {
     ...mapGetters({
-      lang: (state) => state.header.lang
+      lang: (state) => state.header.lang,
     }),
-    userUseOpenProject () {
-      return this.$store.state.user.userinfo.userUseOpenProject
-    }
+    projectInfo() {
+      return this.$store.state.user.userinfo
+    },
   },
-  async created () {
-    await this.edit()
-    await this.setAllSysCustomField()
-    await this.queryAllCustomField()
-  },
-  methods: {
-    // 获取字段
-    async queryAllCustomField () {
-      const that = this
-      const params = {
-        'projectId': that.userUseOpenProject.projectId,
-        'scope': 'project'
-      }
-      const res = await getAllCustomField(params)
+  created() {
+      this.projectFrom.projectId = this.projectInfo.userUseOpenProject.projectId
+    // 获取系统字段
+    getAllSysCustomFields({
+      scope: 'Project',
+    }).then((res) => {
       if (res.code === '200') {
-        console.log('res---', res)
+        this.$nextTick(() => {
+          if (res.data) {
+            var arr1 = []
+            var arr2 = res.data.filter((item, index) => {
+              if (
+                item.fieldName === 'scheduleStartDate' ||
+                item.fieldName === 'scheduleEndDate' ||
+                item.fieldName === 'jenkinsJob'
+              ) {
+                arr1.push(item)
+                return false
+              } else {
+                return true
+              }
+            })
+            arr1.unshift(12, 0)
+            Array.prototype.splice.apply(arr2, arr1)
+            this.sysCustomFields = arr2
+          }
+        })
       }
-    },
-    // 编辑
-    async edit () {
-      const that = this
-      if (that.$route.query.id) {
-        console.log('edit---', that.$route.query.id)
-        const res = await getFeature(that.$route.query.id)
-        // res.data.status = res.data.status === 1 ? '关闭' : res.data.status === 2 ? '计划' : '开发中'
-        that.projectFrom = res.data
-        that.projectFromTem = Object.assign({}, that.projectFrom)
+    })
+    // 获取自定义字段
+    getAllCustomField({
+      projectId: this.projectInfo.userUseOpenProject.projectId,
+      scope: 'Project',
+    }).then((res) => {
+      if (res.code === '200') {
+        this.customFields = res.data
       }
-    },
-    // 系统字段赋值
-    async setAllSysCustomField () {
-      const that = this
-      const res = await getAllSysCustomField()
-      res.data.forEach((v, k) => {
-        switch (v.sysCustomField.fieldName) {
-          case 'project_status':
-            that.statusListArr = v.mergeValues
-            break
-          case 'customer_list':
-            that.customerListArr = v.mergeValues
-            break
-          case 'report_name':
-            that.reportToNameArr = v.mergeValues
-            break
-          case 'test_frame':
-            that.testFrameArr = v.mergeValues
-            break
-          case 'project_category':
-            that.projectCategory = v.mergeValues
-            break
-        }
-      })
-    },
-    remoteReport (query) {
+    })
+  },
+  mounted() {},
+  methods: {
+
+    remoteReport(query) {
       if (query !== '') {
         this.loading = true
         setTimeout(() => {
           this.loading = false
           queryByNameSubUsers({ subUserName: query }).then((res) => {
-            this.reportToNameArr = res.data
+            this.optionsArr = res.data
           })
         }, 200)
       } else {
-        this.reportToNameArr = []
+        this.optionsArr = []
       }
     },
     // 重置表单
-    resetFields () {
+    resetFields() {
       this.projectFrom = {
         id: undefined,
+        projectId: this.projectInfo.userUseOpenProject.projectId,
         title: undefined,
-        description: undefined,
-        reportToName: undefined,
-        customer: undefined,
         status: undefined,
-        testFrame: undefined,
-        projectCategory: undefined,
-        fileList: []
+        runStatus: undefined,
+        currentVersion: 0,
+        version: undefined,
+        assignTo: undefined,
+        notifiyList: undefined,
+        description: undefined,
       }
       this.$refs['projectFrom'].resetFields()
     },
+
     // 提交
-    submitForm (formName, type) {
+    submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.projectFrom.id) {
-            const param = formatChangedPara(
-              this.projectFromTem,
-              this.projectFrom
-            )
-            editProjects(param)
+            const param = formatChangedPara(this.projectFromTemp, this.projectFrom)
+            param.projectId = this.projectFromTemp.projectId
+            editProject(param)
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -331,6 +379,8 @@ export default {
                   if (type) {
                     returntomenu(this, 1000)
                   }
+                } else {
+                  message('error', res.msg)
                 }
               })
               .catch((error) => {
@@ -344,15 +394,15 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack () {
+    giveupBack() {
       if (!this.projectFrom.id) {
         this.resetFields()
       }
       this.returntomenu(this)
     }
-  }
+}
 }
 </script>
 <style lang="scss" scoped>
-@import "index.scss";
+@import 'index.scss';
 </style>

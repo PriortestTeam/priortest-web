@@ -79,3 +79,20 @@ export function querySprintList (data) {
     params: data
   })
 }
+
+export function getAllCustomField(data) {
+  return request({
+    url: '/CustomFieldData/getAllCustomField',
+    method: 'post',
+    data
+  })
+}
+
+// 获取系统字段
+export function getAllSysCustomFields(params) {
+  return request({
+    url: '/CustomFieldData/getAllSysCustomField',
+    method: 'get',
+    params
+  })
+}

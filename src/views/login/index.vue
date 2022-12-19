@@ -166,7 +166,7 @@ export default {
   data () {
     return {
       loginForm: {
-        username: 'hjyhappy_03@163.com',
+        username: 'qatest.hu.mary3@gmail.com',
         password: 'Hjyhappy123!'
       },
       loginRules: {
@@ -174,7 +174,7 @@ export default {
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'blur'] }
         ],
-        password: [{ required: true, message: '请输入活动名称', trigger: 'blur' }]
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       },
       loading: false,
       passwordType: 'password',

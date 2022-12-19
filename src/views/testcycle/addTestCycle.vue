@@ -58,7 +58,7 @@
           >
             <!-- 输入框 -->
             <el-form-item
-              v-if="field.type === 'text'"
+              v-if="field.fieldType === 'text'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -68,7 +68,7 @@
             </el-form-item>
             <!-- textarea -->
             <el-form-item
-              v-if="field.type === 'memo'"
+              v-if="field.fieldType === 'memo'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -83,7 +83,7 @@
             </el-form-item>
             <!-- 单选框 -->
             <el-form-item
-              v-if="field.type === 'checkbox'"
+              v-if="field.fieldType === 'checkbox'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -93,7 +93,7 @@
             </el-form-item>
             <!-- 日期 -->
             <el-form-item
-              v-if="field.type === 'Date'"
+              v-if="field.fieldType === 'Date'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -108,7 +108,7 @@
             </el-form-item>
             <!-- 单选 -->
             <el-form-item
-              v-if="field.type === 'radio'"
+              v-if="field.fieldType === 'radio'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -127,13 +127,13 @@
                   :value="field.defaultValues.split(',')[index]"
                 />
                 <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                  <el-option label="Add New Value" value />
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
             <!-- 下拉选择 -->
             <el-form-item
-              v-if="field.type === 'dropDown'"
+              v-if="field.fieldType === 'dropDown'"
               :label="field.fieldNameCn"
               size="small"
               :prop="field.fieldName"
@@ -155,7 +155,7 @@
                   v-if="field.fieldName !== 'schedule_run_frequency'"
                   :to="`/admincenter/admincenter?par=${field.fieldName}`"
                 >
-                  <el-option label="Add New Value" value />
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
@@ -170,7 +170,7 @@
             :xl="6"
           >
             <el-form-item
-              v-if="field.type === 'text'"
+              v-if="field.fieldType === 'text'"
               :label="field.fieldName"
               size="small"
               :prop="field.fieldName"
@@ -178,7 +178,7 @@
               <el-input v-model="field.fieldName" type="text" />
             </el-form-item>
             <el-form-item
-              v-if="field.type === 'memo'"
+              v-if="field.fieldType === 'memo'"
               :label="field.fieldName"
               size="small"
               :prop="field.fieldName"
@@ -191,7 +191,7 @@
               />
             </el-form-item>
             <el-form-item
-              v-if="field.type === 'radio'"
+              v-if="field.fieldType === 'radio'"
               :label="field.fieldName"
               size="small"
               :prop="field.fieldName"
@@ -207,12 +207,12 @@
                   :value="field.mergeValues[index]"
                 />
                 <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                  <el-option label="Add New Value" value />
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
             <el-form-item
-              v-if="field.type === 'DropDown'"
+              v-if="field.fieldType === 'DropDown'"
               :label="field.fieldName"
               size="small"
               filterable
@@ -232,7 +232,7 @@
                   v-if="field.fieldName !== 'schedule_run_frequency'"
                   :to="`/admincenter/admincenter?par=${field.fieldName}`"
                 >
-                  <el-option label="Add New Value" value />
+                  <el-option label="添加新值" value />
                 </router-link>
               </el-select>
             </el-form-item>
