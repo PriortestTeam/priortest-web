@@ -313,7 +313,7 @@ export default {
     // 获取自定义字段
     getAllCustomField({
       projectId: this.projectInfo.userUseOpenProject.projectId,
-      scope: 'Project',
+      scopeId: '340643333946740730',
     }).then((res) => {
       if (res.code === '200') {
         this.customFields = res.data

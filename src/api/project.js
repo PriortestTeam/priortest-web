@@ -172,11 +172,11 @@ export function queryViewTrees (params) {
 }
 
 
-export function getAllCustomField(data) {
+export function getAllCustomField(params) {
   return request({
-    url: '/CustomFieldData/getAllCustomField',
-    method: 'post',
-    data
+    url: '/customFields/getAllCustomList',
+    method: 'get',
+    params
   })
 }
 
