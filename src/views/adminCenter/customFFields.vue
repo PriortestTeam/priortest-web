@@ -11,10 +11,11 @@
       <div class="formBox">
         <div class="attributes">
           <el-form-item label="字段名称：" prop="fieldNameCn">
-            <el-input v-model="ruleForm.fieldNameCn"></el-input>
+            <el-input :disabled="isEdit" v-model="ruleForm.fieldNameCn"></el-input>
           </el-form-item>
           <el-form-item label="类型：" prop="fieldType">
             <el-select
+            :disabled="isEdit"
               clearable
               v-model="ruleForm.fieldType"
               placeholder="请选择"
@@ -293,7 +294,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item style="float: right">
-            <el-button type="primary" @click="submitForm('ruleForm')"
+            <el-button :loading="subLoad" type="primary" @click="submitForm('ruleForm')"
               >保存</el-button
             >
             <el-button @click="resetForm('ruleForm')">放弃</el-button>
@@ -374,9 +375,11 @@ export default {
         order_1:'无',
         order_2:'无',
       },
+      subLoad:false,
     };
   },
   mounted() {
+    console.log(this,'thisssssssssssssssssssssssss')
     this.RangeSFn();
     // 类型接口
     fieldTypeAPI().then((res) => {
@@ -386,7 +389,7 @@ export default {
     setTimeout(() => {
       let arr = [];
       // 系统列表接口
-      systemListAPI({ projectId: this.projectId }).then((res) => {
+      systemListAPI({ projectId: sessionStorage.getItem('projectId') }).then((res) => {
         res.data.forEach((item) => {
           // arr.push(item.fieldNameCn)
           // this.systemList = arr
@@ -403,14 +406,15 @@ export default {
         this.systemList = res.data;
       });
       // 下拉菜单接口
-      downMenuAPI(this.projectId).then((res) => {
+      downMenuAPI(sessionStorage.getItem('projectId')).then((res) => {
         console.log(res, "下拉菜单");
         this.menuList = res.data;
       });
     }, 1000);
-    getInfo().then((res) => {
-      this.projectId = res.data.userUseOpenProject.projectId;
-    });
+    this.projectId = sessionStorage.getItem('projectId')
+    // getInfo().then((res) => {
+    //   this.projectId = res.data.userUseOpenProject.projectId;
+    // });
   },
   methods: {
     // 范围接口
@@ -534,6 +538,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.subLoad = true
           let obj = {};
           this.fieldTypeOptions.forEach((item) => {
             if (item.nameCn == this.ruleForm.fieldType) {
@@ -543,7 +548,7 @@ export default {
           });
           obj.fieldNameCn = this.ruleForm.fieldNameCn;
           obj.length = this.ruleForm.length;
-          obj.projectId = this.projectId;
+          obj.projectId = sessionStorage.getItem('projectId');
           //----------------------------------
           let list = [];
           this.RangeList.forEach((item) => {
@@ -615,6 +620,7 @@ export default {
                 this.downMenu = false;
                 this.numType = false;
                 this.oneInputs = false;
+                this.subLoad = false
                 if (this.getqueryCustomList) {
                   this.getqueryCustomList();
                 }
@@ -655,6 +661,7 @@ export default {
                 this.downMenu = false;
                 this.numType = false;
                 this.oneInputs = false;
+                this.subLoad = false
                 if (this.getqueryCustomList) {
                   this.getqueryCustomList();
                 }

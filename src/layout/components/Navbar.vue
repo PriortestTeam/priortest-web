@@ -167,6 +167,7 @@ export default {
     async logout () {
       this.remove('activeIndex')
       await this.$store.dispatch('user/logout')
+      sessionStorage.removeItem("projectId");
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     goOther (item, index) {

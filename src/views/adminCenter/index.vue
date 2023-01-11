@@ -265,7 +265,7 @@
             @setFieldName="setFieldName"
           /> -->
           <div class="table">
-            <el-button type="text" @click="deleteAll()" :disabled="dbfields"
+            <el-button :loading="delLoad" type="text" @click="deleteAll()" :disabled="dbfields"
               >删除</el-button
             >
             <el-table
@@ -330,6 +330,7 @@
               <el-table-column label="Action">
                 <template slot-scope="scope">
                   <el-button
+                  :loading="delLoad"
                     type="text"
                     class="table-btn"
                     @click.stop="delfield(scope.row)"
@@ -573,6 +574,8 @@ export default {
       ],
       emailDisabled: false,
       rowData: {},
+      delLoad:false
+
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -891,22 +894,17 @@ export default {
 
     // 获取自定义字段列表
     getqueryCustomList() {
-      console.log("我在获取xiangmuid");
-      getInfo().then((res) => {
-        console.log(res, "resssssssssss我在获取xiangmuid");
         // 字段列表接口
         fieldList({
-          projectId: res.data.userUseOpenProject.projectId,
+          projectId: sessionStorage.getItem('projectId'),
           pageNum: this.fieldsQuery.pageNum,
           pageSize: this.fieldsQuery.pageSize,
         }).then((res) => {
-          console.log(res, "我是数据");
           this.fieldsData = res.data;
           // this.fieldsTotal = res.total;
           this.fieldsTotal = res.total;
           // this.$emit("fieldsList", this.fieldsList);
         });
-      });
       // queryCustomList(this.fieldsId, this.fieldsQuery).then((res) => {
       //   console.log(res,'ssssssssssss');
       //   if (res.code === "200") {
@@ -1009,6 +1007,7 @@ export default {
     },
     // 单独删除自定义字段
     delfield(row) {
+      this.delLoad = true
       let arr = [];
       arr.push(row.customFieldId.toString());
       deleteApi(arr).then((res) => {
@@ -1019,7 +1018,9 @@ export default {
             message: res.msg,
             type: "success",
           });
-          this.$refs.APIFn.APIFn();
+          this.getqueryCustomList()
+          // this.$refs.APIFn.APIFn();
+          this.delLoad = false
         } else {
           this.$message({
             message: res.msg,
@@ -1037,13 +1038,16 @@ export default {
     },
     // 批量删除字段
     deleteAll() {
+      this.delLoad = true
       deleteApi(this.fieldsSelection).then((res) => {
         if (res.code == 200) {
           this.$message({
             message: res.msg,
             type: "success",
           });
-          this.$refs.APIFn.APIFn();
+          this.getqueryCustomList()
+          // this.$refs.APIFn.APIFn();
+          this.delLoad = false
         } else {
           this.$message({
             message: res.msg,
