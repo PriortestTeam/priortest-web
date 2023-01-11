@@ -11,11 +11,14 @@
       <div class="formBox">
         <div class="attributes">
           <el-form-item label="字段名称：" prop="fieldNameCn">
-            <el-input :disabled="isEdit" v-model="ruleForm.fieldNameCn"></el-input>
+            <el-input
+              :disabled="isEdit"
+              v-model="ruleForm.fieldNameCn"
+            ></el-input>
           </el-form-item>
           <el-form-item label="类型：" prop="fieldType">
             <el-select
-            :disabled="isEdit"
+              :disabled="isEdit"
               clearable
               v-model="ruleForm.fieldType"
               placeholder="请选择"
@@ -124,9 +127,7 @@
               <div class="header">
                 <p>{{ linkDownpossible.order_1 }}</p>
                 <div>
-                  <el-button type="primary" @click="STGAddFn()"
-                    >添加</el-button
-                  >
+                  <el-button type="primary" @click="STGAddFn()">添加</el-button>
                   <el-button
                     type="danger"
                     :disabled="!stgDelect"
@@ -163,9 +164,7 @@
               <div class="header">
                 <p>{{ linkDownpossible.order_2 }}</p>
                 <div>
-                  <el-button type="primary" @click="PRDAddFn()"
-                    >添加</el-button
-                  >
+                  <el-button type="primary" @click="PRDAddFn()">添加</el-button>
                   <el-button
                     type="danger"
                     :disabled="!prdDelect"
@@ -294,7 +293,10 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item style="float: right">
-            <el-button :loading="subLoad" type="primary" @click="submitForm('ruleForm')"
+            <el-button
+              :loading="subLoad"
+              type="primary"
+              @click="submitForm('ruleForm')"
               >保存</el-button
             >
             <el-button @click="resetForm('ruleForm')">放弃</el-button>
@@ -372,49 +374,30 @@ export default {
       stgDelect: false,
       prdDelect: false,
       linkDownpossible: {
-        order_1:'无',
-        order_2:'无',
+        order_1: "无",
+        order_2: "无",
       },
-      subLoad:false,
+      subLoad: false,
     };
   },
   mounted() {
-    console.log(this,'thisssssssssssssssssssssssss')
     this.RangeSFn();
     // 类型接口
     fieldTypeAPI().then((res) => {
       this.fieldTypeOptions = res.data;
     });
 
-    setTimeout(() => {
-      let arr = [];
-      // 系统列表接口
-      systemListAPI({ projectId: sessionStorage.getItem('projectId') }).then((res) => {
-        res.data.forEach((item) => {
-          // arr.push(item.fieldNameCn)
-          // this.systemList = arr
-          // item.possibleValue = JSON.parse(item.possibleValue);
-          // console.log(item.possibleValue, "possibleValue");
-          // if (item.possibleValue.order_1) {
-          //   for (var key in item.possibleValue) {
-          //     arr.push(item.possibleValue[key]);
-          //   }
-          //   this.systemList = arr;
-          // }
-        });
-        // console.log(res, "系统列表");
+    // 系统列表接口
+    systemListAPI({ projectId: sessionStorage.getItem("projectId") }).then(
+      (res) => {
         this.systemList = res.data;
-      });
-      // 下拉菜单接口
-      downMenuAPI(sessionStorage.getItem('projectId')).then((res) => {
-        console.log(res, "下拉菜单");
-        this.menuList = res.data;
-      });
-    }, 1000);
-    this.projectId = sessionStorage.getItem('projectId')
-    // getInfo().then((res) => {
-    //   this.projectId = res.data.userUseOpenProject.projectId;
-    // });
+      }
+    );
+    // 下拉菜单接口
+    downMenuAPI(sessionStorage.getItem("projectId")).then((res) => {
+      this.menuList = res.data;
+    });
+    this.projectId = sessionStorage.getItem("projectId");
   },
   methods: {
     // 范围接口
@@ -538,7 +521,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.subLoad = true
+          this.subLoad = true;
           let obj = {};
           this.fieldTypeOptions.forEach((item) => {
             if (item.nameCn == this.ruleForm.fieldType) {
@@ -548,7 +531,7 @@ export default {
           });
           obj.fieldNameCn = this.ruleForm.fieldNameCn;
           obj.length = this.ruleForm.length;
-          obj.projectId = sessionStorage.getItem('projectId');
+          obj.projectId = sessionStorage.getItem("projectId");
           //----------------------------------
           let list = [];
           this.RangeList.forEach((item) => {
@@ -620,7 +603,7 @@ export default {
                 this.downMenu = false;
                 this.numType = false;
                 this.oneInputs = false;
-                this.subLoad = false
+                this.subLoad = false;
                 if (this.getqueryCustomList) {
                   this.getqueryCustomList();
                 }
@@ -661,7 +644,7 @@ export default {
                 this.downMenu = false;
                 this.numType = false;
                 this.oneInputs = false;
-                this.subLoad = false
+                this.subLoad = false;
                 if (this.getqueryCustomList) {
                   this.getqueryCustomList();
                 }
