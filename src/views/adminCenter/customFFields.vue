@@ -13,7 +13,7 @@
           <el-form-item label="字段名称：" prop="fieldNameCn">
             <el-input
               :disabled="isEdit"
-              v-model="ruleForm.fieldNameCn"
+              v-model.trim="ruleForm.fieldNameCn"
             ></el-input>
           </el-form-item>
           <el-form-item label="类型：" prop="fieldType">
@@ -64,7 +64,7 @@
             <el-radio v-model="radioData" label="2">系统列表</el-radio> <br />
             <div class="attributesItem">
               值：<el-input
-                v-model="newVal"
+                v-model.trim="newVal"
                 :type="numType ? 'text' : numData ? 'number' : 'text'"
                 :min="numType ? '' : '0'"
               ></el-input>
@@ -121,20 +121,26 @@
 
         <!-- 链接下拉框 -->
         <div v-if="linkDownShow" class="linkDown">
-          <div class="STGData">
+          <div
+            v-for="(item, index) in linkDownList"
+            :key="index"
+            class="STGData"
+          >
             <!--  -->
             <div class="info">
               <div class="header">
-                <p>{{ linkDownpossible.order_1 }}</p>
+                <p>{{ item.order }}</p>
                 <div>
-                  <el-button type="primary" @click="STGAddFn()">添加</el-button>
+                  <el-button type="primary" @click="STGAddFn(item.order)"
+                    >添加</el-button
+                  >
                   <el-button
                     type="danger"
-                    :disabled="!stgDelect"
+                    :disabled="!item.orderDelect"
                     @click="
                       () => {
-                        STGList.splice(deleceSTG, 1);
-                        stgDelect = false;
+                        item.orderList.splice(deleceSTG, 1);
+                        item.orderDelect = false;
                       }
                     "
                     >删除</el-button
@@ -142,55 +148,18 @@
                 </div>
               </div>
               <div class="infodata">
-                <el-input v-model="STGData" placeholder="link" />
+                <el-input v-model.trim="item.orderInd" placeholder="link" />
                 <p
-                  v-for="(item, index) in STGList"
-                  :key="index"
+                  v-for="(subitem, subindex) in item.orderList"
+                  :key="subindex"
                   @click="
                     () => {
-                      stgDelect = true;
-                      deleceSTG = index;
+                      item.orderDelect = true;
+                      deleceSTG = subindex;
                     }
                   "
                 >
-                  {{ item }}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="PRDData">
-            <!--  -->
-            <div class="info">
-              <div class="header">
-                <p>{{ linkDownpossible.order_2 }}</p>
-                <div>
-                  <el-button type="primary" @click="PRDAddFn()">添加</el-button>
-                  <el-button
-                    type="danger"
-                    :disabled="!prdDelect"
-                    @click="
-                      () => {
-                        PRDList.splice(delecePRD, 1);
-                        prdDelect = false;
-                      }
-                    "
-                    >删除</el-button
-                  >
-                </div>
-              </div>
-              <div class="infodata">
-                <el-input v-model="PRDData" placeholder="text" />
-                <p
-                  v-for="(item, index) in PRDList"
-                  :key="index"
-                  @click="
-                    () => {
-                      prdDelect = true;
-                      delecePRD = index;
-                    }
-                  "
-                >
-                  {{ item }}
+                  {{ subitem }}
                 </p>
               </div>
             </div>
@@ -232,7 +201,7 @@
                 !oneInputs &&
                 !linkDownShow
               "
-              v-model="item.defaultValue"
+              v-model.trim="item.defaultValue"
             ></el-input>
             <el-select
               v-if="
@@ -373,11 +342,10 @@ export default {
       delect: false,
       stgDelect: false,
       prdDelect: false,
-      linkDownpossible: {
-        order_1: "无",
-        order_2: "无",
-      },
+      linkDownpossible: {},
       subLoad: false,
+      dataType: false,
+      linkDownList: [],
     };
   },
   mounted() {
@@ -414,6 +382,7 @@ export default {
     },
     // 切换类型 下拉框 多选项联动
     changeFn(val) {
+      this.ReTeLinData = val;
       if (val == "下拉框" || val == "多选项") {
         this.numType = true;
         this.numData = false;
@@ -437,8 +406,6 @@ export default {
       } else {
         this.oneInputs = false;
       }
-
-      this.ReTeLinData = val;
       if (val == "备注" || val == "文本" || val == "链接") {
         this.ReTeLin = true;
       } else {
@@ -537,7 +504,10 @@ export default {
           this.RangeList.forEach((item) => {
             if (item.range == true) {
               list.push({
-                defaultValue: item.defaultValue == "" ? "" : "ckecked",
+                defaultValue:
+                  this.ReTeLinData == "单选框" || this.ReTeLinData == "复选框"
+                    ? "checked"
+                    : item.defaultValue,
                 mandatory: item.must,
                 scope: item.scopeName,
                 scopeNameCn: item.nameCn,
@@ -545,6 +515,7 @@ export default {
               });
             }
           });
+
           //----------------------------------
           // 新值
           if (this.valueSource) {
@@ -555,14 +526,20 @@ export default {
             // 系统列表
             this.possibleValue = null;
           }
+
           if (this.linkDownShow) {
-            this.possibleValue = {
-              STG: this.STGList,
-              PRD: this.PRDList,
-              others: {
-                parentListId: this.systemData,
-              },
-            };
+            let keys = [];
+            let values = [];
+            let list = {};
+            for (const key in this.linkDownList) {
+              keys.push(this.linkDownList[key].order);
+              values.push(this.linkDownList[key].orderList);
+            }
+            keys.forEach((item, index) => {
+              list[item] = values[index];
+            });
+            list.others = { parentListId: this.systemData };
+            this.possibleValue = list;
           }
           let objData = {
             attributes: obj,
@@ -572,6 +549,7 @@ export default {
             type: "custom",
           };
           if (this.isEdit) {
+            objData.type = this.dataType;
             objData.customFieldId = this.idData;
             unDataApi(objData).then((res) => {
               if (res.code == 200) {
@@ -604,6 +582,7 @@ export default {
                 this.numType = false;
                 this.oneInputs = false;
                 this.subLoad = false;
+                this.linkDownList = []
                 if (this.getqueryCustomList) {
                   this.getqueryCustomList();
                 }
@@ -645,6 +624,7 @@ export default {
                 this.numType = false;
                 this.oneInputs = false;
                 this.subLoad = false;
+                this.linkDownList = []
                 if (this.getqueryCustomList) {
                   this.getqueryCustomList();
                 }
@@ -682,10 +662,14 @@ export default {
       this.numType = false;
       this.isEdit = false;
     },
-    STGAddFn() {
-      if (this.STGData.length == 0) return false;
-      this.STGList.push(this.STGData);
-      this.STGData = "";
+    STGAddFn(val) {
+      this.linkDownList.forEach((item, index) => {
+        if (val == item.order) {
+          if (item.orderInd.length == 0) return false;
+          item.orderList.push(item.orderInd);
+          item.orderInd = "";
+        }
+      });
     },
     PRDAddFn() {
       if (this.PRDData.length == 0) return false;
@@ -693,20 +677,33 @@ export default {
       this.PRDData = "";
     },
     linkDownChange(val) {
-      this.linkDownpossible = {};
+      this.linkDownList = [];
       this.systemList.forEach((item) => {
         if (item.customFieldLinkId == val) {
           this.linkDownpossible = JSON.parse(item.possibleValue);
         }
       });
+
+      for (const key in this.linkDownpossible) {
+        this.linkDownList.push({
+          order: this.linkDownpossible[key],
+          orderInd: "",
+          orderList: [],
+          orderDelect: false,
+        });
+      }
+      console.log(this.linkDownList, "this.linkDownList = []");
+      if (val == "" || val == null || val == undefined) {
+        this.linkDownList = [];
+      }
     },
   },
   watch: {
     rowData(newval, oldval) {
       if (newval) {
         this.isEdit = true;
-        console.log(this.isEdit, "我是修改");
         // this.RangeSFn()
+        this.dataType = newval.type;
         this.idData = newval.customFieldId;
         this.RangeList.forEach((item) => {
           item.range = false;
@@ -745,7 +742,7 @@ export default {
           this.downMenu = false; // 用户列表
           this.numType = false; // 值类型
           this.linkDownShow = false; // 链接下拉框
-          this.oneInputs = false; // 单复选框
+          this.oneInputs = true; // 单复选框
         } else if (
           newval.attributes.fieldTypeCn == "下拉框" ||
           newval.attributes.fieldTypeCn == "多选项"
@@ -756,7 +753,7 @@ export default {
           this.downMenu = false; // 用户列表
           this.numType = true; // 值类型
           this.linkDownShow = false; // 链接下拉框
-          this.oneInputs = true; // 单复选框
+          this.oneInputs = false; // 单复选框
           this.numData = false;
           let arr = [];
           let obj = JSON.parse(newval.possibleValue);
@@ -797,10 +794,18 @@ export default {
           this.numType = false; // 值类型
           this.linkDownShow = true; // 链接下拉框
           this.oneInputs = false; // 单复选框
+          this.linkDownList = [];
           let obj = JSON.parse(newval.possibleValue);
-          this.STGList = obj.STG;
-          this.PRDList = obj.PRD;
           this.systemData = obj.others.parentListId;
+          delete obj.others;
+          for (const key in obj) {
+            this.linkDownList.push({
+              order: key,
+              orderDelect: false,
+              orderInd: "",
+              orderList: obj[key],
+            });
+          }
         }
         this.ruleForm.fieldNameCn = newval.attributes.fieldNameCn;
         this.ruleForm.fieldType = newval.attributes.fieldTypeCn;
@@ -817,6 +822,12 @@ export default {
               }
               if (item.defaultValue) {
                 subItem.initial = true; // 初始值按钮回显
+                subItem.defaultValue = item.defaultValue;
+              } else if (
+                newval.attributes.fieldTypeCn == "单选框" ||
+                newval.attributes.fieldTypeCn == "复选框"
+              ) {
+                subItem.initial = false; // 初始值按钮回显
                 subItem.defaultValue = item.defaultValue;
               }
             }
@@ -890,12 +901,11 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 600px;
-    height: 330px;
+    // width: 600px;
+    // height: 330px;
     margin-left: 30px;
 
-    .STGData,
-    .PRDData {
+    .STGData {
       display: flex;
       flex-direction: row;
       width: 48%;
