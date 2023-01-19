@@ -53,7 +53,7 @@
                 v-for="(item, index) in systemList"
                 :key="index"
                 :label="item.fieldNameCn"
-                :value="item.customFieldLinkId"
+                :value="item.customFieldId"
               >
               </el-option>
             </el-select>
@@ -87,7 +87,7 @@
                   v-for="(item, index) in systemList"
                   :key="index"
                   :label="item.fieldNameCn"
-                  :value="item.customFieldLinkId"
+                  :value="item.customFieldId"
                 >
                 </el-option>
               </el-select>
@@ -126,7 +126,6 @@
             :key="index"
             class="STGData"
           >
-            <!--  -->
             <div class="info">
               <div class="header">
                 <p>{{ item.order }}</p>
@@ -458,14 +457,17 @@ export default {
     // 系统列表
     systemChange(val) {
       let arr = [];
-      this.newValList = [];
+      // this.newValList = [];
       this.systemList.forEach((item) => {
-        if (item.customFieldLinkId == val) {
+        if (item.customFieldId == val) {
           item.possibleValue = JSON.parse(item.possibleValue);
           if (item.possibleValue.order_1) {
             for (var key in item.possibleValue) {
               arr.push(item.possibleValue[key]);
             }
+            // arr.forEach((item) => {
+            //   this.newValList.push(item);
+            // });
             this.newValList = arr;
           } else {
             for (var key in item.possibleValue) {
@@ -480,6 +482,9 @@ export default {
                 }
               }
             }
+            // arr.forEach((item) => {
+            //   this.newValList.push(item);
+            // });
             this.newValList = arr;
           }
         }
@@ -503,6 +508,7 @@ export default {
           let list = [];
           this.RangeList.forEach((item) => {
             if (item.range == true) {
+              if (item.initial == false) item.defaultValue = "";
               list.push({
                 defaultValue:
                   this.ReTeLinData == "单选框" || this.ReTeLinData == "复选框"
@@ -517,17 +523,14 @@ export default {
           });
 
           //----------------------------------
-          // 新值
           if (this.valueSource) {
-            this.newValList.forEach((item, index) => {
+            // 新值
+            this.newValList.map((item, index) => {
               this.possibleValue["order_" + Number(index + 1)] = item;
             });
-          } else {
-            // 系统列表
-            this.possibleValue = null;
-          }
-
-          if (this.linkDownShow) {
+            console.log("新值");
+          } else if (this.linkDownShow) {
+            // 链接下拉框
             let keys = [];
             let values = [];
             let list = {};
@@ -540,7 +543,18 @@ export default {
             });
             list.others = { parentListId: this.systemData };
             this.possibleValue = list;
+            console.log("链接下拉框");
+          } else if (this.downMenu) {
+            // 用户下拉
+            this.menuList.map((item, index) => {
+              this.possibleValue["order_" + Number(index + 1)] = item.userName;
+            });
+            console.log("用户下拉");
+          } else {
+            this.possibleValue = null;
+            console.log("空");
           }
+
           let objData = {
             attributes: obj,
             componentAttributes: list,
@@ -582,7 +596,8 @@ export default {
                 this.numType = false;
                 this.oneInputs = false;
                 this.subLoad = false;
-                this.linkDownList = []
+                this.linkDownList = [];
+                this.possibleValue = {};
                 if (this.getqueryCustomList) {
                   this.getqueryCustomList();
                 }
@@ -624,7 +639,8 @@ export default {
                 this.numType = false;
                 this.oneInputs = false;
                 this.subLoad = false;
-                this.linkDownList = []
+                this.linkDownList = [];
+                this.possibleValue = {};
                 if (this.getqueryCustomList) {
                   this.getqueryCustomList();
                 }
@@ -662,6 +678,7 @@ export default {
       this.numType = false;
       this.isEdit = false;
     },
+    // 新增链接下拉框
     STGAddFn(val) {
       this.linkDownList.forEach((item, index) => {
         if (val == item.order) {
@@ -671,19 +688,14 @@ export default {
         }
       });
     },
-    PRDAddFn() {
-      if (this.PRDData.length == 0) return false;
-      this.PRDList.push(this.PRDData);
-      this.PRDData = "";
-    },
+    // 下拉链接方法
     linkDownChange(val) {
       this.linkDownList = [];
       this.systemList.forEach((item) => {
-        if (item.customFieldLinkId == val) {
+        if (item.customFieldId == val) {
           this.linkDownpossible = JSON.parse(item.possibleValue);
         }
       });
-
       for (const key in this.linkDownpossible) {
         this.linkDownList.push({
           order: this.linkDownpossible[key],
@@ -692,7 +704,6 @@ export default {
           orderDelect: false,
         });
       }
-      console.log(this.linkDownList, "this.linkDownList = []");
       if (val == "" || val == null || val == undefined) {
         this.linkDownList = [];
       }
@@ -747,6 +758,7 @@ export default {
           newval.attributes.fieldTypeCn == "下拉框" ||
           newval.attributes.fieldTypeCn == "多选项"
         ) {
+          console.log("xiala duoxuan");
           this.ReTeLin = false; // 长度显隐
           this.dateShow = false; // 日期
           this.valueSource = true; // 值来源
@@ -773,6 +785,7 @@ export default {
           this.numData = true;
           let arr = [];
           let obj = JSON.parse(newval.possibleValue);
+          // this.systemData = obj.others.parentListId;
           for (const key in obj) {
             arr.push(obj[key]);
           }
@@ -833,22 +846,6 @@ export default {
             }
           });
         });
-
-        // this.RangeList.forEach((item, index) => {
-        //   if (newval.componentAttributes[index]) {
-        //     if (newval.componentAttributes[index].mandatory) {
-        //       item.must = true;
-        //     }
-        //     if (newval.componentAttributes[index].scopeNameCn) {
-        //       item.range = true;
-        //     }
-        //     if (newval.componentAttributes[index].defaultValue) {
-        //       item.initial = true; // 初始值按钮回显
-        //       item.defaultValue =
-        //         newval.componentAttributes[index].defaultValue;
-        //     }
-        //   }
-        // });
       }
     },
   },
@@ -940,10 +937,6 @@ export default {
           }
         }
       }
-      // p {
-      //   width: 20%;
-      //   border: 1px red solid;
-      // }
     }
   }
   .componentAttributes {

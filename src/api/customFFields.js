@@ -71,5 +71,3 @@ export function unDataApi(data) {
     data:data
   })
 }
-
-
