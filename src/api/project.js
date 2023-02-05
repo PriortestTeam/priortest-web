@@ -171,12 +171,12 @@ export function queryViewTrees (params) {
   })
 }
 
-
-export function getAllCustomField(data) {
+// 获取自定义字段
+export function getAllCustomField(params) {
   return request({
-    url: '/CustomFieldData/getAllCustomField',
-    method: 'post',
-    data
+    url: '/customFields/getAllCustomList',
+    method: 'get',
+    params
   })
 }
 

@@ -314,7 +314,8 @@
           label="运行人"
           :show-overflow-tooltip="true"
         />
-        <el-table-column label="操作" align="center">
+        <el-table-column labe
+        l="操作" align="center">
           <template slot-scope="scope">
             <el-button type="text" class="table-btn" @click.stop="delview(scope.row)"
               >删除</el-button
@@ -359,10 +360,9 @@ import {
   editTestCycle,
   testCycleCase,
   addtestCycle,
-  bindCaseDelete,
-  getAllCustomField,
-  getAllSysCustomFields,
+  bindCaseDelete
 } from '@/api/testcycle'
+import { getAllCustomField, getAllSysCustomFields } from '@/api/getFields'
 import { testCaseListAll } from '@/api/testcase'
 import { queryByNameSubUsers } from '@/api/project'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
@@ -459,7 +459,7 @@ export default {
     // 获取自定义字段
     getAllCustomField({
       projectId: this.projectInfo.userUseOpenProject.projectId,
-      scope: 'testCycle',
+      scopeId: '340643333946740788',
     }).then((res) => {
       if (res.code === '200') {
         this.customFields = res.data

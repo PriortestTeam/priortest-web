@@ -401,7 +401,7 @@ import CustomFFields from "@/views/adminCenter/customFFields";
 // import Userindex from '@/views/adminCenter/user'
 // import Link from '@/views/adminCenter/link'
 // import Link2 from '@/views/adminCenter/link2'
-// import ServicePlan from '@/views/servicePlan/index'
+import ServicePlan from '@/views/servicePlan/index'
 import {
   getUserRoles,
   queryForProjectTitles,
@@ -447,7 +447,7 @@ export default {
     Dashboard,
     ViewPage,
     MyAccount,
-    // ServicePlan
+    ServicePlan,
     CustomFFields,
   },
   data() {

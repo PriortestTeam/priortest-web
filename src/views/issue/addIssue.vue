@@ -247,7 +247,7 @@ import { mapGetters } from 'vuex'
 import {
   getAllCustomField,
   getAllSysCustomFields,
-} from '@/api/project'
+} from '@/api/getFields'
 
 import { addIssue, detailIssue, editIssue } from '@/api/issue'
 import { testCaseListAll } from '@/api/testcase'
@@ -315,7 +315,7 @@ export default {
     // 获取自定义字段
     getAllCustomField({
       projectId: this.projectInfo.userUseOpenProject.projectId,
-      scope: 'issue',
+      scopeId: 340643333946740736,
     }).then((res) => {
       if (res.code === '200') {
         this.customFields = res.data

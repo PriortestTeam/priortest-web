@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <div class="one_logo">
+    <div >
       <img src="@/icons/img/one-logo.png" alt="" srcset="" @click="gohome">
     </div>
     <div class="nav-menu">

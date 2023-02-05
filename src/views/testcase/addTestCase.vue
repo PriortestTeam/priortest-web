@@ -245,11 +245,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import {
-
-  getAllCustomField,
-  getAllSysCustomFields,
-} from '@/api/project'
+import {getAllCustomField,  getAllSysCustomFields,} from '@/api/getFields'
 import {featureListAll } from '@/api/feature'
 import {
   addTestCase,
@@ -325,7 +321,7 @@ export default {
     // 获取自定义字段
     getAllCustomField({
       projectId: this.projectInfo.userUseOpenProject.projectId,
-      scope: 'TestCase',
+      scopeId: '340643333946740754',
     }).then((res) => {
       if (res.code === '200') {
         this.customFields = res.data

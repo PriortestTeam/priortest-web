@@ -245,10 +245,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import {
-
   getAllCustomField,
   getAllSysCustomFields,
-} from '@/api/project'
+} from '@/api/getFields'
 import { addFeature, detailFeature, editFeature, querySprintList } from '@/api/feature'
 import { queryNameUsersByRoomId } from '@/api/project'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
@@ -311,8 +310,8 @@ export default {
     })
     // 获取自定义字段
     getAllCustomField({
-      featureId: this.projectInfo.userUseOpenProject.featureId,
-      scope: 'Feature',
+      projectId: this.projectInfo.userUseOpenProject.projectId,
+      scopeId: '340643333946740739',
     }).then((res) => {
       if (res.code === '200') {
         this.customFields = res.data
