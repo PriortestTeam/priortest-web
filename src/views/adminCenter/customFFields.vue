@@ -167,7 +167,7 @@
 
         <div class="componentAttributes">
           <div class="RangeTitle">
-            <span style="width: 88px">范围</span>
+            <span class="rangeNeed" style="width: 88px">范围</span>
             <span style="width: 65px">是否必填</span>
             <span style="width: 173px" v-if="!linkDownShow">初始值</span>
             <span style="width: 173px" v-else> </span>
@@ -177,9 +177,12 @@
             v-for="(item, index) in RangeList"
             :key="index"
           >
-            <el-checkbox class="Range" v-model="item.range">{{
-              item.nameCn
-            }}</el-checkbox>
+            <el-checkbox
+              @change="changeRange"
+              class="Range"
+              v-model="item.range"
+              >{{ item.nameCn }}</el-checkbox
+            >
             <el-checkbox
               style="width: 50px"
               :disabled="!item.range"
@@ -260,6 +263,10 @@
             >
             </el-date-picker>
           </el-form-item>
+          <div style="margin-left: 100px; color: red" v-show="rangeCheck">
+            请选择范围
+          </div>
+          <!-- <el-button @click="showMsg()">msg</el-button> -->
           <el-form-item style="float: right">
             <el-button
               :loading="subLoad"
@@ -296,11 +303,29 @@ export default {
       ruleForm: {
         fieldNameCn: "",
         fieldType: "",
+        fieldRange: [],
         length: 0,
+        type: [],
       },
       rules: {
         fieldNameCn: [
           { required: true, message: "请输入字段名称", trigger: "blur" },
+        ],
+        fieldRange: [
+          {
+            required: true,
+            type: "array",
+            message: "请选择范围",
+            trigger: "change",
+          },
+        ],
+        type: [
+          {
+            type: "array",
+            required: true,
+            message: "请至少选择一个活动性质",
+            trigger: "change",
+          },
         ],
         fieldType: [{ required: true, message: "请选择类型", trigger: "blur" }],
         length: [{ required: true, message: "请输入长度", trigger: "blur" }],
@@ -345,6 +370,7 @@ export default {
       subLoad: false,
       dataType: false,
       linkDownList: [],
+      rangeCheck: false,
     };
   },
   mounted() {
@@ -367,6 +393,22 @@ export default {
     this.projectId = sessionStorage.getItem("projectId");
   },
   methods: {
+    //range
+    changeRange() {
+      const rangeCopy = [...this.RangeList];
+      let isNull = true;
+      rangeCopy.forEach((item) => {
+        if (item.range) {
+          isNull = false;
+        }
+      });
+      this.rangeCheck = isNull;
+      console.log("the null:", isNull);
+    },
+    // debug
+    showMsg() {
+      console.log("the range:", this.RangeList);
+    },
     // 范围接口
     RangeSFn() {
       RangeS().then((res) => {
@@ -426,10 +468,10 @@ export default {
     // 长度监听
     maxChange(val) {
       if (this.ReTeLinData == "文本" || this.ReTeLinData == "链接") {
-        if (this.ruleForm.length > 50) {
-          this.ruleForm.length = 50;
+        if (this.ruleForm.length > 100) {
+          // this.ruleForm.length = 100;
           this.$message({
-            message: "最大值不能超过50",
+            message: "最大值不能超过100,系统为您的输入重新设置为100",
             type: "warning",
           });
         }
@@ -437,7 +479,7 @@ export default {
         if (this.ruleForm.length > 1000) {
           this.ruleForm.length = 1000;
           this.$message({
-            message: "最大值不能超过1000",
+            message: "最大值不能超过1000,系统为您的输入重新设置为1000",
             type: "warning",
           });
         }
@@ -493,6 +535,19 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // 范围判定
+          const rangeCopy = [...this.RangeList];
+          this.rangeCheck = true;
+          rangeCopy.forEach((item) => {
+            if (item.range) {
+              this.rangeCheck = false;
+            }
+          });
+          if (this.rangeCheck) {
+            console.log("debug cant allow-----------");
+            return false;
+          }
+
           this.subLoad = true;
           let obj = {};
           this.fieldTypeOptions.forEach((item) => {
@@ -504,6 +559,8 @@ export default {
           obj.fieldNameCn = this.ruleForm.fieldNameCn;
           obj.length = this.ruleForm.length;
           obj.projectId = sessionStorage.getItem("projectId");
+          //---------------------------------
+
           //----------------------------------
           let list = [];
           this.RangeList.forEach((item) => {
@@ -653,12 +710,20 @@ export default {
             });
           }
         } else {
+          const rangeCopy = [...this.RangeList];
+          this.rangeCheck = true;
+          rangeCopy.forEach((item) => {
+            if (item.range) {
+              this.rangeCheck = false;
+            }
+          });
           return false;
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.rangeCheck = false;
       this.RangeList.forEach((item) => {
         item.range = false;
         item.must = false;
@@ -856,6 +921,11 @@ export default {
 .formBox {
   display: flex;
   margin-top: 20px;
+  .rangeNeed::before {
+    content: "*";
+    color: #f56c6c;
+    margin-right: 4px;
+  }
   .attributes {
     margin: 0 20px 0 20px;
     .attributesItem {

@@ -314,7 +314,7 @@ export default {
     // 获取自定义字段
     getAllCustomField({
       projectId: this.projectInfo.userUseOpenProject.projectId,
-      scopeId: '340643333946740730',
+      scopeId: '1000001',
     }).then((res) => {
       if (res.code === '200') {
         this.customFields = res.data
