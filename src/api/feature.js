@@ -71,28 +71,3 @@ export function checkProject (id) {
     method: 'get'
   })
 }
-// 获取开发周期
-export function querySprintList (data) {
-  return request({
-    url: '/feature/querySprintList',
-    method: 'post',
-    params: data
-  })
-}
-
-export function getAllCustomField(data) {
-  return request({
-    url: '/CustomFieldData/getAllCustomField',
-    method: 'post',
-    data
-  })
-}
-
-// 获取系统字段
-export function getAllSysCustomFields(params) {
-  return request({
-    url: '/CustomFieldData/getAllSysCustomField',
-    method: 'get',
-    params
-  })
-}
