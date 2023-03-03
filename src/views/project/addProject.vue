@@ -247,12 +247,13 @@ import { mapGetters } from 'vuex'
 import {
   addProjects,
   editProjects,
-  getAllCustomField,
-  getAllSysCustomFields,
-} from '@/api/project'
 
+} from '@/api/project'
 import { queryNameUsersByRoomId } from '@/api/project'
+
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import { getAllCustomField, getAllSysCustomFields } from '@/api/getFields'
+
 export default {
   name: 'addProject',
   data() {
@@ -313,7 +314,7 @@ export default {
     // 获取自定义字段
     getAllCustomField({
       projectId: this.projectInfo.userUseOpenProject.projectId,
-      scope: 'Project',
+      scopeId: '1000001',
     }).then((res) => {
       if (res.code === '200') {
         this.customFields = res.data

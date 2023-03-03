@@ -91,19 +91,4 @@ export function executeTestCase(data) {
     data
   })
 }
-// 获取新建周期字段
-export function getAllCustomField(data) {
-  return request({
-    url: '/CustomFieldData/getAllCustomField',
-    method: 'post',
-    data
-  })
-}
 
-export function getAllSysCustomFields(params) {
-  return request({
-    url: '/CustomFieldData/getAllSysCustomField',
-    method: 'get',
-    params
-  })
-}

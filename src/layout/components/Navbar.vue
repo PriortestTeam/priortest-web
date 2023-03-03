@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <div class="one_logo">
+    <div >
       <img src="@/icons/img/one-logo.png" alt="" srcset="" @click="gohome">
     </div>
     <div class="nav-menu">
@@ -167,6 +167,7 @@ export default {
     async logout () {
       this.remove('activeIndex')
       await this.$store.dispatch('user/logout')
+      sessionStorage.removeItem("projectId");
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     goOther (item, index) {
