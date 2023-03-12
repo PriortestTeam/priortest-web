@@ -11,7 +11,7 @@ import request from '@/utils/request'
 export function testCaseList (params, data) {
   console.log(data)
   return request({
-    url: '/testCase/queryList',
+    url: '/testCase/list',
     method: 'post',
     // post拼接路由参数
     params: params,
