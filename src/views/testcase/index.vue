@@ -57,14 +57,14 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  prop="UUID"
+                  prop="id"
                   :show-overflow-tooltip="true"
                   align="center"
                   label="UUID"
                 />
 
                 <el-table-column
-                  prop="status"
+                  prop="testStatus"
                   :show-overflow-tooltip="true"
                   align="center"
                   label="状态"
@@ -85,7 +85,7 @@
                 </el-table-column>
 
                 <el-table-column
-                  prop="test_method"
+                  prop="testMethod"
                   :show-overflow-tooltip="true"
                   align="center"
                   label="测试方法"
@@ -116,7 +116,7 @@
                 />
 
                 <el-table-column
-                  prop="testCategory"
+                  prop="caseCategory"
                   align="center"
                   :show-overflow-tooltip="true"
                   label="测试分类"
@@ -132,14 +132,14 @@
                   align="center"
                   label="末次运行状态"
                 />
-                <el-table-column
+                <!-- <el-table-column
                   prop="stepStatus"
                   align="center"
                   :show-overflow-tooltip="true"
                   label="步骤运行状态"
-                />
+                /> -->
                 <el-table-column
-                  prop="executedDate"
+                  prop="executeTime"
                   align="center"
                   label="执行时间"
                   min-width="120"
@@ -162,8 +162,14 @@
                       type="text"
                       class="table-btn"
                       @click.stop="openEdit(scope.row)"
-                    >克隆
+                    >详情
                     </el-button>
+                    <!-- <el-button
+                      type="text"
+                      class="table-btn"
+                      @click.stop="openEdit(scope.row)"
+                    >克隆
+                    </el-button> -->
                     <el-button
                       type="text"
                       class="table-btn"
@@ -277,14 +283,14 @@ export default {
       return new Promise((resolve, reject) => {
         testCaseList(this.testCaseQuery, query).then(async res => {
           if (res.code === '200') {
-            if (res.total > 0) {
+            if (res.data.total > 0) {
               // 默认取第一条
-              this.testCaseBody.scope = res.data[0].scope
+              this.testCaseBody.scope = res.data.list[0].scope
               this.testCaseBody.projectId = this.projectInfo.userUseOpenProject.projectId
             }
             this.isLoading = false
-            this.testCasetableData = res.data
-            this.testCaseTotal = res.total
+            this.testCasetableData = res.data.list
+            this.testCaseTotal = res.data.total
             resolve(res)
           }
         })

@@ -8,10 +8,9 @@
  */
 import request from '@/utils/request'
 
-export function testCaseList (params, data) {
-  console.log(data)
+export function testCaseList(params, data) {
   return request({
-    url: '/testCase/queryList',
+    url: '/testCase/list',
     method: 'post',
     // post拼接路由参数
     params: params,
@@ -20,7 +19,7 @@ export function testCaseList (params, data) {
 }
 
 // 没有分页的
-export function testCaseListAll (data) {
+export function testCaseListAll(data) {
   return request({
     url: '/leftJoin/queryFestCaseTitles',
     method: 'get',
@@ -29,7 +28,7 @@ export function testCaseListAll (data) {
 }
 
 // 添加项目
-export function addTestCase (data) {
+export function addTestCase(data) {
   return request({
     url: '/testCase/insert',
     method: 'post',
@@ -38,7 +37,7 @@ export function addTestCase (data) {
 }
 
 // 获取详情
-export function detailTestCase (id) {
+export function detailTestCase(id) {
   return request({
     url: '/testCase/queryById/' + id,
     method: 'get'
@@ -46,7 +45,7 @@ export function detailTestCase (id) {
 }
 
 // 删除项目
-export function delTestCase (id) {
+export function delTestCase(id) {
   return request({
     url: '/testCase/delete/' + id,
     method: 'delete'
@@ -54,7 +53,7 @@ export function delTestCase (id) {
 }
 
 // 修改项目
-export function editTestCase (data) {
+export function editTestCase(data) {
   return request({
     url: '/testCase/update',
     method: 'post',
@@ -65,7 +64,7 @@ export function editTestCase (data) {
 /** *弹框 新增步骤
  *
  */
-export function testCaseStep (params, data) {
+export function testCaseStep(params, data) {
   return request({
     url: '/testCaseStep/queryList',
     method: 'post',
@@ -76,7 +75,7 @@ export function testCaseStep (params, data) {
 }
 
 // 添加
-export function addTestCaseStep (data) {
+export function addTestCaseStep(data) {
   return request({
     url: '/testCaseStep/insert',
     method: 'post',
@@ -85,14 +84,14 @@ export function addTestCaseStep (data) {
 }
 
 // 删除
-export function delTestCaseStep (id) {
+export function delTestCaseStep(id) {
   return request({
     url: '/testCaseStep/delete/' + id,
     method: 'delete'
   })
 }
 
-export function editTestCaseStep (data) {
+export function editTestCaseStep(data) {
   return request({
     url: '/testCaseStep/update',
     method: 'post',
@@ -100,7 +99,7 @@ export function editTestCaseStep (data) {
   })
 }
 
-export function getFeatureLikeArgs (id) {
+export function getFeatureLikeArgs(id) {
   const reqBody = {
     featureId: id
   }
@@ -115,7 +114,7 @@ export function getFeatureLikeArgs (id) {
  * 获取当前登录人模板和默认模板
  * @returns {AxiosPromise}
  */
-export function queryListByUserId () {
+export function queryListByUserId() {
   return request({
     url: '/testCaseTemplate/queryListByUserId',
     method: 'get'
@@ -127,7 +126,7 @@ export function queryListByUserId () {
  * @param data
  * @returns {AxiosPromise}
  */
-export function addTestCaseTemplate (data) {
+export function addTestCaseTemplate(data) {
   return request({
     url: '/testCaseTemplate/insert',
     method: 'post',
@@ -140,7 +139,7 @@ export function addTestCaseTemplate (data) {
  * @param id
  * @returns {AxiosPromise}
  */
-export function deleteTemp (id) {
+export function deleteTemp(id) {
   return request({
     url: '/testCaseTemplate/delete/' + id,
     method: 'delete'
@@ -152,7 +151,7 @@ export function deleteTemp (id) {
  * @param data
  * @returns {AxiosPromise}
  */
-export function updateTestCaseTemplate (data) {
+export function updateTestCaseTemplate(data) {
   return request({
     url: '/testCaseTemplate/update',
     method: 'post',
@@ -165,11 +164,35 @@ export function updateTestCaseTemplate (data) {
  * @param data
  * @returns {AxiosPromise}
  */
-export function importTestCase (data) {
+export function importTestCase(data) {
   return request({
     url: '/testCaseTemplate/importTestCase',
     method: 'post',
     data
+  })
+}
+
+
+export function testCaseSave(params, data) {
+  return request({
+    url: '/testCase/save',
+    method: 'post',
+    data: params
+  })
+}
+
+export function testCaseUpdate(params) {
+  return request({
+    url: '/testCase/update',
+    method: 'post',
+    data: params
+  })
+}
+
+export function testCaseInfo(params) {
+  return request({
+    url: '/testCase/info/' + params.id,
+    method: 'get'
   })
 }
 
