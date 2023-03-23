@@ -4,9 +4,11 @@
 
       <el-form ref="testCaseForm" :model="testCaseForm" :rules="testCaseRules" label-width="120px" class="demo-ruleForm">
         <div>
-          <el-button v-if="!testCaseForm.id&&isEdit" type="primary" @click="submitForm('testCaseForm', false)">保存并新建</el-button>
-          <el-button v-if="!testCaseForm.id&&isEdit" type="primary" @click="submitForm('testCaseForm', true)">保存并返回</el-button>
-          <el-button v-if="testCaseForm.id&&isEdit" type="primary" @click="submitForm('testCaseForm')">确认修改</el-button>
+          <el-button v-if="!testCaseForm.id && isEdit" type="primary"
+            @click="submitForm('testCaseForm', false)">保存并新建</el-button>
+          <el-button v-if="!testCaseForm.id && isEdit" type="primary"
+            @click="submitForm('testCaseForm', true)">保存并返回</el-button>
+          <el-button v-if="testCaseForm.id && isEdit" type="primary" @click="submitForm('testCaseForm')">确认修改</el-button>
           <el-button type="primary" @click="giveupBack('testCaseForm')">放弃</el-button>
           <router-link v-if="!testCaseForm.id" to="/admincenter/admincenter">
             <el-button type="text">
@@ -207,6 +209,12 @@ export default {
           testCaseInfo({ id: this.id }).then((res) => {
             [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
               item.valueData = res.data[item.fieldNameEn]
+              const testcaseExpand = JSON.parse(res.data.testcaseExpand)
+              debugger
+              if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+
+                item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+              }
             })
           })
         }
