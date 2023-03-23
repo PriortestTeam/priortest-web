@@ -1,12 +1,12 @@
 <template>
-  <div class="app-container add-form add-project">
+  <div class="app-container add-form add-project" v-loading="loading">
     <el-card>
 
       <el-form ref="testCaseForm" :model="testCaseForm" :rules="testCaseRules" label-width="120px" class="demo-ruleForm">
         <div>
-          <el-button v-if="!testCaseForm.id" type="primary" @click="submitForm('testCaseForm', false)">保存并新建</el-button>
-          <el-button v-if="!testCaseForm.id" type="primary" @click="submitForm('testCaseForm', true)">保存并返回</el-button>
-          <el-button v-if="testCaseForm.id" type="primary" @click="submitForm('testCaseForm')">确认修改</el-button>
+          <el-button v-if="!testCaseForm.id&&isEdit" type="primary" @click="submitForm('testCaseForm', false)">保存并新建</el-button>
+          <el-button v-if="!testCaseForm.id&&isEdit" type="primary" @click="submitForm('testCaseForm', true)">保存并返回</el-button>
+          <el-button v-if="testCaseForm.id&&isEdit" type="primary" @click="submitForm('testCaseForm')">确认修改</el-button>
           <el-button type="primary" @click="giveupBack('testCaseForm')">放弃</el-button>
           <router-link v-if="!testCaseForm.id" to="/admincenter/admincenter">
             <el-button type="text">
@@ -139,7 +139,8 @@ export default {
       sysCustomFields: [],
       customFields: [],
       id: '',
-      isEdit: false
+      isEdit: false,
+      loading: false
     }
   },
   computed: {
@@ -240,6 +241,8 @@ export default {
     },
     // 重置表单
     resetFields() {
+      this.id = ''
+      this.isEdit = true
       this.$refs['testCaseForm'].resetFields()
     },
     // 提交
@@ -251,7 +254,8 @@ export default {
               ...a, [b.fieldNameEn]: b.valueData
             }
           }, {})
-          params.projectId = this.projectInfo.userUseOpenProject.projectId
+          this.loading = true
+          params.project_id = this.projectInfo.userUseOpenProject.projectId
           const attributes = this.customFields.map(item => {
             return {
               "fieldType": item.fieldType,
@@ -270,14 +274,16 @@ export default {
             attributes: attributes.length ? attributes : undefined
           }
           if (this.id) {
-            testCaseUpdate({ id: this.id, ...param })
+            testCaseUpdate({ id: this.id, ...params })
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
                   returntomenu(this, 1000)
                 }
+                this.loading = false
               })
               .catch((error) => {
+                this.loading = false
                 console.log(error)
               })
           } else {
@@ -292,8 +298,10 @@ export default {
                 } else {
                   message('error', res.msg)
                 }
+                this.loading = false
               })
               .catch((error) => {
+                this.loading = false
                 console.log(error)
               })
           }
@@ -332,4 +340,5 @@ export default {
 
 .el-date-editor {
   width: 100%;
-}</style>
+}
+</style>
