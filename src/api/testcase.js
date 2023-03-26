@@ -144,7 +144,7 @@ export function deleteTemp(id) {
     url: '/testCaseTemplate/delete/' + id,
     method: 'delete'
   })
-}
+}s
 
 /**
  * 更新测试用例模板
@@ -184,7 +184,7 @@ export function testCaseSave(params, data) {
 export function testCaseUpdate(params) {
   return request({
     url: '/testCase/update',
-    method: 'post',
+    method: 'put',
     data: params
   })
 }

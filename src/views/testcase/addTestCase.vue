@@ -210,7 +210,6 @@ export default {
             [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
               item.valueData = res.data[item.fieldNameEn]
               const testcaseExpand = JSON.parse(res.data.testcaseExpand)
-              debugger
               if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
 
                 item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
@@ -263,7 +262,7 @@ export default {
             }
           }, {})
           this.loading = true
-          params.project_id = this.projectInfo.userUseOpenProject.projectId
+          params.projectId = this.projectInfo.userUseOpenProject.projectId
           const attributes = this.customFields.map(item => {
             return {
               "fieldType": item.fieldType,
