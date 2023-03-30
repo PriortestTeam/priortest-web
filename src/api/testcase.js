@@ -144,7 +144,7 @@ export function deleteTemp(id) {
     url: '/testCaseTemplate/delete/' + id,
     method: 'delete'
   })
-}s
+}
 
 /**
  * 更新测试用例模板
