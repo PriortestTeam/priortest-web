@@ -151,7 +151,7 @@ export function getViewAllScopeParams (scope) {
     params: scope
   })
 }
-///view/getViewScope
+// /view/getViewScope
 
 // 查询父view
 export function queryViewParents (params) {
@@ -174,7 +174,7 @@ export function queryViewTrees (params) {
 // 获取自定义字段
 export function getAllCustomField(params) {
   return request({
-    url: '/api/customFields/getAllCustomList',
+    url: '/customFields/getAllCustomList',
     method: 'get',
     params
   })

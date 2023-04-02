@@ -1,13 +1,19 @@
 <template>
-  <div class="app-container add-form add-project" v-loading="loading">
+  <div v-loading="loading" class="app-container add-form add-project">
     <el-card>
 
       <el-form ref="testCaseForm" :model="testCaseForm" :rules="testCaseRules" label-width="120px" class="demo-ruleForm">
         <div>
-          <el-button v-if="!testCaseForm.id && isEdit" type="primary"
-            @click="submitForm('testCaseForm', false)">保存并新建</el-button>
-          <el-button v-if="!testCaseForm.id && isEdit" type="primary"
-            @click="submitForm('testCaseForm', true)">保存并返回</el-button>
+          <el-button
+            v-if="!testCaseForm.id && isEdit"
+            type="primary"
+            @click="submitForm('testCaseForm', false)"
+          >保存并新建</el-button>
+          <el-button
+            v-if="!testCaseForm.id && isEdit"
+            type="primary"
+            @click="submitForm('testCaseForm', true)"
+          >保存并返回</el-button>
           <el-button v-if="testCaseForm.id && isEdit" type="primary" @click="submitForm('testCaseForm')">确认修改</el-button>
           <el-button type="primary" @click="giveupBack('testCaseForm')">放弃</el-button>
           <router-link v-if="!testCaseForm.id" to="/admincenter/admincenter">
@@ -18,29 +24,51 @@
         </div>
         <div class="form-box">
           <el-row>
-            <el-col v-for="field in sysCustomFields" :key="field.i1d" :xs="24" :sm="24"
-              :md="field.fieldNameEn === 'title' ? 24 : 12" :lg="field.fieldNameEn === 'title' ? 24 : 12"
-              :xl="field.fieldNameEn === 'title' ? 24 : 8">
-              <el-form-item size="small" :label="field.fieldNameCn" label-width="80px"
-                :prop="'sField' + field.fieldNameEn">
-                <el-input :disabled="!isEdit" v-if="field.fieldType === 'text'" v-model="field.valueData" type="text" />
-                <el-input :disabled="!isEdit" v-if="field.fieldType === 'memo'" v-model="field.valueData" type="textarea"
-                  :rows="2" :placeholder="`请输入${field.fieldNameCn}`" />
-                <el-radio-group :disabled="!isEdit" v-if="field.fieldType === 'radio'" v-model="field.valueData">
+            <el-col
+              v-for="field in sysCustomFields"
+              :key="field.i1d"
+              :xs="24"
+              :sm="24"
+              :md="field.fieldNameEn === 'title' ? 24 : 12"
+              :lg="field.fieldNameEn === 'title' ? 24 : 12"
+              :xl="field.fieldNameEn === 'title' ? 24 : 8"
+            >
+              <el-form-item
+                size="small"
+                :label="field.fieldNameCn"
+                label-width="80px"
+                :prop="'sField' + field.fieldNameEn"
+              >
+                <el-input v-if="field.fieldType === 'text'" v-model="field.valueData" :disabled="!isEdit" type="text" />
+                <el-input
+                  v-if="field.fieldType === 'memo'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="textarea"
+                  :rows="2"
+                  :placeholder="`请输入${field.fieldNameCn}`"
+                />
+                <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData" :disabled="!isEdit">
                   <el-radio label="1">是</el-radio>
                   <el-radio label="0">否</el-radio>
                 </el-radio-group>
-                <el-checkbox-group :disabled="!isEdit" v-if="field.fieldType === 'checkbox'" v-model="field.valueData">
+                <el-checkbox-group v-if="field.fieldType === 'checkbox'" v-model="field.valueData" :disabled="!isEdit">
                   <el-checkbox label="1">是</el-checkbox>
                   <el-checkbox label="0">否</el-checkbox>
                 </el-checkbox-group>
-                <el-select :disabled="!isEdit"
+                <el-select
                   v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
-                  :multiple="['multiList'].includes(field.fieldType)" v-model="field.valueData"
-                  :placeholder="`请选择${field.fieldNameCn}`">
-                  <el-option v-for="item in handleOptions(field.possibleValue)" :key="item.value" :label="item.label"
-                    :value="item.value">
-                  </el-option>
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  :multiple="['multiList'].includes(field.fieldType)"
+                  :placeholder="`请选择${field.fieldNameCn}`"
+                >
+                  <el-option
+                    v-for="item in handleOptions(field.possibleValue)"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
                   <router-link :to="`/admincenter/admincenter?par=${field.fieldNameEn}`">
                     <el-option label="添加新值" value="999" />
                   </router-link>
@@ -49,45 +77,74 @@
                   {{ field.defaultValue }}
                 </el-link>
                 <el-input v-if="field.fieldType === 'link' && isEdit" v-model="field.valueData" type="text" />
-                <el-date-picker :disabled="!isEdit" v-if="field.fieldType === 'Date'" v-model="field.valueData"
-                  type="date" placeholder="选择日期">
-                </el-date-picker>
+                <el-date-picker
+                  v-if="field.fieldType === 'Date'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="date"
+                  placeholder="选择日期"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-divider></el-divider>
+              <el-divider />
             </el-col>
             <el-col v-for="(field, index) in customFields" :key="field.id" :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
-              <el-form-item size="small" :label="field.fieldNameCn" label-width="80px" :prop="'custom' + fieldNameEn">
-                <el-input :disabled="!isEdit" v-if="field.fieldType === 'text'" v-model="field.valueData" type="text"
-                  :length="field.length" />
-                <el-input :disabled="!isEdit" v-if="field.fieldType === 'memo'" v-model="field.valueData" type="textarea"
-                  :rows="2" placeholder="请输入内容" :length="field.length" />
-                <el-radio-group :disabled="!isEdit" v-if="field.fieldType === 'radio'" v-model="field.valueData">
+              <el-form-item size="small" :label="field.fieldNameCn" label-width="80px" :prop="'custom' + field.fieldNameEn">
+                <el-input
+                  v-if="field.fieldType === 'text'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="text"
+                  :length="field.length"
+                />
+                <el-input
+                  v-if="field.fieldType === 'memo'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="textarea"
+                  :rows="2"
+                  placeholder="请输入内容"
+                  :length="field.length"
+                />
+                <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData" :disabled="!isEdit">
                   <el-radio label="1">是</el-radio>
                   <el-radio label="0">否</el-radio>
                 </el-radio-group>
-                <el-checkbox :disabled="!isEdit" v-if="field.fieldType === 'checkbox'"
+                <el-checkbox
+                  v-if="field.fieldType === 'checkbox'"
+                  :disabled="!isEdit"
                   :checked="field.valueData === 'checked'"
-                  @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'"></el-checkbox>
-                <el-select :disabled="!isEdit"
+                  @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'"
+                />
+                <el-select
                   v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
-                  :multiple="['multiList'].includes(field.fieldType)" v-model="field.valueData"
-                  :placeholder="`请选择${field.fieldNameCn}`">
-                  <el-option v-for="item in handleOptions(field.possibleValue, field.fieldType === 'linkedDropDown')"
-                    :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-                  <router-link :to="`/admincenter/admincenter?par=${field.fieldNameEn}`">
-                    <el-option label="添加新值" />
-                  </router-link>
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  :multiple="['multiList'].includes(field.fieldType)"
+                  :placeholder="`请选择${field.fieldNameCn}`"
+                >
+                  <el-option
+                    v-for="item in handleOptions(field.possibleValue, field.fieldType === 'linkedDropDown')"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                  <!-- <router-link :to="`/admincenter/admincenter?par=${field.fieldNameEn}`"> -->
+                  <el-option label="添加新值" value="0" @click.native="handleAddPossibleValue(field)" />
+                  <!-- </router-link> -->
                 </el-select>
                 <el-link v-if="field.fieldType === 'link' && !isEdit" :href="field.defaultValue" target="_blank">
                   {{ field.defaultValue }}
                 </el-link>
                 <el-input v-if="field.fieldType === 'link' && isEdit" v-model="field.valueData" type="text" />
-                <el-date-picker :disabled="!isEdit" v-if="field.fieldType === 'Date'" v-model="field.valueData"
-                  type="date" placeholder="选择日期">
-                </el-date-picker>
+                <el-date-picker
+                  v-if="field.fieldType === 'Date'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="date"
+                  placeholder="选择日期"
+                />
               </el-form-item>
             </el-col>
             <!-- <el-col v-for="field in customFields" :key="field.id" :xs="8" :sm="6" :md="6" :lg="6" :xl="6">
@@ -103,7 +160,10 @@
                 <el-option v-for="(item, index) in field.defaultValues" :key="index" :label="field.mergeValues[index]"
                   :value="field.mergeValues[index]" />
                 <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                  <el-option label="添加新值" value />
+                  <el-option
+                    label="添加新值"
+                    value
+                  />
                 </router-link>
               </el-select>
             </el-form-item>
@@ -122,11 +182,14 @@
         </div>
       </el-form>
     </el-card>
+    <addPossibleValue :field="currentField" :visible.sync="addPossibleValueVisible" @refresh="getData" />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { getAllCustomField } from '@/api/getFields'
+import addPossibleValue from './components/addPossibleValue.vue'
+import { featureListAll } from '@/api/feature'
 import {
   testCaseSave,
   testCaseUpdate,
@@ -134,7 +197,12 @@ import {
 } from '@/api/testcase'
 
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import { fieldTypeAPI } from '@/api/customFFields'
 export default {
+  name: 'AddTestCase',
+  components: {
+    addPossibleValue
+  },
   data() {
     return {
       openDia: false,
@@ -142,7 +210,9 @@ export default {
       customFields: [],
       id: '',
       isEdit: false,
-      loading: false
+      loading: false,
+      currentField: {},
+      addPossibleValueVisible: false
     }
   },
   computed: {
@@ -175,76 +245,122 @@ export default {
       }
     },
     ...mapGetters({
-      lang: (state) => state.header.lang,
+      lang: (state) => state.header.lang
     }),
     projectInfo() {
       return this.$store.state.user.userinfo
-    },
+    }
   },
   created() {
     this.id = this.$route.query.id
     this.isEdit = !!this.$route.query.isEdit
     // 获取自定义字段
-    getAllCustomField({
-      projectId: this.projectInfo.userUseOpenProject.projectId,
-      scopeId: '3000001',
-    }).then((res) => {
-      if (res.code === '200') {
-        const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'radio', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
-        this.sysCustomFields = res.data.filter(item => item.type === "sField").map((item, index) => {
-          return {
-            label: 'sField' + item.fieldNameEn,
-            ...item,
-            valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
-          }
-        })
-        this.customFields = res.data.filter(item => item.type === "custom").sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType)).map((item, index) => {
-          return {
-            label: 'custom' + item.fieldNameEn,
-            ...item,
-            valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
-          }
-        })
-        if (this.id) {
-          testCaseInfo({ id: this.id }).then((res) => {
-            [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
-              item.valueData = res.data[item.fieldNameEn]
-              const testcaseExpand = JSON.parse(res.data.testcaseExpand)
-              if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-
-                item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+    this.getData()
+  },
+  methods: {
+    getData(){
+      getAllCustomField({
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        scopeId: '3000001'
+      }).then((res) => {
+        if (res.code === '200') {
+          const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
+          this.sysCustomFields = res.data.filter(item => item.type === 'sField').map((item, index) => {
+            return {
+              label: 'sField' + item.fieldNameEn,
+              ...item,
+              valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+            }
+          })
+          this.customFields = res.data.filter(item => item.type === 'custom')
+            .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
+            .map((item, index) => {
+              return {
+                label: 'custom' + item.fieldNameEn,
+                ...item,
+                valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
               }
             })
-          })
+          if (this.id) {
+            testCaseInfo({ id: this.id }).then((res) => {
+              [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+                item.valueData = res.data[item.fieldNameEn]
+                const testcaseExpand = JSON.parse(res.data.testcaseExpand)
+                if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                  item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+                }
+              })
+            })
+          }
         }
-      }
-    })
-  },
-  mounted() { },
-
-  methods: {
+      })
+    },
     handleOptions(obj, flag) {
       try {
         if (flag) {
           obj = JSON.parse(obj)
-          return obj[[...this.sysCustomFields, ...this.customFields].find(item => item.customFieldId === obj.others.parentListId).valueData].map(item => {
-            return {
-              label: item,
-              value: item,
+          const list = []
+          Object.keys(obj).forEach(key => {
+            if (obj[key] instanceof Array) {
+              obj[key].forEach((value) => {
+                list.push({ value, label: value + '(' + key + ')' })
+              })
             }
           })
+          return list
         } else {
           return Object.values(JSON.parse(obj)).map(item => {
             return {
               label: item,
-              value: item,
+              value: item
             }
           })
         }
       } catch (error) {
         return []
       }
-
+    },
+    handleDropDownList(field){
+      const { possibleValue, fieldType } = field
+      if (!possibleValue) return []
+      const obj = JSON.parse(possibleValue)
+      const list = []
+      if (['dropDown', 'number'].includes(fieldType)){
+        Object.keys(obj).forEach(key => {
+          list.push(obj[key])
+        })
+        return list
+      } else if (['linkedDropDown'].includes(fieldType)){
+        Object.keys(obj).forEach(key => {
+          // if (obj[key] instanceof Array){
+          //   list.push(...obj[key])
+          // }
+          if (obj[key] instanceof Array) {
+            obj[key].forEach((value) => {
+              list.push({ value, type: key })
+            })
+          }
+        })
+        return list
+      } else {
+        return []
+      }
+    },
+    handlegetAllCustomField() {
+      // 获取自定义字段
+      getAllCustomField({
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        scopeId: '3000001'
+      }).then((res) => {
+        if (res.code === '200') {
+          this.customFields = res.data
+        }
+      })
+    },
+    // 添加下拉框值
+    handleAddPossibleValue(field) {
+      this.currentField = { ...field }
+      this.addPossibleValueVisible = true
     },
     // 重置表单
     resetFields() {
@@ -265,16 +381,16 @@ export default {
           params.projectId = this.projectInfo.userUseOpenProject.projectId
           const attributes = this.customFields.map(item => {
             return {
-              "fieldType": item.fieldType,
-              "fieldNameEn": item.fieldNameEn,
-              "customFieldId": item.customFieldId,
-              "customFieldLinkId": item.customFieldLinkId,
-              "fieldName": item.fieldName,
-              "fieldNameCn": item.fieldNameCn,
-              "scopeNameCn": item.scopeNameCn,
-              "scope": item.scope,
-              "scopeId": item.scopeId,
-              "valueData": item.fieldType === 'checkbox' ? item.valueData === 'checked' ? 1 : 0 : item.valueData
+              'fieldType': item.fieldType,
+              'fieldNameEn': item.fieldNameEn,
+              'customFieldId': item.customFieldId,
+              'customFieldLinkId': item.customFieldLinkId,
+              'fieldName': item.fieldName,
+              'fieldNameCn': item.fieldNameCn,
+              'scopeNameCn': item.scopeNameCn,
+              'scope': item.scope,
+              'scopeId': item.scopeId,
+              'valueData': item.fieldType === 'checkbox' ? item.valueData === 'checked' ? 1 : 0 : item.valueData
             }
           })
           params.customFieldDatas = {

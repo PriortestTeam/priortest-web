@@ -19,20 +19,17 @@
                 type="primary"
                 :disabled="!accountUpdate"
                 @click="submitForm('accountForm')"
-                >新建账户</el-button
-              >
+              >新建账户</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 @click="submitForm('accountForm')"
-                >确认修改</el-button
-              >
+              >确认修改</el-button>
               <el-button
                 type="primary"
                 :disabled="accountUpdate"
                 @click="cancelUpdate('accountForm')"
-                >取消修改</el-button
-              >
+              >取消修改</el-button>
             </div>
             <div class="add-account">
               <el-form-item label="邮箱" prop="email" size="small">
@@ -98,15 +95,15 @@
             </div>
             <div class="table">
               <el-button type="text" @click="accountRefresh">刷新</el-button>
-              <el-button type="text" :disabled="accountMultiple"
-                >批量删除</el-button
-              >
+              <el-button
+                type="text"
+                :disabled="accountMultiple"
+              >批量删除</el-button>
               <el-button
                 type="text"
                 :disabled="accountSingle"
                 @click="accountJurisdiction"
-                >权限</el-button
-              >
+              >权限</el-button>
               <el-table
                 ref="accountData"
                 :data="accountData"
@@ -130,9 +127,10 @@
                 <el-table-column prop="roleName" label="角色" />
                 <el-table-column label="操作">
                   <template slot-scope="scope">
-                    <span class="table-btn" @click.stop="accountDel(scope.row)"
-                      >删除</span
-                    >
+                    <span
+                      class="table-btn"
+                      @click.stop="accountDel(scope.row)"
+                    >删除</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -150,7 +148,7 @@
       <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
         <Jurisdiction
           v-if="jurisdictionAccount"
-          :jurisdictionAccount="jurisdictionAccount"
+          :jurisdiction-account="jurisdictionAccount"
           :user-infos="userinfo"
           @userChange="userChange"
         />
@@ -159,7 +157,7 @@
       <el-tab-pane label="自定义字段" name="3">
         <div class="manage-view">
           <!-- 自定义字段 -->
-          <CustomFFields :rowData="rowData" :getqueryCustomList="getqueryCustomList"></CustomFFields>
+          <CustomFFields :row-data="rowData" :getquery-custom-list="getqueryCustomList" />
           <!-- <Userindex
             v-if="customType === '用户'"
             :scope-list="scopeList"
@@ -265,9 +263,12 @@
             @setFieldName="setFieldName"
           /> -->
           <div class="table">
-            <el-button :loading="delLoad" type="text" @click="deleteAll()" :disabled="dbfields"
-              >删除</el-button
-            >
+            <el-button
+              :loading="delLoad"
+              type="text"
+              :disabled="dbfields"
+              @click="deleteAll()"
+            >删除</el-button>
             <el-table
               :data="fieldsData"
               :header-cell-style="tableHeader"
@@ -302,9 +303,8 @@
                   <span
                     v-for="(item, index) in scope.row.componentAttributes"
                     :key="index"
-                    >{{ item.scopeNameCn }}&#40;
-                    {{ item.mandatory == true ? "必填" : "无" }} &#41;，</span
-                  >
+                  >{{ item.scopeNameCn }}&#40;
+                    {{ item.mandatory == true ? "必填" : "无" }} &#41;，</span>
                 </template>
               </el-table-column>
               <!-- <el-table-column prop="mandatory" label="是否必填">
@@ -330,12 +330,11 @@
               <el-table-column label="Action">
                 <template slot-scope="scope">
                   <el-button
-                  :loading="delLoad"
+                    :loading="delLoad"
                     type="text"
                     class="table-btn"
                     @click.stop="delfield(scope.row)"
-                    >删除</el-button
-                  >
+                  >删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -376,6 +375,9 @@
       <el-tab-pane label="服务计划" name="8">
         <ServicePlan v-if="activeName === '8'" />
       </el-tab-pane>
+      <el-tab-pane label="自定义字段设置" name="9">
+        <CustomFieldSetting v-if="activeName === '9'" />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -384,15 +386,16 @@ import {
   message,
   formatChangedPara,
   customradioData,
-  customtextData,
-} from "@/utils/common";
-import Jurisdiction from "@/views/adminCenter/jurisdiction";
-import System from "@/views/adminCenter/system";
-import Dashboard from "@/views/adminCenter/dashboard";
-import ViewPage from "@/views/project/view";
-import MyAccount from "@/views/adminCenter/myAccount";
-import Dateindex from "@/views/adminCenter/date";
-import CustomFFields from "@/views/adminCenter/customFFields";
+  customtextData
+} from '@/utils/common'
+import Jurisdiction from '@/views/adminCenter/jurisdiction'
+import System from '@/views/adminCenter/system'
+import Dashboard from '@/views/adminCenter/dashboard'
+import ViewPage from '@/views/project/view'
+import MyAccount from '@/views/adminCenter/myAccount'
+import Dateindex from '@/views/adminCenter/date'
+import CustomFFields from '@/views/adminCenter/customFFields'
+import CustomFieldSetting from '@/views/adminCenter/customFieldSetting.vue'
 // import Radioindex from '@/views/adminCenter/radio'
 // import Textindex from '@/views/adminCenter/text'
 // import Memoindex from '@/views/adminCenter/memo'
@@ -409,8 +412,8 @@ import {
   createSubUser,
   deleteSubUser,
   updateSubUser,
-  getSysCustomField,
-} from "@/api/admincenter";
+  getSysCustomField
+} from '@/api/admincenter'
 import {
   queryCustomList,
   queryFieldRadioById,
@@ -418,9 +421,10 @@ import {
   queryFieldTextById,
   deleteCustomText,
   queryFieldDropDownById,
-  deleteCustomDropDown,
-} from "@/api/customField";
-import { deleteApi, getInfo, fieldList } from "@/api/customFFields";
+  deleteCustomDropDown
+} from '@/api/customField'
+import { deleteApi, getInfo, fieldList } from '@/api/customFFields'
+import customFieldSettingVue from './customFieldSetting.vue'
 // import {
 //   fieldTypeAPI,
 //   RangeS,
@@ -431,7 +435,7 @@ import { deleteApi, getInfo, fieldList } from "@/api/customFFields";
 //   downMenuAPI,
 // } from "@/api/customFFields";
 export default {
-  name: "Admincenter",
+  name: 'Admincenter',
   components: {
     Jurisdiction,
     Dateindex,
@@ -449,14 +453,15 @@ export default {
     MyAccount,
     ServicePlan,
     CustomFFields,
+    CustomFieldSetting
   },
   data() {
     return {
-      activeName: "0",
-      propSystem: "",
+      activeName: '0',
+      propSystem: '',
       tableHeader: {
-        color: "#d4dce3",
-        background: "#4286CD",
+        color: '#d4dce3',
+        background: '#4286CD'
       },
       accountRoleOption: [],
       accountTempForm: {},
@@ -467,39 +472,39 @@ export default {
         password: undefined,
         sysRoleId: undefined,
         projectIdStr: [],
-        openProjectByDefaultId: "",
+        openProjectByDefaultId: ''
       },
       accountProject: [],
       accountRules: {
         email: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          { required: true, message: '请输入用户名', trigger: 'blur' },
           {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["blur", "blur"],
-          },
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['blur', 'blur']
+          }
         ],
         password: [
-          { required: true, message: "请设置初始密码", trigger: "blur" },
+          { required: true, message: '请设置初始密码', trigger: 'blur' }
         ],
         userName: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         sysRoleId: [
-          { required: true, message: "请选择角色", trigger: "change" },
+          { required: true, message: '请选择角色', trigger: 'change' }
         ],
         projectIdStr: [
-          { required: true, message: "请选择项目", trigger: "change" },
+          { required: true, message: '请选择项目', trigger: 'change' }
         ],
         openProjectByDefaultId: [
-          { required: true, message: "请选择默认登录项目", trigger: "change" },
-        ],
+          { required: true, message: '请选择默认登录项目', trigger: 'change' }
+        ]
       },
       accountData: [],
       accountTotal: 0,
       accountQuery: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       accountSelection: [], // 选择的表格
       accountSingle: true, // 非单个禁用
@@ -509,11 +514,11 @@ export default {
       userinfo: {},
       // 父传子数据
       fieldsfrom: {
-        type: "radio",
+        type: 'radio'
       },
       textfrom: {},
       // 子传父数据
-      customType: "radio",
+      customType: 'radio',
 
       // 自定义字段表格数据
       fieldsData: [],
@@ -522,121 +527,121 @@ export default {
       dbfields: true, // 非多个禁用
       fieldsQuery: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       fieldsId: {
-        projectId: "",
+        projectId: ''
       },
-      fieldName: "",
+      fieldName: '',
       scopeList: [],
       openProjectByDefaultIdList: [],
       fieldsOptions: [
         {
-          value: "DropDown",
-          label: "下拉框",
+          value: 'DropDown',
+          label: '下拉框'
         },
         {
-          value: "text",
-          label: "文本",
+          value: 'text',
+          label: '文本'
         },
         {
-          value: "RichText",
-          label: "备注",
+          value: 'RichText',
+          label: '备注'
         },
         {
-          value: "Checkbox",
-          label: "复选框",
+          value: 'Checkbox',
+          label: '复选框'
         },
         {
-          value: "radio",
-          label: "单选框",
+          value: 'radio',
+          label: '单选框'
         },
         {
-          value: "链接",
-          label: "链接",
+          value: '链接',
+          label: '链接'
         },
         {
-          value: "链接下拉框",
-          label: "链接下拉框",
+          value: '链接下拉框',
+          label: '链接下拉框'
         },
         {
-          value: "多选项",
-          label: "多选项",
+          value: '多选项',
+          label: '多选项'
         },
         {
-          value: "用户",
-          label: "用户",
+          value: '用户',
+          label: '用户'
         },
         {
-          value: "日期",
-          label: "日期",
-        },
+          value: '日期',
+          label: '日期'
+        }
       ],
       emailDisabled: false,
       rowData: {},
       delLoad:false
 
-    };
+    }
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       // 新增项目到自定义字段
       if (to.query.par) {
         if (
-          from.name === "Addproject" ||
-          from.name === "Addfeature" ||
-          from.name === "Addsprint" ||
-          from.name === "Addtestcycle" ||
-          from.name === "Addissue" ||
-          from.name === "Addtestcase"
+          from.name === 'Addproject' ||
+          from.name === 'Addfeature' ||
+          from.name === 'Addsprint' ||
+          from.name === 'Addtestcycle' ||
+          from.name === 'Addissue' ||
+          from.name === 'Addtestcase'
         ) {
-          vm.activeName = "4";
-          vm.propSystem = to.query.par;
+          vm.activeName = '4'
+          vm.propSystem = to.query.par
         }
       } else {
         if (
-          from.name === "Addproject" ||
-          from.name === "Addfeature" ||
-          from.name === "Addsprint" ||
-          from.name === "Addtestcycle" ||
-          from.name === "Addissue" ||
-          from.name === "Addtestcase"
+          from.name === 'Addproject' ||
+          from.name === 'Addfeature' ||
+          from.name === 'Addsprint' ||
+          from.name === 'Addtestcycle' ||
+          from.name === 'Addissue' ||
+          from.name === 'Addtestcase'
         ) {
-          vm.activeName = "3";
+          vm.activeName = '3'
         }
       }
-      if (to.params.id === "6") {
-        vm.activeName = "6";
+      if (to.params.id === '6') {
+        vm.activeName = '6'
       }
-    });
+    })
   },
   computed: {
     projectInfo() {
-      return this.$store.state.user.userinfo;
-    },
+      return this.$store.state.user.userinfo
+    }
   },
   watch: {
-    "fieldsfrom.type": function (val) {
-      this.chType(val);
+    'fieldsfrom.type': function (val) {
+      this.chType(val)
       // this.PleaseType(val)
     },
-    "fieldsfrom.fieldName": function (val) {
+    'fieldsfrom.fieldName': function (val) {
       if (val) {
-        this.fielddisabled = false;
+        this.fielddisabled = false
       } else {
-        this.fielddisabled = true;
+        this.fielddisabled = true
       }
-    },
+    }
   },
   created() {
-    this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId;
+    this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId
     getUserRoles().then((res) => {
-      this.accountRoleOption = res.data;
-    });
-    this.getquerySubUsers();
-    this.getProject();
-    this.getqueryCustomList();
-    this.getSysCustomFieldByScope();
+      this.accountRoleOption = res.data
+    })
+    this.getquerySubUsers()
+    this.getProject()
+    this.getqueryCustomList()
+    this.getSysCustomFieldByScope()
     // this.getSysCustomFieldByType()
   },
   methods: {
@@ -644,11 +649,11 @@ export default {
     userChange(user) {},
     async getSysCustomFieldByType() {
       const params = {
-        fieldName: "type",
-      };
-      const res = await getSysCustomField(params);
-      if (res.code === "200") {
-        console.log("getSysCustomFieldByType--", res);
+        fieldName: 'type'
+      }
+      const res = await getSysCustomField(params)
+      if (res.code === '200') {
+        console.log('getSysCustomFieldByType--', res)
         /* res.data.mergeValues.forEach(item => {
           const obj = {
             value: item,
@@ -660,12 +665,12 @@ export default {
     },
     async getSysCustomFieldByScope() {
       const params = {
-        fieldName: "scope",
-      };
-      const res = await getSysCustomField(params);
-      if (res.code === "200") {
-        console.log("getSysCustomFieldByScope---", res);
-        this.scopeList = res.data.mergeValues;
+        fieldName: 'scope'
+      }
+      const res = await getSysCustomField(params)
+      if (res.code === '200') {
+        console.log('getSysCustomFieldByScope---', res)
+        this.scopeList = res.data.mergeValues
         /* res.data.mergeValues.forEach(item => {
           const obj = {
             value: item,
@@ -676,12 +681,12 @@ export default {
       }
     },
     setFieldName(data) {
-      this.fieldName = data;
+      this.fieldName = data
     },
     handleClick(val) {
-      if (val === "4") {
+      if (val === '4') {
         if (!this.projectInfo.userUseOpenProject.projectId) {
-          message("error", "请先选择项目");
+          message('error', '请先选择项目')
           // throw new Error('')
         }
       }
@@ -690,18 +695,18 @@ export default {
     // 得到项目
     getProject() {
       queryForProjectTitles().then((res) => {
-        this.accountProject = res.data;
-        this.accountProject.unshift({ title: "ALL", id: "0" });
-      });
+        this.accountProject = res.data
+        this.accountProject.unshift({ title: 'ALL', id: '0' })
+      })
     },
     // 项目互斥
     accountChangePro(val) {
-      const that = this;
-      const index = val.indexOf("0");
+      const that = this
+      const index = val.indexOf('0')
       if (index !== -1) {
-        that.accountForm.projectIdStr = ["0"];
+        that.accountForm.projectIdStr = ['0']
       }
-      if (that.accountForm.projectIdStr[0] === "0") {
+      if (that.accountForm.projectIdStr[0] === '0') {
         /* eslint-disable */
         that.openProjectByDefaultIdList = _.cloneDeep(that.accountProject);
         that.openProjectByDefaultIdList.splice(0, 1);
