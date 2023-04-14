@@ -304,6 +304,17 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/settingCenter',
+    component: Layout,
+    redirect: '/settingCenter',
+    children: [{
+      path: 'settingCenter',
+      name: 'SettingCenter',
+      component: () => import('@/views/settingCenter/index'),
+      meta: { title: 'settingCenter', icon: 'settingCenter' }
+    }]
+  },
+  {
     path: 'external-link',
     component: Layout,
     children: [

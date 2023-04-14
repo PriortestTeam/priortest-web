@@ -51,6 +51,9 @@
                 个人中心
               </div>
             </el-dropdown-item>
+            <el-dropdown-item>
+              <div @click="menuSelect('SettingCenter')">设置中心</div>
+            </el-dropdown-item>
             <el-dropdown-item style="color: #f56c6c">
               <div @click="logout">
                 <svg-icon icon-class="tuichu" class="tuichu" />

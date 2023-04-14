@@ -69,9 +69,7 @@
                     :label="item.label"
                     :value="item.value"
                   />
-                  <router-link :to="`/admincenter/admincenter?par=${field.fieldNameEn}`">
-                    <el-option label="添加新值" value="999" />
-                  </router-link>
+                  <el-option label="添加新值" value="999"  @click.native="handleAddPossibleValue(field)"/>
                 </el-select>
                 <el-link v-if="field.fieldType === 'link' && !isEdit" :href="field.defaultValue" target="_blank">
                   {{ field.defaultValue }}
@@ -208,6 +206,8 @@ export default {
       openDia: false,
       sysCustomFields: [],
       customFields: [],
+      oldSysCustomFields:[],
+      oldCustomFields:[],
       id: '',
       isEdit: false,
       loading: false,
@@ -251,6 +251,20 @@ export default {
       return this.$store.state.user.userinfo
     }
   },
+  watch:{
+    sysCustomFields:{
+      handler(newVal){
+        this.oldSysCustomFields = newVal
+      }
+      ,deep:true
+    },
+    customFields:{
+      handler(newVal){
+        this.oldCustomFields = newVal
+      }
+      ,deep:true
+    }
+  },
   created() {
     this.id = this.$route.query.id
     this.isEdit = !!this.$route.query.isEdit
@@ -292,7 +306,24 @@ export default {
               })
             })
           }
+          this.handleDefaultForm();
         }
+      })
+    },
+    handleDefaultForm(){
+      this.sysCustomFields.forEach(el=>{
+        this.oldSysCustomFields.forEach(old=>{
+          if(el.customFieldLinkId == old.customFieldLinkId){
+            el.valueData = old.valueData
+          }
+        })
+      })
+      this.customFields.forEach(el=>{
+        this.oldCustomFields.forEach(old=>{
+          if(el.customFieldLinkId == old.customFieldLinkId){
+            el.valueData = old.valueData
+          }
+        })
       })
     },
     handleOptions(obj, flag) {
