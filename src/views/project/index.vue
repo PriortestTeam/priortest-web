@@ -241,7 +241,8 @@ export default {
     // 新建项目
     newproject() {
       const data = JSON.stringify({});
-      this.$router.push({ name: "Addproject", query: { info: data } });
+      // query: { info: data }
+      this.$router.push({ name: "Addproject", query: { isEdit: 1 } });
     },
 
     /** 项目列表表格开始 */

@@ -5,21 +5,18 @@
     </div>
     <el-row>
       <el-col :span="treeCol">
-        <view-tree
-          :child-scope="currentScope"
-          @hadleTree="hadleTreeshow"
-          @childByValue="childByValue"
-        />
+        <view-tree :child-scope="currentScope" @hadleTree="hadleTreeshow" @childByValue="childByValue" />
       </el-col>
 
       <el-col :span="24 - treeCol">
         <el-card>
-          <div class="project_table">
-            <div class="new_project">
-              <el-button type="primary" @click="newproject">
-                新建缺陷
-              </el-button>
-            </div>
+
+           <div class="project_table">
+                       <div class="new_project">
+                         <el-button type="primary" @click="newproject">
+                           新建缺陷
+                         </el-button>
+                       </div>
 
             <div class="oprate_btn">
               <el-button type="text" @click="projectRefresh">刷新</el-button>
@@ -189,7 +186,8 @@ export default {
   methods: {
     // 新建项目
     newproject () {
-      this.$router.push({ name: 'Addissue' })
+     this.$router.push({ name: 'Addissue', query: { isEdit: 1 } })
+
     },
 
     /** 项目列表表格开始 */

@@ -207,7 +207,7 @@ export default {
   methods: {
     // 新建项目
     newproject () {
-      this.$router.push({ name: 'Addtestcycle' })
+      this.$router.push({ name: 'Addtestcycle', query: { isEdit: 1 } })
     },
 
     /** 项目列表表格开始 */

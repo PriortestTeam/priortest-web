@@ -1,210 +1,447 @@
 <template>
-  <div class="app-container add-form add-project">
-    <el-form
-      ref="sprintFrom"
-      :model="sprintFrom"
-      :rules="sprintrules"
-      label-width="120px"
-      class="demo-ruleForm"
-    >
-      <div>
-        <el-button
-          v-if="!sprintFrom.id"
-          type="primary"
-          @click="submitForm('sprintFrom', false)"
-        >保存并新建</el-button>
-        <el-button
-          v-if="!sprintFrom.id"
-          type="primary"
-          @click="submitForm('sprintFrom', true)"
-        >保存并返回</el-button>
-        <el-button
-          v-if="sprintFrom.id"
-          type="primary"
-          @click="submitForm('sprintFrom')"
-        >确认修改</el-button>
-        <el-button
-          type="primary"
-          @click="giveupBack('sprintFrom')"
-        >放弃</el-button>
-        <router-link v-if="!sprintFrom.id" to="/admincenter/admincenter">
-          <el-button type="text">{{
-            $t("lang.PublicBtn.CreateCustomField")
-          }}</el-button>
-        </router-link>
-      </div>
-      <div class="form-box">
-        <el-form-item label="迭代标题" prop="title">
-          <el-input v-model="sprintFrom.title" size="small" maxlength="15" />
-        </el-form-item>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item size="small" label="EPIC" prop="epic">
-              <el-select
-                v-model="sprintFrom.epic"
-                placeholder="请选择epic"
-                clearable
+  <div v-loading="loading" class="app-container add-form add-project">
+    <el-card>
+
+      <el-form ref="testCaseForm" :model="testCaseForm" :rules="testCaseRules" label-width="120px" class="demo-ruleForm">
+        <div>
+          <el-button
+            v-if="!testCaseForm.id && isEdit"
+            type="primary"
+            @click="submitForm('testCaseForm', false)"
+          >保存并新建</el-button>
+          <el-button
+            v-if="!testCaseForm.id && isEdit"
+            type="primary"
+            @click="submitForm('testCaseForm', true)"
+          >保存并返回</el-button>
+          <el-button v-if="testCaseForm.id && isEdit" type="primary" @click="submitForm('testCaseForm')">确认修改</el-button>
+          <el-button type="primary" @click="giveupBack('testCaseForm')">放弃</el-button>
+          <router-link v-if="!testCaseForm.id" to="/admincenter/admincenter">
+            <el-button type="text">
+              {{ $t('lang.PublicBtn.CreateCustomField') }}
+            </el-button>
+          </router-link>
+        </div>
+        <div class="form-box">
+          <el-row>
+            <el-col
+              v-for="field in sysCustomFields"
+              :key="field.i1d"
+              :xs="24"
+              :sm="24"
+              :md="field.fieldNameEn === 'title' ? 24 : 12"
+              :lg="field.fieldNameEn === 'title' ? 24 : 12"
+              :xl="field.fieldNameEn === 'title' ? 24 : 8"
+            >
+              <el-form-item
+                size="small"
+                :label="field.fieldNameCn"
+                label-width="80px"
+                :prop="'sField' + field.fieldNameEn"
               >
-                <el-option
-                  v-for="item in epicArr"
-                  :key="item"
-                  :label="item"
-                  :value="item"
+                <el-input v-if="field.fieldType === 'text'" v-model="field.valueData" :disabled="!isEdit" type="text" />
+                <el-input
+                  v-if="field.fieldType === 'memo'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="textarea"
+                  :rows="2"
+                  :placeholder="`请输入${field.fieldNameCn}`"
                 />
-                <router-link to="/admincenter/admincenter?par=epic">
-                  <el-option label="添加新值" :value="0" />
+                <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData" :disabled="!isEdit">
+                  <el-radio label="1">是</el-radio>
+                  <el-radio label="0">否</el-radio>
+                </el-radio-group>
+                <el-checkbox-group v-if="field.fieldType === 'checkbox'" v-model="field.valueData" :disabled="!isEdit">
+                  <el-checkbox label="1">是</el-checkbox>
+                  <el-checkbox label="0">否</el-checkbox>
+                </el-checkbox-group>
+                <el-select
+                  v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  :multiple="['multiList'].includes(field.fieldType)"
+                  :placeholder="`请选择${field.fieldNameCn}`"
+                >
+                  <el-option
+                    v-for="item in handleOptions(field.possibleValue)"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                  <el-option label="添加新值" value="999"  @click.native="handleAddPossibleValue(field)"/>
+                </el-select>
+                <el-link v-if="field.fieldType === 'link' && !isEdit" :href="field.defaultValue" target="_blank">
+                  {{ field.defaultValue }}
+                </el-link>
+                <el-input v-if="field.fieldType === 'link' && isEdit" v-model="field.valueData" type="text" />
+                <el-date-picker
+                  v-if="field.fieldType === 'Date'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="date"
+                  placeholder="选择日期"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-divider />
+            </el-col>
+            <el-col v-for="(field, index) in customFields" :key="field.id" :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+              <el-form-item size="small" :label="field.fieldNameCn" label-width="80px" :prop="'custom' + field.fieldNameEn">
+                <el-input
+                  v-if="field.fieldType === 'text'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="text"
+                  :length="field.length"
+                />
+                <el-input
+                  v-if="field.fieldType === 'memo'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="textarea"
+                  :rows="2"
+                  placeholder="请输入内容"
+                  :length="field.length"
+                />
+                <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData" :disabled="!isEdit">
+                  <el-radio label="1">是</el-radio>
+                  <el-radio label="0">否</el-radio>
+                </el-radio-group>
+                <el-checkbox
+                  v-if="field.fieldType === 'checkbox'"
+                  :disabled="!isEdit"
+                  :checked="field.valueData === 'checked'"
+                  @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'"
+                />
+                <el-select
+                  v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  :multiple="['multiList'].includes(field.fieldType)"
+                  :placeholder="`请选择${field.fieldNameCn}`"
+                >
+                  <el-option
+                    v-for="item in handleOptions(field.possibleValue, field.fieldType === 'linkedDropDown')"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                  <!-- <router-link :to="`/admincenter/admincenter?par=${field.fieldNameEn}`"> -->
+                  <el-option label="添加新值" value="0" @click.native="handleAddPossibleValue(field)" />
+                  <!-- </router-link> -->
+                </el-select>
+                <el-link v-if="field.fieldType === 'link' && !isEdit" :href="field.defaultValue" target="_blank">
+                  {{ field.defaultValue }}
+                </el-link>
+                <el-input v-if="field.fieldType === 'link' && isEdit" v-model="field.valueData" type="text" />
+                <el-date-picker
+                  v-if="field.fieldType === 'Date'"
+                  v-model="field.valueData"
+                  :disabled="!isEdit"
+                  type="date"
+                  placeholder="选择日期"
+                />
+              </el-form-item>
+            </el-col>
+            <!-- <el-col v-for="field in customFields" :key="field.id" :xs="8" :sm="6" :md="6" :lg="6" :xl="6">
+            <el-form-item v-if="field.fieldType === 'text'" :label="field.fieldName" size="small" :prop="field.fieldName">
+              <el-input v-model="field.valueData" type="text" />
+            </el-form-item>
+            <el-form-item v-if="field.fieldType === 'memo'" :label="field.fieldName" size="small" :prop="field.fieldName">
+              <el-input v-model="field.valueData" type="textarea" :rows="2" placeholder="请输入内容" />
+            </el-form-item>
+            <el-form-item v-if="field.fieldType === 'radio'" :label="field.fieldName" size="small"
+              :prop="field.fieldName">
+              <el-select v-model="field.valueData" :placeholder="`请选择${field.fieldName}`">
+                <el-option v-for="(item, index) in field.defaultValues" :key="index" :label="field.mergeValues[index]"
+                  :value="field.mergeValues[index]" />
+                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                  <el-option
+                    label="添加新值"
+                    value
+                  />
                 </router-link>
               </el-select>
             </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="起止日期" size="small" prop="timeArr">
-              <el-date-picker
-                v-model="sprintFrom.timeArr"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                unlink-panels
-                :default-time="['00:00:00', '23:59:00']"
-              /> </el-form-item></el-col>
-        </el-row>
-
-        <el-form-item
-          :label="$t('lang.Project.Description')"
-          prop="description"
-          size="small"
-        >
-          <el-input
-            v-model="sprintFrom.description"
-            type="textarea"
-            maxlength="1000"
-            show-word-limit
-            :autosize="{ minRows: 3, maxRows: 8 }"
-          />
-        </el-form-item>
-      </div>
-    </el-form>
+            <el-form-item v-if="field.fieldType === 'DropDown'" :label="field.fieldName" size="small" filterable
+              :prop="field.fieldName">
+              <el-select v-model="field.valueData" :placeholder="`请选择${field.fieldName}`">
+                <el-option v-for="(item, index) in field.defaultValues" :key="index" :label="field.mergeValues[index]"
+                  :value="field.mergeValues[index]" />
+                <router-link v-if="field.fieldName !== 'schedule_run_frequency'"
+                  :to="`/admincenter/admincenter?par=${field.fieldName}`">
+                  <el-option label="添加新值" value />
+                </router-link>
+              </el-select>
+            </el-form-item> -->
+          </el-row>
+        </div>
+      </el-form>
+    </el-card>
+    <addPossibleValue :field="currentField" :visible.sync="addPossibleValueVisible" @refresh="getData" />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { sysCustomField } from '@/api/systemArr'
+import { getAllCustomField } from '@/api/getFields'
+import addPossibleValue from './components/addPossibleValue.vue'
+import { featureListAll } from '@/api/feature'
+import {
+  testCaseSave,
+  testCaseUpdate,
+  testCaseInfo
+} from '@/api/testcase'
 
-import { addSprint, editSprint, detailSprint } from '@/api/sprint'
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import { fieldTypeAPI } from '@/api/customFFields'
 export default {
-  name: 'Addsprint',
-  data () {
+  name: 'AddTestCase',
+  components: {
+    addPossibleValue
+  },
+  data() {
     return {
-      pickerOptions: {
-        disabledDate (time) {
-          return time.getTime() < Date.now() - 8.64e7 // 如果没有后面的-8.64e7就是不可以选择今天的
-        },
-        shortcuts: [
-          {
-            text: '15个工作日',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 14)
-              picker.$emit('pick', [start, end])
-            }
-          },
-          {
-            text: '28个工作日',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
-          }
-        ]
-      },
-      epicArr: [],
-      sprintFrom: {},
-      sprintFromTem: {},
-      sprintrules: {
-        title: [{ required: true, message: '请输入迭代标题', trigger: 'blur' }],
-        timeArr: [{ required: true, message: '请选择日期', trigger: 'change' }]
-      }
+      openDia: false,
+      sysCustomFields: [],
+      customFields: [],
+      oldSysCustomFields:[],
+      oldCustomFields:[],
+      id: '',
+      isEdit: false,
+      loading: false,
+      currentField: {},
+      addPossibleValueVisible: false
     }
   },
   computed: {
+    testCaseForm() {
+      try {
+        return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
+          return {
+            ...a,
+            [b.label]: b.valueData
+          }
+        }, {})
+      } catch (error) {
+        return []
+      }
+    },
+    testCaseRules() {
+      try {
+        return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
+          if (b.mandatory) {
+            return {
+              ...a,
+              [b.label]: [{ required: true, message: '不能为空', trigger: 'blur' }]
+            }
+          } else {
+            return a
+          }
+        }, {})
+      } catch (error) {
+        return []
+      }
+    },
     ...mapGetters({
       lang: (state) => state.header.lang
     }),
-    projectInfo () {
+    projectInfo() {
       return this.$store.state.user.userinfo
     }
   },
-  created () {
-    if (this.$route.query.id) {
-      detailSprint(this.$route.query.id).then((res) => {
-        this.sprintFrom = res.data
-        this.$set(this.sprintFrom, 'timeArr', [
-          this.sprintFrom.startDate,
-          this.sprintFrom.endDate
-        ])
-        this.sprintFromTem = Object.assign({}, this.sprintFrom)
-      })
-    } else {
-      this.sprintFrom.projectId = this.projectInfo.userUseOpenProject.projectId
-    }
-    sysCustomField({ fieldName: 'epic' }).then((res) => {
-      const data = res.data.mergeValues ? res.data.mergeValues : []
-      this.epicArr = data
-    })
-  },
-
-  methods: {
-    // 重置表单
-    resetFields () {
-      this.sprintFrom = {
-        id: undefined,
-        projectId: this.projectInfo.userUseOpenProject.projectId,
-        title: undefined,
-        description: undefined,
-        startDate: undefined,
-        endDate: undefined,
-        epic: undefined,
-        timeArr: '',
-        fileList: []
+  watch:{
+    sysCustomFields:{
+      handler(newVal){
+        this.oldSysCustomFields = newVal
       }
-      this.$refs['sprintFrom'].resetFields()
+      ,deep:true
+    },
+    customFields:{
+      handler(newVal){
+        this.oldCustomFields = newVal
+      }
+      ,deep:true
+    }
+  },
+  created() {
+    this.id = this.$route.query.id
+    this.isEdit = !!this.$route.query.isEdit
+    // 获取自定义字段
+    this.getData()
+  },
+  methods: {
+    getData(){
+      getAllCustomField({
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        scopeId: '8000001'
+      }).then((res) => {
+        if (res.code === '200') {
+          const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
+          this.sysCustomFields = res.data.filter(item => item.type === 'sField').map((item, index) => {
+            return {
+              label: 'sField' + item.fieldNameEn,
+              ...item,
+              valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+            }
+          })
+          this.customFields = res.data.filter(item => item.type === 'custom')
+            .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
+            .map((item, index) => {
+              return {
+                label: 'custom' + item.fieldNameEn,
+                ...item,
+                valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+              }
+            })
+          if (this.id) {
+            testCaseInfo({ id: this.id }).then((res) => {
+              [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+                item.valueData = res.data[item.fieldNameEn]
+                const testcaseExpand = JSON.parse(res.data.testcaseExpand)
+                if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                  item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+                }
+              })
+            })
+          }
+          this.handleDefaultForm();
+        }
+      })
+    },
+    handleDefaultForm(){
+      this.sysCustomFields.forEach(el=>{
+        this.oldSysCustomFields.forEach(old=>{
+          if(el.customFieldLinkId == old.customFieldLinkId){
+            el.valueData = old.valueData
+          }
+        })
+      })
+      this.customFields.forEach(el=>{
+        this.oldCustomFields.forEach(old=>{
+          if(el.customFieldLinkId == old.customFieldLinkId){
+            el.valueData = old.valueData
+          }
+        })
+      })
+    },
+    handleOptions(obj, flag) {
+      try {
+        if (flag) {
+          obj = JSON.parse(obj)
+          const list = []
+          Object.keys(obj).forEach(key => {
+            if (obj[key] instanceof Array) {
+              obj[key].forEach((value) => {
+                list.push({ value, label: value + '(' + key + ')' })
+              })
+            }
+          })
+          return list
+        } else {
+          return Object.values(JSON.parse(obj)).map(item => {
+            return {
+              label: item,
+              value: item
+            }
+          })
+        }
+      } catch (error) {
+        return []
+      }
+    },
+    handleDropDownList(field){
+      const { possibleValue, fieldType } = field
+      if (!possibleValue) return []
+      const obj = JSON.parse(possibleValue)
+      const list = []
+      if (['dropDown', 'number'].includes(fieldType)){
+        Object.keys(obj).forEach(key => {
+          list.push(obj[key])
+        })
+        return list
+      } else if (['linkedDropDown'].includes(fieldType)){
+        Object.keys(obj).forEach(key => {
+          // if (obj[key] instanceof Array){
+          //   list.push(...obj[key])
+          // }
+          if (obj[key] instanceof Array) {
+            obj[key].forEach((value) => {
+              list.push({ value, type: key })
+            })
+          }
+        })
+        return list
+      } else {
+        return []
+      }
+    },
+    handlegetAllCustomField() {
+      // 获取自定义字段
+      getAllCustomField({
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        scopeId: '8000001'
+      }).then((res) => {
+        if (res.code === '200') {
+          this.customFields = res.data
+        }
+      })
+    },
+    // 添加下拉框值
+    handleAddPossibleValue(field) {
+      this.currentField = { ...field }
+      this.addPossibleValueVisible = true
+    },
+    // 重置表单
+    resetFields() {
+      this.id = ''
+      this.isEdit = true
+      this.$refs['testCaseForm'].resetFields()
     },
     // 提交
-    submitForm (formName, type) {
+    submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.sprintFrom.id) {
-            const param = formatChangedPara(
-              this.sprintFromTem,
-              this.sprintFrom
-            )
-            param.projectId = this.sprintFrom.projectId
-            param.startDate = this.sprintFrom.timeArr[0]
-            param.endDate = this.sprintFrom.timeArr[1]
-
-            editSprint(param)
+          const params = this.sysCustomFields.reduce((a, b) => {
+            return {
+              ...a, [b.fieldNameEn]: b.valueData
+            }
+          }, {})
+          this.loading = true
+          params.projectId = this.projectInfo.userUseOpenProject.projectId
+          const attributes = this.customFields.map(item => {
+            return {
+              'fieldType': item.fieldType,
+              'fieldNameEn': item.fieldNameEn,
+              'customFieldId': item.customFieldId,
+              'customFieldLinkId': item.customFieldLinkId,
+              'fieldName': item.fieldName,
+              'fieldNameCn': item.fieldNameCn,
+              'scopeNameCn': item.scopeNameCn,
+              'scope': item.scope,
+              'scopeId': item.scopeId,
+              'valueData': item.fieldType === 'checkbox' ? item.valueData === 'checked' ? 1 : 0 : item.valueData
+            }
+          })
+          params.customFieldDatas = {
+            attributes: attributes.length ? attributes : undefined
+          }
+          if (this.id) {
+            testCaseUpdate({ id: this.id, ...params })
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
                   returntomenu(this, 1000)
                 }
+                this.loading = false
               })
               .catch((error) => {
+                this.loading = false
                 console.log(error)
               })
           } else {
-            this.sprintFrom.startDate = this.sprintFrom.timeArr[0]
-            this.sprintFrom.endDate = this.sprintFrom.timeArr[1]
-            delete this.sprintFrom.timeArr
-            addSprint(this.sprintFrom)
+            testCaseSave(params)
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -212,9 +449,13 @@ export default {
                   if (type) {
                     returntomenu(this, 1000)
                   }
+                } else {
+                  message('error', res.msg)
                 }
+                this.loading = false
               })
               .catch((error) => {
+                this.loading = false
                 console.log(error)
               })
           }
@@ -225,15 +466,33 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack () {
-      if (!this.sprintFrom.id) {
+    giveupBack() {
+      if (!this.testCaseForm.id) {
         this.resetFields()
       }
       this.returntomenu(this)
+    },
+    // 新建步骤
+    resetStepFrom() {
+      this.stepFrom = {
+        testCaseId: undefined,
+        step: undefined,
+        stepData: undefined,
+        expectedResult: undefined
+      }
+      this.$refs['stepFrom'].resetFields()
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-@import "index.scss";
+@import 'index.scss';
+
+.el-select {
+  width: 100%;
+}
+
+.el-date-editor {
+  width: 100%;
+}
 </style>

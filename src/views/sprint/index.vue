@@ -181,7 +181,7 @@ export default {
   methods: {
     // 新建项目
     newproject () {
-      this.$router.push({ name: 'Addsprint' })
+      this.$router.push({ name: 'Addsprint', query: { isEdit: 1 } })
       this.viewSearchQueryId = ''
     },
     getqueryForSprint () {

@@ -193,7 +193,7 @@ export default {
   methods: {
     // 新建项目
     newproject () {
-      this.$router.push({ name: 'Addfeature' })
+      this.$router.push({ name: 'Addfeature' , query: { isEdit: 1 }})
     },
 
     /** 项目列表表格开始 */
