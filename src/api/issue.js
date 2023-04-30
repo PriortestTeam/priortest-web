@@ -10,29 +10,17 @@ import request from '@/utils/request'
 
 export function issueList (params, data) {
   return request({
-    url: '/issue/queryList',
+    url: '/issue/list',
     method: 'post',
     // post拼接路由参数
     params: params,
     data: data
   })
 }
-// 添加项目
-export function addIssue (data) {
-  return request({
-    url: '/issue/insert',
-    method: 'post',
-    data
-  })
-}
-// 获取详情
-export function detailIssue (id) {
-  return request({
-    url: '/issue/queryById/' + id,
-    method: 'get'
-  })
-}
-// 删除项目
+
+
+
+// 删除 记录
 export function delIssue (id) {
   return request({
     url: '/issue/delete/' + id,
@@ -40,14 +28,40 @@ export function delIssue (id) {
   })
 }
 
-// 修改项目
-export function editIssue (data) {
+
+// clone 记录
+export function cloneIssue(data) {
   return request({
-    url: '/issue/update',
+    url: '/issue/clone',
     method: 'post',
-    data
+    data: data
   })
 }
-/** *弹框 新增步骤
- *
- */
+
+// new issue save / update, get method api
+// 添加记录
+export function issueSave(params, data) {
+  return request({
+    url: '/issue/save',
+    method: 'post',
+    data: params
+  })
+}
+
+// 修改记录
+export function issueUpdate(params) {
+  return request({
+    url: '/issue/update',
+    method: 'put',
+    data: params
+  })
+}
+
+// 获取某条记录的详请
+export function issueInfo(params) {
+  return request({
+    url: '/issue/info/' + params.id,
+    method: 'get'
+  })
+}
+

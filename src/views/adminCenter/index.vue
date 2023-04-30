@@ -272,12 +272,14 @@
             <el-table
               :data="fieldsData"
               :header-cell-style="tableHeader"
-              stripe
+              :cell-style="{padding: '0'}"
+              align="left"
+
               style="width: 100%"
               @row-click="showfield"
               @selection-change="fieldsSelectionChange"
             >
-              <el-table-column type="selection" width="55" />
+              <el-table-column type="selection" width="35" />
 
               <!-- <el-table-column prop="fieldName"  /> -->
               <el-table-column label="字段名称">
@@ -327,7 +329,7 @@
                   >
                 </template>
               </el-table-column> -->
-              <el-table-column label="Action">
+              <el-table-column label="操作" height="20">
                 <template slot-scope="scope">
                   <el-button
                     :loading="delLoad"

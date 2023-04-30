@@ -1,22 +1,24 @@
 <template>
   <div v-loading="loading" class="app-container add-form add-project">
-    <el-card>
 
-      <el-form ref="testCaseForm" :model="testCaseForm" :rules="testCaseRules" label-width="120px" class="demo-ruleForm">
+    <el-card >
+    <el-tabs v-model="activeName" type="card" :before-leave="handBeforeLeave">
+           <el-tab-pane label="新建" name="first">
+      <el-form ref="issueForm" :model="issueForm" :rules="issueRules" label-width="120px" class="demo-ruleForm">
         <div>
           <el-button
-            v-if="!testCaseForm.id && isEdit"
+            v-if="!issueForm.id && isEdit"
             type="primary"
-            @click="submitForm('testCaseForm', false)"
+            @click="submitForm('issueForm', false)"
           >保存并新建</el-button>
           <el-button
-            v-if="!testCaseForm.id && isEdit"
+            v-if="!issueForm.id && isEdit"
             type="primary"
-            @click="submitForm('testCaseForm', true)"
+            @click="submitForm('issueForm', true)"
           >保存并返回</el-button>
-          <el-button v-if="testCaseForm.id && isEdit" type="primary" @click="submitForm('testCaseForm')">确认修改</el-button>
-          <el-button type="primary" @click="giveupBack('testCaseForm')">放弃</el-button>
-          <router-link v-if="!testCaseForm.id" to="/admincenter/admincenter">
+          <el-button v-if="issueForm.id && isEdit" type="primary" @click="submitForm('issueForm')">确认修改</el-button>
+          <el-button type="primary" @click="giveupBack('issueForm')">放弃</el-button>
+          <router-link v-if="!issueForm.id" to="/admincenter/admincenter">
             <el-button type="text">
               {{ $t('lang.PublicBtn.CreateCustomField') }}
             </el-button>
@@ -77,6 +79,7 @@
                 <el-input v-if="field.fieldType === 'link' && isEdit" v-model="field.valueData" type="text" />
                 <el-date-picker
                   v-if="field.fieldType === 'Date'"
+                  value-format ="yyyy-MM-dd HH:mm:ss"
                   v-model="field.valueData"
                   :disabled="!isEdit"
                   type="date"
@@ -179,7 +182,13 @@
           </el-row>
         </div>
       </el-form>
-    </el-card>
+        </el-tab-pane>
+              <el-tab-pane label="链接" name="second">
+                <add-link-record :issue-id="id" />
+              </el-tab-pane>
+              <el-tab-pane label="运行记录" name="third">运行记录</el-tab-pane>
+            </el-tabs>
+            </el-card>
     <addPossibleValue :field="currentField" :visible.sync="addPossibleValueVisible" @refresh="getData" />
   </div>
 </template>
@@ -189,15 +198,15 @@ import { getAllCustomField } from '@/api/getFields'
 import addPossibleValue from './components/addPossibleValue.vue'
 import { featureListAll } from '@/api/feature'
 import {
-  testCaseSave,
-  testCaseUpdate,
-  testCaseInfo
-} from '@/api/testcase'
+  issueSave,
+  issueUpdate,
+  issueInfo
+} from '@/api/issue.js'
 
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
 export default {
-  name: 'AddTestCase',
+  name: 'AddIssue',
   components: {
     addPossibleValue
   },
@@ -216,7 +225,7 @@ export default {
     }
   },
   computed: {
-    testCaseForm() {
+    issueForm() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           return {
@@ -228,7 +237,7 @@ export default {
         return []
       }
     },
-    testCaseRules() {
+    issueRules() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           if (b.mandatory) {
@@ -296,12 +305,12 @@ export default {
               }
             })
           if (this.id) {
-            testCaseInfo({ id: this.id }).then((res) => {
+            issueInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
                 item.valueData = res.data[item.fieldNameEn]
-                const testcaseExpand = JSON.parse(res.data.testcaseExpand)
-                if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-                  item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+                const issueExpand = JSON.parse(res.data.issueExpand)
+                if (issueExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                  item.valueData = issueExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
                 }
               })
             })
@@ -397,7 +406,7 @@ export default {
     resetFields() {
       this.id = ''
       this.isEdit = true
-      this.$refs['testCaseForm'].resetFields()
+      this.$refs['issueForm'].resetFields()
     },
     // 提交
     submitForm(formName, type) {
@@ -428,7 +437,7 @@ export default {
             attributes: attributes.length ? attributes : undefined
           }
           if (this.id) {
-            testCaseUpdate({ id: this.id, ...params })
+            issueUpdate({ id: this.id, ...params })
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -441,7 +450,7 @@ export default {
                 console.log(error)
               })
           } else {
-            testCaseSave(params)
+            issueSave(params)
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -467,7 +476,7 @@ export default {
     },
     // 放弃并且返回
     giveupBack() {
-      if (!this.testCaseForm.id) {
+      if (!this.issueForm.id) {
         this.resetFields()
       }
       this.returntomenu(this)
@@ -475,7 +484,7 @@ export default {
     // 新建步骤
     resetStepFrom() {
       this.stepFrom = {
-        testCaseId: undefined,
+        issueId: undefined,
         step: undefined,
         stepData: undefined,
         expectedResult: undefined
