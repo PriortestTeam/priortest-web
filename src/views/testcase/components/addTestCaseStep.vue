@@ -6,6 +6,7 @@
       <el-button type="danger" @click="clear">清空</el-button>
     </div>
     <el-table
+      ref="table"
       :data="testCaseStepTableData"
       border
       style="width: 100%"
@@ -78,14 +79,14 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="自定义字段" prop="customField">
+      <el-table-column label="自定义字段" prop="customField" width="auto" min-width="200">
         <template v-slot="scope">
           <el-form>
             <el-row :gutter="20">
               <el-col
                 v-for="field in scope.row.customFieldDatas"
                 :key="field.customFieldId"
-                span="8"
+                span="24"
               >
                 <el-form-item
                   size="small"
@@ -130,17 +131,17 @@
                       :value="item.value"
                     />
                     <el-option label="添加新值" value="999" @click.native="handleAddPossibleValue(field)" />
-                    <el-link v-if="field.fieldType === 'link'" :href="field.defaultValue" target="_blank">
-                      {{ field.defaultValue }}
-                    </el-link>
-                    <el-input v-if="field.fieldType === 'link'" v-model="field.valueData" type="text" />
-                    <el-date-picker
-                      v-if="field.fieldType === 'Date'"
-                      v-model="field.valueData"
-                      type="date"
-                      placeholder="选择日期"
-                    />
                   </el-select>
+                  <el-link v-if="field.fieldType === 'link'" :href="field.defaultValue" target="_blank">
+                    {{ field.defaultValue }}
+                  </el-link>
+                  <el-input v-if="field.fieldType === 'link'" v-model="field.valueData" type="text" />
+                  <el-date-picker
+                    v-if="field.fieldType === 'Date'"
+                    v-model="field.valueData"
+                    type="date"
+                    placeholder="选择日期"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -301,6 +302,12 @@ export default {
     },
     // 保存步骤
     addTestCaseStep() {
+      // 步骤重新排序
+      let num = 1
+      this.testCaseStepTableData.forEach(obj => {
+        obj.testStepId = num
+        num++
+      })
       const caseStepList = {
         testCaseId: this.caseId,
         steps: this.testCaseStepTableData
@@ -308,8 +315,15 @@ export default {
       addTestCaseStepApi(caseStepList).then((res) => {
         if (res.code === '200') {
           message('success', '保存成功')
+          // 刷新表格数据
+          this.refresh()
         }
       })
+    },
+    // 刷新表格数据
+    refresh() {
+      this.getData()
+      this.$refs.table.reload()
     }
   }
 }

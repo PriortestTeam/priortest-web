@@ -219,7 +219,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="步骤" name="second">
-          <add-test-case-step :case-id="id" />
+          <add-test-case-step v-if="!verification(id)" :case-id="id" />
         </el-tab-pane>
         <el-tab-pane label="运行记录" name="third">运行记录</el-tab-pane>
       </el-tabs>
@@ -419,7 +419,7 @@ import {
   testCaseInfo
 } from '@/api/testcase'
 
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
+import {message, returntomenu, formatChangedPara, verification} from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
 
 export default {
@@ -500,6 +500,7 @@ export default {
     this.getData()
   },
   methods: {
+    verification,
     getData() {
       getAllCustomField({
         projectId: this.projectInfo.userUseOpenProject.projectId,
