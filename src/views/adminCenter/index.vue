@@ -329,7 +329,7 @@
                   >
                 </template>
               </el-table-column> -->
-              <el-table-column label="操作" height="20">
+              <el-table-column label="操作" height=20>
                 <template slot-scope="scope">
                   <el-button
                     :loading="delLoad"

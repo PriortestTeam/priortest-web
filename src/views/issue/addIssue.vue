@@ -16,8 +16,14 @@
             type="primary"
             @click="submitForm('issueForm', true)"
           >保存并返回</el-button>
+
           <el-button v-if="issueForm.id && isEdit" type="primary" @click="submitForm('issueForm')">确认修改</el-button>
-          <el-button type="primary" @click="giveupBack('issueForm')">放弃</el-button>
+          <el-button type="primary" @click="giveupBack('issueForm')">放弃&返回</el-button>
+           <el-button
+            v-if="!issueForm.id && isEdit"
+            type="primary"
+            @click="submitForm('issueForm', false)"
+            >保存 </el-button>
           <router-link v-if="!issueForm.id" to="/admincenter/admincenter">
             <el-button type="text">
               {{ $t('lang.PublicBtn.CreateCustomField') }}
@@ -215,8 +221,8 @@ export default {
       openDia: false,
       sysCustomFields: [],
       customFields: [],
-      oldSysCustomFields:[],
-      oldCustomFields:[],
+     // oldSysCustomFields:[],
+     // oldCustomFields:[],
       id: '',
       isEdit: false,
       loading: false,
@@ -335,57 +341,90 @@ export default {
         })
       })
     },
+
+
+
+
     handleOptions(obj, flag) {
       try {
         if (flag) {
           obj = JSON.parse(obj)
-          const list = []
-          Object.keys(obj).forEach(key => {
-            if (obj[key] instanceof Array) {
-              obj[key].forEach((value) => {
-                list.push({ value, label: value + '(' + key + ')' })
-              })
+          return obj[[...this.sysCustomFields, ...this.customFields].find(item => item.customFieldId === obj.others.parentListId).valueData].map(item => {
+            return {
+              label: item,
+              value: item,
             }
           })
-          return list
         } else {
           return Object.values(JSON.parse(obj)).map(item => {
             return {
               label: item,
-              value: item
+              value: item,
             }
           })
         }
       } catch (error) {
         return []
       }
-    },
+},
+
+// 此处对链接字段 - 显示 parent label
+    //handleOptions(obj, flag) {
+      //try {
+        //if (flag) {
+          //obj = JSON.parse(obj)
+          //const list = []
+          //Object.keys(obj).forEach(key => {
+            //if (obj[key] instanceof Array) {
+              //obj[key].forEach((value) => {
+                //list.push({ value, label: value + '(' + key + ')' })
+              //})
+            //}
+          //})
+          //return list
+        //} else {
+          //return Object.values(JSON.parse(obj)).map(item => {
+            //return {
+              //label: item,
+              //value: item
+            //}
+          //})
+        //}
+      //} catch (error) {
+      //  return []
+    //  }
+  //  },
+
+
     handleDropDownList(field){
-      const { possibleValue, fieldType } = field
-      if (!possibleValue) return []
-      const obj = JSON.parse(possibleValue)
-      const list = []
-      if (['dropDown', 'number'].includes(fieldType)){
-        Object.keys(obj).forEach(key => {
-          list.push(obj[key])
-        })
-        return list
-      } else if (['linkedDropDown'].includes(fieldType)){
-        Object.keys(obj).forEach(key => {
-          // if (obj[key] instanceof Array){
-          //   list.push(...obj[key])
-          // }
-          if (obj[key] instanceof Array) {
-            obj[key].forEach((value) => {
-              list.push({ value, type: key })
-            })
-          }
-        })
-        return list
-      } else {
-        return []
+     const { possibleValue, fieldType } = field
+     if (!possibleValue) return []
+    const obj = JSON.parse(possibleValue)
+    const list = []
+    if (['dropDown', 'number'].includes(fieldType)){
+     Object.keys(obj).forEach(key => {
+     list.push(obj[key])
+    })
+    return list
+    }
+    else if (['linkedDropDown'].includes(fieldType)){
+     Object.keys(obj).forEach(key => {
+      if (obj[key] instanceof Array){
+        list.push(...obj[key])
       }
+   if (obj[key] instanceof Array) {
+   obj[key].forEach((value) => {
+    list.push({ value, type: key })
+    })
+   }
+   })
+     return list
+   }
+   else {
+    return []
+   }
     },
+
     handlegetAllCustomField() {
       // 获取自定义字段
       getAllCustomField({
@@ -481,16 +520,6 @@ export default {
       }
       this.returntomenu(this)
     },
-    // 新建步骤
-    resetStepFrom() {
-      this.stepFrom = {
-        issueId: undefined,
-        step: undefined,
-        stepData: undefined,
-        expectedResult: undefined
-      }
-      this.$refs['stepFrom'].resetFields()
-    }
   }
 }
 </script>

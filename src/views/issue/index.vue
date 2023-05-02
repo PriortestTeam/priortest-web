@@ -50,8 +50,8 @@
                <!-- <el-table-column prop="testMethod" :show-overflow-tooltip="true" align="center" label="测试方法" /> -->
                 <el-table-column prop="priority"  label="优先级" />
                 <el-table-column prop="severity"  :show-overflow-tooltip="true" label="严重级别" />
-                <el-table-column prop="module"  :show-overflow-tooltip="true" label="模块" />
-                <el-table-column prop="issueVersion"  :show-overflow-tooltip="true" label="版本" />
+               <!--   <el-table-column prop="module"  :show-overflow-tooltip="true" label="模块" /> -->
+                <el-table-column prop="issueVersion"  :show-overflow-tooltip="true" label="缺陷版本" />
                 <el-table-column prop="caseCategory" :show-overflow-tooltip="true" label="测试分类" />
                 <el-table-column prop="lastRunStatus" label="L-运行状态" />
                 <!-- <el-table-column
@@ -60,9 +60,9 @@
                   label="步骤运行状态"
                 /> -->
 
-                 <el-table-column prop="planFixDate" label="计划修改" min-width="120"
+                 <el-table-column prop="planFixDate" label="计划修改" :formatter="formatDate"
                   :show-overflow-tooltip="true" />
-                <el-table-column prop="createTime" label="创建日期" min-width="120"
+                <el-table-column prop="createTime" label="创建日期"
                   :show-overflow-tooltip="true" />
  <el-table-column prop="id" :show-overflow-tooltip="true" width="165" label="UUID" />
                 <el-table-column label="操作" min-width="140" >
@@ -254,6 +254,8 @@ export default {
     }
   }
 }
+
+
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
