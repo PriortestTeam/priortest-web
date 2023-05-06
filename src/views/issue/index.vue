@@ -17,7 +17,7 @@
 
             <div class="oprate_btn">
               <el-button type="text" @click="projectRefresh">刷新</el-button>
-              <el-button type="text" :disabled="single" @click="projectClone">克隆
+              <el-button type="text" :disabled="multiple" @click="projectClone">克隆
               </el-button>
               <el-button type="text" :disabled="multiple" @click="delproject('all')">批量删除
               </el-button>
@@ -67,7 +67,7 @@
  <el-table-column prop="id" :show-overflow-tooltip="true" width="165" label="UUID" />
                 <el-table-column label="操作" min-width="140" >
                   <template slot-scope="scope">
-                   <el-button type="text" class="table-btn">克隆</el-button>
+                   <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
                    <!-- <span class="line">|</span> -->
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
                     </el-button>
@@ -96,7 +96,7 @@
 <script>
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
-import { issueList, delIssue } from '@/api/issue.js'
+import { issueList, delIssue, cloneIssue } from '@/api/issue.js'
 // import { queryViews } from '@/api/project'
 
 export default {
@@ -204,8 +204,19 @@ export default {
     },
 
     // 克隆
-    projectClone() {
-      message('error', '暂未开发')
+    projectClone(id, operation) {
+      let parms = []
+      if (operation === 'single'){
+        parms = [id]
+      } else {
+        parms = this.projectIds.split(',')
+      }
+      cloneIssue(parms).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)
+          this.getqueryForIssue()
+        }
+      })
     },
     // 删除项目
     delproject(id) {
