@@ -1,22 +1,30 @@
 <template>
   <div v-loading="loading" class="app-container add-form add-project">
-    <el-card>
 
-      <el-form ref="testCaseForm" :model="testCaseForm" :rules="testCaseRules" label-width="120px" class="demo-ruleForm">
+    <el-card >
+    <el-tabs v-model="activeName" type="card" :before-leave="handBeforeLeave">
+           <el-tab-pane label="新建" name="first">
+      <el-form ref="featureForm" :model="featureForm" :rules="featureRules" label-width="120px" class="demo-ruleForm">
         <div>
           <el-button
-            v-if="!testCaseForm.id && isEdit"
+            v-if="!featureForm.id && isEdit"
             type="primary"
-            @click="submitForm('testCaseForm', false)"
+            @click="submitForm('featureForm', false)"
           >保存并新建</el-button>
           <el-button
-            v-if="!testCaseForm.id && isEdit"
+            v-if="!featureForm.id && isEdit"
             type="primary"
-            @click="submitForm('testCaseForm', true)"
+            @click="submitForm('featureForm', true)"
           >保存并返回</el-button>
-          <el-button v-if="testCaseForm.id && isEdit" type="primary" @click="submitForm('testCaseForm')">确认修改</el-button>
-          <el-button type="primary" @click="giveupBack('testCaseForm')">放弃</el-button>
-          <router-link v-if="!testCaseForm.id" to="/admincenter/admincenter">
+
+          <el-button v-if="featureForm.id && isEdit" type="primary" @click="submitForm('featureForm')">确认修改</el-button>
+          <el-button type="primary" @click="giveupBack('featureForm')">放弃&返回</el-button>
+           <el-button
+            v-if="!featureForm.id && isEdit"
+            type="primary"
+            @click="submitForm('featureForm', false)"
+            >保存 </el-button>
+          <router-link v-if="!featureForm.id" to="/admincenter/admincenter">
             <el-button type="text">
               {{ $t('lang.PublicBtn.CreateCustomField') }}
             </el-button>
@@ -77,6 +85,7 @@
                 <el-input v-if="field.fieldType === 'link' && isEdit" v-model="field.valueData" type="text" />
                 <el-date-picker
                   v-if="field.fieldType === 'Date'"
+                  value-format ="yyyy-MM-dd HH:mm:ss"
                   v-model="field.valueData"
                   :disabled="!isEdit"
                   type="date"
@@ -179,7 +188,12 @@
           </el-row>
         </div>
       </el-form>
-    </el-card>
+        </el-tab-pane>
+              <el-tab-pane label="链接" name="second">
+                <add-link-record :feature-id="id" />
+              </el-tab-pane>
+            </el-tabs>
+            </el-card>
     <addPossibleValue :field="currentField" :visible.sync="addPossibleValueVisible" @refresh="getData" />
   </div>
 </template>
@@ -187,17 +201,16 @@
 import { mapGetters } from 'vuex'
 import { getAllCustomField } from '@/api/getFields'
 import addPossibleValue from './components/addPossibleValue.vue'
-import { featureListAll } from '@/api/feature'
 import {
-  testCaseSave,
-  testCaseUpdate,
-  testCaseInfo
-} from '@/api/testcase'
+  featureSave,
+  featureUpdate,
+  featureInfo
+} from '@/api/feature.js'
 
 import { message, returntomenu, formatChangedPara } from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
 export default {
-  name: 'AddTestCase',
+  name: 'AddFeature',
   components: {
     addPossibleValue
   },
@@ -206,8 +219,8 @@ export default {
       openDia: false,
       sysCustomFields: [],
       customFields: [],
-      oldSysCustomFields:[],
-      oldCustomFields:[],
+     // oldSysCustomFields:[],
+     // oldCustomFields:[],
       id: '',
       isEdit: false,
       loading: false,
@@ -216,7 +229,7 @@ export default {
     }
   },
   computed: {
-    testCaseForm() {
+    featureForm() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           return {
@@ -228,7 +241,7 @@ export default {
         return []
       }
     },
-    testCaseRules() {
+    featureRules() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           if (b.mandatory) {
@@ -296,12 +309,12 @@ export default {
               }
             })
           if (this.id) {
-            testCaseInfo({ id: this.id }).then((res) => {
+            featureInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
                 item.valueData = res.data[item.fieldNameEn]
-                const testcaseExpand = JSON.parse(res.data.testcaseExpand)
-                if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-                  item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+                const featureExpand = JSON.parse(res.data.featureExpand)
+                if (featureExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                  item.valueData = featureExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
                 }
               })
             })
@@ -326,57 +339,90 @@ export default {
         })
       })
     },
+
+
+
+
     handleOptions(obj, flag) {
       try {
         if (flag) {
           obj = JSON.parse(obj)
-          const list = []
-          Object.keys(obj).forEach(key => {
-            if (obj[key] instanceof Array) {
-              obj[key].forEach((value) => {
-                list.push({ value, label: value + '(' + key + ')' })
-              })
+          return obj[[...this.sysCustomFields, ...this.customFields].find(item => item.customFieldId === obj.others.parentListId).valueData].map(item => {
+            return {
+              label: item,
+              value: item,
             }
           })
-          return list
         } else {
           return Object.values(JSON.parse(obj)).map(item => {
             return {
               label: item,
-              value: item
+              value: item,
             }
           })
         }
       } catch (error) {
         return []
       }
-    },
+},
+
+// 此处对链接字段 - 显示 parent label
+    //handleOptions(obj, flag) {
+      //try {
+        //if (flag) {
+          //obj = JSON.parse(obj)
+          //const list = []
+          //Object.keys(obj).forEach(key => {
+            //if (obj[key] instanceof Array) {
+              //obj[key].forEach((value) => {
+                //list.push({ value, label: value + '(' + key + ')' })
+              //})
+            //}
+          //})
+          //return list
+        //} else {
+          //return Object.values(JSON.parse(obj)).map(item => {
+            //return {
+              //label: item,
+              //value: item
+            //}
+          //})
+        //}
+      //} catch (error) {
+      //  return []
+    //  }
+  //  },
+
+
     handleDropDownList(field){
-      const { possibleValue, fieldType } = field
-      if (!possibleValue) return []
-      const obj = JSON.parse(possibleValue)
-      const list = []
-      if (['dropDown', 'number'].includes(fieldType)){
-        Object.keys(obj).forEach(key => {
-          list.push(obj[key])
-        })
-        return list
-      } else if (['linkedDropDown'].includes(fieldType)){
-        Object.keys(obj).forEach(key => {
-          // if (obj[key] instanceof Array){
-          //   list.push(...obj[key])
-          // }
-          if (obj[key] instanceof Array) {
-            obj[key].forEach((value) => {
-              list.push({ value, type: key })
-            })
-          }
-        })
-        return list
-      } else {
-        return []
+     const { possibleValue, fieldType } = field
+     if (!possibleValue) return []
+    const obj = JSON.parse(possibleValue)
+    const list = []
+    if (['dropDown', 'number'].includes(fieldType)){
+     Object.keys(obj).forEach(key => {
+     list.push(obj[key])
+    })
+    return list
+    }
+    else if (['linkedDropDown'].includes(fieldType)){
+     Object.keys(obj).forEach(key => {
+      if (obj[key] instanceof Array){
+        list.push(...obj[key])
       }
+   if (obj[key] instanceof Array) {
+   obj[key].forEach((value) => {
+    list.push({ value, type: key })
+    })
+   }
+   })
+     return list
+   }
+   else {
+    return []
+   }
     },
+
     handlegetAllCustomField() {
       // 获取自定义字段
       getAllCustomField({
@@ -397,7 +443,7 @@ export default {
     resetFields() {
       this.id = ''
       this.isEdit = true
-      this.$refs['testCaseForm'].resetFields()
+      this.$refs['featureForm'].resetFields()
     },
     // 提交
     submitForm(formName, type) {
@@ -428,7 +474,7 @@ export default {
             attributes: attributes.length ? attributes : undefined
           }
           if (this.id) {
-            testCaseUpdate({ id: this.id, ...params })
+            featureUpdate({ id: this.id, ...params })
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -441,7 +487,7 @@ export default {
                 console.log(error)
               })
           } else {
-            testCaseSave(params)
+            featureSave(params)
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -467,21 +513,11 @@ export default {
     },
     // 放弃并且返回
     giveupBack() {
-      if (!this.testCaseForm.id) {
+      if (!this.featureForm.id) {
         this.resetFields()
       }
       this.returntomenu(this)
     },
-    // 新建步骤
-    resetStepFrom() {
-      this.stepFrom = {
-        testCaseId: undefined,
-        step: undefined,
-        stepData: undefined,
-        expectedResult: undefined
-      }
-      this.$refs['stepFrom'].resetFields()
-    }
   }
 }
 </script>

@@ -52,6 +52,16 @@ export function delTestCase(id) {
   })
 }
 
+
+// clone 记录
+export function cloneTestCase(data) {
+  return request({
+    url: '/testCase/clone',
+    method: 'post',
+    data: data
+  })
+}
+
 // 修改项目
 export function editTestCase(data) {
   return request({

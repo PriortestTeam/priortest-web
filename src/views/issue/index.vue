@@ -21,7 +21,7 @@
               </el-button>
               <el-button type="text" :disabled="multiple" @click="delproject('all')">批量删除
               </el-button>
-              <el-button type="text" @click="importTestCases">导出缺陷</el-button>
+              <el-button type="text" @click="exportIssue">导出缺陷</el-button>
               <el-button type="text" @click="selectMoreCol">更多列</el-button>
               <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
             </div>
@@ -100,12 +100,12 @@ import { issueList, delIssue, cloneIssue } from '@/api/issue.js'
 // import { queryViews } from '@/api/project'
 
 export default {
-  name: 'Testcase',
+  name: 'issue',
   components: { viewTree },
   data() {
     return {
       treeCol: 5,
-      currentScope: 'TestCase',
+      currentScope: 'issue',
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'
@@ -125,7 +125,7 @@ export default {
       projectIds: '',
 
       setTree: [], // tree数据
-      testCaseBody: {
+      issueBody: {
         scope: '',
         projectId: ''
       }, // tree的body数据
@@ -161,13 +161,10 @@ export default {
     newproject() {
       this.$router.push({ name: 'Addissue', query: { isEdit: 1 } })
     },
-    // 导入
-    importTestCase() {
+    // 导出
+    exportIssue(){
+    },
 
-    },
-    importTestCases() {
-      this.$router.push({ name: 'ImportTestCases' })
-    },
 
     /** 项目列表表格开始 */
     getqueryForIssue() {
@@ -183,8 +180,8 @@ export default {
           if (res.code === '200') {
             if (res.data.total > 0) {
               // 默认取第一条
-              this.testCaseBody.scope = res.data.list[0].scope
-              this.testCaseBody.projectId = this.projectInfo.userUseOpenProject.projectId
+              this.issueBody.scope = res.data.list[0].scope
+              this.issueBody.projectId = this.projectInfo.userUseOpenProject.projectId
             }
             this.isLoading = false
             this.issuetableData = res.data.list
