@@ -146,7 +146,7 @@ export function getViewScopeChildParams (scope) {
 
 export function getViewAllScopeParams (scope) {
   return request({
-    url: '/view/getViewScope',
+    url: '/customFields/getAllCustomList?projectId=593988941040848896',
     method: 'get',
     params: scope
   })

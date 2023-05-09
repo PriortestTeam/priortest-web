@@ -14,6 +14,13 @@ export function RangeS() {
     method: 'get'
   })
 }
+// 范围 必填 初始值
+export function getFilterCondition() {
+  return request({
+    url: '/sysConfig/listByGroup/filterCondition',
+    method: 'get'
+  })
+}
 // 获取字段列表
 export function fieldList(data) {
   return request({

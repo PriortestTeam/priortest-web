@@ -62,6 +62,7 @@
                   <i class="el-icon-remove circle remove" />
                 </span>
               </el-col>
+              <!-- 第一个查询条件 -->
               <el-col :span="4">
                 <el-select
                   ref="selectFiled"
@@ -78,31 +79,44 @@
                   />
                 </el-select>
               </el-col>
+              <!-- 第二个查询条件 -->
               <el-col v-if="!filter" :span="4">
                 <el-select ref="selectFiled" v-model="item.condition" size="small" placeholder="">
-                  <el-option v-for="i in conditionList" :key="i.value" :label="i.label" :value="i.value" />
+                  <el-option v-for="i in conditionList" :key="i.value" :label="i.nameCn" :value="i.id" />
                 </el-select>
               </el-col>
-              <!-- input -->
-              <el-col v-show="!filter" v-if="item.type === 'fString'" :span="4">
-                <el-input v-model="item.textVal" size="small" />
-              </el-col>
-              <!-- select -->
-              <el-col v-else-if="item.type === 'fInteger'" :span="4">
-                <el-select v-model="item.textVal" clearable size="small" placeholder="请选择状态">
-                  <el-option
-                    v-for="i in statusDownChildParams"
-                    :key="i.optionValue"
-                    :label="i.optionValueCn"
-                    :value="i.optionValue"
+              <!-- 第三个查询条件 -->
+              <template
+                v-if="item.condition === `6340727` || item.condition === `6740728` || item.condition === `6740729` || item.condition === `6741721` || item.condition === `6741726` || item.condition === `6760739`"
+              >
+                <!-- 下拉框 -->
+                <el-col v-if="item.type === 'number'||item.type === 'dropDown'||item.type === 'multiList'||item.type === 'linkedMoudue'||item.type === 'userList'" :span="4">
+                  <el-select v-model="item.textVal" clearable size="small" placeholder="请选择状态">
+                    <el-option
+                      v-for="i in item.possibleValue"
+                      :key="i.optionValue"
+                      :label="i"
+                      :value="i"
+                    />
+                  </el-select>
+                </el-col>
+                <!-- 链式下拉框 -->
+                <el-col v-else-if="item.type === 'linkedDropDown'" :span="4">
+                  <el-cascader
+                    v-model="item.textVal"
+                    :options="item.possibleValue"
                   />
-                </el-select>
-              </el-col>
-              <!-- date -->
-              <el-col v-else v-show="!filter" :span="6">
-                <el-date-picker v-model="item.beginDate" type="datetime" size="small" placeholder="开始日期" />
-                <el-date-picker v-model="item.endDate" type="datetime" size="small" placeholder="结束日期" />
-              </el-col>
+                </el-col>
+                <!-- 当选择的类型为日期时,第3个查询条件框出现日期选择框 -->
+                <el-col v-else-if="item.type === 'Date'" v-show="!filter" :span="6">
+                  <el-date-picker v-model="item.beginDate" type="datetime" size="small" placeholder="开始日期" />
+                  <el-date-picker v-model="item.endDate" type="datetime" size="small" placeholder="结束日期" />
+                </el-col>
+                <!-- 输入框 -->
+                <el-col v-show="!filter" v-else :span="4">
+                  <el-input v-model="item.textVal" size="small" />
+                </el-col>
+              </template>
             </el-row>
             <el-row v-if="!filter">
               <el-col :span="2">~ </el-col>
@@ -188,6 +202,7 @@ import {
   queryViewParents,
   getViewFilter
 } from '@/api/project'
+import { getFilterCondition } from '@/api/customFFields'
 import { getQueryViewParents } from '@/api/view.js'
 // import { getSysCustomField } from '@/api/admincenter'
 import { mapState } from 'vuex'
@@ -198,28 +213,44 @@ export default {
       parentView: false,
       scopeOptions: [
         {
-          value: 'project',
-          label: '项目'
+          value: '1000001',
+          label: '项目',
+          scopeId: '1000001'
         },
         {
-          value: 'feature',
-          label: '故事'
+          value: '2000001',
+          label: '故事',
+          scopeId: '2000001'
         },
         {
-          value: 'sprint',
-          label: '迭代'
+          value: '3000001',
+          label: '测试用例',
+          scopeId: '3000001'
         },
         {
-          value: 'testCase',
-          label: '测试用例'
+          value: '4000001',
+          label: '用例步骤',
+          scopeId: '4000001'
         },
         {
-          value: 'testCycle',
-          label: '测试周期'
+          value: '5000001',
+          label: '测试周期',
+          scopeId: '5000001'
         },
         {
-          value: 'issue',
-          label: '缺陷'
+          value: '6000001',
+          label: '运行',
+          scopeId: '6000001'
+        },
+        {
+          value: '7000001',
+          label: '缺陷',
+          scopeId: '7000001'
+        },
+        {
+          value: '8000001',
+          label: '迭代',
+          scopeId: '8000001'
         }
       ],
       scopeDownChildParams: [],
@@ -492,18 +523,55 @@ export default {
       this.from.oneFilters.splice(index, 1)
     },
     getType: function (fieldName, index) {
+      // 格式化第三个选项
+      this.from.oneFilters[index].textVal = ''
+      // 格式化链式下拉框数据
+      function convertData(data) {
+        return data.flatMap((item) => {
+          const { others, ...categories } = item
+          return Object.entries(categories).map(([key, values]) => {
+            return {
+              value: key,
+              label: key,
+              children: Array.isArray(values)
+                ? values.map((value) => ({
+                  value,
+                  label: value,
+                  ...others
+                }))
+                : []
+            }
+          })
+        })
+      }
       for (let i = 0; i < this.scopeDownChildParams.length; i++) {
         const entity = this.scopeDownChildParams[i]
-        if (entity.filedName === fieldName) {
+        if (entity.fieldNameCn === fieldName) {
           // 如果是下拉框，赋值
           if (
             entity.selectChild !== undefined &&
             entity.selectChild.length > 0
           ) {
-            console.log('statusDownChildParams', this.statusDownChildParams)
             this.statusDownChildParams = entity.selectChild
           }
-          this.from.oneFilters[index].type = entity.type
+          this.from.oneFilters[index].type = entity.fieldType
+          if (
+            entity.fieldType === 'number' ||
+            entity.fieldType === 'dropDown' ||
+            entity.fieldType === 'multiList' ||
+            entity.fieldType === 'linkedMoudue' ||
+            entity.fieldType === 'userList'
+          ) {
+            this.from.oneFilters[index].possibleValue = JSON.parse(entity.possibleValue)
+          }
+          if (entity.fieldType === 'linkedDropDown'){
+            this.from.oneFilters[index].possibleValue = convertData([JSON.parse(entity.possibleValue)])
+          }
+          if (entity.fieldType === 'radio' || entity.fieldType === 'checkbox'){
+            this.conditionList = this.conditionList.filter((item) => {
+              return item.nameCn === '为空' || item.nameCn === '等于' || item.nameCn === '不等于'
+            })
+          }
           return
         }
       }
@@ -526,23 +594,13 @@ export default {
           })
       }
       const scope = {
-        scope: this.from.scope
+        scopeId: this.from.scope
       }
       getViewAllScopeParams(scope).then((res) => {
-        const { customField, sysCustomField } = res.data
-        const _customField = (customField || []).map((item) => {
-          return {
-            ...item,
-            fieldNameCn: item.fieldName
-          }
-        })
-        if (!this.filter) {
-          this.scopeDownChildParams = _customField.concat(sysCustomField)
-        } else {
-          this.scopeDownChildParams = _customField
-            .concat(sysCustomField)
-            .filter((item) => item.type === 'dropDown')
-        }
+        this.scopeDownChildParams = res.data
+      })
+      getFilterCondition(scope).then((res) => {
+        this.conditionList = res.data
       })
       const params = {
         scope: this.from.scope,
