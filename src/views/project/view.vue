@@ -326,17 +326,10 @@ export default {
           )
         } else {
           const scope = {
-            scope: this.from.scope
+            scopeId: this.from.scope
           }
           getViewAllScopeParams(scope).then((res) => {
-            const { customField, sysCustomField } = res.data
-            const _customField = (customField || []).map((item) => {
-              return {
-                ...item,
-                fieldNameCn: item.fieldName
-              }
-            })
-            this.scopeDownChildParams = _customField.concat(sysCustomField)
+            this.scopeDownChildParams = res.data
           })
         }
       }
