@@ -109,8 +109,7 @@
                 </el-col>
                 <!-- 当选择的类型为日期时,第3个查询条件框出现日期选择框 -->
                 <el-col v-else-if="item.type === 'Date'" v-show="!filter" :span="6">
-                  <el-date-picker v-model="item.beginDate" type="datetime" size="small" placeholder="开始日期" />
-                  <el-date-picker v-model="item.endDate" type="datetime" size="small" placeholder="结束日期" />
+                  <el-date-picker v-model="item.beginDate" type="datetime" size="small" placeholder="日期" />
                 </el-col>
                 <!-- 输入框 -->
                 <el-col v-show="!filter" v-else :span="4">
