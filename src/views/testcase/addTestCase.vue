@@ -53,7 +53,7 @@
                     size="small"
                     :label="field.fieldNameCn"
                     label-width="80px"
-                    :prop="'sField' + field.fieldNameEn"
+                    :prop="'sField' + field.customFieldId"
                   >
                     <el-input
                       v-if="field.fieldType === 'text'"
@@ -125,7 +125,7 @@
                     size="small"
                     :label="field.fieldNameCn"
                     label-width="80px"
-                    :prop="'custom' + field.fieldNameEn"
+                    :prop="'custom' + field.customFieldId"
                   >
                     <el-input
                       v-if="field.fieldType === 'text'"
@@ -419,7 +419,7 @@ import {
   testCaseInfo
 } from '@/api/testcase'
 
-import {message, returntomenu, formatChangedPara, verification} from '@/utils/common'
+import { message, returntomenu, formatChangedPara, verification } from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
 
 export default {
@@ -510,7 +510,7 @@ export default {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
           this.sysCustomFields = res.data.filter(item => item.type === 'sField').map((item, index) => {
             return {
-              label: 'sField' + item.fieldNameEn,
+              label: 'sField' + item.customFieldId,
               ...item,
               valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
             }
@@ -519,7 +519,7 @@ export default {
             .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
             .map((item, index) => {
               return {
-                label: 'custom' + item.fieldNameEn,
+                label: 'custom' + item.customFieldId,
                 ...item,
                 valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
               }
