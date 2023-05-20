@@ -7,11 +7,12 @@
       <el-col :span="treeCol">
         <view-tree :child-scope="currentScope" @hadleTree="hadleTreeshow" @childByValue="childByValue" />
       </el-col>
-      <el-col :span="24 - treeCol">
+      <el-col :span="24-treeCol">
         <el-card>
           <div class="project_table">
             <div class="new_project">
-              <el-button type="primary" @click="newproject" >新建
+              <el-button type="primary" @click="newproject">
+                新建故事
               </el-button>
             </div>
 
@@ -22,21 +23,16 @@
               <el-button type="text" :disabled="multiple" @click="delproject('all')">批量删除
               </el-button>
               <el-button type="text" @click="selectMoreCol">更多列</el-button>
-              <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
             </div>
             <div v-loading="isLoading" class="protable table">
               <el-table ref="featuretableData" :data="featuretableData" :header-cell-style="tableHeader" stripe
-                style="width: 100%"  @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="35" :cell-style="{padding: '0'}"/>
-                <el-table-column type="index" label="序号">
+                style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="45" />
+                <el-table-column type="index"  label="序号">
                   <template slot-scope="scope">
                     {{ scope.$index + 1 }}
                   </template>
                 </el-table-column>
-
-
-                <el-table-column prop="featureStatus" :show-overflow-tooltip="true" label="状态" />
-
                 <el-table-column prop="title" :show-overflow-tooltip="true"  width="120"
                   :label="$t('lang.CommonFiled.Title')">
                   <template slot-scope="scope">
@@ -46,31 +42,20 @@
                   </template>
                 </el-table-column>
 
-
-                <el-table-column prop="epic"  label="主题" />
+                <el-table-column prop="featureStatus"  :show-overflow-tooltip="true" label="状态" />
+                <el-table-column prop="epic"  :show-overflow-tooltip="true" label="epic主题" />
                 <el-table-column prop="version"  :show-overflow-tooltip="true" label="版本" />
-                <el-table-column prop="reportTo"  :show-overflow-tooltip="true" label="负责人" />
-                <el-table-column prop="createTime" label="创建日期"
-                  :show-overflow-tooltip="true" />
- <el-table-column prop="id" :show-overflow-tooltip="true" width="178" label="UUID" />
-                <el-table-column label="操作" min-width="140" >
+                <el-table-column prop="module"  :show-overflow-tooltip="true" label="模块" />
+                <el-table-column label="操作" min-width="145"  fixed="right">
                   <template slot-scope="scope">
-                   <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
-                   <!-- <span class="line">|</span> -->
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
                     </el-button>
-                    <!-- <el-button
-                      type="text"
-                      class="table-btn"
-                      @click.stop="openEdit(scope.row)"
-                    >克隆
-                    </el-button> -->
+                    <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
                     <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除
                     </el-button>
                   </template>
                 </el-table-column>
               </el-table>
-
               <pagination v-show="featureTotal > 0" :total="featureTotal" :page.sync="featureQuery.pageNum"
                 :limit.sync="featureQuery.pageSize" @pagination="getqueryForFeature" />
             </div>
@@ -84,7 +69,7 @@
 <script>
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
-import { featureList, delFeature, cloneFeature } from '@/api/feature.js'
+import { featureList, delFeature,cloneFeature } from '@/api/feature'
 // import { queryViews } from '@/api/project'
 
 export default {
@@ -149,15 +134,8 @@ export default {
     newproject() {
       this.$router.push({ name: 'Addfeature', query: { isEdit: 1 } })
     },
-    // 导入
-    importTestCase() {
 
-    },
-    importTestCases() {
-      this.$router.push({ name: 'ImportTestCases' })
-    },
-
-    /** 项目列表表格开始 */
+     /** 项目列表表格开始 */
     getqueryForFeature() {
       this.isLoading = true
       const query = {
@@ -191,6 +169,9 @@ export default {
       }
     },
 
+
+
+
     // 克隆
     projectClone(id, operation) {
       let parms = []
@@ -206,6 +187,8 @@ export default {
         }
       })
     },
+
+
     // 删除项目
     delproject(id) {
       if (id === 'all') {
@@ -253,8 +236,6 @@ export default {
     }
   }
 }
-
-
 </script>
 <style lang="scss" scoped>
 @import "index.scss";

@@ -35,7 +35,7 @@
                     {{ scope.$index + 1 }}
                   </template>
                 </el-table-column>
-                <el-table-column prop="testStatus" :show-overflow-tooltip="true"  label="状态" />
+                <el-table-column prop="testCycleStatus" :show-overflow-tooltip="true"  label="状态" />
                 <el-table-column prop="title" :show-overflow-tooltip="true"  width="120"
                   :label="$t('lang.CommonFiled.Title')">
                   <template slot-scope="scope">
@@ -44,37 +44,23 @@
                     </span>
                   </template>
                 </el-table-column>
-
                 <el-table-column prop="testMethod" :show-overflow-tooltip="true"  label="测试方法" />
-                <el-table-column prop="priority"  label="优先级" />
-                <el-table-column prop="feature"  :show-overflow-tooltip="true" label="需求" />
-                <el-table-column prop="module"  :show-overflow-tooltip="true" label="模块" />
-
-                <el-table-column prop="version"  :show-overflow-tooltip="true" label="版本" />
-
-                <!--<el-table-column prop="caseCategory"  :show-overflow-tooltip="true" label="测试分类" />-->
-                <el-table-column prop="testType"  :show-overflow-tooltip="true" label="测试类型" />
-                <el-table-column prop="lastRunStatus"  label="L-运行状态" />
-                <!-- <el-table-column
-                  prop="stepStatus"
-
-                  :show-overflow-tooltip="true"
-                  label="步骤运行状态"
-                /> -->
-                <el-table-column prop="executeTime"  label="执行时间" min-width="120"
+                <el-table-column prop="version"  label="版本" />
+                <el-table-column prop="currentRelease"  :show-overflow-tooltip="true" label="当前版本" />
+                <el-table-column prop="runStatus"  :show-overflow-tooltip="true" label="运行状态" />
+                <el-table-column prop="env"  :show-overflow-tooltip="true" label="环境" />
+                <!--<el-table-column prop="instanceCount"  :show-overflow-tooltip="true" label="运行用例数" />-->
+                <el-table-column prop="planExecuteDate"  label="执行时间" min-width="120"
                   :show-overflow-tooltip="true" />
-
                 <el-table-column prop="createTime"  label="创建日期" min-width="120"
                   :show-overflow-tooltip="true" />
                     <el-table-column prop="id" :show-overflow-tooltip="true"  min-width="160" label="UUID" />
-
                 <el-table-column label="操作" min-width="145"  fixed="right">
                   <template slot-scope="scope">
                     <!-- <el-button type="text" class="table-btn">克隆</el-button>
                   <span class="line">|</span> -->
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
                     </el-button>
-
                     <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
                     <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除
                     </el-button>

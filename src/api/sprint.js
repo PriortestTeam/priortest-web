@@ -10,38 +10,40 @@ import request from '@/utils/request'
 
 export function sprintList (params, data) {
   return request({
-    url: '/sprint/queryList',
+    url: '/sprint/list',
     method: 'post',
     // post拼接路由参数
     params: params,
     data: data
   })
 }
-// 没有分页的
-export function sprintListAll (data) {
+
+// clone 记录
+export function cloneSprint(data) {
   return request({
-    url: '/leftJoin/querySprintTitles',
-    method: 'get',
-    params: data
+    url: '/sprint/clone',
+    method: 'post',
+    data: data
   })
 }
+
 // 添加项目
-export function addSprint (data) {
+export function sprintSave(params, data) {
   return request({
-    url: '/sprint/insert',
+    url: '/sprint/save',
     method: 'post',
-    data
+    data:params
   })
 }
 // 获取详情
-export function detailSprint (id) {
+export function sprintInfo(params) {
   return request({
-    url: '/sprint/queryById/' + id,
+    url: '/sprint/info/' + params.id,
     method: 'get'
   })
 }
 // 删除项目
-export function delSprint (id) {
+export function delSprint(id) {
   return request({
     url: '/sprint/delete/' + id,
     method: 'delete'
@@ -49,10 +51,10 @@ export function delSprint (id) {
 }
 
 // 修改项目
-export function editSprint (data) {
+export function sprintUpdate(params) {
   return request({
     url: '/sprint/update',
-    method: 'post',
-    data
+    method: 'put',
+    data:params
   })
 }

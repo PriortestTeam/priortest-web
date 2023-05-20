@@ -154,37 +154,7 @@
                 />
               </el-form-item>
             </el-col>
-            <!-- <el-col v-for="field in customFields" :key="field.id" :xs="8" :sm="6" :md="6" :lg="6" :xl="6">
-            <el-form-item v-if="field.fieldType === 'text'" :label="field.fieldName" size="small" :prop="field.fieldName">
-              <el-input v-model="field.valueData" type="text" />
-            </el-form-item>
-            <el-form-item v-if="field.fieldType === 'memo'" :label="field.fieldName" size="small" :prop="field.fieldName">
-              <el-input v-model="field.valueData" type="textarea" :rows="2" placeholder="请输入内容" />
-            </el-form-item>
-            <el-form-item v-if="field.fieldType === 'radio'" :label="field.fieldName" size="small"
-              :prop="field.fieldName">
-              <el-select v-model="field.valueData" :placeholder="`请选择${field.fieldName}`">
-                <el-option v-for="(item, index) in field.defaultValues" :key="index" :label="field.mergeValues[index]"
-                  :value="field.mergeValues[index]" />
-                <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                  <el-option
-                    label="添加新值"
-                    value
-                  />
-                </router-link>
-              </el-select>
-            </el-form-item>
-            <el-form-item v-if="field.fieldType === 'DropDown'" :label="field.fieldName" size="small" filterable
-              :prop="field.fieldName">
-              <el-select v-model="field.valueData" :placeholder="`请选择${field.fieldName}`">
-                <el-option v-for="(item, index) in field.defaultValues" :key="index" :label="field.mergeValues[index]"
-                  :value="field.mergeValues[index]" />
-                <router-link v-if="field.fieldName !== 'schedule_run_frequency'"
-                  :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                  <el-option label="添加新值" value />
-                </router-link>
-              </el-select>
-            </el-form-item> -->
+
           </el-row>
         </div>
       </el-form>
