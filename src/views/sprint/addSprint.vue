@@ -536,7 +536,7 @@ export default {
     // 处理 tab 切换逻辑
     handBeforeLeave(activeName, oldActiveName) {
       if (activeName === 'second' && !this.id) {
-        message(200, '请先保存测试用例再添加测试用例')
+        message(200, '请先保存迭代再添加连接')
         return false
       }
       if (activeName === 'third') {
