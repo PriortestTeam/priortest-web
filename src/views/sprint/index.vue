@@ -82,7 +82,7 @@ export default {
   data() {
     return {
       treeCol: 5,
-      currentScope: 'sprint',
+      currentScope: '8000001',  //If need to scope name - change to 'sprint'
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'

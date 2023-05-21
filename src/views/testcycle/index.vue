@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       treeCol: 5,
-      currentScope: 'testCycle',
+      currentScope: '5000001', //If need to scope name - change to 'testCycle'
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'

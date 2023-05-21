@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       treeCol: 5,
-      currentScope: 'feature',
+      currentScope: '2000001', // if need to scope name - change to 'feature'
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'
