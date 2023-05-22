@@ -92,12 +92,12 @@ export default {
     },
   },
   mounted() {
-    this.getData();
+    //this.init();
   },
   watch: {
     activeName: {
       handler(newVal) {
-        this.init();
+        this.initData();
         console.log(this.currentField);
       },
       immediate: true,
@@ -105,7 +105,7 @@ export default {
   },
 
   methods: {
-    init() {
+    initData() {
       this.possibleValueList = [];
       this.valueTypeList = [];
       const { possibleValue, fieldType } = this.currentField;
@@ -171,22 +171,22 @@ export default {
         if (res.code === "200") {
           this.$message.success("操作成功");
         }
-        this.getData();
+        this.init();
       });
     },
     cancel() {
       this.$confirm("是否要放弃编辑？").then(() => {
-        this.getData();
+        this.init();
       });
     },
-    getData() {
+    init() {
       systemListAPI({
         projectId: this.projectInfo.userUseOpenProject.projectId,
         scopeId: "3000001",
       }).then((res) => {
         if (res.code == 200) {
           this.data = res.data;
-          this.init();
+          this.initData();
         }
       });
     },

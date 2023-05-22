@@ -140,6 +140,8 @@
 </template>
 <script>
   import {
+        getUserRoles,
+        querySubUsers,
         queryForProjectTitles,
         createSubUser,
         deleteSubUser,
