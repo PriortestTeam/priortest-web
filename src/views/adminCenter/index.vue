@@ -4,6 +4,7 @@
       v-model="activeName"
       :before-leave="handleClick"
       class="admin-Control"
+      @tab-click="clickTab"
     >
       <el-tab-pane label="用户管理" name="0">
         <div class="tab-box">
@@ -637,16 +638,68 @@ export default {
   },
   created() {
     this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId
-    getUserRoles().then((res) => {
-      this.accountRoleOption = res.data
-    })
-    this.getquerySubUsers()
-    this.getProject()
-    this.getqueryCustomList()
-    this.getSysCustomFieldByScope()
+    // getUserRoles().then((res) => {
+    //   this.accountRoleOption = res.data
+    // })
+    // this.getquerySubUsers()
+    // this.getProject()
+    // this.getqueryCustomList()
+    // this.getSysCustomFieldByScope()
     // this.getSysCustomFieldByType()
+
+    this.initTab(this.activeName)
   },
   methods: {
+    clickTab(tab, event){
+      this.initTab(tab.name);
+    },
+    async initTab(name){
+      switch(name){
+        //用户管理
+        case '0':
+          const result = await getUserRoles();
+          this.accountRoleOption = result.data;
+          break;
+        //权限管理
+        case '1':
+          await this.getquerySubUsers();
+          break;
+        //项目管理
+        case '2':
+          await this.getProject();
+          break;
+        //自定义字段
+        case '3':
+          await this.getqueryCustomList();
+          break;
+        //系统字段
+        case '4':
+
+          break;
+        //视图管理
+        case '5':
+
+          break;
+        //在线报表
+        case '6':
+
+          break;
+        //我的账户
+        case '7':
+
+          break;
+        //账户计划
+        case '8':
+
+          break;
+        //自定义字段设置
+        case '9':
+
+          break;
+        default:
+          break;
+      }
+    },
     // 权限管理，左侧选择用户
     userChange(user) {},
     async getSysCustomFieldByType() {
