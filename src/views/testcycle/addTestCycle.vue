@@ -346,9 +346,9 @@ export default {
              testCycleInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
                 item.valueData = res.data[item.fieldNameEn]
-                const testCycleExpand = JSON.parse(res.data.testcaseExpand)
-                if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-                  item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+                const testcycleExpand = JSON.parse(res.data.testcycleExpand)
+                if (testcycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                  item.valueData = testcycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
                 }
               })
             })
