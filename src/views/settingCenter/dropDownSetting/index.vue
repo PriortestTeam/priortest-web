@@ -80,7 +80,9 @@ export default {
       valueTypeList: [],
       possibleValueList: [],
     };
-  },
+
+      },
+
   computed: {
     projectInfo() {
       return this.$store.state.user.userinfo;
@@ -95,14 +97,15 @@ export default {
   watch: {
     activeName: {
       handler(newVal) {
-        this.initData();
+        this.init();
         console.log(this.currentField);
       },
       immediate: true,
     },
   },
+
   methods: {
-    initData() {
+    init() {
       this.possibleValueList = [];
       this.valueTypeList = [];
       const { possibleValue, fieldType } = this.currentField;
@@ -183,7 +186,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.data = res.data;
-          this.initData();
+          this.init();
         }
       });
     },

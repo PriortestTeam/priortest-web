@@ -13,6 +13,8 @@
           :tableHeader="tableHeader"
         ></user-page>
       </el-tab-pane>
+
+
       <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
         <Jurisdiction
           v-if="jurisdictionAccount"
@@ -245,9 +247,11 @@
       <el-tab-pane label="服务计划" name="8">
         <ServicePlan v-if="activeName === '8'" />
       </el-tab-pane>
-      <el-tab-pane label="自定义字段设置" name="9">
-        <CustomFieldSetting v-if="activeName === '9'" />
-      </el-tab-pane>
+
+       <el-tab-pane label="自定义字段设置" name="9">
+              <add-custom-field-value> </add-custom-field-value>
+            </el-tab-pane>
+
     </el-tabs>
   </div>
 </template>
@@ -275,7 +279,13 @@ import CustomFieldSetting from '@/views/adminCenter/customFieldSetting.vue'
 // import Link from '@/views/adminCenter/link'
 // import Link2 from '@/views/adminCenter/link2'
 import ServicePlan from '@/views/servicePlan/index'
+
+
 import UserPage from '@/views/user/index'
+import AddCustomFieldValue from '@/views/settingCenter/dropDownSetting/index'
+
+
+
 import {
   queryForProjectTitles,
   createSubUser,
@@ -323,7 +333,8 @@ export default {
     ServicePlan,
     CustomFFields,
     CustomFieldSetting,
-    UserPage
+    UserPage,
+    AddCustomFieldValue
   },
   data() {
     return {
