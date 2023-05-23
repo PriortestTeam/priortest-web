@@ -52,7 +52,7 @@
                   <el-form-item
                     size="small"
                     :label="field.fieldNameCn"
-                    label-width="80px"
+                    label-width="150px"
                     :prop="'sField' + field.customFieldId"
                   >
                     <el-input
@@ -87,6 +87,7 @@
                       :disabled="!isEdit"
                       :multiple="['multiList'].includes(field.fieldType)"
                       :placeholder="`请选择${field.fieldNameCn}`"
+                      @change="selectChange(field)"
                     >
                       <el-option
                         v-for="item in handleOptions(field.possibleValue)"
@@ -124,8 +125,9 @@
                   <el-form-item
                     size="small"
                     :label="field.fieldNameCn"
-                    label-width="80px"
+                    label-width="150px"
                     :prop="'custom' + field.customFieldId"
+                    v-if="hasParentFiled(field)"
                   >
                     <el-input
                       v-if="field.fieldType === 'text'"
@@ -159,6 +161,7 @@
                       :disabled="!isEdit"
                       :multiple="['multiList'].includes(field.fieldType)"
                       :placeholder="`请选择${field.fieldNameCn}`"
+                      @change="selectChange(field)"
                     >
                       <el-option
                         v-for="item in handleOptions(field.possibleValue, field.fieldType === 'linkedDropDown')"
@@ -250,9 +253,9 @@ export default {
   },
   data() {
     return {
-      openDia: false,
-      sysCustomFields: [],
-      customFields: [],
+      //openDia: false,
+      sysCustomFields: [],  //sField即上半部分
+      customFields: [],     //custom即下半部分
       oldSysCustomFields: [],
       oldCustomFields: [],
       id: '',
@@ -260,7 +263,8 @@ export default {
       loading: false,
       currentField: {},
       addPossibleValueVisible: false,
-      activeName: 'first'
+      activeName: 'first',
+      linkedObj: {},   //存储linkedDropDown的父子id对应关系
     }
   },
   computed: {
@@ -322,35 +326,56 @@ export default {
   methods: {
     verification,
     getData() {
+      const that = this;
       getAllCustomField({
         projectId: this.projectInfo.userUseOpenProject.projectId,
         scopeId: '3000001'
       }).then((res) => {
         if (res.code === '200') {
+          that.linkedObj = {};
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
-          this.sysCustomFields = res.data.filter(item => item.type === 'sField').map((item, index) => {
+          const data = res.data;
+
+          data.forEach(item => {
+            if(item.fieldType === 'linkedDropDown'){
+              const possibleValue = JSON.parse(item.possibleValue);
+              const parentListId = possibleValue.others.parentListId;
+              if(!(parentListId in that.linkedObj)){
+                that.linkedObj[parentListId] = [];
+              }
+              that.linkedObj[parentListId].push({
+                customFieldId: item.customFieldId,
+                possibleValue: possibleValue
+              });
+            }
+          })
+
+          this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
             return {
               label: 'sField' + item.customFieldId,
               ...item,
-              valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+              valueData: 'checkbox' === item.fieldType?[item.defaultValue]:['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
             }
           })
-          this.customFields = res.data.filter(item => item.type === 'custom')
+          this.customFields = data.filter(item => item.type === 'custom')
             .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
             .map((item, index) => {
               return {
                 label: 'custom' + item.customFieldId,
                 ...item,
-                valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+                valueData: 'checkbox' === item.fieldType?[item.defaultValue]:['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
               }
             })
           if (this.id) {
             testCaseInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
-                item.valueData = res.data[item.fieldNameEn]
-                const testcaseExpand = JSON.parse(res.data.testcaseExpand)
+                if(item.fieldNameEn && res.data[item.fieldNameEn]){
+                  item.valueData = res.data[item.fieldNameEn];
+                }
+
+                const testcaseExpand = JSON.parse(res.data.testcaseExpand);
                 if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-                  item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+                  item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })
             })
@@ -376,12 +401,15 @@ export default {
       })
     },
     handleOptions(obj, flag) {
+      const that = this;
       try {
+        obj = JSON.parse(obj)
         if (flag) {
-          obj = JSON.parse(obj)
           const list = []
+          const parent = [...that.sysCustomFields, ...that.customFields].find(item => item.customFieldId === obj.others.parentListId);
+
           Object.keys(obj).forEach(key => {
-            if (obj[key] instanceof Array) {
+            if (key === parent.valueData && obj[key] instanceof Array) {
               obj[key].forEach((value) => {
                 list.push({ value, label: value + '(' + key + ')' })
               })
@@ -389,7 +417,7 @@ export default {
           })
           return list
         } else {
-          return Object.values(JSON.parse(obj)).map(item => {
+          return Object.values(obj).map(item => {
             return {
               label: item,
               value: item
@@ -544,6 +572,24 @@ export default {
         message(200, '正在开发中')
         return false
       }
+    },
+    selectChange(filed){
+      const children = this.linkedObj[filed.customFieldId];
+      if(children){
+        console.log(filed.valueData);
+        children.forEach(item => {
+          console.log(item);
+          console.log(item.possibleValue[filed.valueData]);
+        })
+      }
+    },
+    hasParentFiled(filed){
+      if(filed.fieldType === 'linkedDropDown'){
+        const possibleValue = JSON.parse(filed.possibleValue);
+        const index = [...this.sysCustomFields, ...this.customFields].findIndex(item => item.customFieldId === possibleValue.others.parentListId);
+        return index > -1;
+      }
+      return true;
     }
   }
 }
