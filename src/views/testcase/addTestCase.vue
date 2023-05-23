@@ -87,7 +87,6 @@
                       :disabled="!isEdit"
                       :multiple="['multiList'].includes(field.fieldType)"
                       :placeholder="`请选择${field.fieldNameCn}`"
-                      @change="selectChange(field)"
                     >
                       <el-option
                         v-for="item in handleOptions(field.possibleValue)"
@@ -161,7 +160,6 @@
                       :disabled="!isEdit"
                       :multiple="['multiList'].includes(field.fieldType)"
                       :placeholder="`请选择${field.fieldNameCn}`"
-                      @change="selectChange(field)"
                     >
                       <el-option
                         v-for="item in handleOptions(field.possibleValue, field.fieldType === 'linkedDropDown')"
@@ -264,7 +262,6 @@ export default {
       currentField: {},
       addPossibleValueVisible: false,
       activeName: 'first',
-      linkedObj: {},   //存储linkedDropDown的父子id对应关系
     }
   },
   computed: {
@@ -332,23 +329,8 @@ export default {
         scopeId: '3000001'
       }).then((res) => {
         if (res.code === '200') {
-          that.linkedObj = {};
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
           const data = res.data;
-
-          data.forEach(item => {
-            if(item.fieldType === 'linkedDropDown'){
-              const possibleValue = JSON.parse(item.possibleValue);
-              const parentListId = possibleValue.others.parentListId;
-              if(!(parentListId in that.linkedObj)){
-                that.linkedObj[parentListId] = [];
-              }
-              that.linkedObj[parentListId].push({
-                customFieldId: item.customFieldId,
-                possibleValue: possibleValue
-              });
-            }
-          })
 
           this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
             return {
@@ -571,16 +553,6 @@ export default {
       if (activeName === 'third') {
         message(200, '正在开发中')
         return false
-      }
-    },
-    selectChange(filed){
-      const children = this.linkedObj[filed.customFieldId];
-      if(children){
-        console.log(filed.valueData);
-        children.forEach(item => {
-          console.log(item);
-          console.log(item.possibleValue[filed.valueData]);
-        })
       }
     },
     hasParentFiled(filed){
