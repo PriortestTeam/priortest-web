@@ -152,7 +152,6 @@
   export default {
     name: 'UserPage',
     props: {
-      accountProject: Array,
       tableHeader: Object,
     },
     data(){
@@ -237,7 +236,6 @@
               this.accountData.forEach((item) => {
                 item.isSelect = false;
               });
-              console.log(this.accountData);
               resolve(res);
             }
           });

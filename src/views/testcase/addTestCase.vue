@@ -73,14 +73,20 @@
                       <el-radio label="1">是</el-radio>
                       <el-radio label="0">否</el-radio>
                     </el-radio-group>
-                    <el-checkbox-group
+                    <el-checkbox
+                      v-if="field.fieldType === 'checkbox'"
+                      :disabled="!isEdit"
+                      :checked="field.valueData === '1'"
+                      @change="field.valueData = field.valueData === 'checked' ? '0' : '1'"
+                    />
+                    <!-- <el-checkbox-group
                       v-if="field.fieldType === 'checkbox'"
                       v-model="field.valueData"
                       :disabled="!isEdit"
                     >
                       <el-checkbox label="1">是</el-checkbox>
                       <el-checkbox label="0">否</el-checkbox>
-                    </el-checkbox-group>
+                    </el-checkbox-group> -->
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
                       v-model="field.valueData"
@@ -336,7 +342,7 @@ export default {
             return {
               label: 'sField' + item.customFieldId,
               ...item,
-              valueData: 'checkbox' === item.fieldType?[item.defaultValue]:['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+              valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
             }
           })
           this.customFields = data.filter(item => item.type === 'custom')
@@ -345,7 +351,7 @@ export default {
               return {
                 label: 'custom' + item.customFieldId,
                 ...item,
-                valueData: 'checkbox' === item.fieldType?[item.defaultValue]:['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+                valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
               }
             })
           if (this.id) {
@@ -480,7 +486,7 @@ export default {
               'scopeNameCn': item.scopeNameCn,
               'scope': item.scope,
               'scopeId': item.scopeId,
-              'valueData': item.fieldType === 'checkbox' ? item.valueData === 'checked' ? 1 : 0 : item.valueData
+              'valueData': item.fieldType === 'checkbox' ? item.valueData === 'checked' || '1' ? 1 : 0 : item.valueData
             }
           })
           params.customFieldDatas = {

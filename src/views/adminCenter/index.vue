@@ -9,13 +9,8 @@
       <el-tab-pane label="用户管理" name="0">
         <user-page
           ref="UserPage"
-          :accountProject="accountProject"
           :tableHeader="tableHeader"
         ></user-page>
-      </el-tab-pane>
-
- <el-tab-pane label="自定义字段" name="10">
-        <custom-field>   </custom-field>
       </el-tab-pane>
 
       <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
@@ -477,7 +472,7 @@ export default {
     this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId
 
     //this.getProject();
-    // this.getqueryCustomList()
+    this.getqueryCustomList()
     // this.getSysCustomFieldByScope()
     // this.getSysCustomFieldByType()
     this.$refs.UserPage.init();
