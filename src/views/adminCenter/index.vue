@@ -14,6 +14,9 @@
         ></user-page>
       </el-tab-pane>
 
+ <el-tab-pane label="自定义字段" name="10">
+        <custom-field>   </custom-field>
+      </el-tab-pane>
 
       <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
         <Jurisdiction
@@ -281,10 +284,11 @@ import CustomFieldSetting from '@/views/adminCenter/customFieldSetting.vue'
 import ServicePlan from '@/views/servicePlan/index'
 
 
+// Start - below for indenpent tabs
 import UserPage from '@/views/user/index'
 import AddCustomFieldValue from '@/views/settingCenter/dropDownSetting/index'
-
-
+import CustomField from '@/views/adminCenter/customFFields'
+//End-below for indenpent tabs
 
 import {
   queryForProjectTitles,
@@ -334,7 +338,8 @@ export default {
     CustomFFields,
     CustomFieldSetting,
     UserPage,
-    AddCustomFieldValue
+    AddCustomFieldValue,
+    CustomField
   },
   data() {
     return {
@@ -345,7 +350,7 @@ export default {
         background: '#4286CD'
       },
       accountTempForm: {},
-      accountProject: [],
+
 
       userinfo: {},
       // 父传子数据
@@ -471,7 +476,7 @@ export default {
   mounted() {
     this.fieldsId.projectId = this.projectInfo.userUseOpenProject.projectId
 
-    this.getProject();
+    //this.getProject();
     // this.getqueryCustomList()
     // this.getSysCustomFieldByScope()
     // this.getSysCustomFieldByType()
@@ -530,15 +535,6 @@ export default {
         }
       }
     },
-    /** ˙账户开始 */
-    // 得到项目
-    getProject() {
-      queryForProjectTitles().then((res) => {
-        this.accountProject = res.data
-        this.accountProject.unshift({ title: 'ALL', id: '0' })
-      })
-    },
-    /** ˙账户结束 */
 
     /** 自定义字段 开始 */
     // 获取子类的传值

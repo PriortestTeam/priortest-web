@@ -157,6 +157,7 @@
     },
     data(){
       return {
+        accountProject: [],
         accountData: [],
         accountTotal: 0,
         accountQuery: {
@@ -215,7 +216,15 @@
         getUserRoles().then((res) => {
           this.accountRoleOption = res.data
         })
-        this.getquerySubUsers()
+        this.getquerySubUsers();
+        this.getProject();
+      },
+      // 得到项目
+      getProject() {
+        queryForProjectTitles().then((res) => {
+          this.accountProject = res.data
+          this.accountProject.unshift({ title: 'ALL', id: '0' })
+        })
       },
       // 得到账户列表
       getquerySubUsers() {
