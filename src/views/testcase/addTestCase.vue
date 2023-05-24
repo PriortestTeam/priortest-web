@@ -76,8 +76,8 @@
                     <el-checkbox
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
-                      :checked="field.valueData === '1'"
-                      @change="field.valueData = field.valueData === 'checked' ? '0' : '1'"
+                      :value="field.valueData === '1'"
+                      @change="field.valueData = field.valueData === '1' ? '0' : '1'"
                     />
                     <!-- <el-checkbox-group
                       v-if="field.fieldType === 'checkbox'"
@@ -157,8 +157,8 @@
                     <el-checkbox
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
-                      :checked="field.valueData === 'checked'"
-                      @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'"
+                      :value="field.valueData === '1' || field.valueData === 1"
+                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? '0' : '1'"
                     />
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
@@ -337,7 +337,6 @@ export default {
         if (res.code === '200') {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
           const data = res.data;
-
           this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
             return {
               label: 'sField' + item.customFieldId,
@@ -360,15 +359,15 @@ export default {
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
-
                 const testcaseExpand = JSON.parse(res.data.testcaseExpand);
+
                 if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
                   item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })
             })
           }
-          this.handleDefaultForm()
+          this.handleDefaultForm();
         }
       })
     },
@@ -486,12 +485,13 @@ export default {
               'scopeNameCn': item.scopeNameCn,
               'scope': item.scope,
               'scopeId': item.scopeId,
-              'valueData': item.fieldType === 'checkbox' ? item.valueData === 'checked' || '1' ? 1 : 0 : item.valueData
+              'valueData': item.valueData
             }
           })
           params.customFieldDatas = {
             attributes: attributes.length ? attributes : undefined
           }
+          //console.log(params);
           if (this.id) {
             testCaseUpdate({ id: this.id, ...params })
               .then((res) => {
