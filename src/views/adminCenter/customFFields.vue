@@ -566,11 +566,11 @@ export default {
           this.RangeList.forEach((item) => {
             if (item.range == true) {
               if (item.initial == false) item.defaultValue = "";
+              if(this.ReTeLinData == "单选框" || this.ReTeLinData == "复选框"){
+                item.defaultValue = item.initial?'1':'0';
+              }
               list.push({
-                defaultValue:
-                  this.ReTeLinData == "单选框" || this.ReTeLinData == "复选框"
-                    ? "checked"
-                    : item.defaultValue,
+                defaultValue: item.defaultValue,
                 mandatory: item.must,
                 scope: item.scopeName,
                 scopeNameCn: item.nameCn,
@@ -788,6 +788,7 @@ export default {
           item.defaultValue = "";
         });
         console.log(newval, "newvall");
+        this.ReTeLinData = newval.attributes.fieldTypeCn;
         if (newval.attributes.fieldTypeCn == "日期") {
           this.ReTeLin = false; // 长度显隐
           this.dateShow = true; // 日期
@@ -907,6 +908,10 @@ export default {
               ) {
                 subItem.initial = false; // 初始值按钮回显
                 subItem.defaultValue = item.defaultValue;
+              }
+
+              if(this.ReTeLinData == "单选框" || this.ReTeLinData == "复选框"){
+                subItem.initial = item.defaultValue === '1'?true:false;
               }
             }
           });
