@@ -103,6 +103,28 @@ export const constantRoutes = [
       }
     ]
   },
+
+  {
+    path: '/projectManage',
+    component: Layout,
+    redirect: '/projectManage',
+    children: [
+      {
+        path: 'projectManage',
+        name: 'ProjectManage',
+        component: () => import('@/views/projectManage/index'),
+        meta: { title: 'ProjectManage', icon: 'ProjectManage' }
+      },
+      {
+        path: 'addproject',
+        name: 'Addproject',
+        component: () => import('@/views/projectManage/addProject'),
+        meta: {
+          title: 'ProjectManage', icon: 'ProjectManage'
+        }
+      }
+    ]
+  },
   {
     path: '/sprint',
     component: Layout,
@@ -247,6 +269,7 @@ export const constantRoutes = [
       meta: { title: 'SignOff', icon: 'SignOff' }
     }]
   },
+
   {
     path: '/project',
     component: Layout,

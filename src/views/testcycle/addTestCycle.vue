@@ -15,13 +15,13 @@
                 v-if="!testCycleForm.id && isEdit"
                 type="primary"
                 @click="submitForm('testCycleForm', false)"
-              >保存&新建
+              >保存并新建
               </el-button>
               <el-button
                 v-if="!testCycleForm.id && isEdit"
                 type="primary"
                 @click="submitForm('testCycleForm', true)"
-              >保存&返回
+              >保存并返回
               </el-button>
               <el-button
                 v-if="!testCycleForm.id && isEdit"
@@ -31,7 +31,7 @@
               </el-button>
               <el-button v-if="testCycleForm.id && isEdit" type="primary" @click="submitForm('testCycleForm')">确认修改
               </el-button>
-              <el-button type="primary" @click="giveupBack('testCycleForm')">放弃&返回</el-button>
+              <el-button type="primary" @click="giveupBack('testCycleForm')">放弃</el-button>
               <router-link v-if="!testCycleForm.id" to="/admincenter/admincenter">
                 <el-button type="text">
                   {{ $t('lang.PublicBtn.CreateCustomField') }}
@@ -52,8 +52,8 @@
                   <el-form-item
                     size="small"
                     :label="field.fieldNameCn"
-                    label-width="80px"
-                    :prop="'sField' + field.fieldNameEn"
+                    label-width="150px"
+                    :prop="'sField' + field.customFieldId"
                   >
                     <el-input
                       v-if="field.fieldType === 'text'"
@@ -73,14 +73,20 @@
                       <el-radio label="1">是</el-radio>
                       <el-radio label="0">否</el-radio>
                     </el-radio-group>
-                    <el-checkbox-group
+                    <el-checkbox
+                      v-if="field.fieldType === 'checkbox'"
+                      :disabled="!isEdit"
+                      :value="field.valueData === '1'"
+                      @change="field.valueData = field.valueData === '1' ? '0' : '1'"
+                    />
+                    <!-- <el-checkbox-group
                       v-if="field.fieldType === 'checkbox'"
                       v-model="field.valueData"
                       :disabled="!isEdit"
                     >
                       <el-checkbox label="1">是</el-checkbox>
                       <el-checkbox label="0">否</el-checkbox>
-                    </el-checkbox-group>
+                    </el-checkbox-group> -->
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
                       v-model="field.valueData"
@@ -103,8 +109,8 @@
                     <el-date-picker
                       v-if="field.fieldType === 'Date'"
                       v-model="field.valueData"
-                      value-format ="yyyy-MM-dd HH:mm:ss"
                       :disabled="!isEdit"
+                      value-format ="yyyy-MM-dd HH:mm:ss"
                       type="date"
                       placeholder="选择日期"
                     />
@@ -125,8 +131,9 @@
                   <el-form-item
                     size="small"
                     :label="field.fieldNameCn"
-                    label-width="80px"
-                    :prop="'custom' + field.fieldNameEn"
+                    label-width="150px"
+                    :prop="'custom' + field.customFieldId"
+                    v-if="hasParentFiled(field)"
                   >
                     <el-input
                       v-if="field.fieldType === 'text'"
@@ -151,8 +158,8 @@
                     <el-checkbox
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
-                      :checked="field.valueData === 'checked'"
-                      @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'"
+                      :value="field.valueData === '1' || field.valueData === 1"
+                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? '0' : '1'"
                     />
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
@@ -219,8 +226,8 @@
             </div>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="运行计划" name="second">
-          <add-test-cycle-schedule v-if="!verification(id)" :case-id="id" />
+        <el-tab-pane label="步骤" name="second">
+          <add-test-case-step v-if="!verification(id)" :case-id="id" />
         </el-tab-pane>
         <el-tab-pane label="运行记录" name="third">运行记录</el-tab-pane>
       </el-tabs>
@@ -230,27 +237,26 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import {getAllCustomField } from '@/api/getFields'
+import { getAllCustomField } from '@/api/getFields'
 import addPossibleValue from './components/addPossibleValue.vue'
+
+import { featureListAll } from '@/api/feature'
 import {
   testCycleSave,
   testCycleUpdate,
   testCycleInfo
 } from '@/api/testcycle'
 
-import {message, returntomenu, formatChangedPara, verification} from '@/utils/common'
+import { message, returntomenu, formatChangedPara, verification } from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
 
 export default {
-  name: 'AddtestCycle',
-  components: {
-    addPossibleValue
-  },
+  name: 'AddTestCycle',
   data() {
     return {
-      openDia: false,
-      sysCustomFields: [],
-      customFields: [],
+      //openDia: false,
+      sysCustomFields: [],  //sField即上半部分
+      customFields: [],     //custom即下半部分
       oldSysCustomFields: [],
       oldCustomFields: [],
       id: '',
@@ -258,11 +264,11 @@ export default {
       loading: false,
       currentField: {},
       addPossibleValueVisible: false,
-      activeName: 'first'
+      activeName: 'first',
     }
   },
   computed: {
-     testCycleForm() {
+    testCycleForm() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           return {
@@ -274,7 +280,7 @@ export default {
         return []
       }
     },
-     testCycleRules() {
+    testCycleRules() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           if (b.mandatory) {
@@ -320,40 +326,45 @@ export default {
   methods: {
     verification,
     getData() {
+      const that = this;
       getAllCustomField({
         projectId: this.projectInfo.userUseOpenProject.projectId,
         scopeId: '5000001'
       }).then((res) => {
         if (res.code === '200') {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
-          this.sysCustomFields = res.data.filter(item => item.type === 'sField').map((item, index) => {
+          const data = res.data;
+          this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
             return {
-              label: 'sField' + item.fieldNameEn,
+              label: 'sField' + item.customFieldId,
               ...item,
               valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
             }
           })
-          this.customFields = res.data.filter(item => item.type === 'custom')
+          this.customFields = data.filter(item => item.type === 'custom')
             .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
             .map((item, index) => {
               return {
-                label: 'custom' + item.fieldNameEn,
+                label: 'custom' + item.customFieldId,
                 ...item,
                 valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
               }
             })
           if (this.id) {
-             testCycleInfo({ id: this.id }).then((res) => {
+            testCycleInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
-                item.valueData = res.data[item.fieldNameEn]
-                const testcycleExpand = JSON.parse(res.data.testcycleExpand)
-                if (testcycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-                  item.valueData = testcycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
+                if(item.fieldNameEn && res.data[item.fieldNameEn]){
+                  item.valueData = res.data[item.fieldNameEn];
+                }
+                const testCycleExpand = JSON.parse(res.data.testCycleExpand);
+
+                if (testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                  item.valueData = testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })
             })
           }
-          this.handleDefaultForm()
+          this.handleDefaultForm();
         }
       })
     },
@@ -374,12 +385,15 @@ export default {
       })
     },
     handleOptions(obj, flag) {
+      const that = this;
       try {
+        obj = JSON.parse(obj)
         if (flag) {
-          obj = JSON.parse(obj)
           const list = []
+          const parent = [...that.sysCustomFields, ...that.customFields].find(item => item.customFieldId === obj.others.parentListId);
+
           Object.keys(obj).forEach(key => {
-            if (obj[key] instanceof Array) {
+            if (key === parent.valueData && obj[key] instanceof Array) {
               obj[key].forEach((value) => {
                 list.push({ value, label: value + '(' + key + ')' })
               })
@@ -387,7 +401,7 @@ export default {
           })
           return list
         } else {
-          return Object.values(JSON.parse(obj)).map(item => {
+          return Object.values(obj).map(item => {
             return {
               label: item,
               value: item
@@ -468,14 +482,15 @@ export default {
               'scopeNameCn': item.scopeNameCn,
               'scope': item.scope,
               'scopeId': item.scopeId,
-              'valueData': item.fieldType === 'checkbox' ? item.valueData === 'checked' ? 1 : 0 : item.valueData
+              'valueData': item.valueData
             }
           })
           params.customFieldDatas = {
             attributes: attributes.length ? attributes : undefined
           }
+          //console.log(params);
           if (this.id) {
-             testCycleUpdate({ id: this.id, ...params })
+            testCycleUpdate({ id: this.id, ...params })
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -490,7 +505,7 @@ export default {
                 console.log(error)
               })
           } else {
-             testCycleSave(params)
+            testCycleSave(params)
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -522,8 +537,8 @@ export default {
       }
       this.returntomenu(this)
     },
-    // 设置自动运行计划
-    setRunPlan() {
+    // 新建步骤
+    resetStepFrom() {
       this.stepFrom = {
         testCycleId: undefined,
         step: undefined,
@@ -535,13 +550,21 @@ export default {
     // 处理 tab 切换逻辑
     handBeforeLeave(activeName, oldActiveName) {
       if (activeName === 'second' && !this.id) {
-        message(200, '请先保存测试周期再设置周期运行计划')
+        message(200, '请先保存测试用例再添加测试用例')
         return false
       }
       if (activeName === 'third') {
         message(200, '正在开发中')
         return false
       }
+    },
+    hasParentFiled(filed){
+      if(filed.fieldType === 'linkedDropDown'){
+        const possibleValue = JSON.parse(filed.possibleValue);
+        const index = [...this.sysCustomFields, ...this.customFields].findIndex(item => item.customFieldId === possibleValue.others.parentListId);
+        return index > -1;
+      }
+      return true;
     }
   }
 }
