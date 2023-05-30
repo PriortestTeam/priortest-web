@@ -4,35 +4,35 @@
       <el-tabs v-model="activeName" type="card" :before-leave="handBeforeLeave">
         <el-tab-pane label="新建" name="first">
           <el-form
-            ref="featureForm"
-            :model="featureForm"
-            :rules="featureRules"
+            ref="projectManageForm"
+            :model="projectManageForm"
+            :rules="projectManageRules"
             label-width="120px"
             class="demo-ruleForm"
           >
             <div>
               <el-button
-                v-if="!featureForm.id && isEdit"
+                v-if="!projectManageForm.id && isEdit"
                 type="primary"
-                @click="submitForm('featureForm', false)"
+                @click="submitForm('projectManageForm', false)"
               >保存并新建
               </el-button>
               <el-button
-                v-if="!featureForm.id && isEdit"
+                v-if="!projectManageForm.id && isEdit"
                 type="primary"
-                @click="submitForm('featureForm', true)"
+                @click="submitForm('projectManageForm', true)"
               >保存并返回
               </el-button>
               <el-button
-                v-if="!featureForm.id && isEdit"
+                v-if="!projectManageForm.id && isEdit"
                 type="primary"
-                @click="submitForm('featureForm', false)"
+                @click="submitForm('projectManageForm', false)"
               >保存
               </el-button>
-              <el-button v-if="featureForm.id && isEdit" type="primary" @click="submitForm('featureForm')">确认修改
+              <el-button v-if="projectManageForm.id && isEdit" type="primary" @click="submitForm('projectManageForm')">确认修改
               </el-button>
-              <el-button type="primary" @click="giveupBack('featureForm')">放弃</el-button>
-              <router-link v-if="!featureForm.id" to="/admincenter/admincenter">
+              <el-button type="primary" @click="giveupBack('projectManageForm')">放弃</el-button>
+              <router-link v-if="!projectManageForm.id" to="/admincenter/admincenter">
                 <el-button type="text">
                   {{ $t('lang.PublicBtn.CreateCustomField') }}
                 </el-button>
@@ -110,6 +110,7 @@
                       v-if="field.fieldType === 'Date'"
                       v-model="field.valueData"
                       :disabled="!isEdit"
+                      value-format ="yyyy-MM-dd HH:mm:ss"
                       type="date"
                       placeholder="选择日期"
                     />
@@ -241,16 +242,16 @@ import addPossibleValue from './components/addPossibleValue.vue'
 
 import { featureListAll } from '@/api/feature'
 import {
-  featureSave,
-  featureUpdate,
-  featureInfo
-} from '@/api/feature'
+  projectSave,
+  projectUpdate,
+  projectInfo
+} from '@/api/project'
 
 import { message, returntomenu, formatChangedPara, verification } from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
 
 export default {
-  name: 'AddFeature',
+  name: 'AddprojectManage',
   data() {
     return {
       //openDia: false,
@@ -267,7 +268,7 @@ export default {
     }
   },
   computed: {
-    featureForm() {
+    projectManageForm() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           return {
@@ -279,7 +280,7 @@ export default {
         return []
       }
     },
-    featureRules() {
+    projectManageRules() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           if (b.mandatory) {
@@ -328,7 +329,7 @@ export default {
       const that = this;
       getAllCustomField({
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        scopeId: '2000001'
+        scopeId: '5000001'
       }).then((res) => {
         if (res.code === '200') {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
@@ -350,15 +351,15 @@ export default {
               }
             })
           if (this.id) {
-            featureInfo({ id: this.id }).then((res) => {
+            projectManageInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
-                const featureExpand = JSON.parse(res.data.featureExpand);
+                const projectManageExpand = JSON.parse(res.data.projectManageExpand);
 
-                if (featureExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-                  item.valueData = featureExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
+                if (projectManageExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                  item.valueData = projectManageExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })
             })
@@ -441,7 +442,7 @@ export default {
       // 获取自定义字段
       getAllCustomField({
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        scopeId: '2000001'
+        scopeId: '5000001'
       }).then((res) => {
         if (res.code === '200') {
           this.customFields = res.data
@@ -457,7 +458,7 @@ export default {
     resetFields() {
       this.id = ''
       this.isEdit = true
-      this.$refs['featureForm'].resetFields()
+      this.$refs['projectManageForm'].resetFields()
     },
     // 提交
     submitForm(formName, type) {
@@ -489,7 +490,7 @@ export default {
           }
           //console.log(params);
           if (this.id) {
-            featureUpdate({ id: this.id, ...params })
+            projectUpdate({ id: this.id, ...params })
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -504,7 +505,7 @@ export default {
                 console.log(error)
               })
           } else {
-            featureSave(params)
+            projectSave(params)
               .then((res) => {
                 if (res.code === '200') {
                   message('success', res.msg)
@@ -531,7 +532,7 @@ export default {
     },
     // 放弃并且返回
     giveupBack() {
-      if (!this.featureForm.id) {
+      if (!this.projectManageForm.id) {
         this.resetFields()
       }
       this.returntomenu(this)
@@ -539,7 +540,7 @@ export default {
     // 新建步骤
     resetStepFrom() {
       this.stepFrom = {
-        featureId: undefined,
+        projectId: undefined,
         step: undefined,
         stepData: undefined,
         expectedResult: undefined
@@ -549,7 +550,7 @@ export default {
     // 处理 tab 切换逻辑
     handBeforeLeave(activeName, oldActiveName) {
       if (activeName === 'second' && !this.id) {
-        message(200, '请先保存故事')
+        message(200, '请先保存测试用例再添加测试用例')
         return false
       }
       if (activeName === 'third') {
