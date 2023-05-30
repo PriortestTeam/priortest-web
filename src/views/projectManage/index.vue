@@ -81,8 +81,7 @@
 <script>
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
-import {projectList, delProject,cloneProject } from '@/api/project'
-// import { queryViews } from '@/api/project'
+import {projectList, delProject,cloneProject } from '@/api/projectManage'
 
 export default {
   name: 'project',
@@ -90,7 +89,7 @@ export default {
   data() {
     return {
       treeCol: 5,
-      currentScope: '5000001', //If need to scope name - change to 'project'
+      currentScope: '1000001', //If need to scope name - change to 'project'
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'

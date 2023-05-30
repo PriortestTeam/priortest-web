@@ -239,13 +239,11 @@
 import { mapGetters } from 'vuex'
 import { getAllCustomField } from '@/api/getFields'
 import addPossibleValue from './components/addPossibleValue.vue'
-
-import { featureListAll } from '@/api/feature'
 import {
   projectSave,
   projectUpdate,
   projectInfo
-} from '@/api/project'
+} from '@/api/projectManage'
 
 import { message, returntomenu, formatChangedPara, verification } from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
@@ -329,7 +327,7 @@ export default {
       const that = this;
       getAllCustomField({
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        scopeId: '5000001'
+        scopeId: '1000001'
       }).then((res) => {
         if (res.code === '200') {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
@@ -442,7 +440,7 @@ export default {
       // 获取自定义字段
       getAllCustomField({
         projectId: this.projectInfo.userUseOpenProject.projectId,
-        scopeId: '5000001'
+        scopeId: '1000001'
       }).then((res) => {
         if (res.code === '200') {
           this.customFields = res.data
