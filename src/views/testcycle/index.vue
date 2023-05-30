@@ -46,7 +46,8 @@
                 </el-table-column>
                 <el-table-column prop="testMethod" :show-overflow-tooltip="true"  label="测试方法" />
                 <el-table-column prop="version"  label="版本" />
-                <el-table-column prop="currentRelease"  :show-overflow-tooltip="true" label="当前版本" />
+                <el-table-column prop="currentRelease"  :show-overflow-tooltip="true" label="当前发布" />
+                <el-table-column prop="released"  :show-overflow-tooltip="true" label="发布版本" />
                 <el-table-column prop="runStatus"  :show-overflow-tooltip="true" label="运行状态" />
                 <el-table-column prop="env"  :show-overflow-tooltip="true" label="环境" />
                 <!--<el-table-column prop="instanceCount"  :show-overflow-tooltip="true" label="运行用例数" />-->
