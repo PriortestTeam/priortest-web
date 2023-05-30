@@ -76,8 +76,8 @@
                     <el-checkbox
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
-                      :value="field.valueData === '1'"
-                      @change="field.valueData = field.valueData === '1' ? '0' : '1'"
+                      :value="field.valueData === '1' || field.valueData === 1"
+                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? 0 : 1"
                     />
                     <!-- <el-checkbox-group
                       v-if="field.fieldType === 'checkbox'"
@@ -159,7 +159,7 @@
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
                       :value="field.valueData === '1' || field.valueData === 1"
-                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? '0' : '1'"
+                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? 0 : 1"
                     />
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
@@ -227,7 +227,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="步骤" name="second">
-          <add-test-case-step v-if="!verification(id)" :case-id="id" />
+          <!-- <add-test-case-step v-if="!verification(id)" :case-id="id" /> -->
         </el-tab-pane>
         <el-tab-pane label="运行记录" name="third">运行记录</el-tab-pane>
       </el-tabs>
@@ -266,6 +266,9 @@ export default {
       addPossibleValueVisible: false,
       activeName: 'first',
     }
+  },
+  components: {
+    addPossibleValue
   },
   computed: {
     testCycleForm() {
@@ -353,12 +356,14 @@ export default {
           if (this.id) {
             testCycleInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
-                const testCycleExpand = JSON.parse(res.data.testCycleExpand);
+                const testCycleExpand = JSON.parse(res.data.testcycleExpand);
 
                 if (testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+
                   item.valueData = testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })
