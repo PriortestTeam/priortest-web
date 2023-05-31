@@ -70,14 +70,14 @@
                       :placeholder="`请输入${field.fieldNameCn}`"
                     />
                     <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData" :disabled="!isEdit">
-                      <el-radio label="1">是</el-radio>
-                      <el-radio label="0">否</el-radio>
+                      <el-radio :label="1">是</el-radio>
+                      <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                     <el-checkbox
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
-                      :value="field.valueData === '1' || field.valueData === 1"
-                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? 0 : 1"
+                      :value="field.valueData === 1"
+                      @change="field.valueData = (field.valueData === 1) ? 0 : 1"
                     />
                     <!-- <el-checkbox-group
                       v-if="field.fieldType === 'checkbox'"
@@ -152,14 +152,14 @@
                       :length="field.length"
                     />
                     <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData" :disabled="!isEdit">
-                      <el-radio label="1">是</el-radio>
-                      <el-radio label="0">否</el-radio>
+                      <el-radio :label="1">是</el-radio>
+                      <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                     <el-checkbox
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
-                      :value="field.valueData === '1' || field.valueData === 1"
-                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? 0 : 1"
+                      :value="field.valueData === 1"
+                      @change="field.valueData = (field.valueData === 1) ? 0 : 1"
                     />
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
@@ -338,19 +338,39 @@ export default {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
           const data = res.data;
           this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
+            let valueData = item.defaultValue;
+            if(['multiList'].includes(item.fieldType)){
+              valueData = item.defaultValue || [];
+            }else if(['checkbox', 'radio'].includes(item.fieldType)){
+              if(item.defaultValue === 1 || item.defaultValue === '1'){
+                valueData = 1;
+              }else{
+                valueData = 0;
+              }
+            }
             return {
               label: 'sField' + item.customFieldId,
               ...item,
-              valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+              valueData: valueData
             }
           })
           this.customFields = data.filter(item => item.type === 'custom')
             .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
             .map((item, index) => {
+              let valueData = item.defaultValue;
+              if(['multiList'].includes(item.fieldType)){
+                valueData = item.defaultValue || [];
+              }else if(['checkbox'].includes(item.fieldType)){
+                if(item.defaultValue === 1 || item.defaultValue === '1'){
+                  valueData = 1;
+                }else{
+                  valueData = 0;
+                }
+              }
               return {
                 label: 'custom' + item.customFieldId,
                 ...item,
-                valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+                valueData: valueData
               }
             })
           if (this.id) {

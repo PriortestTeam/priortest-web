@@ -151,7 +151,7 @@ export default {
     importtestCycle() {
 
     },
-    exporttestCycle() {
+    exportTestCycle() {
       this.$router.push({ name: 'ExporttestCycle' })
     },
 
