@@ -8,6 +8,7 @@ export const lang = {
         TestCycle: 'TestCycle',
         Issue: 'Issue',
         SignOff: 'SignOff',
+        ProjectManage:' ProjectManage'
     },
     login:{
         forget:'Forget Password',
