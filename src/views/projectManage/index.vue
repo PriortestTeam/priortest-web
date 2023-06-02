@@ -44,14 +44,11 @@
                     </span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="testMethod" :show-overflow-tooltip="true"  label="测试方法" />
-                <el-table-column prop="version"  label="版本" />
-                <el-table-column prop="currentRelease"  :show-overflow-tooltip="true" label="当前版本" />
-                <el-table-column prop="runStatus"  :show-overflow-tooltip="true" label="运行状态" />
-                <el-table-column prop="env"  :show-overflow-tooltip="true" label="环境" />
-                <!--<el-table-column prop="instanceCount"  :show-overflow-tooltip="true" label="运行用例数" />-->
-                <el-table-column prop="planExecuteDate"  label="执行时间" min-width="120"
-                  :show-overflow-tooltip="true" />
+                <el-table-column prop="testFrame" :show-overflow-tooltip="true"  label="测试方式" />
+                <el-table-column prop="projectCategory"  :show-overflow-tooltip="true" label="项目类别" />
+                <el-table-column prop="reportTo"  :show-overflow-tooltip="true" label="负责人" />
+                <el-table-column prop="planReleaseDate"  :show-overflow-tooltip="true" label="计划上线" />
+                <el-table-column prop="customer"  :show-overflow-tooltip="true" label="客户" />
                 <el-table-column prop="createTime"  label="创建日期" min-width="120"
                   :show-overflow-tooltip="true" />
                     <el-table-column prop="id" :show-overflow-tooltip="true"  min-width="160" label="UUID" />

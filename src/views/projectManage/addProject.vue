@@ -244,7 +244,6 @@ import {
   projectUpdate,
   projectInfo
 } from '@/api/projectManage'
-
 import { message, returntomenu, formatChangedPara, verification } from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
 
