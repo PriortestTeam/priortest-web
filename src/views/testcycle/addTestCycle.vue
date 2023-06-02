@@ -360,7 +360,7 @@ export default {
               let valueData = item.defaultValue;
               if(['multiList'].includes(item.fieldType)){
                 valueData = item.defaultValue || [];
-              }else if(['checkbox'].includes(item.fieldType)){
+              }else if(['checkbox', 'radio'].includes(item.fieldType)){
                 if(item.defaultValue === 1 || item.defaultValue === '1'){
                   valueData = 1;
                 }else{
