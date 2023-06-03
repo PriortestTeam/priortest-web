@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 16:38:28
- * @LastEditTime: 2021-02-16 13:51:50
+ * @LastEditTime: 2021-01-28 15:01:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \oneclick-web\src\api\project.js
@@ -10,37 +10,16 @@ import request from '@/utils/request'
 
 export function featureList (params, data) {
   return request({
-    url: '/feature/queryList',
+    url: '/feature/list',
     method: 'post',
     // post拼接路由参数
     params: params,
     data: data
   })
 }
-// 没有分页的
-export function featureListAll (data) {
-  return request({
-    url: '/leftJoin/queryFeatureTitles',
-    method: 'get',
-    params: data
-  })
-}
-// 添加项目
-export function addFeature (data) {
-  return request({
-    url: '/feature/insert',
-    method: 'post',
-    data
-  })
-}
-// 获取详情
-export function detailFeature (id) {
-  return request({
-    url: '/feature/queryById/' + id,
-    method: 'get'
-  })
-}
-// 删除项目
+
+
+// 删除 记录
 export function delFeature (id) {
   return request({
     url: '/feature/delete/' + id,
@@ -48,26 +27,40 @@ export function delFeature (id) {
   })
 }
 
-// 修改项目
-export function editFeature (data) {
+
+// clone 记录
+export function cloneFeature(data) {
+  return request({
+    url: '/feature/clone',
+    method: 'post',
+    data: data
+  })
+}
+
+// new feature save / update, get method api
+// 添加记录
+export function featureSave(params, data) {
+  return request({
+    url: '/feature/save',
+    method: 'post',
+    data: params
+  })
+}
+
+// 修改记录
+export function featureUpdate(params) {
   return request({
     url: '/feature/update',
-    method: 'post',
-    data
+    method: 'put',
+    data: params
   })
 }
-// 列表操作切换项目
-export function closeUpdate (data) {
+
+// 获取某条记录的详请
+export function featureInfo(params) {
   return request({
-    url: '/feature/closeUpdate',
-    method: 'post',
-    params: data
-  })
-}
-// 切换项目
-export function checkProject (id) {
-  return request({
-    url: '/project/checkProject/' + id,
+    url: '/feature/info/' + params.id,
     method: 'get'
   })
 }
+

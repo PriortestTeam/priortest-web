@@ -195,7 +195,7 @@ export default {
   data() {
     return {
       treeCol: 5,
-      currentScope: "Project",
+      currentScope: "1000001", //// If need to scope name - change to 'project'
       tableHeader: {
         color: "#d4dce3",
         background: "#4286CD",
@@ -241,7 +241,8 @@ export default {
     // 新建项目
     newproject() {
       const data = JSON.stringify({});
-      this.$router.push({ name: "Addproject", query: { info: data } });
+      // query: { info: data }
+      this.$router.push({ name: "Addproject", query: { isEdit: 1 } });
     },
 
     /** 项目列表表格开始 */

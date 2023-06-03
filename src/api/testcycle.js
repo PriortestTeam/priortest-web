@@ -10,52 +10,56 @@ import request from '@/utils/request'
 
 export function testCycleList(params, data) {
   return request({
-    url: '/testCycle/queryList',
+    url: '/testCycle/list',
     method: 'post',
     // post拼接路由参数
     params: params,
     data: data
   })
 }
-// 没有分页的
-export function testCycleListAll(data) {
+
+// 添加测试周期
+export function testCycleSave(params, data) {
   return request({
-    url: '/leftJoin/queryFestCycleTitles',
-    method: 'get',
-    params: data
-  })
-}
-// 添加项目
-export function addTestCycle(data) {
-  return request({
-    url: '/testCycle/insert',
+    url: '/testCycle/saveTestCycle',
     method: 'post',
-    data
+    data: params
   })
 }
-// 获取详情
-export function detailTestCycle(id) {
+// 测试周期更改
+export function testCycleUpdate(params) {
   return request({
-    url: '/testCycle/queryById/' + id,
+    url: '/testCycle/updateTestCycle',
+    method: 'put',
+    data: params
+  })
+}
+
+// clone 记录
+export function clonetestCycle(data) {
+  return request({
+    url: '/testCycle/clone',
+    method: 'post',
+    data: data
+  })
+}
+
+// 获取详情
+export function testCycleInfo(params) {
+  return request({
+    url: '/testCycle/info/' + params.id,
     method: 'get'
   })
 }
+
 // 删除项目
-export function delTestCycle(id) {
+export function deltestCycle(id) {
   return request({
-    url: '/testCycle/delete/' + id,
+    url: '/testCycle/deleteTestCycle/' + id,
     method: 'delete'
   })
 }
 
-// 修改项目
-export function editTestCycle(data) {
-  return request({
-    url: '/testCycle/update',
-    method: 'post',
-    data
-  })
-}
 /** *弹框 新增步骤
  *
  */

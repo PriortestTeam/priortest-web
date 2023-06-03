@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <div >
+    <div>
       <img src="@/icons/img/one-logo.png" alt="" srcset="" @click="gohome">
     </div>
     <div class="nav-menu">
@@ -15,10 +15,11 @@
           :key="i"
           :index="item.index"
         >{{
-          item.index === "Project"
-            ? item.name
-            : $t(`lang.menuTitle.${item.name}`)
-        }}</el-menu-item>
+            item.index === 'Project'
+              ? item.name
+              : $t(`lang.menuTitle.${item.name}`)
+          }}
+        </el-menu-item>
       </el-menu>
     </div>
     <div class="user-menu">
@@ -29,21 +30,21 @@
           placeholder="id/text"
           style="width: 240px"
         >
-          <i slot="prefix" class="el-input__icon el-icon-search" />
+          <i slot="prefix" class="el-input__icon el-icon-search"/>
         </el-input>
       </div>
       <div class="lan-menu">
         <el-dropdown>
           <el-button type="text">语言切换</el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item> 中文 </el-dropdown-item>
-            <el-dropdown-item> English </el-dropdown-item>
+            <el-dropdown-item> 中文</el-dropdown-item>
+            <el-dropdown-item> English</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
       <div class="info-menu">
         <el-dropdown>
-          <el-avatar icon="el-icon-user-solid" :size="40" />
+          <el-avatar icon="el-icon-user-solid" :size="40"/>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>
               <div @click="menuSelect('Admincenter')">
@@ -51,9 +52,12 @@
                 个人中心
               </div>
             </el-dropdown-item>
+            <el-dropdown-item>
+              <div @click="menuSelect('SettingCenter')">设置中心</div>
+            </el-dropdown-item>
             <el-dropdown-item style="color: #f56c6c">
               <div @click="logout">
-                <svg-icon icon-class="tuichu" class="tuichu" />
+                <svg-icon icon-class="tuichu" class="tuichu"/>
                 退出
               </div>
             </el-dropdown-item>
@@ -67,36 +71,40 @@
 <script>
 import { mapGetters } from 'vuex'
 import { message } from '@/utils/common'
+
 export default {
-  data () {
+  data() {
     return {
       menuList: [
-       {
-              index: 'Welcome',
-              name: 'Welcome'
-            },
-            {
-        index: 'Project',
-        name: ''
-      }, {
-        index: 'Feature',
-        name: 'Feature'
-      }, {
-        index: 'Sprint',
-        name: 'Sprint'
-      }, {
-        index: 'Testcase',
-        name: 'TestCase'
-      }, {
-        index: 'Testcycle',
-        name: 'TestCycle'
-      }, {
-        index: 'Issue',
-        name: 'Issue'
-      }, {
-        index: 'Signoff',
-        name: 'SignOff'
-      }],
+        {
+          index: 'Welcome',
+          name: 'Welcome'
+        },
+        {
+          index: 'Project',
+          name: ''
+        }, {
+          index: 'Feature',
+          name: 'Feature'
+        }, {
+          index: 'Sprint',
+          name: 'Sprint'
+        }, {
+          index: 'Testcase',
+          name: 'TestCase'
+        }, {
+          index: 'Testcycle',
+          name: 'TestCycle'
+        }, {
+          index: 'Issue',
+          name: 'Issue'
+        }, {
+          index: 'Signoff',
+          name: 'SignOff'
+        }, {
+          index: 'ProjectManage',
+          name: 'ProjectManage'
+        }],
       Idsearch: '',
       projectName: '',
       activeIndex: '',
@@ -108,7 +116,8 @@ export default {
         'Testcase',
         'Testcycle',
         'Issue',
-        'Signoff'
+        'Signoff',
+        'ProjectManage'
       ]
     }
   },
@@ -121,7 +130,7 @@ export default {
         // navName: state => state.common.nvaName
       }
     ]),
-    userInfo () {
+    userInfo() {
       return this.$store.state.user.userinfo
     }
   },
@@ -132,7 +141,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.menuList[1].name = this.userInfo.userUseOpenProject.title
     if (window.localStorage.currentMenu) {
       this.activeIndex = window.localStorage.currentMenu
@@ -148,7 +157,7 @@ export default {
   },
   methods: {
     // 菜单切换事件
-    menuSelect (name) {
+    menuSelect(name) {
       const index = this.menuList.findIndex(v => v.index === name)
       window.localStorage.setItem('currentMenu', name)
       if (name === 'Project') {
@@ -161,16 +170,16 @@ export default {
         this.$router.push({ name })
       }
     },
-    toggleSideBar () {
+    toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout () {
+    async logout() {
       this.remove('activeIndex')
       await this.$store.dispatch('user/logout')
-      sessionStorage.removeItem("projectId");
+      sessionStorage.removeItem('projectId')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
-    goOther (item, index) {
+    goOther(item, index) {
       this.$store.commit('common/setNavName', item)
       this.activeIndex = index
       this.set('activeIndex', index)
@@ -182,12 +191,12 @@ export default {
         this.$router.push({ name: item })
       }
     },
-    gohome () {
+    gohome() {
       this.$router.push({ name: 'Dashboard' })
     },
 
     // 切换语言
-    changeLang (command) {
+    changeLang(command) {
       if (command === 'zh-CN') {
         this.$i18n.locale = 'zh-CN'
       }
@@ -232,12 +241,14 @@ export default {
     justify-content: flex-end;
     align-items: center;
     height: 46px;
+
     .user-avatar {
       cursor: pointer;
       width: 38px;
       height: 38px;
       border-radius: 25px;
     }
+
     .tuichu {
       font-size: 28px;
       color: #333;
@@ -245,10 +256,12 @@ export default {
       cursor: pointer;
       margin-left: 20px;
     }
+
     .lang {
       margin-right: 20px;
     }
   }
+
   .one_title {
     display: flex;
     // border: 1px solid $tabcolorBG;
@@ -259,6 +272,7 @@ export default {
     box-sizing: border-box;
     color: #2a344b;
     justify-content: space-between;
+
     > div {
       &:first-child {
         flex: 1;
@@ -267,6 +281,7 @@ export default {
         align-items: center;
       }
     }
+
     .item {
       height: 100%;
       padding: 0 15px;
@@ -274,8 +289,10 @@ export default {
       cursor: pointer;
       font-size: 14px;
       margin: 0 20px;
+
       &:hover {
         position: relative;
+
         &::after {
           position: absolute;
           bottom: -1px;
@@ -287,12 +304,14 @@ export default {
         }
       }
     }
+
     .active {
       background: #fff;
       color: $tabcolorBG;
       border-radius: 23px;
       // margin: 5px 0;
       position: relative;
+
       &::after {
         position: absolute;
         bottom: -1px;
@@ -303,14 +322,17 @@ export default {
         content: "";
       }
     }
+
     ::v-deep .el-input {
       width: 300px;
       margin-left: 30px;
+
       .el-input__inner {
         border-radius: 15px;
       }
     }
   }
+
   .one_logo {
     cursor: pointer;
     height: auto;
@@ -318,6 +340,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
     & > img {
       height: 40px;
     }

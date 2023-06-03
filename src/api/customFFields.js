@@ -14,6 +14,13 @@ export function RangeS() {
     method: 'get'
   })
 }
+// 范围 必填 初始值
+export function getFilterCondition() {
+  return request({
+    url: '/sysConfig/listByGroup/filterCondition',
+    method: 'get'
+  })
+}
 // 获取字段列表
 export function fieldList(data) {
   return request({
@@ -57,7 +64,15 @@ export function systemListAPI(data) {
 export function downMenuAPI(data) {
   return request({
     url: '/user/listUserByProjectId/' + data,
-    method: 'get',
+    method: 'get'
+  })
+}
+// 修改下拉框的数值
+export function updateValueDropDownBox (data) {
+  return request({
+    url: '/customFields/updateValueDropDownBox',
+    method: 'post',
+    data: data
   })
 }
 // 修改
@@ -66,7 +81,7 @@ export function unDataApi(data) {
     url: '/customFields/update',
     method: 'put',
     headers:{
-      "Access-Control-Allow-Methods":"GET, POST, PATCH, PUT, DELETE, OPTIONS"
+      'Access-Control-Allow-Methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS'
     },
     data:data
   })

@@ -7,7 +7,8 @@ export const lang = {
     TestCase: '测试用例',
     TestCycle: '测试周期',
     Issue: '缺陷',
-    SignOff: '验收'
+    SignOff: '验收',
+    ProjectManage:'项目管理'
 
   },
   CommonFiled: {
