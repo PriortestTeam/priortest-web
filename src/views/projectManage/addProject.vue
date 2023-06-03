@@ -4,35 +4,35 @@
       <el-tabs v-model="activeName" type="card" :before-leave="handBeforeLeave">
         <el-tab-pane label="新建" name="first">
           <el-form
-            ref="projectManageForm"
-            :model="projectManageForm"
-            :rules="projectManageRules"
+            ref="projectForm"
+            :model="projectForm"
+            :rules="projectRules"
             label-width="120px"
             class="demo-ruleForm"
           >
             <div>
               <el-button
-                v-if="!projectManageForm.id && isEdit"
+                v-if="!projectForm.id && isEdit"
                 type="primary"
-                @click="submitForm('projectManageForm', false)"
+                @click="submitForm('projectForm', false)"
               >保存并新建
               </el-button>
               <el-button
-                v-if="!projectManageForm.id && isEdit"
+                v-if="!projectForm.id && isEdit"
                 type="primary"
-                @click="submitForm('projectManageForm', true)"
+                @click="submitForm('projectForm', true)"
               >保存并返回
               </el-button>
               <el-button
-                v-if="!projectManageForm.id && isEdit"
+                v-if="!projectForm.id && isEdit"
                 type="primary"
-                @click="submitForm('projectManageForm', false)"
+                @click="submitForm('projectForm', false)"
               >保存
               </el-button>
-              <el-button v-if="projectManageForm.id && isEdit" type="primary" @click="submitForm('projectManageForm')">确认修改
+              <el-button v-if="projectForm.id && isEdit" type="primary" @click="submitForm('projectForm')">确认修改
               </el-button>
-              <el-button type="primary" @click="giveupBack('projectManageForm')">放弃</el-button>
-              <router-link v-if="!projectManageForm.id" to="/admincenter/admincenter">
+              <el-button type="primary" @click="giveupBack('projectForm')">放弃</el-button>
+              <router-link v-if="!projectForm.id" to="/admincenter/admincenter">
                 <el-button type="text">
                   {{ $t('lang.PublicBtn.CreateCustomField') }}
                 </el-button>
@@ -70,14 +70,14 @@
                       :placeholder="`请输入${field.fieldNameCn}`"
                     />
                     <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData" :disabled="!isEdit">
-                      <el-radio label="1">是</el-radio>
-                      <el-radio label="0">否</el-radio>
+                      <el-radio :label="1">是</el-radio>
+                      <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                     <el-checkbox
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
-                      :value="field.valueData === '1'"
-                      @change="field.valueData = field.valueData === '1' ? '0' : '1'"
+                      :value="field.valueData === 1"
+                      @change="field.valueData = (field.valueData === 1) ? 0 : 1"
                     />
                     <!-- <el-checkbox-group
                       v-if="field.fieldType === 'checkbox'"
@@ -152,14 +152,14 @@
                       :length="field.length"
                     />
                     <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData" :disabled="!isEdit">
-                      <el-radio label="1">是</el-radio>
-                      <el-radio label="0">否</el-radio>
+                      <el-radio :label="1">是</el-radio>
+                      <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                     <el-checkbox
                       v-if="field.fieldType === 'checkbox'"
                       :disabled="!isEdit"
-                      :value="field.valueData === '1' || field.valueData === 1"
-                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? '0' : '1'"
+                      :value="field.valueData === 1"
+                      @change="field.valueData = (field.valueData === 1) ? 0 : 1"
                     />
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
@@ -227,7 +227,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="步骤" name="second">
-          <add-test-case-step v-if="!verification(id)" :case-id="id" />
+          <!-- <add-test-case-step v-if="!verification(id)" :case-id="id" /> -->
         </el-tab-pane>
         <el-tab-pane label="运行记录" name="third">运行记录</el-tab-pane>
       </el-tabs>
@@ -239,16 +239,19 @@
 import { mapGetters } from 'vuex'
 import { getAllCustomField } from '@/api/getFields'
 import addPossibleValue from './components/addPossibleValue.vue'
+
+import { featureListAll } from '@/api/feature'
 import {
   projectSave,
   projectUpdate,
   projectInfo
 } from '@/api/projectManage'
+
 import { message, returntomenu, formatChangedPara, verification } from '@/utils/common'
 import { fieldTypeAPI } from '@/api/customFFields'
 
 export default {
-  name: 'AddprojectManage',
+  name: 'AddProject',
   data() {
     return {
       //openDia: false,
@@ -264,8 +267,11 @@ export default {
       activeName: 'first',
     }
   },
+  components: {
+    addPossibleValue
+  },
   computed: {
-    projectManageForm() {
+    projectForm() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           return {
@@ -277,7 +283,7 @@ export default {
         return []
       }
     },
-    projectManageRules() {
+    projectRules() {
       try {
         return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
           if (b.mandatory) {
@@ -332,31 +338,53 @@ export default {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
           const data = res.data;
           this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
+            let valueData = item.defaultValue;
+            if(['multiList'].includes(item.fieldType)){
+              valueData = item.defaultValue || [];
+            }else if(['checkbox', 'radio'].includes(item.fieldType)){
+              if(item.defaultValue === 1 || item.defaultValue === '1'){
+                valueData = 1;
+              }else{
+                valueData = 0;
+              }
+            }
             return {
               label: 'sField' + item.customFieldId,
               ...item,
-              valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+              valueData: valueData
             }
           })
           this.customFields = data.filter(item => item.type === 'custom')
             .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
             .map((item, index) => {
+              let valueData = item.defaultValue;
+              if(['multiList'].includes(item.fieldType)){
+                valueData = item.defaultValue || [];
+              }else if(['checkbox'].includes(item.fieldType)){
+                if(item.defaultValue === 1 || item.defaultValue === '1'){
+                  valueData = 1;
+                }else{
+                  valueData = 0;
+                }
+              }
               return {
                 label: 'custom' + item.customFieldId,
                 ...item,
-                valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
+                valueData: valueData
               }
             })
           if (this.id) {
-            projectManageInfo({ id: this.id }).then((res) => {
+            projectInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
-                const projectManageExpand = JSON.parse(res.data.projectManageExpand);
+                const projectExpand = JSON.parse(res.data.projectExpand);
 
-                if (projectManageExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-                  item.valueData = projectManageExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
+                if (projectExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+
+                  item.valueData = projectExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })
             })
@@ -455,7 +483,7 @@ export default {
     resetFields() {
       this.id = ''
       this.isEdit = true
-      this.$refs['projectManageForm'].resetFields()
+      this.$refs['projectForm'].resetFields()
     },
     // 提交
     submitForm(formName, type) {
@@ -529,7 +557,7 @@ export default {
     },
     // 放弃并且返回
     giveupBack() {
-      if (!this.projectManageForm.id) {
+      if (!this.projectForm.id) {
         this.resetFields()
       }
       this.returntomenu(this)

@@ -63,6 +63,7 @@
                     </el-button>
                   </template>
                 </el-table-column>
+
               </el-table>
 
               <pagination v-show="projectTotal > 0" :total=" projectTotal" :page.sync="projectQuery.pageNum"
@@ -205,12 +206,12 @@ export default {
 
 
     // 删除项目
-    delproject(id) {
+    delProject(id) {
       if (id === 'all') {
         message('error', '暂未开发')
         return
       }
-      delproject(id).then(res => {
+      delProject(id).then(res => {
         if (res.code === '200') {
           message('success', res.msg)
           this.getqueryForproject()
