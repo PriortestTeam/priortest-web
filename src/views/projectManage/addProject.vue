@@ -15,13 +15,13 @@
                 v-if="!projectForm.id && isEdit"
                 type="primary"
                 @click="submitForm('projectForm', false)"
-              >保存并新建
+              >保存&新建
               </el-button>
               <el-button
                 v-if="!projectForm.id && isEdit"
                 type="primary"
                 @click="submitForm('projectForm', true)"
-              >保存并返回
+              >保存&返回
               </el-button>
               <el-button
                 v-if="!projectForm.id && isEdit"
@@ -31,7 +31,7 @@
               </el-button>
               <el-button v-if="projectForm.id && isEdit" type="primary" @click="submitForm('projectForm')">确认修改
               </el-button>
-              <el-button type="primary" @click="giveupBack('projectForm')">放弃</el-button>
+              <el-button type="primary" @click="giveupBack('projectForm')">放弃返回</el-button>
               <router-link v-if="!projectForm.id" to="/admincenter/admincenter">
                 <el-button type="text">
                   {{ $t('lang.PublicBtn.CreateCustomField') }}
@@ -251,7 +251,7 @@ import { message, returntomenu, formatChangedPara, verification } from '@/utils/
 import { fieldTypeAPI } from '@/api/customFFields'
 
 export default {
-  name: 'AddProject',
+  name: 'Addproject',
   data() {
     return {
       //openDia: false,
@@ -360,7 +360,7 @@ export default {
               let valueData = item.defaultValue;
               if(['multiList'].includes(item.fieldType)){
                 valueData = item.defaultValue || [];
-              }else if(['checkbox'].includes(item.fieldType)){
+              }else if(['checkbox', 'radio'].includes(item.fieldType)){
                 if(item.defaultValue === 1 || item.defaultValue === '1'){
                   valueData = 1;
                 }else{
