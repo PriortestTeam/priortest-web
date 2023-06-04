@@ -8,15 +8,26 @@
  */
 import request from '@/utils/request'
 
+//export function queryForProjects (params, data) {
+  //return request({
+   // url: '/project/queryForProjects',
+    //method: 'post',
+    // post拼接路由参数
+    //params: params,
+    //data: data
+  //})
+//}
+
 export function queryForProjects (params, data) {
   return request({
-    url: '/project/queryForProjects',
-    method: 'post',
+    url: '/subUser/queryForProjectsbyUser',
+    method: 'get',
     // post拼接路由参数
     params: params,
     data: data
   })
 }
+
 // 添加项目
 export function addProjects (data) {
   return request({
@@ -146,12 +157,12 @@ export function getViewScopeChildParams (scope) {
 
 export function getViewAllScopeParams (scope) {
   return request({
-    url: '/view/getViewScope',
+    url: '/customFields/getAllCustomList?projectId=593988941040848896',
     method: 'get',
     params: scope
   })
 }
-///view/getViewScope
+// /view/getViewScope
 
 // 查询父view
 export function queryViewParents (params) {

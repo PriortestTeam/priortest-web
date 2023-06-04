@@ -6,7 +6,7 @@
       :page-size.sync="pageSize"
       :layout="layout"
       :page-sizes="pageSizes"
-      :total="total"
+      :total="Number(total)"
       v-bind="$attrs"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -22,7 +22,7 @@ export default {
   props: {
     total: {
       required: true,
-      type: Number
+      type: [Number, String]
     },
     page: {
       type: Number,

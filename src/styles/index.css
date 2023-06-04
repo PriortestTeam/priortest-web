@@ -1,3 +1,8 @@
+/* 引入 tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :export {
   menuText: #bfcbd9;
   menuActiveText: #409EFF;
@@ -256,7 +261,7 @@ body {
 }
 
 label {
-  font-weight: 700;
+  /* font-weight: 700; */
 }
 
 html {

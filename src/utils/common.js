@@ -44,6 +44,16 @@ function formatChangedPara (originObj, newObj) {
   tempObj.id = newObj.id
   return tempObj
 }
+/**
+ * @description: 校验空值、null、undefined、[]
+ * @param {*} val
+ * @return {*}
+ */
+function verification(val) {
+  const valString = val + ''
+  const verificationType = ['', 'null', 'undefined', '[]', 'NaN']
+  return verificationType.includes(valString)
+}
 // 处理自定义radio字段数据
 function customradioData (data) {
   const radio = data
@@ -121,6 +131,7 @@ export {
   formData,
   message,
   formatChangedPara,
+  verification,
   returntomenu,
   customradioData,
   customtextData,
