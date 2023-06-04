@@ -22,7 +22,6 @@
               </el-button>
               <el-button type="text" :disabled="multiple" @click="delproject('all')">批量删除
               </el-button>
-              <el-button type="text" @click="exportproject">导出测试周期</el-button>
               <el-button type="text" @click="selectMoreCol">更多列</el-button>
               <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
             </div>
@@ -44,11 +43,12 @@
                     </span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="testFrame" :show-overflow-tooltip="true"  label="测试方式" />
-                <el-table-column prop="projectCategory"  :show-overflow-tooltip="true" label="项目类别" />
-                <el-table-column prop="reportTo"  :show-overflow-tooltip="true" label="负责人" />
-                <el-table-column prop="planReleaseDate"  :show-overflow-tooltip="true" label="计划上线" />
+                <el-table-column prop="reportTo" :show-overflow-tooltip="true"  label="负责人" />
+                <el-table-column prop="projectCategory"  label="项目类别" />
+                <el-table-column prop="testFrame"  :show-overflow-tooltip="true" label="测试框架" />
                 <el-table-column prop="customer"  :show-overflow-tooltip="true" label="客户" />
+                <el-table-column prop="planReleaseDate"  label="上线日期" min-width="120"
+                  :show-overflow-tooltip="true" />
                 <el-table-column prop="createTime"  label="创建日期" min-width="120"
                   :show-overflow-tooltip="true" />
                     <el-table-column prop="id" :show-overflow-tooltip="true"  min-width="160" label="UUID" />
@@ -59,11 +59,10 @@
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
                     </el-button>
                     <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
-                    <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除
+                    <el-button type="text" class="table-btn" @click.stop="delProject(scope.row.id)">删除
                     </el-button>
                   </template>
                 </el-table-column>
-
               </el-table>
 
               <pagination v-show="projectTotal > 0" :total=" projectTotal" :page.sync="projectQuery.pageNum"
@@ -80,6 +79,7 @@
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import {projectList, delProject,cloneProject } from '@/api/projectManage'
+// import { queryViews } from '@/api/project'
 
 export default {
   name: 'project',
@@ -196,14 +196,13 @@ export default {
       } else {
         parms = this.projectIds.split(',')
       }
-      cloneproject(parms).then(res => {
+      cloneProject(parms).then(res => {
         if (res.code === '200') {
           message('success', res.msg)
           this.getqueryForproject()
         }
       })
     },
-
 
     // 删除项目
     delProject(id) {
