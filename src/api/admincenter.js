@@ -74,7 +74,7 @@ export function getProjectList (data) {
 // 查询角色列表
 export function rolelist () {
   return request({
-    url: '/role/allList',
+    url: '/role/roleList',
     method: 'get'
   })
 }
@@ -117,7 +117,7 @@ export function getSysCustomField (data) {
 // 项目获取角色
 export function getUserRoles () {
   return request({
-    url: '/role/allList',
+    url: '/role/roleList',
     method: 'get'
   })
 }
