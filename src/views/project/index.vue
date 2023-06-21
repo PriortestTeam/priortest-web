@@ -1,25 +1,9 @@
 <template>
   <div class="project-container app-container">
-    <div v-if="treeCol == 0" class="showBtn" @click="hadleTreeshow">
-      <i class="el-icon-d-arrow-right" />
-    </div>
     <el-row>
-      <el-col :span="treeCol">
-        <view-tree
-          :key="timer"
-          :child-scope="currentScope"
-          @hadleTree="hadleTreeshow"
-          @childByValue="childByValue"
-        />
-      </el-col>
-      <el-col :span="24 - treeCol">
+      <el-col>
         <el-card>
           <div class="project_table">
-            <div class="new_project">
-              <el-button type="primary" @click="newproject">
-                新建项目
-              </el-button>
-            </div>
 
             <div class="oprate_btn">
               <el-button type="text" @click="projectRefresh">刷新</el-button>
@@ -28,15 +12,6 @@
                 :disabled="isAllowChangePro"
                 @click="projectChange"
                 >切换项目</el-button
-              >
-              <el-button type="text" :disabled="single" @click="projectClone"
-                >克隆</el-button
-              >
-              <el-button
-                type="text"
-                :disabled="multiple"
-                @click="delproject('all')"
-                >批量删除</el-button
               >
               <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
             </div>
@@ -194,8 +169,6 @@ export default {
 
   data() {
     return {
-      treeCol: 5,
-      currentScope: "1000001", //// If need to scope name - change to 'project'
       tableHeader: {
         color: "#d4dce3",
         background: "#4286CD",
@@ -235,16 +208,6 @@ export default {
     this.getqueryForProjects(); // 获取管理项目列表
   },
   methods: {
-    hadleTreeshow() {
-      this.treeCol = this.treeCol === 5 ? 0 : 5;
-    },
-    // 新建项目
-    newproject() {
-      const data = JSON.stringify({});
-      // query: { info: data }
-      this.$router.push({ name: "Addproject", query: { isEdit: 1 } });
-    },
-
     /** 项目列表表格开始 */
     getqueryForProjects() {
       this.isLoading = true;
@@ -295,10 +258,6 @@ export default {
           message("success", "切换项目成功");
         }
       });
-    },
-    // 克隆
-    projectClone() {
-      message("error", "暂未开发");
     },
     // 删除项目
     delproject(id) {
@@ -357,18 +316,8 @@ export default {
           // TO DO DO ...
         })
         .catch({});
-    },
-    childByValue: function (query) {
-      console.log("query--", query);
-      this.isLoading = true;
-      this.viewSearchQueryId = query.viewTreeDto.id;
-      queryForProjects(this.projectQuery, query).then((res) => {
-        this.projecttableData = res.data;
-        this.projectTotal = res.total;
-        this.isLoading = false;
-      });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
