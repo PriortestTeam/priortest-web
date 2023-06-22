@@ -65,7 +65,7 @@
                 <el-table-column prop="createTime" label="创建日期"
                   :show-overflow-tooltip="true" />
  <el-table-column prop="id" :show-overflow-tooltip="true" width="165" label="UUID" />
-                <el-table-column label="操作" min-width="140" >
+                <el-table-column label="操作" min-width="148" fixed="right">
                   <template slot-scope="scope">
                    <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
                    <!-- <span class="line">|</span> -->
@@ -104,7 +104,7 @@ export default {
   components: { viewTree },
   data() {
     return {
-      treeCol: 5,
+      treeCol: 3,
       currentScope: '7000001', // If need to scope name - change to 'issue'
       tableHeader: {
         color: '#d4dce3',
@@ -258,7 +258,7 @@ export default {
       })
     },
     hadleTreeshow() {
-      this.treeCol = this.treeCol === 5 ? 0 : 5
+      this.treeCol = this.treeCol === 3 ? 0 : 3
     }
   }
 }

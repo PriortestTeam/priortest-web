@@ -38,7 +38,9 @@
 }
 //表格操作的样式
 .table{
+	table-layout: fixed;
   .table-btn{
+	padding-left: 0;
    color:$btnbgcolor;
    cursor: pointer;
   }

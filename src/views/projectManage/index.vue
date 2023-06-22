@@ -52,7 +52,7 @@
                 <el-table-column prop="createTime"  label="创建日期" min-width="120"
                   :show-overflow-tooltip="true" />
                     <el-table-column prop="id" :show-overflow-tooltip="true"  min-width="160" label="UUID" />
-                <el-table-column label="操作" min-width="145"  fixed="right">
+                <el-table-column label="操作" min-width="148"  fixed="right">
                   <template slot-scope="scope">
                     <!-- <el-button type="text" class="table-btn">克隆</el-button>
                   <span class="line">|</span> -->
@@ -86,7 +86,7 @@ export default {
   components: { viewTree },
   data() {
     return {
-      treeCol: 5,
+      treeCol: 3,
       currentScope: '1000001', //If need to scope name - change to 'project'
       tableHeader: {
         color: '#d4dce3',
@@ -247,7 +247,7 @@ export default {
       })
     },
     hadleTreeshow() {
-      this.treeCol = this.treeCol === 5 ? 0 : 5
+      this.treeCol = this.treeCol === 3 ? 0 : 3
     }
   }
 }

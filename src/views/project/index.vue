@@ -114,7 +114,7 @@
                   min-width="120"
                   :show-overflow-tooltip="true"
                 />
-                <el-table-column label="操作" min-width="120" align="center">
+                <el-table-column label="操作" min-width="148" align="center">
                   <template slot-scope="scope">
                     <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->

@@ -231,6 +231,7 @@
           querySubUsers(this.accountQuery).then((res) => {
             if (res.code === "200") {
               this.accountData = res.data;
+							console.log(this.accountData)
               this.accountTotal = res.total;
               // console.log(res.data)
               this.accountData.forEach((item) => {
@@ -421,6 +422,9 @@
 @import "@/styles/mixin.scss"; //颜色
 @import "@/styles/color.scss"; //按钮
 //标签页切换样式
+.table{
+	width:100%;
+}
 .el-tabs {
   width: 100%;
   height: 100%;

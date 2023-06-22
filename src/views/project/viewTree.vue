@@ -93,12 +93,16 @@ export default {
 <style scoped lang="scss">
 @import "index.scss";
 .comp-tree {
+  padding: 20px 0px;
   overflow: auto;
   background: #fff;
-  padding: $spacing;
+  // padding: $spacing;
   box-sizing: border-box;
   margin-right: 20px;
   height: calc(100vh - 100px);
+  .icon-box{
+  	margin-left: 0;
+  }
 }
 .comp-data {
   width: 100%;
