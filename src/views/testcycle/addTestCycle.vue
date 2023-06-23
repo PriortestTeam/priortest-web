@@ -376,7 +376,6 @@ export default {
           if (this.id) {
             testCycleInfo({ id: this.id }).then((res) => {
               [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
-
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
@@ -387,6 +386,7 @@ export default {
                   item.valueData = testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })
+			  console.log(this.customFields)
             })
           }
           this.handleDefaultForm();

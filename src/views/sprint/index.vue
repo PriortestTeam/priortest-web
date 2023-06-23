@@ -47,7 +47,7 @@
                 <el-table-column prop="startDate"  :show-overflow-tooltip="true" label="开始日期" />
                 <el-table-column prop="endDate"  :show-overflow-tooltip="true" label="结束日期" />
                 <el-table-column prop="sprintGoal"  :show-overflow-tooltip="true" label="迭代目标" />
-                <el-table-column label="操作" min-width="145"  fixed="right">
+                <el-table-column label="操作" min-width="148"  fixed="right">
                   <template slot-scope="scope">
                     <!-- <el-button type="text" class="table-btn">克隆</el-button>
                   <span class="line">|</span> -->
@@ -81,7 +81,7 @@ export default {
   components: { viewTree },
   data() {
     return {
-      treeCol: 5,
+      treeCol: 3,
       currentScope: '8000001',  //If need to scope name - change to 'sprint'
       tableHeader: {
         color: '#d4dce3',
@@ -236,7 +236,7 @@ export default {
       })
     },
     hadleTreeshow() {
-      this.treeCol = this.treeCol === 5 ? 0 : 5
+      this.treeCol = this.treeCol === 3 ? 0 : 3
     }
   }
 }

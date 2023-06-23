@@ -68,16 +68,13 @@
                   :show-overflow-tooltip="true" />
                     <el-table-column prop="id" :show-overflow-tooltip="true"  min-width="160" label="UUID" />
 
-                <el-table-column label="操作" min-width="145"  fixed="right">
-                  <template slot-scope="scope">
+                <el-table-column label="操作" min-width="148"  fixed="right">
+                  <template slot-scope="scope" >
                     <!-- <el-button type="text" class="table-btn">克隆</el-button>
                   <span class="line">|</span> -->
-                    <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
-                    </el-button>
-
-                    <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
-                    <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除
-                    </el-button>
+                    	<el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情</el-button>
+                    	<el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
+                    	<el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除 </el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -103,7 +100,7 @@ export default {
   components: { viewTree },
   data() {
     return {
-      treeCol: 5,
+      treeCol: 3,
       currentScope: '3000001', // If need to scope name - change to 'testCase'
       tableHeader: {
         color: '#d4dce3',
@@ -265,7 +262,7 @@ export default {
       })
     },
     hadleTreeshow() {
-      this.treeCol = this.treeCol === 5 ? 0 : 5
+      this.treeCol = this.treeCol === 3 ? 0 : 3
     }
   }
 }

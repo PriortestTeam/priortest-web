@@ -180,10 +180,7 @@ export default {
       });
     },
     init() {
-      systemListAPI({
-        projectId: this.projectInfo.userUseOpenProject.projectId,
-        scopeId: "3000001",
-      }).then((res) => {
+      systemListAPI( { projectId: this.projectInfo.userUseOpenProject.projectId } ).then((res) => {
         if (res.code == 200) {
           this.data = res.data;
           this.initData();
