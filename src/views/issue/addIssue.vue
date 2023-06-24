@@ -197,7 +197,8 @@ export default {
       isEdit: false,
       loading: false,
       currentField: {},
-      addPossibleValueVisible: false
+      addPossibleValueVisible: false,
+	  activeName: 'first'
     }
   },
   computed: {
