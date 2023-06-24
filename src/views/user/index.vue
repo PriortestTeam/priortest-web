@@ -86,7 +86,7 @@
           </el-select>
         </el-form-item>
       </div>
-      <div class="table">
+      <div class="user-container table">
         <el-button type="text" @click="accountRefresh">刷新</el-button>
         <el-button
           type="text"
@@ -148,7 +148,7 @@
         updateSubUser,
         getSysCustomField
   } from '@/api/admincenter'
-
+  import {message} from "@/utils/common"
   export default {
     name: 'UserPage',
     props: {
@@ -409,9 +409,14 @@
       // 权限
       accountJurisdiction() {
         // this.jurisdictionAccountId = ''
-        this.activeName = "1";
+        // this.activeName = "1";
         this.jurisdictionAccount = this.accountSelection[0];
-        console.log(this.jurisdictionAccount, this.userinfo, "=======111");
+        this.$emit("jurisdictionChange",this.jurisdictionAccount)
+        // this.$parent.$parent.$parent.activeName = "1"
+        // this.$parent.$parent.$parent.jurisdictionAccount = this.accountSelection[0];
+        // console.log(this.jurisdictionAccount, this.userinfo, "=======111");
+        // console.log(this)
+
       },
     }
   }
@@ -462,6 +467,10 @@
   overflow: hidden;
   .el-form-item .el-form-item__label {
     padding-right: 8px;
+  }
+  //table的宽度
+  .user-container{
+    width: 100%;
   }
   .demo-ruleForm {
     .el-form-item__label {

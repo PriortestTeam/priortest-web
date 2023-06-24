@@ -10,6 +10,7 @@
         <user-page
           ref="UserPage"
           :tableHeader="tableHeader"
+          @jurisdictionChange="jurisdictionChange"
         ></user-page>
       </el-tab-pane>
 
@@ -706,6 +707,12 @@ export default {
       this.customType = val;
     },
     // 自定义字段 结束
+    //--------
+    // 显示权限tab
+    jurisdictionChange(jurisdiction){
+      this.activeName = "1"
+      this.jurisdictionAccount = jurisdiction
+    }
   },
 };
 </script>
