@@ -381,7 +381,7 @@ export default {
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
-                if (testCycleExpand.length && testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                if (Object.keys(testCycleExpand).length && testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
 
                   item.valueData = testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 } 
