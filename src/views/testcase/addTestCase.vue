@@ -354,14 +354,15 @@ export default {
               }
             })
           if (this.id) {
-            testCaseInfo({ id: this.id }).then((res) => {
-              [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+            testCaseInfo({ id: this.id }).then((res) => {							
+			  const testcaseExpand = JSON.parse(res.data.testcaseExpand)
+              const fields = [...this.sysCustomFields, ...this.customFields]
+              fields.forEach((item, index) => {
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
-                const testcaseExpand = JSON.parse(res.data.testcaseExpand);
 
-                if (testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                if (Object.keys(testcaseExpand).length && testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
                   item.valueData = testcaseExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })

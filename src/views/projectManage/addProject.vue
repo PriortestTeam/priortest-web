@@ -375,16 +375,17 @@ export default {
             })
           if (this.id) {
             projectInfo({ id: this.id }).then((res) => {
-              [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
-
+              const projectExpand = JSON.parse(res.data.projectExpand)
+			  const fields = [...this.sysCustomFields, ...this.customFields]
+			  console.log(this.customFields)
+              fields.forEach((item, index) => {
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
-                const projectExpand = JSON.parse(res.data.projectExpand);
 
-                if (projectExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
-
+                if (Object.keys(projectExpand).length && projectExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
                   item.valueData = projectExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
+				  consoole.log(item.valueData)
                 }
               })
             })

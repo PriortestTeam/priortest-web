@@ -197,7 +197,8 @@ export default {
       isEdit: false,
       loading: false,
       currentField: {},
-      addPossibleValueVisible: false
+      addPossibleValueVisible: false,
+	  activeName: 'first'
     }
   },
   computed: {
@@ -282,10 +283,11 @@ export default {
             })
           if (this.id) {
             issueInfo({ id: this.id }).then((res) => {
-              [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+              const issueExpand = JSON.parse(res.data.issueExpand)
+			  const fields = [...this.sysCustomFields, ...this.customFields]
+              fields.forEach((item, index) => {
                 item.valueData = res.data[item.fieldNameEn]
-                const issueExpand = JSON.parse(res.data.issueExpand)
-                if (issueExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                if (Object.keys(issueExpand).length && issueExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
                   item.valueData = issueExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
                 }
               })
@@ -297,6 +299,7 @@ export default {
     },
     handleDefaultForm(){
       this.sysCustomFields.forEach(el=>{
+		console.log(this.oldSysCustomFields)
         this.oldSysCustomFields.forEach(old=>{
           if(el.customFieldLinkId == old.customFieldLinkId){
             el.valueData = old.valueData

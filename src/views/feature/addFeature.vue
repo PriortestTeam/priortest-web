@@ -351,13 +351,14 @@ export default {
             })
           if (this.id) {
             featureInfo({ id: this.id }).then((res) => {
-              [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+				const featureExpand = JSON.parse(res.data.featureExpand)
+				const fields = [...this.sysCustomFields, ...this.customFields]
+                fields.forEach((item, index) => {
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
-                  item.valueData = res.data[item.fieldNameEn];
+                  item.valueData = res.data[item.fieldNameEn]
                 }
-                const featureExpand = JSON.parse(res.data.featureExpand);
 
-                if (featureExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                if (Object.keys(featureExpand).length && featureExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
                   item.valueData = featureExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
                 }
               })

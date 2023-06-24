@@ -345,10 +345,11 @@ export default {
             })
           if (this.id) {
             sprintInfo({ id: this.id }).then((res) => {
-              [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+              const sprintExpand = JSON.parse(res.data.sprintExpand)
+			  const fields = [...this.sysCustomFields, ...this.customFields]
+              fields.forEach((item, index) => {
                 item.valueData = res.data[item.fieldNameEn]
-                const sprintExpand = JSON.parse(res.data.sprintExpand)
-                if (sprintExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                if (Object.keys(sprintExpand).length && sprintExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
                   item.valueData = sprintExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData
                 }
               })

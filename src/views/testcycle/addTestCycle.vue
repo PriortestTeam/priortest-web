@@ -374,19 +374,18 @@ export default {
               }
             })
           if (this.id) {
-            testCycleInfo({ id: this.id }).then((res) => {
-              [...this.sysCustomFields, ...this.customFields].forEach((item, index) => {
+            testCycleInfo({ id: this.id }).then((res) => {							
+			  const testCycleExpand = JSON.parse(res.data.testcycleExpand)
+              const fields = [...this.sysCustomFields, ...this.customFields]
+			  fields.forEach((item, index) => {
                 if(item.fieldNameEn && res.data[item.fieldNameEn]){
                   item.valueData = res.data[item.fieldNameEn];
                 }
-                const testCycleExpand = JSON.parse(res.data.testcycleExpand);
-
-                if (testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
+                if (Object.keys(testCycleExpand).length && testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
 
                   item.valueData = testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
-                }
+                } 
               })
-			  console.log(this.customFields)
             })
           }
           this.handleDefaultForm();
