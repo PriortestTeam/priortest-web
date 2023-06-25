@@ -179,6 +179,7 @@ export default {
         const res = await makeToken(form)
         if (res.code === '200') {
           message('success', res.msg)
+		  that.$refs.form.resetFields()
           that.queryListTokens()
         }
       } catch (error) {
@@ -193,6 +194,7 @@ export default {
       const res = await listTokens(params)
       if (res.code === '200') {
         this.viewData = res.data
+		console.log( this.viewData)
 		// 分页器暂不显示
         // this.viewTotal = Number(res.total)
       }
@@ -214,8 +216,8 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteToken(params).then(res => {
-          if (res.code === 200) {
-            message.success(res.msg)
+          if (res.code === '200') {
+            message('success', res.msg)
             that.currentPage = 1
             that.pageSize = 10
             that.queryListTokens()
