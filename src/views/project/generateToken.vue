@@ -71,6 +71,7 @@
 
         <el-table-column prop="tokenValue" label="密钥值" />
         <el-table-column prop="expirationTime" label="失效日期" />
+		<el-table-column prop="apiTimes" label="API次数" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -230,7 +231,6 @@ export default {
       that.$refs.viewData.clearSelection()
       row.id ? that.disable = true : that.disable = false
       that.form.tokenName = row.tokenName
-      that.form.expirationTime = row.expirationTime
       /* this.viewId = row.id
       this.viewParentQuery = '0'
       this.$refs.viewData.toggleRowSelection(row)
@@ -416,8 +416,13 @@ export default {
 <style lang="scss" scoped>
 @import "index.scss";
 @import "@/styles/index.scss";
+
+.table{
+	width: 100%
+}
 </style>
 <style lang="scss">
+	
 /* .view {
   .wd200 {
     .el-form-item__label {
