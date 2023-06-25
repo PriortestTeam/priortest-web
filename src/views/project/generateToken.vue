@@ -56,7 +56,7 @@
         <el-table-column type="selection" width="55" />
 
         <el-table-column
-          prop="token_name"
+          prop="tokenName"
           :show-overflow-tooltip="true"
           align="left"
           width="155"
@@ -64,13 +64,13 @@
         >
           <template slot-scope="scope">
             <span class="title" @click="toEdit(scope.row)">
-              {{ scope.row.token_name }}
+              {{ scope.row.tokenName }}
             </span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="token_value" label="密钥值" />
-        <el-table-column prop="expiration_time" label="失效日期" />
+        <el-table-column prop="tokenValue" label="密钥值" />
+        <el-table-column prop="expirationTime" label="失效日期" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -192,7 +192,8 @@ export default {
       const res = await listTokens(params)
       if (res.code === '200') {
         this.viewData = res.data
-        this.viewTotal = Number(res.total)
+		// 分页器暂不显示
+        // this.viewTotal = Number(res.total)
       }
     },
     // 删除token
@@ -224,11 +225,12 @@ export default {
     },
     // 回显token
     toEdit (row) {
+	  console.log(row)
       const that = this
       that.$refs.viewData.clearSelection()
       row.id ? that.disable = true : that.disable = false
-      that.form.tokenName = row.token_name
-      that.form.expirationTime = row.expiration_time
+      that.form.tokenName = row.tokenName
+      that.form.expirationTime = row.expirationTime
       /* this.viewId = row.id
       this.viewParentQuery = '0'
       this.$refs.viewData.toggleRowSelection(row)
