@@ -9,10 +9,11 @@
       >
         <div class="m-b-10">
           <el-button @click="add" type="primary" plain>添加</el-button>
-          <el-button @click="confirm" type="primary" plain>确定</el-button>
+          <el-button @click="confirm" type="primary" plain :disabled="hasNullValue || !canConfirm">确定</el-button>
           <el-button @click="cancel" type="danger">放弃</el-button>
         </div>
-        <div
+        <div class="possible-list">
+          <div
           v-for="(item, index) in possibleValueList"
           :key="index"
           class="m-b-10"
@@ -52,15 +53,18 @@
               v-if="['number'].includes(currentField.fieldType)"
               v-model.number="item.value"
               placeholder="请输入数字"
+              @input="inputChange"
             />
             <el-input
               class="inputClass"
               v-if="
-                ['linkedDropDown', 'dropDown'].includes(currentField.fieldType)
+                ['linkedDropDown', 'dropDown','userList','multiList'].includes(currentField.fieldType)
               "
               v-model="item.value"
+              @input="inputChange"
             />
           </template>
+        </div>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -79,6 +83,7 @@ export default {
       form: "",
       valueTypeList: [],
       possibleValueList: [],
+      canConfirm:false
     };
 
       },
@@ -89,6 +94,9 @@ export default {
     },
     currentField() {
       return this.data[this.activeName] ? this.data[this.activeName] : {};
+    },
+    hasNullValue(){
+      return !this.possibleValueList.every(item=>item.value!="")
     },
   },
   mounted() {
@@ -109,7 +117,7 @@ export default {
       this.possibleValueList = [];
       this.valueTypeList = [];
       const { possibleValue, fieldType } = this.currentField;
-      if (["dropDown", "number"].includes(fieldType)) {
+      if (["dropDown", "number","userList","multiList"].includes(fieldType)) {
         let obj = JSON.parse(possibleValue);
         Object.keys(obj).forEach((key) => {
           this.possibleValueList.push({ value: obj[key], edit: false });
@@ -133,12 +141,14 @@ export default {
     },
     handleDel(item, index) {
       this.possibleValueList.splice(index, 1);
+      this.canConfirm = true
     },
     handleEdit(item) {
       item.edit = !item.edit;
     },
     add() {
       this.possibleValueList.push({ type: "", value: "", edit: true });
+      this.canConfirm = true
     },
     confirm() {
       const { customFieldId, fieldType, possibleValue } = this.currentField;
@@ -156,7 +166,7 @@ export default {
             obj[el.type].push(el.value);
           });
           obj.others = possibleValueTemp.others;
-        } else if (["dropDown", "number"].includes(fieldType)) {
+        } else if (["dropDown", "number","userList","multiList"].includes(fieldType)) {
           this.possibleValueList.forEach((el, index) => {
             obj["order_" + (index + 1)] = el.value;
           });
@@ -170,6 +180,7 @@ export default {
       updateValueDropDownBox(params).then((res) => {
         if (res.code === "200") {
           this.$message.success("操作成功");
+          this.canConfirm = false
         }
         this.init();
       });
@@ -187,10 +198,22 @@ export default {
         }
       });
     },
+    inputChange(){
+      console.log("input change")
+      this.canConfirm = true
+    }
   },
 };
 </script>
 <style lang="scss" scoped>
+.dropDown-setting{
+  height: calc(100vh - 142px);
+}
+.possible-list{
+  height: 100%;
+  overflow: auto;
+  padding-bottom: 40px;
+}
 .m-b-10 {
   margin-bottom: 10px;
 }
