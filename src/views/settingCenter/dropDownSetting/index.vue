@@ -1,5 +1,5 @@
 <template>
-  <div class="dropDown-setting">
+  <div class="dropDown-setting" :style="{'height':calcHeight}">
     <el-tabs v-model="activeName" tab-position="left">
       <el-tab-pane
         v-for="(field, index) in data"
@@ -83,7 +83,8 @@ export default {
       form: "",
       valueTypeList: [],
       possibleValueList: [],
-      canConfirm:false
+      canConfirm:false,
+      calcHeight:'calc(100vh - 142px)'
     };
 
       },
@@ -96,11 +97,14 @@ export default {
       return this.data[this.activeName] ? this.data[this.activeName] : {};
     },
     hasNullValue(){
-      return !this.possibleValueList.every(item=>item.value!="")
+      return !this.possibleValueList.every(item=>item.value.trim()!="")
     },
   },
   mounted() {
     //this.init();
+    console.log("mount")
+    let header = document.querySelector(".fixed-header")
+    this.calcHeight = `calc(100vh - ${header.clientHeight+40+25+20}px)`
   },
   watch: {
     activeName: {
@@ -207,7 +211,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dropDown-setting{
-  height: calc(100vh - 142px);
+  height: calc(100vh - 150px);
 }
 .possible-list{
   height: 100%;
