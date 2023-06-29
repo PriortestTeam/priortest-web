@@ -181,13 +181,15 @@
               type: 'email',
               message: '请输入正确的邮箱地址',
               trigger: ['blur', 'blur']
-            }
+            },
+			{ max: 30, message: '邮箱长度请小于 30 个字符', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '请设置初始密码', trigger: 'blur' }
           ],
           userName: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+			{ max: 10, message: '用户名长度请小于 10 个字符', trigger: 'blur' }
           ],
           sysRoleId: [
             { required: true, message: '请选择角色', trigger: 'change' }
@@ -243,6 +245,7 @@
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
+		console.log(this.accountForm)
           if (valid) {
             if (this.accountForm.id) {
               //
@@ -250,7 +253,8 @@
               //   this.accountTempForm,
               //   this.accountForm
               // )
-              const param = this.accountForm;
+              const param = this.accountForm
+			  Reflect.deleteProperty(param, 'password')
               if (param.projectIdStr && param.projectIdStr != 0) {
                 param.projectIdStr = param.projectIdStr.join(",");
               } else {
