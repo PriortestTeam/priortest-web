@@ -10,7 +10,7 @@
         <div class="m-b-10">
           <el-button @click="add" type="primary" plain>添加</el-button>
           <el-button @click="confirm" type="primary" plain :disabled="hasNullValue || !canConfirm">确定</el-button>
-          <el-button @click="cancel" type="danger">放弃</el-button>
+          <el-button @click="cancel" type="danger" :disabled="!canConfirm">放弃</el-button>
         </div>
         <div class="possible-list">
           <div
@@ -97,7 +97,7 @@ export default {
       return this.data[this.activeName] ? this.data[this.activeName] : {};
     },
     hasNullValue(){
-      return !this.possibleValueList.every(item=>item.value.trim()!="")
+      return !this.possibleValueList.every(item=>(item.value+"").trim()!="")
     },
   },
   mounted() {
@@ -111,6 +111,7 @@ export default {
       handler(newVal) {
         this.initData();
         console.log(this.currentField);
+        this.canConfirm = false
       },
       immediate: true,
     },
@@ -192,6 +193,7 @@ export default {
     cancel() {
       this.$confirm("是否要放弃编辑？").then(() => {
         this.init();
+        this.canConfirm = false
       });
     },
     init() {
