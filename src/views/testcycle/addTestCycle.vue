@@ -79,14 +79,7 @@
                       :value="field.valueData === 1"
                       @change="field.valueData = (field.valueData === 1) ? 0 : 1"
                     />
-                    <!-- <el-checkbox-group
-                      v-if="field.fieldType === 'checkbox'"
-                      v-model="field.valueData"
-                      :disabled="!isEdit"
-                    >
-                      <el-checkbox label="1">是</el-checkbox>
-                      <el-checkbox label="0">否</el-checkbox>
-                    </el-checkbox-group> -->
+
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
                       v-model="field.valueData"
@@ -374,7 +367,7 @@ export default {
               }
             })
           if (this.id) {
-            testCycleInfo({ id: this.id }).then((res) => {							
+            testCycleInfo({ id: this.id }).then((res) => {
 			  const testCycleExpand = JSON.parse(res.data.testcycleExpand)
               const fields = [...this.sysCustomFields, ...this.customFields]
 			  fields.forEach((item, index) => {
@@ -384,7 +377,7 @@ export default {
                 if (Object.keys(testCycleExpand).length && testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId)) {
 
                   item.valueData = testCycleExpand.attributes.find(o => o.customFieldLinkId === item.customFieldLinkId).valueData;
-                } 
+                }
               })
             })
           }
