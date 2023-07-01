@@ -69,7 +69,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label="默认登录项目"
+          label="默认项目"
           prop="openProjectByDefaultId"
           size="small"
         >
