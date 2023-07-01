@@ -55,8 +55,7 @@
 
                 <el-table-column label="操作" min-width="148"  fixed="right">
                   <template slot-scope="scope">
-                    <!-- <el-button type="text" class="table-btn">克隆</el-button>
-                  <span class="line">|</span> -->
+
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
                     </el-button>
 
@@ -89,7 +88,7 @@ export default {
   data() {
     return {
       treeCol: 3,
-      currentScope: '3000001', // If need to scope name - change to 'feature'
+      currentScope: '2000001', // If need to scope name - change to 'feature'
       tableHeader: {
         color: '#d4dce3',
         background: '#4286CD'
