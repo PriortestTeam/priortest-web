@@ -182,14 +182,14 @@
               message: '请输入正确的邮箱地址',
               trigger: ['blur', 'blur']
             },
-			{ max: 30, message: '邮箱长度请小于 30 个字符', trigger: 'blur' }
+			{ max: 50, message: '邮箱长度请小于 50 个字符', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '请设置初始密码', trigger: 'blur' }
           ],
           userName: [
             { required: true, message: '请输入用户名', trigger: 'blur' },
-			{ max: 10, message: '用户名长度请小于 10 个字符', trigger: 'blur' }
+			{ max: 10, message: '用户名长度请小于 20 个字符', trigger: 'blur' }
           ],
           sysRoleId: [
             { required: true, message: '请选择角色', trigger: 'change' }
