@@ -8,6 +8,14 @@
       label-width="100px"
       class="demo-ruleForm"
     >
+	  <!-- <el-button @click="showMsg()">msg</el-button> -->
+	  <el-button
+	    :loading="subLoad"
+	    type="primary"
+	    @click="submitForm('ruleForm')"
+	    >保存</el-button
+	  >
+	  <el-button @click="resetForm('ruleForm')">放弃</el-button>
       <div class="formBox">
         <div class="attributes">
           <el-form-item label="字段名称：" prop="fieldNameCn">
@@ -176,6 +184,7 @@
             class="formItem"
             v-for="(item, index) in RangeList"
             :key="index"
+			label-width="0px"
           >
             <el-checkbox
               @change="changeRange"
@@ -266,16 +275,6 @@
           <div style="margin-left: 100px; color: red" v-show="rangeCheck">
             请选择范围
           </div>
-          <!-- <el-button @click="showMsg()">msg</el-button> -->
-          <el-form-item style="float: right">
-            <el-button
-              :loading="subLoad"
-              type="primary"
-              @click="submitForm('ruleForm')"
-              >保存</el-button
-            >
-            <el-button @click="resetForm('ruleForm')">放弃</el-button>
-          </el-form-item>
         </div>
       </div>
     </el-form>
@@ -955,7 +954,7 @@ export default {
     flex-direction: row;
     width: 180px;
     height: 330px;
-    margin: 0px 100px 0 100px;
+    margin-left: 50px;
     overflow: auto;
     p {
       width: 100px;
@@ -1015,13 +1014,13 @@ export default {
     }
   }
   .componentAttributes {
-    width: 500px;
+    width: 400px;
+	margin-left: 50px;
     .RangeTitle {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       font-size: 16px;
-      margin-left: 100px;
     }
     .formItem {
       ::v-deep .el-input__suffix {
