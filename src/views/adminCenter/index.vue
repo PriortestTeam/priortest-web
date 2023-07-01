@@ -762,6 +762,10 @@ export default {
   .el-form-item .el-form-item__label {
     padding-right: 8px;
   }
+	.table {
+		table-layout: fixed;
+		width: 100%;
+	}
   .demo-ruleForm {
     .el-form-item__label {
       //width: 110px!important;
