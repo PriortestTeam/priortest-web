@@ -139,9 +139,9 @@
                     :label="item.label"
                     :value="item.value"
                   />
-                  <!-- <router-link :to="`/admincenter/admincenter?par=${field.fieldNameEn}`"> -->
+
                   <el-option label="添加新值" value="0" @click.native="handleAddPossibleValue(field)" />
-                  <!-- </router-link> -->
+
                 </el-select>
                 <el-link v-if="field.fieldType === 'link' && !isEdit" :href="field.defaultValue" target="_blank">
                   {{ field.defaultValue }}

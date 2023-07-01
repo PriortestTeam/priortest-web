@@ -73,20 +73,13 @@
                       <el-radio label="1">是</el-radio>
                       <el-radio label="0">否</el-radio>
                     </el-radio-group>
-                    <el-checkbox
-                      v-if="field.fieldType === 'checkbox'"
-                      :disabled="!isEdit"
-                      :value="field.valueData === '1'"
-                      @change="field.valueData = field.valueData === '1' ? '0' : '1'"
-                    />
-                    <!-- <el-checkbox-group
-                      v-if="field.fieldType === 'checkbox'"
-                      v-model="field.valueData"
-                      :disabled="!isEdit"
-                    >
-                      <el-checkbox label="1">是</el-checkbox>
-                      <el-checkbox label="0">否</el-checkbox>
-                    </el-checkbox-group> -->
+                  <el-checkbox
+                                       v-if="field.fieldType === 'checkbox'"
+                                       :disabled="!isEdit"
+                                       :value="field.valueData === 1"
+                                       @change="field.valueData = (field.valueData === 1) ? 0 : 1"
+                                     />
+
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
                       v-model="field.valueData"
@@ -154,12 +147,12 @@
                       <el-radio label="1">是</el-radio>
                       <el-radio label="0">否</el-radio>
                     </el-radio-group>
-                    <el-checkbox
-                      v-if="field.fieldType === 'checkbox'"
-                      :disabled="!isEdit"
-                      :value="field.valueData === '1' || field.valueData === 1"
-                      @change="field.valueData = (field.valueData === '1' || field.valueData === 1) ? '0' : '1'"
-                    />
+                   <el-checkbox
+                                        v-if="field.fieldType === 'checkbox'"
+                                        :disabled="!isEdit"
+                                        :value="field.valueData === 1"
+                                        @change="field.valueData = (field.valueData === 1) ? 0 : 1"
+                                      />
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
                       v-model="field.valueData"
@@ -173,9 +166,8 @@
                         :label="item.label"
                         :value="item.value"
                       />
-                      <!-- <router-link :to="`/admincenter/admincenter?par=${field.fieldNameEn}`"> -->
-                      <el-option label="添加新值" value="0" @click.native="handleAddPossibleValue(field)" />
-                      <!-- </router-link> -->
+
+                     <el-option label="添加新值" value="0" @click.native="handleAddPossibleValue(field)" />
                     </el-select>
                     <el-link v-if="field.fieldType === 'link' && !isEdit" :href="field.defaultValue" target="_blank">
                       {{ field.defaultValue }}
@@ -190,37 +182,7 @@
                     />
                   </el-form-item>
                 </el-col>
-                <!-- <el-col v-for="field in customFields" :key="field.id" :xs="8" :sm="6" :md="6" :lg="6" :xl="6">
-                <el-form-item v-if="field.fieldType === 'text'" :label="field.fieldName" size="small" :prop="field.fieldName">
-                  <el-input v-model="field.valueData" type="text" />
-                </el-form-item>
-                <el-form-item v-if="field.fieldType === 'memo'" :label="field.fieldName" size="small" :prop="field.fieldName">
-                  <el-input v-model="field.valueData" type="textarea" :rows="2" placeholder="请输入内容" />
-                </el-form-item>
-                <el-form-item v-if="field.fieldType === 'radio'" :label="field.fieldName" size="small"
-                  :prop="field.fieldName">
-                  <el-select v-model="field.valueData" :placeholder="`请选择${field.fieldName}`">
-                    <el-option v-for="(item, index) in field.defaultValues" :key="index" :label="field.mergeValues[index]"
-                      :value="field.mergeValues[index]" />
-                    <router-link :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                      <el-option
-                        label="添加新值"
-                        value
-                      />
-                    </router-link>
-                  </el-select>
-                </el-form-item>
-                <el-form-item v-if="field.fieldType === 'DropDown'" :label="field.fieldName" size="small" filterable
-                  :prop="field.fieldName">
-                  <el-select v-model="field.valueData" :placeholder="`请选择${field.fieldName}`">
-                    <el-option v-for="(item, index) in field.defaultValues" :key="index" :label="field.mergeValues[index]"
-                      :value="field.mergeValues[index]" />
-                    <router-link v-if="field.fieldName !== 'schedule_run_frequency'"
-                      :to="`/admincenter/admincenter?par=${field.fieldName}`">
-                      <el-option label="添加新值" value />
-                    </router-link>
-                  </el-select>
-                </el-form-item> -->
+
               </el-row>
             </div>
           </el-form>
@@ -231,6 +193,7 @@
         <el-tab-pane label="运行记录" name="third">运行记录</el-tab-pane>
       </el-tabs>
     </el-card>
+
     <addPossibleValue :field="currentField" :visible.sync="addPossibleValueVisible" @refresh="getData" />
   </div>
 </template>
@@ -251,6 +214,9 @@ import { fieldTypeAPI } from '@/api/customFFields'
 
 export default {
   name: 'AddFeature',
+   components: {
+      addPossibleValue
+    },
   data() {
     return {
       //openDia: false,
@@ -332,23 +298,45 @@ export default {
       }).then((res) => {
         if (res.code === '200') {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
-          const data = res.data;
-          this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
-            return {
-              label: 'sField' + item.customFieldId,
-              ...item,
-              valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
-            }
-          })
-          this.customFields = data.filter(item => item.type === 'custom')
-            .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
-            .map((item, index) => {
-              return {
-                label: 'custom' + item.customFieldId,
-                ...item,
-                valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
-              }
-            })
+            const data = res.data;
+                                     this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
+                                       let valueData = item.defaultValue;
+                                       if(['multiList'].includes(item.fieldType)){
+                                         valueData = item.defaultValue || [];
+                                       }
+                                 else if(['checkbox', 'radio'].includes(item.fieldType)){
+                                               if(item.defaultValue === 1 || item.defaultValue === '1'){
+                                                 valueData = 1;
+                                               }else{
+                                                 valueData = 0;
+                                               }
+                                             }
+                                  return {
+                                   label: 'sField' + item.customFieldId,
+                                               ...item,
+                                               valueData: valueData
+                               }
+                             })
+                    this.customFields = data.filter(item => item.type === 'custom')
+                                        .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
+                                        .map((item, index) => {
+                                          let valueData = item.defaultValue;
+                                          if(['multiList'].includes(item.fieldType)){
+                                            valueData = item.defaultValue || [];
+                                          }
+                                 else if(['checkbox', 'radio'].includes(item.fieldType)){
+                                                 if(item.defaultValue === 1 || item.defaultValue === '1'){
+                                                   valueData = 1;
+                                                 }else{
+                                                   valueData = 0;
+                                                 }
+                                               }
+                                               return {
+                                                 label: 'custom' + item.customFieldId,
+                                                 ...item,
+                                                 valueData: valueData
+                                               }
+                               })
           if (this.id) {
             featureInfo({ id: this.id }).then((res) => {
 				const featureExpand = JSON.parse(res.data.featureExpand)

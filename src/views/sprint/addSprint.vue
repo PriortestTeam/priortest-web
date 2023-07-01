@@ -73,14 +73,12 @@
                       <el-radio label="1">是</el-radio>
                       <el-radio label="0">否</el-radio>
                     </el-radio-group>
-                    <el-checkbox-group
-                      v-if="field.fieldType === 'checkbox'"
-                      v-model="field.valueData"
-                      :disabled="!isEdit"
-                    >
-                      <el-checkbox label="1">是</el-checkbox>
-                      <el-checkbox label="0">否</el-checkbox>
-                    </el-checkbox-group>
+                    <el-checkbox
+                                                       v-if="field.fieldType === 'checkbox'"
+                                                       :disabled="!isEdit"
+                                                       :value="field.valueData === 1"
+                                                       @change="field.valueData = (field.valueData === 1) ? 0 : 1"
+                                                     />
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
                       v-model="field.valueData"
@@ -148,12 +146,12 @@
                       <el-radio label="1">是</el-radio>
                       <el-radio label="0">否</el-radio>
                     </el-radio-group>
-                    <el-checkbox
-                      v-if="field.fieldType === 'checkbox'"
-                      :disabled="!isEdit"
-                      :checked="field.valueData === 'checked'"
-                      @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'"
-                    />
+                     <el-checkbox
+                                                        v-if="field.fieldType === 'checkbox'"
+                                                        :disabled="!isEdit"
+                                                        :value="field.valueData === 1"
+                                                        @change="field.valueData = (field.valueData === 1) ? 0 : 1"
+                                                      />
                     <el-select
                       v-if="['number', 'dropDown', 'multiList', 'userList', 'linkedDropDown'].includes(field.fieldType)"
                       v-model="field.valueData"
@@ -327,22 +325,45 @@ export default {
       }).then((res) => {
         if (res.code === '200') {
           const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
-          this.sysCustomFields = res.data.filter(item => item.type === 'sField').map((item, index) => {
-            return {
-              label: 'sField' + item.customFieldId,
-              ...item,
-              valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
-            }
-          })
-          this.customFields = res.data.filter(item => item.type === 'custom')
-            .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
-            .map((item, index) => {
-              return {
-                label: 'custom' + item.customFieldId,
-                ...item,
-                valueData: ['multiList'].includes(item.fieldType) ? item.defaultValue || [] : item.defaultValue
-              }
-            })
+           const data = res.data;
+                                     this.sysCustomFields = data.filter(item => item.type === 'sField').map((item, index) => {
+                                       let valueData = item.defaultValue;
+                                       if(['multiList'].includes(item.fieldType)){
+                                         valueData = item.defaultValue || [];
+                                       }
+                                 else if(['checkbox', 'radio'].includes(item.fieldType)){
+                                               if(item.defaultValue === 1 || item.defaultValue === '1'){
+                                                 valueData = 1;
+                                               }else{
+                                                 valueData = 0;
+                                               }
+                                             }
+                                  return {
+                                   label: 'sField' + item.customFieldId,
+                                               ...item,
+                                               valueData: valueData
+                               }
+                             })
+           this.customFields = data.filter(item => item.type === 'custom')
+                                       .sort((a, b) => arr.indexOf(a.fieldType) - arr.indexOf(b.fieldType))
+                                       .map((item, index) => {
+                                         let valueData = item.defaultValue;
+                                         if(['multiList'].includes(item.fieldType)){
+                                           valueData = item.defaultValue || [];
+                                         }
+                                else if(['checkbox', 'radio'].includes(item.fieldType)){
+                                                if(item.defaultValue === 1 || item.defaultValue === '1'){
+                                                  valueData = 1;
+                                                }else{
+                                                  valueData = 0;
+                                                }
+                                              }
+                                              return {
+                                                label: 'custom' + item.customFieldId,
+                                                ...item,
+                                                valueData: valueData
+                                              }
+                              })
           if (this.id) {
             sprintInfo({ id: this.id }).then((res) => {
               const sprintExpand = JSON.parse(res.data.sprintExpand)
