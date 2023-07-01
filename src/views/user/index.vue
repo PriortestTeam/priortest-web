@@ -69,7 +69,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label="默认登录项目"
+          label="默认项目"
           prop="openProjectByDefaultId"
           size="small"
         >
@@ -189,7 +189,7 @@
           ],
           userName: [
             { required: true, message: '请输入用户名', trigger: 'blur' },
-			{ max: 10, message: '用户名长度请小于 20 个字符', trigger: 'blur' }
+			{ max: 20, message: '用户名长度请小于 20 个字符', trigger: 'blur' }
           ],
           sysRoleId: [
             { required: true, message: '请选择角色', trigger: 'change' }
