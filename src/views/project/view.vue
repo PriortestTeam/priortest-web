@@ -7,11 +7,11 @@
         <el-button v-if="from.id" type="primary" @click.stop="submitForm('from')">确定修改</el-button>
         <el-button v-if="from.id" type="primary" @click.stop="cancelUpdate('from')">取消修改</el-button>
       </div>
-      <el-form-item label="视图标题:" prop="title" class="form-small">
+      <el-form-item label="视图标题" prop="title" class="form-small">
         <el-input v-model="from.title" size="small" />
       </el-form-item>
       <div class="scopeView">
-        <el-form-item label="范围:" prop="scope" class="form-small">
+        <el-form-item label="范围" prop="scope" class="form-small">
           <el-select
             v-model="from.scope"
             size="small"
@@ -23,7 +23,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="父级视图:" prop="parent" class="form-small">
+        <el-form-item label="父级视图" prop="parent" class="form-small">
           <el-select
             v-model="viewParentQuery"
             clearable
@@ -168,9 +168,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="parentTitle" label="父级视图" />
-        <el-table-column prop="owner" label="创建者" />
+        <el-table-column prop="creater" label="创建者" />
         <el-table-column prop="createTime" label="创建日期" />
-        <el-table-column prop="modifier" label="修改者" />
+        <el-table-column prop="updateUser" label="修改者" />
         <el-table-column prop="updateTime" label="修改日期" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -198,8 +198,8 @@ import {
   deleteView,
   getViewScopeChildParams,
   getViewAllScopeParams,
-  queryViewParents,
-  getViewFilter
+  queryViewParents
+  //getViewFilter
 } from '@/api/project'
 import { getFilterCondition } from '@/api/customFFields'
 import { getQueryViewParents } from '@/api/view.js'
