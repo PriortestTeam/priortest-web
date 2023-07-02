@@ -8,15 +8,23 @@
       label-width="100px"
       class="demo-ruleForm"
     >
+	  <!-- <el-button @click="showMsg()">msg</el-button> -->
+	  <el-button
+	    :loading="subLoad"
+	    type="primary"
+	    @click="submitForm('ruleForm')"
+	    >保存</el-button
+	  >
+	  <el-button @click="resetForm('ruleForm')">放弃</el-button>
       <div class="formBox">
         <div class="attributes">
-          <el-form-item label="字段名称：" prop="fieldNameCn">
+          <el-form-item label="字段名称" prop="fieldNameCn">
             <el-input
               :disabled="isEdit"
               v-model.trim="ruleForm.fieldNameCn"
             ></el-input>
           </el-form-item>
-          <el-form-item label="类型：" prop="fieldType">
+          <el-form-item label="类型" prop="fieldType">
             <el-select
               :disabled="isEdit"
               clearable
@@ -34,7 +42,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item v-if="ReTeLin" label="长度：" prop="length">
+          <el-form-item v-if="ReTeLin" label="长度" prop="length">
             <el-input
               min="0"
               type="number"
@@ -42,7 +50,7 @@
               @change="maxChange"
             ></el-input>
           </el-form-item>
-          <el-form-item v-if="linkDownShow" label="链接字段：">
+          <el-form-item v-if="linkDownShow" label="链接字段">
             <el-select
               clearable
               v-model="systemData"
@@ -59,7 +67,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item v-if="valueSource" label="值来源：">
+          <el-form-item v-if="valueSource" label="值来源">
             <el-radio v-model="radioData" label="1">新值</el-radio> <br />
             <el-radio v-model="radioData" label="2">系统列表</el-radio> <br />
             <div class="attributesItem">
@@ -95,28 +103,28 @@
           </el-form-item>
         </div>
 
+
+
+
         <div v-if="valueSource" class="newValue">
+         <el-button
+                    @click="delectNewVal()"
+                    :disabled="!delect"
+                    style="height: 30px; background-color: gray; color: #fff"
+                    >删除</el-button >
           <div>
-            <p>value</p>
             <p
               v-for="(item, index) in newValList"
               :key="index"
-              @click="
-                () => {
+              @click="() => {
                   delect = true;
                   deleceValueSource = index;
-                }
-              "
+                }"
             >
               <span>{{ item }}</span>
             </p>
           </div>
-          <el-button
-            @click="delectNewVal()"
-            :disabled="!delect"
-            style="height: 30px; background-color: gray; color: #fff"
-            >删除</el-button
-          >
+
         </div>
 
         <!-- 链接下拉框 -->
@@ -176,6 +184,7 @@
             class="formItem"
             v-for="(item, index) in RangeList"
             :key="index"
+			label-width="0px"
           >
             <el-checkbox
               @change="changeRange"
@@ -266,16 +275,6 @@
           <div style="margin-left: 100px; color: red" v-show="rangeCheck">
             请选择范围
           </div>
-          <!-- <el-button @click="showMsg()">msg</el-button> -->
-          <el-form-item style="float: right">
-            <el-button
-              :loading="subLoad"
-              type="primary"
-              @click="submitForm('ruleForm')"
-              >保存</el-button
-            >
-            <el-button @click="resetForm('ruleForm')">放弃</el-button>
-          </el-form-item>
         </div>
       </div>
     </el-form>
@@ -955,15 +954,15 @@ export default {
     flex-direction: row;
     width: 180px;
     height: 330px;
-    margin: 0px 100px 0 100px;
+    margin-left: 20px;
     overflow: auto;
     p {
       width: 100px;
-      height: 46px;
+      height: 40px;
       background-color: #fff;
       margin: 0;
       padding: 0;
-      text-align: center;
+      text-align: left;
       line-height: 46px;
       border-bottom: 1px rgb(236, 234, 234) solid;
       cursor: pointer;
@@ -1015,13 +1014,13 @@ export default {
     }
   }
   .componentAttributes {
-    width: 500px;
+    width: 400px;
+	margin-left: 50px;
     .RangeTitle {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       font-size: 16px;
-      margin-left: 100px;
     }
     .formItem {
       ::v-deep .el-input__suffix {
