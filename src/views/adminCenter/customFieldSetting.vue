@@ -101,6 +101,7 @@ export default {
       }).then((res) => {
         if (res.code === '200') {
           this.customData = this.formatter(res.data)
+		  console.log(this.customData)
         }
       })
     },
