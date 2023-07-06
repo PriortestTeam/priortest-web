@@ -596,8 +596,7 @@ export default {
       })
       const params = {
         scope: this.from.scope,
-        projectId: this.projectInfo.userUseOpenProject.projectId,
-        emailId: ''
+        projectId: this.projectInfo.userUseOpenProject.projectId
       }
       getQueryViewParents(params).then((response) => {
         this.viewParents = response.data || []
