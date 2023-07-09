@@ -18,6 +18,8 @@
 
             <div class="oprate_btn">
               <el-button type="text" @click="projectRefresh">刷新</el-button>
+               <el-button type="text" :disabled="multiple" @click="addToTestCycle">添加到周期 </el-button>
+
               <el-button type="text" :disabled="multiple" @click="projectClone">克隆
               </el-button>
               <el-button type="text" :disabled="multiple" @click="delproject('all')">批量删除

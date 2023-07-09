@@ -219,10 +219,11 @@
             </div>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="步骤" name="second">
-          <!-- <add-test-case-step v-if="!verification(id)" :case-id="id" /> -->
-        </el-tab-pane>
-        <el-tab-pane label="运行记录" name="third">运行记录</el-tab-pane>
+
+        <el-tab-pane label="添加用例" name="second">添加用例</el-tab-pane>
+        <el-tab-pane label="运行计划" name="third">运行计划</el-tab-pane>
+
+        <el-tab-pane label="运行记录" name="fouth">运行记录</el-tab-pane>
       </el-tabs>
     </el-card>
     <addPossibleValue :field="currentField" :visible.sync="addPossibleValueVisible" @refresh="getData" />
@@ -554,20 +555,11 @@ export default {
       }
       this.returntomenu(this)
     },
-    // 新建步骤
-    resetStepFrom() {
-      this.stepFrom = {
-        testCycleId: undefined,
-        step: undefined,
-        stepData: undefined,
-        expectedResult: undefined
-      }
-      this.$refs['stepFrom'].resetFields()
-    },
+
     // 处理 tab 切换逻辑
     handBeforeLeave(activeName, oldActiveName) {
       if (activeName === 'second' && !this.id) {
-        message(200, '请先保存测试用例再添加测试用例')
+        message(200, '请先保存测试周期再添加用例')
         return false
       }
       if (activeName === 'third') {

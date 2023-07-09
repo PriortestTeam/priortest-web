@@ -320,9 +320,7 @@ export default {
       } else {
         if (val) {
           this.from.oneFilters = []
-          this.scopeDownChildParams = this.scopeDownChildParams.filter(
-            (item) => item.type === 'dropDown'
-          )
+          this.scopeDownChildParams = this.filterScopeDownChildParams()
         } else {
           const scope = {
             scopeId: this.from.scope
@@ -590,6 +588,9 @@ export default {
       }
       getViewAllScopeParams(scope).then((res) => {
         this.scopeDownChildParams = res.data
+		if (this.filter) {
+			this.scopeDownChildParams = this.filterScopeDownChildParams()
+		}
       })
       getFilterCondition(scope).then((res) => {
         this.conditionList = res.data
@@ -621,7 +622,13 @@ export default {
     },
     fuzhiFrom(val) {
       this.from.parentId = val
-    }
+    },
+	//过滤ScopeDownChildParams
+	filterScopeDownChildParams() {
+		return this.scopeDownChildParams.filter(
+		  (item) => item.fieldType === 'dropDown' || item.fieldType === 'userList' || item.fieldType === 'number'
+		)
+	}
   }
 }
 </script>
