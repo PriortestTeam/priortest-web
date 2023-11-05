@@ -28,12 +28,12 @@
               <el-table ref="sprinttableData" :data="sprinttableData" :header-cell-style="tableHeader" stripe
                 style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="45" />
-                <el-table-column type="index"  label="序号">
+                <el-table-column type="index" label="序号">
                   <template slot-scope="scope">
                     {{ scope.$index + 1 }}
                   </template>
                 </el-table-column>
-                <el-table-column prop="title" :show-overflow-tooltip="true"  width="120"
+                <el-table-column prop="title" :show-overflow-tooltip="true" width="120"
                   :label="$t('lang.CommonFiled.Title')">
                   <template slot-scope="scope">
                     <span class="title" @click="openEdit(scope.row, 1)">
@@ -42,19 +42,20 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column prop="sprintStatus"  :show-overflow-tooltip="true" label="迭代状态" />
-                <el-table-column prop="epic"  :show-overflow-tooltip="true" label="epic主题" />
-                <el-table-column prop="startDate"  :show-overflow-tooltip="true" label="开始日期" />
-                <el-table-column prop="endDate"  :show-overflow-tooltip="true" label="结束日期" />
-                <el-table-column prop="sprintGoal"  :show-overflow-tooltip="true" label="迭代目标" />
-                <el-table-column label="操作" min-width="148"  fixed="right">
+                <el-table-column prop="sprintStatus" :show-overflow-tooltip="true" label="迭代状态" />
+                <el-table-column prop="epic" :show-overflow-tooltip="true" label="epic主题" />
+                <el-table-column prop="startDate" :show-overflow-tooltip="true" label="开始日期" />
+                <el-table-column prop="endDate" :show-overflow-tooltip="true" label="结束日期" />
+                <el-table-column prop="sprintGoal" :show-overflow-tooltip="true" label="迭代目标" />
+                <el-table-column label="操作" min-width="148" fixed="right">
                   <template slot-scope="scope">
                     <!-- <el-button type="text" class="table-btn">克隆</el-button>
                   <span class="line">|</span> -->
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
                     </el-button>
 
-                    <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
+                    <el-button type="text" class="table-btn"
+                      @click.stop="projectClone(scope.row.id, 'single')">克隆</el-button>
                     <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除
                     </el-button>
                   </template>
@@ -73,7 +74,7 @@
 <script>
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
-import { sprintList, delSprint,cloneSprint } from '@/api/sprint'
+import { sprintList, delSprint, cloneSprint } from '@/api/sprint'
 // import { queryViews } from '@/api/project'
 
 export default {
@@ -139,7 +140,7 @@ export default {
       this.$router.push({ name: 'Addsprint', query: { isEdit: 1 } })
     },
 
-     /** 项目列表表格开始 */
+    /** 项目列表表格开始 */
     getqueryForSprint() {
       this.isLoading = true
       const query = {
@@ -179,7 +180,7 @@ export default {
     // 克隆
     projectClone(id, operation) {
       let parms = []
-      if (operation === 'single'){
+      if (operation === 'single') {
         parms = [id]
       } else {
         parms = this.projectIds.split(',')

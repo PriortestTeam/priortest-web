@@ -10,7 +10,6 @@ const service = axios.create({
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000 // request timeout
 })
-console.log(process.env,'process.envprocess.env')
 // request interceptor
 service.interceptors.request.use(
   config => {

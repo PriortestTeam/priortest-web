@@ -26,17 +26,17 @@
               <el-button type="text" @click="selectMoreCol">更多列</el-button>
               <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
             </div>
-            <div v-loading="isLoading" class="protable table">
+            <div v-loading="isLoading" class="table protable">
               <el-table ref="featuretableData" :data="featuretableData" :header-cell-style="tableHeader" stripe
                 style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="45" />
-                <el-table-column type="index"  label="序号">
+                <el-table-column type="index" label="序号">
                   <template slot-scope="scope">
                     {{ scope.$index + 1 }}
                   </template>
                 </el-table-column>
-                <el-table-column prop="featureStatus" :show-overflow-tooltip="true"  label="状态" />
-                <el-table-column prop="title" :show-overflow-tooltip="true"  width="120"
+                <el-table-column prop="featureStatus" :show-overflow-tooltip="true" label="状态" />
+                <el-table-column prop="title" :show-overflow-tooltip="true" width="120"
                   :label="$t('lang.CommonFiled.Title')">
                   <template slot-scope="scope">
                     <span class="title" @click="openEdit(scope.row, 1)">
@@ -45,21 +45,21 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column prop="version" :show-overflow-tooltip="true"  label="版本" />
-                <el-table-column prop="module"  :show-overflow-tooltip="true" label="模块" />
+                <el-table-column prop="version" :show-overflow-tooltip="true" label="版本" />
+                <el-table-column prop="module" :show-overflow-tooltip="true" label="模块" />
 
 
-                <el-table-column prop="createTime"  label="创建日期" min-width="120"
-                  :show-overflow-tooltip="true" />
-                    <el-table-column prop="id" :show-overflow-tooltip="true"  min-width="160" label="UUID" />
+                <el-table-column prop="createTime" label="创建日期" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column prop="id" :show-overflow-tooltip="true" min-width="160" label="UUID" />
 
-                <el-table-column label="操作" min-width="148"  fixed="right">
+                <el-table-column label="操作" min-width="148" fixed="right">
                   <template slot-scope="scope">
 
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
                     </el-button>
 
-                    <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
+                    <el-button type="text" class="table-btn"
+                      @click.stop="projectClone(scope.row.id, 'single')">克隆</el-button>
                     <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除
                     </el-button>
                   </template>
@@ -79,7 +79,7 @@
 <script>
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
-import { featureList, delFeature,cloneFeature } from '@/api/feature'
+import { featureList, delFeature, cloneFeature, featureListByClick } from '@/api/feature'
 // import { queryViews } from '@/api/project'
 
 export default {
@@ -192,7 +192,7 @@ export default {
     // 克隆
     projectClone(id, operation) {
       let parms = []
-      if (operation === 'single'){
+      if (operation === 'single') {
         parms = [id]
       } else {
         parms = this.projectIds.split(',')
@@ -235,11 +235,29 @@ export default {
     openEdit(row, isEdit) {
       this.$router.push({ name: 'Addfeature', query: { id: row.id, isEdit } })
     },
+    // childByValue: function (query) {
+    //   this.isLoading = true
+    //   this.viewSearchQueryId = query.viewTreeDto.id
+    //   featureList(this.featureQuery, query).then(res => {
+    //     this.featuretableData = res.data
+    //     this.featureTotal = res.total
+    //     this.isLoading = false
+    //   }).catch(() => {
+    //     this.featuretableData = []
+    //     this.featureTotal = 0
+    //     this.isLoading = false
+    //   })
+    // },
     childByValue: function (query) {
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id
-      featureList(this.featureQuery, query).then(res => {
-        this.featuretableData = res.data
+      const params = {
+        scope: 'feature',
+        viewId: this.viewSearchQueryId
+      }
+      // console.log('query.viewTreeDto.id: ', query.viewTreeDto.id);
+      featureListByClick(params).then(res => {
+        this.featuretableData = res.data.list
         this.featureTotal = res.total
         this.isLoading = false
       }).catch(() => {

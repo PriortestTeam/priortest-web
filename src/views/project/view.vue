@@ -1,635 +1,606 @@
 <template>
-  <div class="app-container manage-view view">
-    <el-form ref="from" :model="from" :rules="rules" label-width="100px" class="demo-ruleForm">
-      <div class="new_project">
-        <el-button v-if="!from.id" type="primary" :disabled="savedisabled" @click.stop="submitForm('from')">新增</el-button>
-        <el-button v-if="!from.id" type="primary" @click.stop="waiveForm('from')">取消</el-button>
-        <el-button v-if="from.id" type="primary" @click.stop="submitForm('from')">确定修改</el-button>
-        <el-button v-if="from.id" type="primary" @click.stop="cancelUpdate('from')">取消修改</el-button>
-      </div>
-      <el-form-item label="视图标题" prop="title" class="form-small">
-        <el-input v-model="from.title" size="small" />
-      </el-form-item>
-      <div class="scopeView">
-        <el-form-item label="范围" prop="scope" class="form-small">
-          <el-select
-            v-model="from.scope"
-            size="small"
-            :disabled="scopeDis"
-            placeholder="请选择适用范围"
-            @change="viewScopeChildParams"
-          >
-            <el-option v-for="item in scopeOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
+	<div class="app-container manage-view view">
 
-        <el-form-item label="父级视图" prop="parent" class="form-small">
-          <el-select
-            v-model="viewParentQuery"
-            clearable
-            size="small"
-            filterable
-            :filter-method="dataFilter"
-            placeholder="请选择父级视图"
-            @keyup.enter.native="queryViewParent"
-            @change="fuzhiFrom"
-          >
-            <el-option v-for="i in viewParents" :key="i.id" :label="i.title" :value="i.id" />
-            <!-- <el-option
-              label="无"
-              value="0"
-            /> -->
-          </el-select>
-        </el-form-item>
-      </div>
-      <el-form-item label="自动创建子视图基于选项值:" prop="filter" class="form-small wd200">
-        <el-checkbox v-model="filter" @change="handleFilterChange" />
-      </el-form-item>
-      <el-form-item label="查询条件:" prop="oneFilters">
-        <div class="filter-item">
-          <el-col v-if="from.oneFilters.length === 0" :span="1">
-            <span @click="addFliter">
-              <i class="el-icon-circle-plus circle" />
-            </span>
-          </el-col>
-          <el-row v-for="(item, index) in from.oneFilters" :key="index">
-            <el-row>
-              <el-col v-if="!filter" :span="2">
-                <span @click="addFliter">
-                  <i class="el-icon-circle-plus circle" />
-                </span>
-                <span @click="delRemove(index)">
-                  <i class="el-icon-remove circle remove" />
-                </span>
-              </el-col>
-              <!-- 第一个查询条件 -->
-              <el-col :span="4">
-                <el-select
-                  ref="selectFiled"
-                  v-model="item.fieldName"
-                  size="small"
-                  placeholder="请选择字段"
-                  @change="getType(item.fieldName, index)"
-                >
-                  <el-option
-                    v-for="i in scopeDownChildParams"
-                    :key="i.fieldNameCn"
-                    :label="i.fieldNameCn"
-                    :value="i.fieldNameCn"
-                  />
-                </el-select>
-              </el-col>
-              <!-- 第二个查询条件 -->
-              <el-col v-if="!filter" :span="4">
-                <el-select ref="selectFiled" v-model="item.condition" size="small" placeholder="">
-                  <el-option v-for="i in conditionList" :key="i.value" :label="i.nameCn" :value="i.id" />
-                </el-select>
-              </el-col>
-              <!-- 第三个查询条件 -->
-              <template
-                v-if="item.condition === `6340727` || item.condition === `6740728` || item.condition === `6740729` || item.condition === `6741721` || item.condition === `6741726` || item.condition === `6760739`"
-              >
-                <!-- 下拉框 -->
-                <el-col v-if="item.type === 'number'||item.type === 'dropDown'||item.type === 'multiList'||item.type === 'linkedMoudue'||item.type === 'userList'" :span="4">
-                  <el-select v-model="item.textVal" clearable size="small" placeholder="请选择状态">
-                    <el-option
-                      v-for="i in item.possibleValue"
-                      :key="i.optionValue"
-                      :label="i"
-                      :value="i"
-                    />
-                  </el-select>
-                </el-col>
-                <!-- 链式下拉框 -->
-                <el-col v-else-if="item.type === 'linkedDropDown'" :span="4">
-                  <el-cascader
-                    v-model="item.textVal"
-                    :options="item.possibleValue"
-                  />
-                </el-col>
-                <!-- 当选择的类型为日期时,第3个查询条件框出现日期选择框 -->
-                <el-col v-else-if="item.type === 'Date'" v-show="!filter" :span="6">
-                  <el-date-picker v-model="item.beginDate" type="datetime" size="small" placeholder="日期" />
-                </el-col>
-                <!-- 输入框 -->
-                <el-col v-show="!filter" v-else :span="4">
-                  <el-input v-model="item.textVal" size="small" />
-                </el-col>
-              </template>
-            </el-row>
-            <el-row v-if="!filter">
-              <el-col :span="2">~ </el-col>
-              <el-col :span="3">
-                <el-radio v-model="item.andOr" label="and">并且</el-radio>
-                <el-radio v-model="item.andOr" label="or">或者</el-radio>
-              </el-col>
-            </el-row>
-          </el-row>
-        </div>
-      </el-form-item>
-      <el-form-item label="视图状态:" prop="isPrivate" class="form-small">
-        <el-radio v-model="from.isPrivate" label="0">仅自己</el-radio>
-        <el-radio v-model="from.isPrivate" label="1">公开</el-radio>
-      </el-form-item>
-    </el-form>
-    <div class="table">
-      <el-button type="text" @click="viewjectRefresh">刷新</el-button>
-      <el-button type="text" :disabled="multiple" @click="delview('all')">批量删除</el-button>
+		{{ form }}
+		<el-form ref="form" :model="form" :rules="rules" label-width="100px" class="demo-ruleForm">
+			<div class="btns">
+				<!-- 表单标题form.title为空时，新增按钮禁止点击 -->
+				<el-button v-if="!form.id" type="primary" :disabled="!form.title" @click.stop="submitForm('add')">新增</el-button>
+				<el-button v-if="!form.id" type="primary" @click.stop="waiveForm">取消</el-button>
+				<el-button v-if="form.id" type="primary" @click.stop="submitForm('edit')">确定修改</el-button>
+				<el-button v-if="form.id" type="primary" @click.stop="cancelUpdate">取消修改</el-button>
+			</div>
+			<el-form-item label="视图标题" prop="title" class="form-small">
+				<el-input v-model="form.title" size="small" />
+			</el-form-item>
+			<div class="scopeView">
+				<el-form-item label="范围" class="form-small">
+					<el-select v-model='scopeSelvalue' value-key="label" size="small" :disabled="scopeDis" placeholder="请选择适用范围"
+						@change="viewScopeChildParams">
+						<el-option v-for="item in scopeOptions" :key="item.scopeId" :label="item.label" :value="item" />
+					</el-select>
+				</el-form-item>
+				<el-form-item label="父级视图" prop="parentId" class="form-small">
+					<el-select :disabled="form.isAuto == 1" v-model="form.parentId" clearable size="small" filterable
+						placeholder="请选择父级视图" @change="parentViewChange" @clear="clearParentView">
+						<el-option v-for="i in viewParents" :key="i.id" :label="i.title" :value="i.id" />
+					</el-select>
+				</el-form-item>
+			</div>
+			<el-form-item label="自动创建子视图基于选项值:" prop="isAuto" class="form-small wd200">
+				<el-checkbox :disabled="form.parentId !== ''" v-model="form.isAuto" true-label=1 false-label=0
+					@change="autoCreateChange" />
+			</el-form-item>
+			<el-form-item label="查询条件:">
+				<div class="filter-item">
+					<!-- 添加条件 -->
+					<span v-if="!addfilter" @click="addFilter">
+						<i class="el-icon-circle-plus circle" />
+					</span>
+					<!-- 没有选择自动创建时 选择条件 -->
+					<div class="oneFilters" v-if="addfilter && form.isAuto == 0">
+						<div v-for="(item, index) in form.oneFilters" :key="index">
+							<el-row v-if="index !== 0">
+								<el-col :span="1">~</el-col>
+								<el-col :span="2">
+									<el-radio-group v-model="item.andOr">
+										<el-radio label="and">并且</el-radio>
+										<el-radio label="or">或者</el-radio>
+									</el-radio-group>
+								</el-col>
+							</el-row>
+							<el-row>
+								<el-col :span="1">
+									<span>
+										<i class="el-icon-circle-plus circle" @click="addCondition" />
+									</span>
+									<span>
+										<i class="el-icon-remove circle remove" @click="removeCondition(index)" />
+									</span>
+								</el-col>
+								<el-col :span="4">
+									<el-select v-model="filterSelValue[index]" value-key="fieldNameCn" size="small" placeholder="请选择字段"
+										@change="filterChange($event, index)">
+										<el-option v-for="i in filedChildParams" :key="i.fieldNameCn" :label="i.fieldNameCn" :value="i" />
+									</el-select>
+								</el-col>
+								<!-- 选择了字段后出现 第二个条件-->
+								<el-col :span="4" v-show="item.type">
+									<el-select v-model="item.condition" size="small" placeholder="请选择条件">
+										<el-option v-for="i in filterConditionList[index]" :key="i.value" :label="i.nameCn"
+											:value="i.scopeName" />
+									</el-select>
+								</el-col>
+								<!-- 选择了条件后且条件部位空或不为空时 -->
+								<el-col :span="4" v-show="item.condition && item.condition != 'not empty' && item.condition != 'empty'">
+									<!-- 下拉框 -->
+									<el-select
+										v-if="item.fieldType === 'number' || item.fieldType === 'dropDown' || item.fieldType === 'multiList' || item.fieldType === 'linkedMoudue' || item.fieldType === 'userList'"
+										v-model="item.sourceVal" clearable size="small" placeholder="请选择状态">
+										<el-option v-for="i in filterSelValue[index].possibleValue" :key="i.optionValue" :label="i"
+											:value="i" />
+									</el-select>
+									<!-- 链式下拉框 -->
+									<el-cascader v-else-if="item.fieldType === 'linkedDropDown'" v-model="item.sourceVal"
+										:options="filterSelValue[index].possibleValue" />
+									<!-- 当选择的类型为日期时,第3个查询条件框出现日期选择框 -->
+									<el-date-picker v-else-if="item.fieldType === 'Date'" v-model="item.sourceVal" type="date"
+										placeholder="选择日期" placement="bottom-start">
+									</el-date-picker>
+									<!-- 其他出现输入框 -->
+									<el-input v-else v-model="item.sourceVal" size="small" />
+								</el-col>
+							</el-row>
+						</div>
+					</div>
+					<!-- 自动创建子视图下拉框 -->
+					<el-select v-if="addfilter && form.isAuto == 1" v-model="filterSelValue" value-key="fieldNameEn" size="small"
+						placeholder="请选择字段" @change="filterChange">
+						<el-option v-for="i in filedChildParams" :key="i.fieldNameCn" :label="i.fieldNameCn" :value="i" />
+					</el-select>
+				</div>
+			</el-form-item>
+			<el-form-item label="视图状态:" prop="isPrivate" class="form-small">
+				<el-radio v-model="form.isPrivate" label="1">仅自己</el-radio>
+				<el-radio v-model="form.isPrivate" label="0">公开</el-radio>
+			</el-form-item>
+		</el-form>
+		<div class="table">
+			<el-button type="text" @click="viewjectRefresh">刷新</el-button>
+			<el-button type="text" :disabled="multiple" @click="delview('all')">批量删除</el-button>
 
-      <el-table
-        ref="viewData"
-        :data="viewData"
-        :header-cell-style="tableHeader"
-        stripe
-        style="width: 100%"
-        @row-click="toEdit"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column type="selection" width="55" />
+			<el-table ref="viewData" :data="viewData" :header-cell-style="tableHeader" stripe style="width: 100%"
+				@row-click="toEdit" @selection-change="handleSelectionChange">
+				<el-table-column type="selection" width="55" />
 
-        <el-table-column
-          prop="title"
-          :show-overflow-tooltip="true"
-          align="left"
-          width="155"
-          :label="$t('lang.CommonFiled.Title')"
-        >
-          <template slot-scope="scope">
-            <span class="title" @click="toEdit(scope.row)">
-              {{ scope.row.title }}
-            </span>
-          </template>
-        </el-table-column>
+				<el-table-column prop="title" :show-overflow-tooltip="true" align="left" width="155"
+					:label="$t('lang.CommonFiled.Title')">
+					<template slot-scope="scope">
+						<span class="title">
+							{{ scope.row.title }}
+						</span>
+					</template>
+				</el-table-column>
 
-        <el-table-column prop="scope" label="范围" />
-        <el-table-column prop="status" label="视图状态">
-          <template slot-scope="scope">
-            {{ scope.row.isPrivate == 0 ? "仅自己" : "公开" }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="parentTitle" label="父级视图" />
-        <el-table-column prop="creater" label="创建者" />
-        <el-table-column prop="createTime" label="创建日期" />
-        <el-table-column prop="updateUser" label="修改者" />
-        <el-table-column prop="updateTime" label="修改日期" />
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button type="text" class="table-btn" @click.stop="delview(scope.row.id)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="viewTotal > 0"
-        :total="viewTotal"
-        :page.sync="viewQuery.pageNum"
-        :limit.sync="viewQuery.pageSize"
-        @pagination="getqueryViews"
-      />
-    </div>
-  </div>
+				<el-table-column prop="scope" label="范围">
+					<template slot-scope="scope">
+						{{ scope.row.scopeName }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="status" label="视图状态">
+					<template slot-scope="scope">
+						{{ scope.row.isPrivate == 0 ? "仅自己" : "公开" }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="parentTitle" label="父级视图" />
+				<el-table-column prop="creater" label="创建者" />
+				<el-table-column prop="createTime" label="创建日期" />
+				<el-table-column prop="updateUser" label="修改者" />
+				<el-table-column prop="updateTime" label="修改日期" />
+				<el-table-column label="操作" align="center">
+					<template slot-scope="scope">
+						<el-button type="text" class="table-btn" @click.stop="delview(scope.row.id)">删除</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<pagination v-show="viewTotal > 0" :total="viewTotal" :page.sync="viewQuery.pageNum"
+				:limit.sync="viewQuery.pageSize" @pagination="getqueryViews" />
+		</div>
+	</div>
 </template>
 <script>
-import { message, returntomenu, formatChangedPara } from '@/utils/common'
 import {
-  queryViews,
-  lookView,
-  addViewRE,
-  updateView,
-  deleteView,
-  getViewScopeChildParams,
-  getViewAllScopeParams,
-  queryViewParents
-  //getViewFilter
+	message,
+	returntomenu,
+	formatChangedPara
+} from '@/utils/common'
+import {
+	queryViews,
+	lookView,
+	addViewRE,
+	updateView,
+	deleteView,
+	getViewScopeChildParams,
+	getViewAllScopeParams,
+	queryViewParents
+	//getViewFilter
 } from '@/api/project'
-import { getFilterCondition } from '@/api/customFFields'
-import { getQueryViewParents } from '@/api/view.js'
+import {
+	getFilterCondition
+} from '@/api/customFFields'
+import {
+	getQueryViewParents
+} from '@/api/view.js'
 // import { getSysCustomField } from '@/api/admincenter'
-import { mapState } from 'vuex'
+import {
+	mapState
+} from 'vuex'
 export default {
-  name: 'Projectview',
-  data() {
-    return {
-      parentView: false,
-      scopeOptions: [
-        {
-          value: '1000001',
-          label: '项目',
-          scopeId: '1000001'
-        },
-        {
-          value: '2000001',
-          label: '故事',
-          scopeId: '2000001'
-        },
-        {
-          value: '3000001',
-          label: '测试用例',
-          scopeId: '3000001'
-        },
-        {
-          value: '4000001',
-          label: '用例步骤',
-          scopeId: '4000001'
-        },
-        {
-          value: '5000001',
-          label: '测试周期',
-          scopeId: '5000001'
-        },
-        {
-          value: '6000001',
-          label: '运行',
-          scopeId: '6000001'
-        },
-        {
-          value: '7000001',
-          label: '缺陷',
-          scopeId: '7000001'
-        },
-        {
-          value: '8000001',
-          label: '迭代',
-          scopeId: '8000001'
-        }
-      ],
-      scopeDownChildParams: [],
-      statusDownChildParams: [],
-      savedisabled: true,
-      from: {
-        isPrivate: '0',
-        oneFilters: []
-      },
-      fromTemp: {},
-      scopeDis: false,
-      rules: {
-        title: [{ required: true, message: '请输入视图名称', trigger: 'blur' }]
-      },
-      tableHeader: {
-        color: '#d4dce3',
-        background: '#4286CD'
-      },
+	name: 'Projectview',
+	data() {
+		return {
+			aaa: '',
+			// 范围 选项
+			scopeOptions: [{
+				label: '项目',
+				scopeId: '1000001',
+				scopeName: 'project'
+			},
+			{
+				label: '故事',
+				scopeId: '2000001',
+				scopeName: 'feature'
+			},
+			{
+				label: '测试用例',
+				scopeId: '3000001',
+				scopeName: 'testCase'
+			},
+			{
+				label: '测试周期',
+				scopeId: '5000001',
+				scopeName: 'testCycle'
+			},
+			{
+				label: '缺陷',
+				scopeId: '7000001',
+				scopeName: 'issue'
+			},
+			{
+				label: '迭代',
+				scopeId: '8000001',
+				scopeName: 'sprint'
+			}
+			],
+			// 当前页面的scope
+			scope: '',
+			scopeDownChildParams: [],
+			statusDownChildParams: [],
+			savedisabled: true,
+			//添加,修改表单
+			form: {
+				isPrivate: '1',
+				level: 0,
+				parentId: '',
+				isAuto: 0,
+				oneFilters: '',
+				auto_filter: '',
+				scopeId: '',
+				scopeName: '',
+				title: ''
+			},
+			scopeSelvalue: '',
+			filterSelValue: '',
+			filterConditionList: '',
+			//是否显示选择条件下拉框
+			addfilter: false,
+			formTemp: {},
+			scopeDis: false,
+			rules: {
+				title: [{
+					required: true,
+					message: '请输入视图名称',
+					trigger: 'blur'
+				}]
+			},
+			tableHeader: {
+				color: '#d4dce3',
+				background: '#4286CD'
+			},
 
-      viewQuery: {
-        pageNum: 1,
-        pageSize: 10
-      },
-      viewBody: {
-        scope: '',
-        projectId: ''
-      },
-      viewParentQuery: '',
-      viewParents: [],
-      viewTotal: 0,
-      viewData: [], // 表格数据
-      multipleSelection: [], // 选择的表格
-      multiple: true, // 非多个禁用
-      viewId: '',
-      conditionList: [],
-      filter: false
-    }
-  },
-  computed: {
-    ...mapState({
-      nvaName: (state) => state.common.nvaName
-    }),
-    projectInfo() {
-      return this.$store.state.user.userinfo
-    }
-  },
-  watch: {
-    'from.title': function (val) {
-      if (val) {
-        this.savedisabled = false
-      } else {
-        this.savedisabled = true
-      }
-    }
-  },
-  async created() {
-    // this.viewBody.scope = this.$route.query.scope
-    this.viewBody.projectId = this.projectInfo.userUseOpenProject.projectId
-    await this.initScope()
-    await this.getqueryViews() // 获取视图
-    this.getViewFilter()
-  },
-  methods: {
-    handleFilterChange(val) {
-      if (this.from.scope == undefined) {
-        message('warning', '请选择范围')
-        return
-      } else {
-        if (val) {
-          this.from.oneFilters = []
-          this.scopeDownChildParams = this.filterScopeDownChildParams()
-        } else {
-          const scope = {
-            scopeId: this.from.scope
-          }
-          getViewAllScopeParams(scope).then((res) => {
-            this.scopeDownChildParams = res.data
-          })
-        }
-      }
-    },
-    async getViewFilter() {
-      const res = await getViewFilter()
-      if (res.code === '200') {
-        res.data.forEach((item) => {
-          const obj = {
-            value: item.split(',')[1],
-            label: item.split(',')[0]
-          }
-          this.conditionList.push(obj)
-        })
-      }
-    },
-    // 初始化scope
-    initScope() {
-      const that = this
-      that.viewBody.scope = that.nvaName
-      if (
-        that.nvaName !== 'Feature' &&
-        that.nvaName !== 'Sprint' &&
-        that.nvaName !== 'TestCase' &&
-        that.nvaName !== 'TestCycle' &&
-        that.nvaName !== 'Issue'
-      ) {
-        that.viewBody.scope = 'Project'
-      }
-    },
-    // 新增和修改确定表单
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          if (!this.from.id) {
-            addViewRE(this.from).then((res) => {
-              if (res.code === '200') {
-                this.resetForm()
-                message('success', res.msg)
-                this.getqueryViews()
-                this.viewParentQuery = ''
-                this.filter = false
-              }
-            })
-          } else {
-            const param = formatChangedPara(this.fromTemp, this.from)
-            param.oneFilters = this.from.oneFilters
-            param.scope = this.from.scope
-            updateView(param).then((res) => {
-              if (res.code === '200') {
-                message('success', res.msg)
-                this.cancelUpdate()
-                this.getqueryViews()
-                this.viewParentQuery = ''
-                this.filter = false
-              }
-            })
-          }
-        } else {
-          return false
-        }
-      })
-    },
-    // 取消返回
-    waiveForm() {
-      returntomenu(this, 1000)
-    },
-    // 取消修改
-    cancelUpdate() {
-      this.$refs.viewData.clearSelection()
-      this.resetForm()
-      this.viewId = ''
-    },
-    // 重置表单
-    resetForm() {
-      this.from = {
-        id: undefined,
-        isPrivate: '0',
-        oneFilters: [],
-        title: ''
-      }
-      this.scopeDis = false
-      this.$refs['from'].resetFields()
-    },
-    // 表格多选
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-      this.multiple = !val.length
-    },
-    toEdit(row) {
-      this.$refs.viewData.clearSelection()
-      this.viewId = row.id
-
-      this.viewParentQuery = ''
-
-      this.$refs.viewData.toggleRowSelection(row)
-      this.searchViewInfo()
-
-      if (row.parentTitle !== undefined && row.parentTitle !== '') {
-        this.viewParentQuery = row.parentTitle
-      }
-
-      const scope = {
-        scope: row.scope
-      }
-      getViewScopeChildParams(scope).then((res) => {
-        this.scopeDownChildParams = (res.data || []).map((item) => {
-          return {
-            ...item,
-            fieldNameCn: item.filedNameCn
-          }
-        })
-      })
-    },
-    // 查询view信息
-    searchViewInfo() {
-      lookView(this.viewId).then((res) => {
-        if (res.code === '200') {
-          if (res.data.isPrivate === 0) {
-            res.data.isPrivate = '0'
-          } else {
-            res.data.isPrivate = '1'
-          }
-          this.from = res.data
-          this.scopeDis = true
-          this.fromTemp = Object.assign({}, this.from)
-        }
-      })
-    },
-    // 删除view
-    delview(id) {
-      if (id === 'all') {
-        message('error', '暂未开发')
-        return
-      }
-      deleteView(id).then((res) => {
-        message('success', res.msg)
-        this.getqueryViews()
-        this.cancelUpdate()
-      })
-    },
-    // view视图列表
-    getqueryViews() {
-      return new Promise((resolve, reject) => {
-        queryViews(this.viewBody, this.viewQuery).then((res) => {
-          if (res.code === '200') {
-            this.viewData = res.data
-            this.viewTotal = res.total
-            resolve(res)
-          }
-        })
-      })
-    },
-    // 刷新view
-    async viewjectRefresh() {
-      const res = await this.getqueryViews()
-      if (res.code === '200') {
-        message('success', '刷新成功')
-      }
-    },
-    // 新增字段
-    addFliter() {
-      if (this.from.scope === undefined || this.from.scope.trim() === '') {
-        message('warning', '请选择范围')
-        return
-      }
-
-      const obj = {
-        andOr: 'and',
-        beginDate: '',
-        endDate: '',
-        fieldName: '',
-        intVal: '',
-        sourceVal: '',
-        textVal: '',
-        condition: '',
-        type: 'fString'
-      }
-
-      this.from.oneFilters.push(obj)
-    },
-    // 移除字段
-    delRemove(index) {
-      this.from.oneFilters.splice(index, 1)
-    },
-    getType: function (fieldName, index) {
-      // 格式化第三个选项
-      this.from.oneFilters[index].textVal = ''
-      // 格式化链式下拉框数据
-      function convertData(data) {
-        return data.flatMap((item) => {
-          const { others, ...categories } = item
-          return Object.entries(categories).map(([key, values]) => {
-            return {
-              value: key,
-              label: key,
-              children: Array.isArray(values)
-                ? values.map((value) => ({
-                  value,
-                  label: value,
-                  ...others
-                }))
-                : []
-            }
-          })
-        })
-      }
-      for (let i = 0; i < this.scopeDownChildParams.length; i++) {
-        const entity = this.scopeDownChildParams[i]
-        if (entity.fieldNameCn === fieldName) {
-          // 如果是下拉框，赋值
-          if (
-            entity.selectChild !== undefined &&
-            entity.selectChild.length > 0
-          ) {
-            this.statusDownChildParams = entity.selectChild
-          }
-          this.from.oneFilters[index].type = entity.fieldType
-          if (
-            entity.fieldType === 'number' ||
-            entity.fieldType === 'dropDown' ||
-            entity.fieldType === 'multiList' ||
-            entity.fieldType === 'linkedMoudue' ||
-            entity.fieldType === 'userList'
-          ) {
-            this.from.oneFilters[index].possibleValue = JSON.parse(entity.possibleValue)
-          }
-          if (entity.fieldType === 'linkedDropDown'){
-            this.from.oneFilters[index].possibleValue = convertData([JSON.parse(entity.possibleValue)])
-          }
-          if (entity.fieldType === 'radio' || entity.fieldType === 'checkbox'){
-            this.conditionList = this.conditionList.filter((item) => {
-              return item.nameCn === '为空' || item.nameCn === '等于' || item.nameCn === '不等于'
-            })
-          }
-          return
-        }
-      }
-    },
-    viewScopeChildParams() {
-      this.viewParentQuery = ''
-      if (this.from.oneFilters.length > 0) {
-        this.$confirm('重新选择可能会丢失页面内容请确认？', {
-          title: '提示',
-          showCancelButton: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then((s) => {
-            this.from.oneFilters = []
-          })
-          .catch((e) => {
-            this.$router.go(0)
-          })
-      }
-      const scope = {
-        scopeId: this.from.scope
-      }
-      getViewAllScopeParams(scope).then((res) => {
-        this.scopeDownChildParams = res.data
-		if (this.filter) {
-			this.scopeDownChildParams = this.filterScopeDownChildParams()
+			viewQuery: {
+				pageNum: 1,
+				pageSize: 10
+			},
+			viewBody: {
+				scopeName: '',
+				projectId: ''
+			},
+			viewParents: [],
+			viewTotal: 0,
+			viewData: [], // 表格数据
+			multipleSelection: [], // 选择的表格
+			multiple: true, // 非多个禁用
+			viewId: '',
+			conditionList: [],
+			filter: false
 		}
-      })
-      getFilterCondition(scope).then((res) => {
-        this.conditionList = res.data
-      })
-      const params = {
-        scope: this.from.scope,
-        projectId: this.projectInfo.userUseOpenProject.projectId
-      }
-      getQueryViewParents(params).then((response) => {
-        this.viewParents = response.data || []
-      })
-    },
-    dataFilter(val) {
-      this.viewParentQuery = val
-    },
-    queryViewParent() {
-      if (this.from.scope === undefined || this.from.scope === '') {
-        message('success', '请选择范围')
-        this.viewParentQuery = '0'
-        return
-      }
-      const params = {
-        viewTitle: this.viewParentQuery,
-        scope: this.from.scope
-      }
-      queryViewParents(params).then((res) => {
-        this.viewParents = res.data
-      })
-    },
-    fuzhiFrom(val) {
-      this.from.parentId = val
-    },
-	//过滤ScopeDownChildParams
-	filterScopeDownChildParams() {
-		return this.scopeDownChildParams.filter(
-		  (item) => item.fieldType === 'dropDown' || item.fieldType === 'userList' || item.fieldType === 'number'
-		)
+	},
+	computed: {
+		...mapState({
+			nvaName: (state) => state.common.nvaName
+		}),
+		projectInfo() {
+			return this.$store.state.user.userinfo
+		},
+		//条件下拉框 选项
+		filedChildParams() {
+			if (this.form.isAuto == 1) {
+				return this.scopeDownChildParams.filter(
+					(item) => item.fieldType === 'dropDown' || item.fieldType === 'userList' || item.fieldType ===
+						'number'
+				)
+			} else {
+				return this.scopeDownChildParams
+			}
+		}
+	},
+
+	async created() {
+		// this.viewBody.scope = this.$route.query.scope
+		this.viewBody.projectId = this.projectInfo.userUseOpenProject.projectId
+		await this.initScope()
+		await this.getqueryViews() // 获取视图
+		// this.getViewFilter()
+	},
+	methods: {
+		// 新增视图
+		submitForm(action) {
+			if (this.form.isAuto == 0 && this.form.oneFilters !== '') {
+				this.form.oneFilters.forEach((item, index) => {
+					item.id = index
+				})
+			}
+			if (action === 'add') {
+				this.$refs['form'].validate((valid) => {
+					addViewRE(this.form).then((res) => {
+						if (res.code === '200') {
+							this.resetForm()
+							message('success', res.msg)
+							this.getqueryViews()
+							this.filter = false
+						}
+					})
+				})
+			} else if (action === 'edit') {
+				updateView(this.form).then((res) => {
+					if (res.code === '200') {
+						this.resetForm()
+						message('success', res.msg)
+						this.getqueryViews()
+						this.filter = false
+					}
+				})
+			}
+		},
+		// 取消
+		waiveForm() {
+			returntomenu(this, 1000)
+		},
+		// 取消修改
+		cancelUpdate() {
+			this.$refs.viewData.clearSelection()
+			this.resetForm()
+		},
+		// 重置表单
+		resetForm() {
+			this.scopeDis = false
+			this.filterConditionList = ''
+			this.scopeSelvalue = ''
+			this.viewParents = []
+			this.filterSelValue = ''
+			this.addfilter = false
+			this.$refs['form'].resetFields()
+		},
+		// 初始化scope
+		initScope() {
+			this.scopeObj = this.scopeOptions.filter((item) => {
+				return item.scopeId === this.nvaName
+			})
+			if (this.scopeObj) {
+				this.viewBody.scopeName = this.scopeObj[0].scopeName
+			} else {
+				this.viewBody.scopeName = 'project'
+			}
+		},
+		// view视图列表
+		getqueryViews() {
+			return new Promise((resolve, reject) => {
+				queryViews(this.viewBody, this.viewQuery).then((res) => {
+					if (res.code === '200') {
+						console.log("res: ", res);
+						this.viewData = res.data.list
+						this.viewTotal = res.data.total
+						console.log('viewData: ', this.viewData);
+						resolve(res)
+					}
+				})
+			})
+		},
+
+		//范围修改时获取参数
+		async viewScopeChildParams(selVal) {
+			if (this.filterSelValue) {
+				await this.$confirm('重新选择可能会丢失页面内容请确认？', {
+					title: '提示',
+					showCancelButton: true,
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				})
+					.catch((e) => {
+						return
+					})
+			}
+			this.form.scopeId = selVal.scopeId
+			this.form.scopeName = selVal.scopeName
+			this.addfilter = false
+			const scope = {
+				scopeId: this.form.scopeId
+			}
+			const params = {
+				scope: this.form.scopeName,
+				projectId: this.projectInfo.userUseOpenProject.projectId
+			}
+			//获取
+			getViewAllScopeParams(scope).then((res) => {
+				this.scopeDownChildParams = res.data
+			})
+			//过滤条件参数
+			getFilterCondition(scope).then((res) => {
+				this.conditionList = res.data
+			})
+			//获取父视图参数
+			await getQueryViewParents(params).then((response) => {
+				this.viewParents = response.data || []
+			})
+		},
+
+		//父视图下拉框被选择时
+		parentViewChange() {
+			this.form.level = 1
+			this.form.isAuto = 0
+		},
+
+		//清空父视图
+		clearParentView() {
+			this.form.level = 0
+			this.form.isAuto = 0
+			this.addfilter = false
+		},
+
+		//自动创建子视图改变时
+		autoCreateChange() {
+			if (this.form.isAuto) {
+				if (this.form.scopeId === '') {
+					message('warning', '请选择范围')
+					return
+				}
+				this.form.level = 0
+				this.addfilter = false
+			}
+		},
+
+		//添加条件
+		addFilter() {
+			if (this.form.scopeId === '') {
+				message('warning', '请选择范围')
+				return
+			}
+			this.addfilter = true
+			this.filterSelVal = ''
+			if (this.form.isAuto == 0) {
+				const form = {
+					id: '',
+					andOr: '',
+					type: '',
+					customFieldId: '',
+					fieldNameEn: '',
+					fieldType: '',
+					condition: '',
+					sourceVal: ''
+				}
+				this.form.oneFilters = [form]
+				this.filterSelValue = [{}]
+				this.filterConditionList = [
+					[]
+				]
+				this.form.auto_filter = ''
+			} else {
+				this.form.oneFilters = ''
+				this.filterSelValue = ''
+				this.filterConditionList = ''
+				this.form.auto_filter = []
+			}
+		},
+
+		// 格式化链式下拉框数据
+		convertData(data) {
+			return data.flatMap((item) => {
+				const {
+					others,
+					...categories
+				} = item
+				return Object.entries(categories).map(([key, values]) => {
+					return {
+						value: key,
+						label: key,
+						children: Array.isArray(values) ?
+							values.map((value) => ({
+								value,
+								label: value,
+								...others
+							})) : []
+					}
+				})
+			})
+		},
+
+		//条件字段下拉框被选择
+		filterChange(selVal, index) {
+			console.log(this.filterSelValue)
+			const form = {
+				type: selVal.type,
+				fieldNameEn: selVal.fieldNameEn
+			}
+			// 如果type为custom 需要customFieldId
+			if (selVal.type === 'custom') {
+				form.customFieldId = selVal.customFieldId
+			} else {
+				form.customFieldId = ''
+			}
+			// 如果没有选择自动创建子视图，需要fieldType, 给form.onefilter[index]赋值
+			if (this.form.isAuto == 0) {
+				form.fieldType = selVal.fieldType
+				Object.assign(this.form.oneFilters[index], form)
+				if (typeof (selVal.possibleValue) === 'string') {
+					selVal.possibleValue = JSON.parse(selVal.possibleValue)
+				}
+				if (selVal.fieldType === 'linkedDropDown') {
+					selVal.possibleValue = this.convertData([selVal.possibleValue])
+				}
+				this.filterCondition(selVal.fieldType, index)
+			}
+			// 如果选择自动创建子视图， 给form.auto_filter赋值
+			else {
+				this.form.auto_filter = []
+				this.form.auto_filter.push(form)
+			}
+		},
+		//当条件的filedType 为 checkbox和 radio，conditon的选项只显示 为空，不等于和 等于
+		filterCondition(fieldType, index) {
+			if (fieldType === 'radio' || fieldType === 'checkbox') {
+				this.conditionList.forEach(item => {
+					if (item.nameCn === '为空' || item.nameCn === '等于' || item.nameCn ===
+						'不等于') {
+						this.filterConditionList[index].push(item)
+					}
+				})
+			} else {
+				this.filterConditionList[index] = this.conditionList
+			}
+		},
+		//增加查询条件
+		addCondition() {
+			const form = {
+				id: '',
+				andOr: '',
+				type: '',
+				customFieldId: '',
+				fieldNameEn: '',
+				fieldType: '',
+				condition: '',
+				sourceVal: ''
+			}
+			this.form.oneFilters.push(form)
+			this.filterSelValue.push({})
+			this.filterConditionList.push([])
+			console.log(this.filterConditionList)
+		},
+
+		//移除查询条件
+		removeCondition(index) {
+			this.form.oneFilters.splice(index, 1)
+			this.filterSelValue.splice(index, 1)
+			this.filterConditionList.splice(index, 1)
+			if (this.filterSelValue.length === 0) {
+				this.addfilter = false
+			}
+		},
+
+		// 刷新view
+		async viewjectRefresh() {
+			const res = await this.getqueryViews()
+			if (res.code === '200') {
+				message('success', '刷新成功')
+			}
+		},
+		// 删除view
+		delview(id) {
+			if (id === 'all') {
+				message('error', '暂未开发')
+				return
+			}
+			deleteView(id).then((res) => {
+				message('success', res.msg)
+				this.getqueryViews()
+				this.cancelUpdate()
+			})
+		},
+		// 表格多选
+		handleSelectionChange(val) {
+			this.multipleSelection = val
+			this.multiple = !val.length
+		},
+
+		//视图修改
+		async toEdit(row) {
+			console.log(row)
+			this.resetForm()
+			this.form.id = row.id
+			this.$refs.viewData.clearSelection()
+
+			this.$refs.viewData.toggleRowSelection(row)
+
+			this.form.title = row.title
+			this.scopeSelvalue = this.scopeObj[0]
+			await this.viewScopeChildParams(this.scopeObj[0])
+			if (row.parentId !== '') {
+				this.parentViewChange()
+				this.form.parentId = row.parentId
+			}
+		}
 	}
-  }
 }
 </script>
 <style lang="scss" scoped>
@@ -637,42 +608,46 @@ export default {
 </style>
 <style lang="scss">
 .view {
-  .wd200 {
-    .el-form-item__label {
-      width: 200px !important;
-    }
-  }
+	.wd200 {
+		.el-form-item__label {
+			width: 200px !important;
+		}
+	}
 
-  .el-checkbox__input {
-    .el-checkbox__inner {
-      border-radius: 100%;
+	.el-checkbox__input {
+		.el-checkbox__inner {
+			border-radius: 100%;
 
-      &:after {
-        width: 4px;
-        height: 4px;
-        border-radius: 100%;
-        background-color: #fff;
-        content: "";
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%) scale(1);
-        transform: translate(-50%, -50%) scale(1);
-      }
-    }
-  }
+			&:after {
+				width: 4px;
+				height: 4px;
+				border-radius: 100%;
+				background-color: #fff;
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%) scale(1);
+				transform: translate(-50%, -50%) scale(1);
+			}
+		}
+	}
 
-  .el-checkbox__input.is-checked {
-    .el-checkbox__inner {
-      border-color: #4286cd;
-      background: #4286cd;
-    }
-  }
+	.el-checkbox__input.is-checked {
+		.el-checkbox__inner {
+			border-color: #4286cd;
+			background: #4286cd;
+		}
+	}
 
-  .el-form-item {
-    .el-form-item__label {
-      padding-right: 8px;
-    }
-  }
+	.el-form-item {
+		.el-form-item__label {
+			padding-right: 8px;
+		}
+	}
+
+	.table {
+		width: 100%
+	}
 }
 </style>

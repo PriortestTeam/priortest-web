@@ -18,6 +18,16 @@ export function testCaseList(params, data) {
   })
 }
 
+export function testCaseListByClick(p, params) {
+  return request({
+    url: `bean/search/${p.scope}/${p.viewId}`,
+    method: 'get',
+    // post拼接路由参数
+    params
+    // data: data
+  })
+}
+
 // 没有分页的
 export function testCaseListAll(data) {
   return request({

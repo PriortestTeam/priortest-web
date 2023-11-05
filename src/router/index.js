@@ -234,7 +234,7 @@ export const constantRoutes = [
         },{
           path: 'useCase',
           name: 'useCase',
-          component: () => import('@/views/testcycle/useCase'),
+          component: () => import('@/views/testcycle/caseRun/caseRun'),
           meta: {
             title: 'Project', icon: 'Project'
           }

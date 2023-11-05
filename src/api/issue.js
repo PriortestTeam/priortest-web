@@ -18,7 +18,15 @@ export function issueList (params, data) {
   })
 }
 
-
+export function issueListByClick(params) {
+  return request({
+    url: `bean/search/${params.scope}/${params.viewId}`,
+    method: 'get',
+    // post拼接路由参数
+    // params
+    // data: data
+  })
+}
 // 删除 记录
 export function delIssue (id) {
   return request({

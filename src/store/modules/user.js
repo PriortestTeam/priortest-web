@@ -51,6 +51,8 @@ const actions = {
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
+        console.log("userinfo 数据结构：\n");
+        console.log(data)
         commit('SET_USERINFO', data)
         resolve(data)
       }).catch(error => {

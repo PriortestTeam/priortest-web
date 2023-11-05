@@ -1,28 +1,15 @@
 <template>
   <div class="admin-center">
-    <el-tabs
-      v-model="activeName"
-      :before-leave="handleClick"
-      class="admin-Control"
-      @tab-click="clickTab"
-    >
+    <el-tabs v-model="activeName" :before-leave="handleClick" class="admin-Control" @tab-click="clickTab">
       <el-tab-pane label="用户管理" name="0">
-        <user-page
-          ref="UserPage"
-          :tableHeader="tableHeader"
-          @jurisdictionChange="jurisdictionChange"
-        ></user-page>
+        <user-page ref="UserPage" :tableHeader="tableHeader" @jurisdictionChange="jurisdictionChange"></user-page>
       </el-tab-pane>
 
       <el-tab-pane v-if="activeName === '1'" label="权限管理" name="1">
-        <Jurisdiction
-          v-if="jurisdictionAccount"
-          :jurisdiction-account="jurisdictionAccount"
-          :user-infos="userinfo"
-          @userChange="userChange"
-        />
+        <Jurisdiction v-if="jurisdictionAccount" :jurisdiction-account="jurisdictionAccount" :user-infos="userinfo"
+          @userChange="userChange" />
       </el-tab-pane>
-      <el-tab-pane label="项目管理" name="2">项目管理</el-tab-pane>
+      <!-- <el-tab-pane label="项目管理111" name="2">项目管理</el-tab-pane> -->
       <el-tab-pane label="自定义字段" name="3">
         <div class="manage-view">
           <!-- 自定义字段 -->
@@ -132,22 +119,9 @@
             @setFieldName="setFieldName"
           /> -->
           <div class="table">
-            <el-button
-              :loading="delLoad"
-              type="text"
-              :disabled="dbfields"
-              @click="deleteAll()"
-            >删除</el-button>
-            <el-table
-              :data="fieldsData"
-              :header-cell-style="tableHeader"
-              :cell-style="{padding: '0'}"
-              align="left"
-
-              style="width: 100%"
-              @row-click="showfield"
-              @selection-change="fieldsSelectionChange"
-            >
+            <el-button :loading="delLoad" type="text" :disabled="dbfields" @click="deleteAll()">删除</el-button>
+            <el-table :data="fieldsData" :header-cell-style="tableHeader" :cell-style="{ padding: '0' }" align="left"
+              style="width: 100%" @row-click="showfield" @selection-change="fieldsSelectionChange">
               <el-table-column type="selection" width="35" />
 
               <!-- <el-table-column prop="fieldName"  /> -->
@@ -171,10 +145,7 @@
               </el-table-column> -->
               <el-table-column label="范围">
                 <template scope="scope">
-                  <span
-                    v-for="(item, index) in scope.row.componentAttributes"
-                    :key="index"
-                  >{{ item.scopeNameCn }}&#40;
+                  <span v-for="(item, index) in scope.row.componentAttributes" :key="index">{{ item.scopeNameCn }}&#40;
                     {{ item.mandatory == true ? "必填" : "无" }} &#41;，</span>
                 </template>
               </el-table-column>
@@ -200,22 +171,13 @@
               </el-table-column> -->
               <el-table-column label="操作" height=20>
                 <template slot-scope="scope">
-                  <el-button
-                    :loading="delLoad"
-                    type="text"
-                    class="table-btn"
-                    @click.stop="delfield(scope.row)"
-                  >删除</el-button>
+                  <el-button :loading="delLoad" type="text" class="table-btn"
+                    @click.stop="delfield(scope.row)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
-            <pagination
-              v-show="fieldsTotal > 0"
-              :total="fieldsTotal"
-              :page.sync="fieldsQuery.pageNum"
-              :limit.sync="fieldsQuery.pageSize"
-              @pagination="getqueryCustomList"
-            />
+            <pagination v-show="fieldsTotal > 0" :total="fieldsTotal" :page.sync="fieldsQuery.pageNum"
+              :limit.sync="fieldsQuery.pageSize" @pagination="getqueryCustomList" />
             <!-- <el-pagination
               background
               @size-change="handleSizeChange"
@@ -229,11 +191,10 @@
             </el-pagination> -->
           </div>
         </div>
-        <!-- 自定义字段 -->
       </el-tab-pane>
-      <el-tab-pane label="系统字段" name="4">
+      <!-- <el-tab-pane label="系统字段" name="4">
         <System :param-value="propSystem" />
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="视图管理" name="5">
         <ViewPage v-if="activeName === '5'" />
       </el-tab-pane>
@@ -247,9 +208,9 @@
         <ServicePlan v-if="activeName === '8'" />
       </el-tab-pane>
 
-       <el-tab-pane label="自定义字段设置" name="9">
-              <add-custom-field-value> </add-custom-field-value>
-            </el-tab-pane>
+      <el-tab-pane label="字段设置" name="9">
+        <add-custom-field-value> </add-custom-field-value>
+      </el-tab-pane>
 
     </el-tabs>
   </div>
@@ -415,7 +376,7 @@ export default {
       ],
 
       rowData: {},
-      delLoad:false
+      delLoad: false
 
     }
   },
@@ -479,14 +440,32 @@ export default {
     this.$refs.UserPage.init();
   },
   methods: {
-    clickTab(tab, event){
+    clickTab(tab, event) {
+      // console.log(tab);
       const init = tab['$children'][0].init;
-      if(init){
+
+      console.log("before if");
+      if (init) {
+        console.log(" in if");
         init();
       }
     },
+    // clickTab(tab, event){
+    //   console.log("tab结构：\n");
+    //   console.log(tab);
+    //   // console.log(tab['$children'][0]);
+    //   // if(tab['$children'][0].init) 
+    //   //   var init = tab['$children'][0].init
+    //   const init = tab['$children'][0].init;
+
+    //   console.log("before if");
+    //   if(init){
+    //     console.log(" in if");
+    //     init();
+    //   }
+    // },
     // 权限管理，左侧选择用户
-    userChange(user) {},
+    userChange(user) { },
     async getSysCustomFieldByType() {
       const params = {
         fieldName: 'type'
@@ -541,17 +520,17 @@ export default {
 
     // 获取自定义字段列表
     getqueryCustomList() {
-        // 字段列表接口
-        fieldList({
-          projectId: sessionStorage.getItem('projectId'),
-          pageNum: this.fieldsQuery.pageNum,
-          pageSize: this.fieldsQuery.pageSize,
-        }).then((res) => {
-          this.fieldsData = res.data;
-          // this.fieldsTotal = res.total;
-          this.fieldsTotal = res.total;
-          // this.$emit("fieldsList", this.fieldsList);
-        });
+      // 字段列表接口
+      fieldList({
+        projectId: sessionStorage.getItem('projectId'),
+        pageNum: this.fieldsQuery.pageNum,
+        pageSize: this.fieldsQuery.pageSize,
+      }).then((res) => {
+        this.fieldsData = res.data;
+        // this.fieldsTotal = res.total;
+        this.fieldsTotal = res.total;
+        // this.$emit("fieldsList", this.fieldsList);
+      });
       // queryCustomList(this.fieldsId, this.fieldsQuery).then((res) => {
       //   console.log(res,'ssssssssssss');
       //   if (res.code === "200") {
@@ -709,7 +688,7 @@ export default {
     // 自定义字段 结束
     //--------
     // 显示权限tab
-    jurisdictionChange(jurisdiction){
+    jurisdictionChange(jurisdiction) {
       this.activeName = "1"
       this.jurisdictionAccount = jurisdiction
     }
@@ -719,27 +698,33 @@ export default {
 <style lang="scss">
 @import "@/styles/mixin.scss"; //颜色
 @import "@/styles/color.scss"; //按钮
+
 //标签页切换样式
 .el-tabs {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+
   .el-tabs__item.is-active,
   .el-tabs__item:hover {
     color: $btnbgcolor;
   }
+
   .el-tabs__active-bar {
     background-color: $btnbgcolor;
   }
+
   .el-tabs__item {
     height: 25px;
     line-height: 14px;
   }
+
   .el-tabs__content {
     flex: 1;
     width: 100%;
     overflow: hidden;
+
     .el-tab-pane {
       width: 100%;
       height: 100%;
@@ -759,17 +744,21 @@ export default {
   box-sizing: border-box;
   padding: 20px;
   overflow: hidden;
+
   .el-form-item .el-form-item__label {
     padding-right: 8px;
   }
-	.table {
-		table-layout: fixed;
-		width: 100%;
-	}
+
+  .table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
   .demo-ruleForm {
     .el-form-item__label {
       //width: 110px!important;
     }
+
     .el-form-item__content {
       //margin-left: 110px!important;
     }

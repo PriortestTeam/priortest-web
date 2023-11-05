@@ -18,6 +18,16 @@ export function testCycleList(params, data) {
   })
 }
 
+export function testCycleListByClick(params) {
+  return request({
+    url: `bean/search/${params.scope}/${params.viewId}`,
+    method: 'get',
+    // post拼接路由参数
+    // params
+    // data: data
+  })
+}
+
 // 添加测试周期
 export function testCycleSave(params, data) {
   return request({
@@ -95,4 +105,49 @@ export function executeTestCase(data) {
     data
   })
 }
+
+//添加运行计划
+//export function addSchedule(data) {
+  //return request({
+    //url: '/testCycle/addSchedule',
+    //method: 'post',
+    //data
+  //})
+//}
+
+export function addSchedule(data) {
+  return request({
+    url: '/testCycle/plan/save',
+    method: 'post',
+    data
+  })
+}
+
+//获得测试用例
+export function getListBytestCycle(data) {
+  return request({
+    url: '/testCycle/instance/listByTestCycle',
+    method: 'post',
+    data
+  })
+}
+
+//添加运行计划
+export function saveInstance(data) {
+  return request({
+    url: '/testCycle/instance/saveInstance',
+    method: 'post',
+    data
+  })
+}
+
+//删除运行计划
+export function deleteInstance(data) {
+  return request({
+    url: '/testCycle/instance/deleteInstance',
+    method: 'delete',
+    data
+  })
+}
+
 

@@ -158,6 +158,7 @@ export default {
   methods: {
     // 菜单切换事件
     menuSelect(name) {
+      console.log('name: ', name);
       const index = this.menuList.findIndex(v => v.index === name)
       window.localStorage.setItem('currentMenu', name)
       if (name === 'Project') {

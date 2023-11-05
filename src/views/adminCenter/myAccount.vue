@@ -90,6 +90,7 @@ import { getUserActivNumber } from '@/api/user'
 // import GenerateToken from '@/views/project/generateToken'
 import { queryViewParents, queryViews, addViewRE, updateView, getViewScopeChildParams, lookView, deleteView } from '@/api/project.js'
 import { mapState } from 'vuex'
+
 export default {
   name: 'MyAccount',
   // components: { GenerateToken },
@@ -119,16 +120,17 @@ export default {
       tokenUrl: '',
       userStatus: '',
       // activNumber: 1,
-      serviceCheck: false
+      serviceCheck: false,
+      projectUserInfo: {}
     }
   },
   computed: {
     ...mapState({
       nvaName: state => state.common.nvaName
     }),
-    projectUserInfo () {
-      return this.$store.state.user.userinfo
-    }
+    // projectUserInfo () {
+    //   return this.$store.state.user.userinfo
+    // }
   },
   watch: {
     'form.title': function (val) {
@@ -139,15 +141,46 @@ export default {
       }
     }
   },
+
+  // async created () {
+  //   console.log("projectUserInfo\n");
+  //   console.log(this.projectUserInfo);
+  //   this.tokenUrl = '/project/generateToken?email=' + this.projectUserInfo.email
+
+  //   this.init()
+  //   // this.getActivNumber()
+  // },
+
   async created () {
+
+    await this.$store.dispatch('user/getInfo').then((res) => {
+      // console.log("res\n")
+      console.log("res" + res)
+      this.projectUserInfo = res
+      console.log("projectUserInfo\n")
+      console.log(this.projectUserInfo)
+        // message('success', res.msg)
+        // that.$router.replace({ path: '/' })
+      })
+
+    console.log("projectUserInfo11\n");
+    console.log(this.projectUserInfo);
     this.tokenUrl = '/project/generateToken?email=' + this.projectUserInfo.email
+    console.log(this.tokenUrl);
+
     this.init()
     // this.getActivNumber()
   },
+
   methods: {
     init () {
       const that = this
+
+
+      console.log("projectUserInfo数据结构：\n")
+      console.log(that.projectUserInfo)
       that.activitiNumber = that.projectUserInfo.activitiNumber
+      // console.log("activitiNumber = " + that.activitiNumber)
       const newDate = new Date()
       const today = newDate.getFullYear() + '-' + newDate.getMonth() + '-' + newDate.getDate()
       let expireDate = that.projectUserInfo.expireDate

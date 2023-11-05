@@ -1,37 +1,17 @@
 <template>
   <div class="app-container manage-view generate-token">
-    <el-form
-      ref="form"
-      :model="form"
-      :rules="rules"
-      label-width="100px"
-      class="demo-ruleForm"
-    >
+    <el-form ref="form" :model="form" :rules="rules" label-width="100px" class="demo-ruleForm">
       <div class="new_project">
-        <el-button
-          type="primary"
-          round
-          @click.stop="generateToken"
-        >新增</el-button>
-        <el-button
-          type="primary"
-          round
-          @click.stop="waiveForm('form')"
-        >取消</el-button>
+        <el-button type="primary" round @click.stop="generateToken">新增</el-button>
+        <el-button type="primary" round @click.stop="waiveForm('form')">取消</el-button>
       </div>
       <div class="scopeView">
         <el-form-item label="密钥名称" prop="tokenName" class="form-small">
           <el-input v-model="form.tokenName" size="small" :disabled="disable" />
         </el-form-item>
         <el-form-item label="失效日期" prop="expirationTime" class="form-small">
-          <el-date-picker
-            v-model="form.expirationTime"
-            type="datetime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            :picker-options="pickerOptions"
-            size="small"
-            placeholder="失效日期"
-          />
+          <el-date-picker v-model="form.expirationTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"
+            :picker-options="pickerOptions" size="small" placeholder="失效日期" />
         </el-form-item>
 
       </div>
@@ -44,24 +24,11 @@
         @click="delview('all')"
       >批量删除</el-button> -->
 
-      <el-table
-        ref="viewData"
-        :data="viewData"
-        :header-cell-style="tableHeader"
-        stripe
-        style="width: 100%"
-        @row-click="toEdit"
-        @selection-change="handleSelectionChange"
-      >
+      <el-table ref="viewData" :data="viewData" :header-cell-style="tableHeader" stripe style="width: 100%"
+        @row-click="toEdit" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
 
-        <el-table-column
-          prop="tokenName"
-          :show-overflow-tooltip="true"
-          align="left"
-          width="155"
-          label="密钥名称"
-        >
+        <el-table-column prop="tokenName" :show-overflow-tooltip="true" align="left" width="155" label="密钥名称">
           <template slot-scope="scope">
             <span class="title" @click="toEdit(scope.row)">
               {{ scope.row.tokenName }}
@@ -71,24 +38,15 @@
 
         <el-table-column prop="tokenValue" label="密钥值" />
         <el-table-column prop="expirationTime" label="失效日期" />
-		<el-table-column prop="apiTimes" label="API次数" />
+        <el-table-column prop="apiTimes" label="API次数" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              class="table-btn"
-              @click.stop="delToken(scope.row.id)"
-            >删除</el-button>
+            <el-button type="text" class="table-btn" @click.stop="delToken(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <pagination
-        v-show="viewTotal > 0"
-        :total="viewTotal"
-        :page.sync="viewQuery.pageNum"
-        :limit.sync="viewQuery.pageSize"
-        @pagination="getqueryViews"
-      />
+      <pagination v-show="viewTotal > 0" :total="viewTotal" :page.sync="viewQuery.pageNum"
+        :limit.sync="viewQuery.pageSize" @pagination="getqueryViews" />
     </div>
   </div>
 </template>
@@ -100,11 +58,11 @@ import { queryViewParents, queryViews, addViewRE, updateView, getViewScopeChildP
 import { mapState } from 'vuex'
 export default {
   name: 'GenerateToken',
-  data () {
+  data() {
     return {
       pickerOptions: {
         // 限制预约时间
-        disabledDate (time) {
+        disabledDate(time) {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         }
       },
@@ -154,7 +112,7 @@ export default {
     ...mapState({
       nvaName: state => state.common.nvaName
     }),
-    projectInfo () {
+    projectInfo() {
       return this.$store.state.user.userinfo
     }
   },
@@ -163,14 +121,14 @@ export default {
       console.log('val---', val)
     }
   },
-  async created () {
+  async created() {
     this.email = this.$route.query.email
     console.log('email--', this.email)
     this.queryListTokens()
   },
   methods: {
     // 生成token
-    async generateToken () {
+    async generateToken() {
       const that = this
       const form = that.form
       console.log('form---', form)
@@ -179,7 +137,7 @@ export default {
         const res = await makeToken(form)
         if (res.code === '200') {
           message('success', res.msg)
-		  that.$refs.form.resetFields()
+          that.$refs.form.resetFields()
           that.queryListTokens()
         }
       } catch (error) {
@@ -187,20 +145,20 @@ export default {
       }
     },
     // 查询token列表
-    async queryListTokens () {
+    async queryListTokens() {
       const params = {
         // emailId: this.email
       }
       const res = await listTokens(params)
       if (res.code === '200') {
         this.viewData = res.data
-		console.log( this.viewData)
-		// 分页器暂不显示
+        console.log(this.viewData)
+        // 分页器暂不显示
         // this.viewTotal = Number(res.total)
       }
     },
     // 删除token
-    delToken (id) {
+    delToken(id) {
       const that = this
       if (id === 'all') {
         message('error', '暂未开发')
@@ -219,16 +177,16 @@ export default {
           if (res.code === '200') {
             message('success', res.msg)
             that.currentPage = 1
-            that.pageSize = 10
+            that.pageSize = 20
             that.queryListTokens()
             that.cancelUpdate()
           }
         })
-      }).catch(() => {})
+      }).catch(() => { })
     },
     // 回显token
-    toEdit (row) {
-	  console.log(row)
+    toEdit(row) {
+      console.log(row)
       const that = this
       that.$refs.viewData.clearSelection()
       row.id ? that.disable = true : that.disable = false
@@ -248,16 +206,16 @@ export default {
       }) */
     },
     // 取消返回
-    waiveForm () {
+    waiveForm() {
       returntomenu(this, 1000)
     },
     // 取消修改
-    cancelUpdate () {
+    cancelUpdate() {
       this.$refs.viewData.clearSelection()
       this.resetForm()
     },
     // 重置表单
-    resetForm () {
+    resetForm() {
       this.form = {
         tokenName: '',
         expirationTime: ''
@@ -265,7 +223,7 @@ export default {
       this.$refs['form'].resetFields()
     },
     // 新增和修改确定表单
-    submitForm (formName) {
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.from.id) {
@@ -294,12 +252,12 @@ export default {
       })
     },
     // 表格多选
-    handleSelectionChange (val) {
+    handleSelectionChange(val) {
       this.multipleSelection = val
       this.multiple = !val.length
     },
     // 查询view信息
-    searchViewInfo () {
+    searchViewInfo() {
       lookView(this.viewId).then(res => {
         if (res.code === '200') {
           if (res.data.isPrivate === 0) {
@@ -314,7 +272,7 @@ export default {
       })
     },
     // token列表
-    getqueryViews () {
+    getqueryViews() {
       return new Promise((resolve, reject) => {
         queryViews(this.viewBody, this.viewQuery).then(res => {
           if (res.code === '200') {
@@ -326,14 +284,14 @@ export default {
       })
     },
     // 刷新view
-    async viewjectRefresh () {
+    async viewjectRefresh() {
       const res = await this.getqueryViews()
       if (res.code === '200') {
         message('success', '刷新成功')
       }
     },
     // 新增字段
-    addFliter () {
+    addFliter() {
       if (this.from.scope === undefined || this.from.scope.trim() === '') {
         message('warning', '请选择作用域')
         return
@@ -354,7 +312,7 @@ export default {
       this.from.oneFilters.push(obj)
     },
     // 移除字段
-    delRemove (index) {
+    delRemove(index) {
       this.from.oneFilters.splice(index, 1)
     },
     getType: function (fieldName, index) {
@@ -371,7 +329,7 @@ export default {
         }
       }
     },
-    viewScopeChildParams () {
+    viewScopeChildParams() {
       if (this.from.oneFilters.length > 0) {
         this.$confirm('重新选择可能会丢失页面内容请确认？', {
           title: '提示',
@@ -392,10 +350,10 @@ export default {
         this.scopeDownChildParams = res.data
       })
     },
-    dataFilter (val) {
+    dataFilter(val) {
       this.viewParentQuery = val
     },
-    queryViewParent () {
+    queryViewParent() {
       if (this.from.scope === undefined || this.from.scope === '') {
         message('success', '请选择作用域')
         this.viewParentQuery = '0'
@@ -409,7 +367,7 @@ export default {
         this.viewParents = res.data
       })
     },
-    fuzhiFrom (val) {
+    fuzhiFrom(val) {
       this.from.parentId = val
     }
   }
@@ -419,12 +377,11 @@ export default {
 @import "index.scss";
 @import "@/styles/index.scss";
 
-.table{
-	width: 100%
+.table {
+  width: 100%
 }
 </style>
 <style lang="scss">
-	
 /* .view {
   .wd200 {
     .el-form-item__label {

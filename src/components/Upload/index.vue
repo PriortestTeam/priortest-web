@@ -1,77 +1,29 @@
 <template>
   <div>
-    <el-upload
-      class="upload-demo"
-      action
-      :http-request="HandleUploadSelf"
-      multiple
-      :file-list="allfileList"
-    >
+    <el-upload class="upload-demo" action :http-request="HandleUploadSelf" multiple :file-list="allfileList">
       <el-button size="small" type="primary">附件</el-button>
     </el-upload>
-    <el-table
-      ref="allfileList"
-      :data="allfileList"
-      :header-cell-style="tableHeader"
-      stripe
-      style="width: 100%; margin-top: 10px"
-    >
-      <el-table-column
-        prop="fileName"
-        :show-overflow-tooltip="true"
-        align="center"
-        label="文件名称"
-      />
+    <el-table ref="allfileList" :data="allfileList" :header-cell-style="tableHeader" stripe
+      style="width: 100%; margin-top: 10px">
+      <el-table-column prop="fileName" :show-overflow-tooltip="true" align="center" label="文件名称" />
       <el-table-column prop="uploader" align="center" label="上传者" />
 
-      <el-table-column
-        prop="modifyTime"
-        align="center"
-        label="更新时间"
-        min-width="120"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column prop="modifyTime" align="center" label="更新时间" min-width="120" :show-overflow-tooltip="true" />
       <el-table-column label="操作" min-width="120" align="center">
         <template slot-scope="scope">
-          <el-button
-            type="text"
-            class="table-btn"
-            @click.stop="openfildEdit(scope.row.id)"
-          >编辑</el-button>
-          <el-button
-            type="text"
-            class="table-btn"
-            @click.stop="openfildDel(scope.row.id)"
-          >删除</el-button>
+          <el-button type="text" class="table-btn" @click.stop="openfildEdit(scope.row.id)">编辑</el-button>
+          <el-button type="text" class="table-btn" @click.stop="openfildDel(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="fileTotal > 0"
-      :total="fileTotal"
-      :page.sync="fileParams.pageNum"
-      :limit.sync="fileParams.pageSize"
-      @pagination="getfileList"
-    />
+    <pagination v-show="fileTotal > 0" :total="fileTotal" :page.sync="fileParams.pageNum"
+      :limit.sync="fileParams.pageSize" @pagination="getfileList" />
 
-    <el-dialog
-      title="修改附件"
-      :visible.sync="profileOpen"
-      width="500px"
-      append-to-body
-    >
+    <el-dialog title="修改附件" :visible.sync="profileOpen" width="500px" append-to-body>
       <div>
-        <el-upload
-          class="editupload-demo"
-          action
-          :http-request="editUploadSelf"
-          :before-remove="editbeforeRemove"
-          multiple
-          :limit="1"
-          :on-exceed="editExceed"
-          :file-list="editfileList"
-        >
+        <el-upload class="editupload-demo" action :http-request="editUploadSelf" :before-remove="editbeforeRemove"
+          multiple :limit="1" :on-exceed="editExceed" :file-list="editfileList">
           <el-button size="small" type="primary">重新上传</el-button>
         </el-upload>
       </div>
@@ -98,7 +50,7 @@ export default {
       type: String
     }
   },
-  data () {
+  data() {
     return {
       profileOpen: false,
       tableHeader: {
@@ -120,7 +72,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.fileParams.type = this.type
     this.fileParams.linkId = this.linkId
     console.log(this.type, this.linkId)
@@ -128,7 +80,7 @@ export default {
   },
   methods: {
     // 新增file
-    HandleUploadSelf (file) {
+    HandleUploadSelf(file) {
       const params = {
         type: this.type,
         linkId: this.linkId
@@ -141,7 +93,7 @@ export default {
       })
     },
     // 获取文件列表
-    getfileList () {
+    getfileList() {
       fileList(this.fileParams).then(res => {
         if (res.code === '200') {
           res.data.filter(item => {
@@ -153,21 +105,21 @@ export default {
       })
     },
     // 修改文件
-    openfildEdit (id) {
+    openfildEdit(id) {
       this.profileOpen = true
       this.onefileId = id
     },
-    editExceed (files, fileList) {
+    editExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
-    editbeforeRemove (file, fileList) {
+    editbeforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
-    editUploadSelf (file, fileList) {
+    editUploadSelf(file, fileList) {
       this.onefileList = file
     },
     // 确认修改file
-    fileSubForm () {
+    fileSubForm() {
       this.profileOpen = false
       updateAttachment(this.onefileId, formData({ file: this.onefileList.file })).then(res => {
         if (res.code === '200') {
@@ -179,11 +131,11 @@ export default {
       })
     },
     // 确认修改
-    calloff () {
+    calloff() {
       this.profileOpen = false
     },
     // 删除文件
-    openfildDel (id) {
+    openfildDel(id) {
       deleteAttachment(id).then(res => {
         if (res.code === '200') {
           message('success', res.msg)

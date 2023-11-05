@@ -1,14 +1,8 @@
 <template>
   <div class="payment-details">
     <div class="title">分期付款</div>
-    <el-table
-      ref="installmentData"
-      :data="installmentData"
-      :header-cell-style="tableHeader"
-      stripe
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table ref="installmentData" :data="installmentData" :header-cell-style="tableHeader" stripe style="width: 100%"
+      @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />
       <el-table-column prop="token_value" label="ID" />
       <el-table-column prop="expiration_time" label="支付截止日期" />
@@ -24,22 +18,11 @@
       <el-table-column prop="expiration_time" label="发票" />
       <el-table-column prop="expiration_time" label="支付凭据" />
     </el-table>
-    <pagination
-      v-show="installmentTotal > 0"
-      :total="installmentTotal"
-      :page.sync="installment.pageNum"
-      :limit.sync="installment.pageSize"
-      @pagination="queryInstallment"
-    />
+    <pagination v-show="installmentTotal > 0" :total="installmentTotal" :page.sync="installment.pageNum"
+      :limit.sync="installment.pageSize" @pagination="queryInstallment" />
     <div class="title">全款付款</div>
-    <el-table
-      ref="fullData"
-      :data="fullData"
-      :header-cell-style="tableHeader"
-      stripe
-      style="width: 100%"
-      @selection-change="handleSelectionChange2"
-    >
+    <el-table ref="fullData" :data="fullData" :header-cell-style="tableHeader" stripe style="width: 100%"
+      @selection-change="handleSelectionChange2">
       <el-table-column type="selection" width="55" />
       <el-table-column prop="token_value" label="ID" />
       <el-table-column prop="expiration_time" label="支付截止日期" />
@@ -55,20 +38,15 @@
       <el-table-column prop="expiration_time" label="发票" />
       <el-table-column prop="expiration_time" label="支付凭据" />
     </el-table>
-    <pagination
-      v-show="fullTotal > 0"
-      :total="fullTotal"
-      :page.sync="full.pageNum"
-      :limit.sync="full.pageSize"
-      @pagination="queryFull"
-    />
+    <pagination v-show="fullTotal > 0" :total="fullTotal" :page.sync="full.pageNum" :limit.sync="full.pageSize"
+      @pagination="queryFull" />
   </div>
 </template>
 
 <script>
 export default {
   name: 'PaymentDetails',
-  data () {
+  data() {
     return {
       tableHeader: {
         color: '#d4dce3',
@@ -92,17 +70,17 @@ export default {
   },
   methods: {
     // 分期多选
-    handleSelectionChange (val) {
+    handleSelectionChange(val) {
       this.multipleSelection = val
     },
     // 全款多选
-    handleSelectionChange2 (val) {
+    handleSelectionChange2(val) {
       this.multipleSelection = val
     },
-    queryInstallment () {
+    queryInstallment() {
       console.log('queryInstallment---')
     },
-    queryFull () {
+    queryFull() {
       console.log('queryFull---')
     }
   }
@@ -113,6 +91,7 @@ export default {
 .payment-details {
   padding: 10px;
   padding-top: 0;
+
   .title {
     margin: 15px 0;
     font-size: 16px;

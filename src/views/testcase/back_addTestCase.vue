@@ -1,35 +1,14 @@
 <template>
   <div class="app-container add-form add-project">
-    <el-form
-      ref="testCaseFrom"
-      :model="testCaseFrom"
-      :rules="testCaseRules"
-      label-width="120px"
-      class="demo-ruleForm"
-    >
+    <el-form ref="testCaseFrom" :model="testCaseFrom" :rules="testCaseRules" label-width="120px" class="demo-ruleForm">
       <div>
-        <el-button
-          v-if="!testCaseFrom.id"
-          type="primary"
-          @click="submitForm('testCaseFrom', false)"
-        >保存并新建
+        <el-button v-if="!testCaseFrom.id" type="primary" @click="submitForm('testCaseFrom', false)">保存并新建
         </el-button>
-        <el-button
-          v-if="!testCaseFrom.id"
-          type="primary"
-          @click="submitForm('testCaseFrom', true)"
-        >保存并返回
+        <el-button v-if="!testCaseFrom.id" type="primary" @click="submitForm('testCaseFrom', true)">保存并返回
         </el-button>
-        <el-button
-          v-if="testCaseFrom.id"
-          type="primary"
-          @click="submitForm('testCaseFrom')"
-        >确认修改
+        <el-button v-if="testCaseFrom.id" type="primary" @click="submitForm('testCaseFrom')">确认修改
         </el-button>
-        <el-button
-          type="primary"
-          @click="giveupBack('testCaseFrom')"
-        >放弃
+        <el-button type="primary" @click="giveupBack('testCaseFrom')">放弃
         </el-button>
         <router-link v-if="!testCaseFrom.id" to="/admincenter/admincenter">
           <el-button type="text">{{
@@ -43,39 +22,22 @@
           <el-input v-model="testCaseFrom.title" size="small" maxlength="15" />
         </el-form-item>
         <el-form-item label="描述" prop="description" size="small">
-          <el-input
-            v-model="testCaseFrom.description"
-            type="textarea"
-            maxlength="1000"
-            show-word-limit
-            :autosize="{ minRows: 3, maxRows: 8 }"
-          />
+          <el-input v-model="testCaseFrom.description" type="textarea" maxlength="1000" show-word-limit
+            :autosize="{ minRows: 3, maxRows: 8 }" />
         </el-form-item>
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="故事" prop="feature">
               <el-select v-model="testCaseFrom.feature" placeholder="关联故事" @change="getFeatureLikeArgs">
-                <el-option
-                  v-for="item in featueData"
-                  :key="item.id"
-                  :label="item.title"
-                  :value="item.id"
-                />
+                <el-option v-for="item in featueData" :key="item.id" :label="item.title" :value="item.id" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="优先级" prop="priority">
-              <el-select
-                v-model="testCaseFrom.priority"
-                placeholder="请选择优先级"
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.priority"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                /> <router-link to="/admincenter/admincenter?par=priority">
+              <el-select v-model="testCaseFrom.priority" placeholder="请选择优先级">
+                <el-option v-for="item in getOptionsArrData.priority" :key="item" :label="item" :value="item" />
+                <router-link to="/admincenter/admincenter?par=priority">
                   <el-option label="Add New Value" value="" />
                 </router-link>
               </el-select>
@@ -83,16 +45,9 @@
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="浏览器" prop="browser" clearable>
-              <el-select
-                v-model="testCaseFrom.browser"
-                placeholder="请选择浏览器"
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.browser"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                /> <router-link to="/admincenter/admincenter?par=browser">
+              <el-select v-model="testCaseFrom.browser" placeholder="请选择浏览器">
+                <el-option v-for="item in getOptionsArrData.browser" :key="item" :label="item" :value="item" />
+                <router-link to="/admincenter/admincenter?par=browser">
                   <el-option label="Add New Value" value="" />
                 </router-link>
               </el-select>
@@ -103,12 +58,7 @@
           <el-col :span="8">
             <el-form-item size="small" label="平台" prop="testPlatform">
               <el-select v-model="testCaseFrom.testPlatform" placeholder="请选择测试平台" clearable>
-                <el-option
-                  v-for="item in getOptionsArrData.testPlatform"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+                <el-option v-for="item in getOptionsArrData.testPlatform" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=test_platform">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -118,12 +68,7 @@
           <el-col :span="8">
             <el-form-item size="small" label="状态" prop="status">
               <el-select v-model="testCaseFrom.status" placeholder="请选择状态" clearable>
-                <el-option
-                  v-for="item in getOptionsArrData.status"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+                <el-option v-for="item in getOptionsArrData.status" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=status">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -132,17 +77,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="版本" prop="version">
-              <el-select
-                v-model="testCaseFrom.version"
-                placeholder="请选择版本"
-                clearable
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.versions"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="testCaseFrom.version" placeholder="请选择版本" clearable>
+                <el-option v-for="item in getOptionsArrData.versions" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=versions">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -153,17 +89,8 @@
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="测试分类" prop="caseCategory">
-              <el-select
-                v-model="testCaseFrom.caseCategory"
-                placeholder="请选择测试分类"
-                clearable
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.testCategory"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="testCaseFrom.caseCategory" placeholder="请选择测试分类" clearable>
+                <el-option v-for="item in getOptionsArrData.testCategory" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=test_category">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -172,17 +99,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="测试类型" prop="caseType">
-              <el-select
-                v-model="testCaseFrom.testType"
-                placeholder="请选择测试类型"
-                clearable
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.testType"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="testCaseFrom.testType" placeholder="请选择测试类型" clearable>
+                <el-option v-for="item in getOptionsArrData.testType" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=test_type">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -198,17 +116,8 @@
         <el-row>
           <el-col :span="8">
             <el-form-item size="small" label="测试环境" prop="testEnv">
-              <el-select
-                v-model="testCaseFrom.testEnv"
-                placeholder="请选择测试环境"
-                clearable
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.testEnv"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="testCaseFrom.testEnv" placeholder="请选择测试环境" clearable>
+                <el-option v-for="item in getOptionsArrData.testEnv" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=test_env">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -217,17 +126,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="模块" prop="module">
-              <el-select
-                v-model="testCaseFrom.module"
-                placeholder="请选择模块"
-                clearable
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.moudle"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="testCaseFrom.module" placeholder="请选择模块" clearable>
+                <el-option v-for="item in getOptionsArrData.moudle" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=moudle">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -236,17 +136,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="测试设备" prop="testDevice">
-              <el-select
-                v-model="testCaseFrom.testDevice"
-                placeholder="请选择测试设备1"
-                clearable
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.testDevice"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="testCaseFrom.testDevice" placeholder="请选择测试设备1" clearable>
+                <el-option v-for="item in getOptionsArrData.testDevice" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=test_device">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -255,17 +146,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item size="small" label="测试方法" prop="testMethod">
-              <el-select
-                v-model="testCaseFrom.testMethod"
-                placeholder="请选择测试方法"
-                clearable
-              >
-                <el-option
-                  v-for="item in getOptionsArrData.testMethod"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="testCaseFrom.testMethod" placeholder="请选择测试方法" clearable>
+                <el-option v-for="item in getOptionsArrData.testMethod" :key="item" :label="item" :value="item" />
                 <router-link to="/admincenter/admincenter?par=test_method">
                   <el-option label="Add New Value" value="" />
                 </router-link>
@@ -274,116 +156,53 @@
           </el-col>
         </el-row>
         <el-form-item label="测试数据" prop="testData" size="small">
-          <el-input
-            v-model="testCaseFrom.testData"
-            type="textarea"
-            maxlength="1000"
-            show-word-limit
-            :autosize="{ minRows: 3, maxRows: 5 }"
-          />
+          <el-input v-model="testCaseFrom.testData" type="textarea" maxlength="1000" show-word-limit
+            :autosize="{ minRows: 3, maxRows: 5 }" />
         </el-form-item>
         <el-form-item label="测试条件" prop="preCondition" size="small">
-          <el-input
-            v-model="testCaseFrom.preCondition"
-            type="textarea"
-            maxlength="1000"
-            show-word-limit
-            :autosize="{ minRows: 3, maxRows: 5 }"
-          />
+          <el-input v-model="testCaseFrom.preCondition" type="textarea" maxlength="1000" show-word-limit
+            :autosize="{ minRows: 3, maxRows: 5 }" />
         </el-form-item>
         <el-form-item label="备注" prop="comments" size="small">
-          <el-input
-            v-model="testCaseFrom.comments"
-            type="textarea"
-            maxlength="1000"
-            show-word-limit
-            :autosize="{ minRows: 3, maxRows: 8 }"
-          />
+          <el-input v-model="testCaseFrom.comments" type="textarea" maxlength="1000" show-word-limit
+            :autosize="{ minRows: 3, maxRows: 8 }" />
         </el-form-item>
       </div>
     </el-form>
     <div v-if="testCaseFrom.id" class="table">
       <el-button type="text" @click="newStep">新建步骤</el-button>
-      <el-table
-        ref="stepData"
-        :data="stepData"
-        :header-cell-style="tableHeader"
-        stripe
-        style="width: 100%"
-      >
+      <el-table ref="stepData" :data="stepData" :header-cell-style="tableHeader" stripe style="width: 100%">
         <el-table-column type="index" label="序号">
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="step"
-          label="步骤"
-          :show-overflow-tooltip="true"
-          align="center"
-        />
+        <el-table-column prop="step" label="步骤" :show-overflow-tooltip="true" align="center" />
         <el-table-column prop="stepData" label="运行数据" />
-        <el-table-column
-          prop="expectedResult"
-          label="预计结果"
-          :show-overflow-tooltip="true"
-          align="center"
-        />
+        <el-table-column prop="expectedResult" label="预计结果" :show-overflow-tooltip="true" align="center" />
         <el-table-column label="操作" align="left">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              class="table-btn"
-              @click.stop="toEdit(scope.row)"
-            >编辑
+            <el-button type="text" class="table-btn" @click.stop="toEdit(scope.row)">编辑
             </el-button>
-            <el-button
-              type="text"
-              class="table-btn"
-              @click.stop="delview(scope.row)"
-            >删除
+            <el-button type="text" class="table-btn" @click.stop="delview(scope.row)">删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <el-dialog
-      title="新建步骤"
-      :visible.sync="openDia"
-      width="500px"
-      append-to-body
-    >
-      <el-form
-        ref="stepFrom"
-        :model="stepFrom"
-        :rules="stepFromRules"
-        label-width="80px"
-      >
+    <el-dialog title="新建步骤" :visible.sync="openDia" width="500px" append-to-body>
+      <el-form ref="stepFrom" :model="stepFrom" :rules="stepFromRules" label-width="80px">
         <el-form-item label="步骤" prop="step" size="small">
-          <el-input
-            v-model="stepFrom.step"
-            maxlength="20"
-            placeholder="请输入步骤"
-          />
+          <el-input v-model="stepFrom.step" maxlength="20" placeholder="请输入步骤" />
         </el-form-item>
 
         <el-form-item label="运行数据" prop="stepData" size="small">
-          <el-input
-            v-model="stepFrom.stepData"
-            maxlength="20"
-            placeholder="请输入步骤运行数据"
-          />
+          <el-input v-model="stepFrom.stepData" maxlength="20" placeholder="请输入步骤运行数据" />
         </el-form-item>
 
         <el-form-item label="预期结果" prop="expectedResult" size="small">
-          <el-input
-            v-model="stepFrom.expectedResult"
-            type="textarea"
-            maxlength="100"
-            show-word-limit
-            :autosize="{ minRows: 2, maxRows: 3 }"
-            placeholder="请输入预期结果"
-          />
+          <el-input v-model="stepFrom.expectedResult" type="textarea" maxlength="100" show-word-limit
+            :autosize="{ minRows: 2, maxRows: 3 }" placeholder="请输入预期结果" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -413,7 +232,7 @@ import { message, returntomenu, formatChangedPara } from '@/utils/common'
 
 export default {
   name: 'Addtestcase',
-  data () {
+  data() {
     return {
       getOptionsArr: [
         'versions',
@@ -471,11 +290,11 @@ export default {
     ...mapGetters({
       lang: (state) => state.header.lang
     }),
-    projectInfo () {
+    projectInfo() {
       return this.$store.state.user.userinfo
     }
   },
-  created () {
+  created() {
     if (this.$route.query.id) {
       this.stepFrom.testCaseId = this.$route.query.id
       detailTestCase(this.$route.query.id).then((res) => {
@@ -503,7 +322,7 @@ export default {
 
   methods: {
     // 编辑获取步骤
-    getTestStep () {
+    getTestStep() {
       testCaseStep(
         { pageNum: 1, pageSize: 10 },
         {
@@ -515,7 +334,7 @@ export default {
     },
 
     // 重置表单
-    resetFields () {
+    resetFields() {
       this.testCaseFrom = {
         id: undefined,
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -541,7 +360,7 @@ export default {
       this.$refs['testCaseFrom'].resetFields()
     },
     // 提交
-    submitForm (formName, type) {
+    submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.testCaseFrom.id) {
@@ -582,14 +401,14 @@ export default {
       })
     },
     // 放弃并且返回
-    giveupBack () {
+    giveupBack() {
       if (!this.testCaseFrom.id) {
         this.resetFields()
       }
       this.returntomenu(this)
     },
     // 新建步骤
-    resetStepFrom () {
+    resetStepFrom() {
       this.stepFrom = {
         testCaseId: undefined,
         step: undefined,
@@ -598,10 +417,10 @@ export default {
       }
       this.$refs['stepFrom'].resetFields()
     },
-    newStep () {
+    newStep() {
       this.openDia = true
     },
-    submitStepFrom () {
+    submitStepFrom() {
       this.$refs['stepFrom'].validate((valid) => {
         if (valid) {
           if (this.stepFrom.id) {
@@ -629,16 +448,16 @@ export default {
         }
       })
     },
-    cancelStepFrom () {
+    cancelStepFrom() {
       this.resetStepFrom()
       this.openDia = false
     },
-    toEdit (row) {
+    toEdit(row) {
       this.stepFrom = Object.assign({}, row)
       this.openDia = true
       this.stepFromTemp = Object.assign({}, row)
     },
-    delview (row) {
+    delview(row) {
       delTestCaseStep(row.id).then((res) => {
         if (res.code === '200') {
           message('success', res.msg)
@@ -646,7 +465,7 @@ export default {
         }
       })
     },
-    getFeatureLikeArgs (row) {
+    getFeatureLikeArgs(row) {
       if ((this.testCaseFrom.module !== undefined && this.testCaseFrom.module !== '') ||
         (this.testCaseFrom.version !== undefined && this.testCaseFrom.version !== '')) {
         this.$confirm('重新选择可能会丢失内容请确认？', {
