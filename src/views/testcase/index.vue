@@ -256,7 +256,7 @@ export default {
         }
         // console.log('query.viewTreeDto.id: ', query.viewTreeDto.id);this.testCaseQuery
         testCaseListByClick(p, this.testCaseQuery).then(res => {
-          console.log('viewClick: ', res)
+          console.log('viewClick: ', 1, res, p, this.testCaseQuery)
           this.testCasetableData = res.data.list
           this.testCaseTotal = res.data.total
           this.isLoading = false
@@ -411,21 +411,7 @@ export default {
       this.viewSearchQueryId = query.viewTreeDto.id
       this.testCaseQuery.pageNum = 1
       this.testCaseQuery.pageSize = 20
-      // const p = {
-      //   scope: 'testCase',
-      //   viewId: this.viewSearchQueryId
-      // }
-      // // console.log('query.viewTreeDto.id: ', query.viewTreeDto.id);this.testCaseQuery
-      // testCaseListByClick(p, this.testCaseQuery).then(res => {
-      //   console.log('viewClick: ', res)
-      //   this.testCasetableData = res.data.list
-      //   this.testCaseTotal = res.data.total
-      //   this.isLoading = false
-      // }).catch(() => {
-      //   this.testCasetableData = []
-      //   this.testCaseTotal = 0
-      //   this.isLoading = false
-      // })
+
       this.getqueryForTestCase()
     },
     hadleTreeshow() {

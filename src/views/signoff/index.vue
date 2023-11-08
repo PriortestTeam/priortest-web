@@ -386,6 +386,7 @@ export default {
         pageSize: 10
       }, {})
       this.projectList = res.data
+      console.log("77", res.data)
     },
     getProjectInfo() {
       this.getProjectEnv()

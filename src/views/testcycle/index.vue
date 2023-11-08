@@ -82,7 +82,7 @@
 <script>
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
-import { testCycleList, deltestCycle, clonetestCycle, testCycleListByClick } from '@/api/testcycle'
+import { testCycleList, deltestCycle, clonetestCycle, testCycleListByClick, testCycleSave, saveInstance } from '@/api/testcycle'
 // import { queryViews } from '@/api/project'
 
 export default {
@@ -109,7 +109,7 @@ export default {
       single: true, // 非单个禁用
       multiple: true, // 非多个禁用
       projectIds: '',
-
+      dialogVisible: false,  //若点击 添加到周期 ， 此值变为 true
       setTree: [], // tree数据
       testCycleBody: {
         scope: '',
@@ -167,6 +167,7 @@ export default {
             id: this.viewSearchQueryId
           }
         }
+        console.log('query: ', query);
         return new Promise((resolve, reject) => {
           testCycleList(this.testCycleQuery, query).then(async res => {
             if (res.code === '200') {
@@ -188,9 +189,8 @@ export default {
           scope: 'testCycle',
           viewId: this.viewSearchQueryId
         }
-        // console.log('query.viewTreeDto.id: ', query.viewTreeDto.id);this.testCaseQuery
-        testCycleListByClick(p, this.testCaseQuery).then(res => {
-          console.log('viewClick: ', res)
+        testCycleListByClick(p, this.testCycleQuery).then(res => {
+          console.log('viewClick: ', res, p, this.testCycleQuery)
           this.testCycletableData = res.data.list
           this.testCycleTotal = res.data.total
           this.isLoading = false
@@ -209,8 +209,24 @@ export default {
         this.viewSearchQueryId = ''
       }
     },
-
-
+    //点击 添加到用例周期
+    addTestCase() {
+      const parms = {
+        projectId: this.projectInfo.userUseOpenProject.projectId,
+        testCycleId: this.testCycleId,
+        testCaseIds: this.projectIds.split(",")
+      }
+      return new Promise((resolve, reject) => {
+        saveInstance(parms).then(async res => {
+          if (res.code === '200') {
+            message('success', res.msg)
+            this.$refs.testCycletableData.setCurrentRow();
+            this.addDisabled = true
+            resolve(res)
+          }
+        })
+      })
+    },
 
 
     // 克隆
@@ -279,16 +295,7 @@ export default {
         scope: 'testCycle',
         viewId: this.viewSearchQueryId
       }
-      // console.log('query.viewTreeDto.id: ', query.viewTreeDto.id);
-      testCycleListByClick(params).then(res => {
-        this.testCycletableData = res.data.list
-        this.testCycleTotal = res.data.total
-        this.isLoading = false
-      }).catch(() => {
-        this.testCycletableData = []
-        this.testCycleTotal = 0
-        this.isLoading = false
-      })
+      this.getqueryFortestCycle()
     },
     hadleTreeshow() {
       this.treeCol = this.treeCol === 3 ? 0 : 3

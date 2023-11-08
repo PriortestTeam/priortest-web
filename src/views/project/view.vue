@@ -15,10 +15,11 @@
 			</el-form-item>
 			<div class="scopeView">
 				<el-form-item label="范围" class="form-small">
-					<el-select v-model='scopeSelvalue' value-key="label" size="small" :disabled="scopeDis" placeholder="请选择适用范围"
-						@change="viewScopeChildParams">
+					<el-select v-model='scopeSelvalue' value-key="label" size="small" :disabled="scopeDis" ref="select"
+						placeholder="请选择适用范围" @change="viewScopeChildParams">
 						<el-option v-for="item in scopeOptions" :key="item.scopeId" :label="item.label" :value="item" />
 					</el-select>
+
 				</el-form-item>
 				<el-form-item label="父级视图" prop="parentId" class="form-small">
 					<el-select :disabled="form.isAuto == 1" v-model="form.parentId" clearable size="small" filterable
@@ -59,16 +60,16 @@
 									</span>
 								</el-col>
 								<el-col :span="4">
-									<el-select v-model="filterSelValue[index]" value-key="fieldNameCn" size="small" placeholder="请选择字段"
-										@change="filterChange($event, index)">
-										<el-option v-for="i in filedChildParams" :key="i.fieldNameCn" :label="i.fieldNameCn" :value="i" />
+
+									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" ref="select1" size="small"
+										placeholder="请选择字段" @change="filterChange($event, index)">
+										<el-option v-for="i in filedChildParams" :key="i.fieldNameEn" :label="i.fieldNameCn" :value="i" />
 									</el-select>
 								</el-col>
 								<!-- 选择了字段后出现 第二个条件-->
 								<el-col :span="4" v-show="item.type">
 									<el-select v-model="item.condition" size="small" placeholder="请选择条件">
-										<el-option v-for="i in filterConditionList[index]" :key="i.value" :label="i.nameCn"
-											:value="i.scopeName" />
+										<el-option v-for="i in conditionList" :key="i.value" :label="i.nameCn" :value="i.nameCn" />
 									</el-select>
 								</el-col>
 								<!-- 选择了条件后且条件部位空或不为空时 -->
@@ -77,6 +78,7 @@
 									<el-select
 										v-if="item.fieldType === 'number' || item.fieldType === 'dropDown' || item.fieldType === 'multiList' || item.fieldType === 'linkedMoudue' || item.fieldType === 'userList'"
 										v-model="item.sourceVal" clearable size="small" placeholder="请选择状态">
+
 										<el-option v-for="i in filterSelValue[index].possibleValue" :key="i.optionValue" :label="i"
 											:value="i" />
 									</el-select>
@@ -96,7 +98,7 @@
 					<!-- 自动创建子视图下拉框 -->
 					<el-select v-if="addfilter && form.isAuto == 1" v-model="filterSelValue" value-key="fieldNameEn" size="small"
 						placeholder="请选择字段" @change="filterChange">
-						<el-option v-for="i in filedChildParams" :key="i.fieldNameCn" :label="i.fieldNameCn" :value="i" />
+						<el-option v-for="i in filedChildParams" :key="i.fieldNameEn" :label="i.fieldNameEn" :value="i" />
 					</el-select>
 				</div>
 			</el-form-item>
@@ -175,6 +177,7 @@ import {
 import {
 	mapState
 } from 'vuex'
+import { Logger } from 'runjs/lib/common'
 export default {
 	name: 'Projectview',
 	data() {
@@ -184,32 +187,32 @@ export default {
 			scopeOptions: [{
 				label: '项目',
 				scopeId: '1000001',
-				scopeName: 'project'
+				scopeName: '项目'
 			},
 			{
 				label: '故事',
 				scopeId: '2000001',
-				scopeName: 'feature'
+				scopeName: '故事'
 			},
 			{
 				label: '测试用例',
 				scopeId: '3000001',
-				scopeName: 'testCase'
+				scopeName: '测试用例'
 			},
 			{
 				label: '测试周期',
 				scopeId: '5000001',
-				scopeName: 'testCycle'
+				scopeName: '测试周期'
 			},
 			{
 				label: '缺陷',
 				scopeId: '7000001',
-				scopeName: 'issue'
+				scopeName: '缺陷'
 			},
 			{
 				label: '迭代',
 				scopeId: '8000001',
-				scopeName: 'sprint'
+				scopeName: '迭代'
 			}
 			],
 			// 当前页面的scope
@@ -223,11 +226,12 @@ export default {
 				level: 0,
 				parentId: '',
 				isAuto: 0,
-				oneFilters: '',
+				oneFilters: [],
 				auto_filter: '',
 				scopeId: '',
 				scopeName: '',
-				title: ''
+				title: '',
+
 			},
 			scopeSelvalue: '',
 			filterSelValue: '',
@@ -263,16 +267,47 @@ export default {
 			multiple: true, // 非多个禁用
 			viewId: '',
 			conditionList: [],
-			filter: false
+			filter: false,
+
 		}
+	},
+	mounted: function () {
+		this.$nextTick(function () {
+			// 仅在整个视图都被渲染之后才会运行的代码
+			let id = this.scopeOptions.findIndex((item) => item.scopeId === this.nvaName)
+			this.form.scopeName = this.scopeOptions[id].label
+			this.form.scopeId = this.scopeOptions[id].scopeId
+			this.scopeSelvalue = this.scopeOptions[id]
+
+
+		})
+
+
+	},
+	watch: {
+		filterConditionList: function (val, valold) {
+			console.log("list", val, valold)
+		},
+		filterSelValue: function (val, valold) {
+			console.log("selvalue", val, valold, "refs", this.$refs)
+			// this.$$refs.select1?this.$$refs.select1.value==
+		},
+		addfilter: function (val) {
+			console.log("add", val)
+		},
+
 	},
 	computed: {
 		...mapState({
 			nvaName: (state) => state.common.nvaName
 		}),
+
 		projectInfo() {
 			return this.$store.state.user.userinfo
 		},
+
+
+
 		//条件下拉框 选项
 		filedChildParams() {
 			if (this.form.isAuto == 1) {
@@ -309,6 +344,7 @@ export default {
 							message('success', res.msg)
 							this.getqueryViews()
 							this.filter = false
+							console.log(11111, this.res)
 						}
 					})
 				})
@@ -344,6 +380,7 @@ export default {
 		},
 		// 初始化scope
 		initScope() {
+
 			this.scopeObj = this.scopeOptions.filter((item) => {
 				return item.scopeId === this.nvaName
 			})
@@ -355,6 +392,7 @@ export default {
 		},
 		// view视图列表
 		getqueryViews() {
+			// initScopeName()
 			return new Promise((resolve, reject) => {
 				queryViews(this.viewBody, this.viewQuery).then((res) => {
 					if (res.code === '200') {
@@ -370,7 +408,8 @@ export default {
 
 		//范围修改时获取参数
 		async viewScopeChildParams(selVal) {
-			if (this.filterSelValue) {
+			console.log("44", selVal)
+			if (this.filterSelValue.length > 1) {
 				await this.$confirm('重新选择可能会丢失页面内容请确认？', {
 					title: '提示',
 					showCancelButton: true,
@@ -395,10 +434,12 @@ export default {
 			//获取
 			getViewAllScopeParams(scope).then((res) => {
 				this.scopeDownChildParams = res.data
+				console.log("scopeDownChildParams :", this.scopeDownChildParams)
 			})
 			//过滤条件参数
 			getFilterCondition(scope).then((res) => {
 				this.conditionList = res.data
+				console.log("conditionList", this.conditionList)
 			})
 			//获取父视图参数
 			await getQueryViewParents(params).then((response) => {
@@ -450,7 +491,7 @@ export default {
 					condition: '',
 					sourceVal: ''
 				}
-				this.form.oneFilters = [form]
+				this.form.oneFilters.push(form)
 				this.filterSelValue = [{}]
 				this.filterConditionList = [
 					[]
@@ -488,7 +529,7 @@ export default {
 
 		//条件字段下拉框被选择
 		filterChange(selVal, index) {
-			console.log(this.filterSelValue)
+			console.log("条件: ", selVal, index, this.filterSelValue)
 			const form = {
 				type: selVal.type,
 				fieldNameEn: selVal.fieldNameEn
@@ -503,11 +544,14 @@ export default {
 			if (this.form.isAuto == 0) {
 				form.fieldType = selVal.fieldType
 				Object.assign(this.form.oneFilters[index], form)
-				if (typeof (selVal.possibleValue) === 'string') {
-					selVal.possibleValue = JSON.parse(selVal.possibleValue)
-				}
-				if (selVal.fieldType === 'linkedDropDown') {
-					selVal.possibleValue = this.convertData([selVal.possibleValue])
+				console.log("selVal.possibleValue", selVal)
+				if (selVal.possibleValue) {
+					if (typeof (selVal.possibleValue) === 'string') {
+						selVal.possibleValue = JSON.parse(selVal.possibleValue)
+					}
+					if (selVal.fieldType === 'linkedDropDown') {
+						selVal.possibleValue = this.convertData([selVal.possibleValue])
+					}
 				}
 				this.filterCondition(selVal.fieldType, index)
 			}
@@ -519,11 +563,13 @@ export default {
 		},
 		//当条件的filedType 为 checkbox和 radio，conditon的选项只显示 为空，不等于和 等于
 		filterCondition(fieldType, index) {
+
 			if (fieldType === 'radio' || fieldType === 'checkbox') {
 				this.conditionList.forEach(item => {
 					if (item.nameCn === '为空' || item.nameCn === '等于' || item.nameCn ===
 						'不等于') {
 						this.filterConditionList[index].push(item)
+
 					}
 				})
 			} else {
@@ -537,7 +583,7 @@ export default {
 				andOr: '',
 				type: '',
 				customFieldId: '',
-				fieldNameEn: '',
+				fieldNamen: '',
 				fieldType: '',
 				condition: '',
 				sourceVal: ''
@@ -545,7 +591,8 @@ export default {
 			this.form.oneFilters.push(form)
 			this.filterSelValue.push({})
 			this.filterConditionList.push([])
-			console.log(this.filterConditionList)
+
+
 		},
 
 		//移除查询条件
@@ -579,19 +626,36 @@ export default {
 		},
 		// 表格多选
 		handleSelectionChange(val) {
+			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = val[0].oneFilters : console.log(val[0].oneFilters.fieldNameEn) : console.log(2)
+			if (val.length) {
+				this.addfilter = true
+				this.filterSelValue = [{}]
+				this.form.auto_filter = ''
+				let id = this.scopeOptions.findIndex((item) => item.scopeName === val[0].scopeName)
+				this.form.scopeName = this.scopeOptions[id].scopeName
+				this.form.scopeId = this.scopeOptions[id].scopeId
+				this.scopeSelvalue = this.scopeOptions[id]
+				this.scopeSelvalue.selected = true
+				this.form.title = val[0].title
+				//表格单击选中时查询条件渲染
+				// getFilterCondition(this.form.scopeId);
+
+				//
+
+			}
+
 			this.multipleSelection = val
 			this.multiple = !val.length
 		},
 
 		//视图修改
 		async toEdit(row) {
-			console.log(row)
 			this.resetForm()
 			this.form.id = row.id
 			this.$refs.viewData.clearSelection()
-
+			this.form.scopeName = row.scopeName
 			this.$refs.viewData.toggleRowSelection(row)
-
+			console.log(row, 'filter')
 			this.form.title = row.title
 			this.scopeSelvalue = this.scopeObj[0]
 			await this.viewScopeChildParams(this.scopeObj[0])

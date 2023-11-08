@@ -57,7 +57,8 @@ export default {
   methods: {
     toViewManage() {
       this.$store.commit('common/setNavName', this.childScope)
-      this.$router.push('/project/projectview')
+      this.$router.push({ path: '/project/projectview' })
+
     },
     hadleShow() {
       this.$emit('hadleTree')
@@ -78,7 +79,6 @@ export default {
         scope: this.childScope
       }
       queryViewTrees(params).then((res) => {
-        // console.log("res: ", res.data[2])
         const dataArry = {
           "id": "1721144850016964610",
           "createUserId": "593989699542978560",
