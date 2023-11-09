@@ -247,14 +247,9 @@ export default {
 	.listContent {
 		padding: 15px;
 
-		.list li {
-			margin: 10px 0;
-			cursor: pointer;
-		}
-
-		.list li.active {
-			color: white;
-			background-color: rgb(64, 158, 255);
+		.list {
+			display: flex;
+			flex-direction: column;
 		}
 
 		.btns {
