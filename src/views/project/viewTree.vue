@@ -11,6 +11,7 @@
     </div>
     <div class="comp-data">
       <div class="big-width">
+
         <el-tree :data="setTree" :props="defaultProps" node-key="id" default-expand-all :expand-on-click-node="false">
           <span slot-scope="{ node }" class="custom-tree-node">
             <span @click="getList(node.data, node.label)">{{ node.label }}</span>
@@ -23,6 +24,7 @@
 
 <script>
 import { queryViewTrees } from '@/api/project'
+import { getqueryFortestCycle } from '@/api/testcycle'
 export default {
   name: 'ViewTree',
   props: {
@@ -60,6 +62,11 @@ export default {
       this.$router.push({ path: '/project/projectview' })
 
     },
+    toViewAll() {
+      console.log("ts");
+
+    }
+    ,
     hadleShow() {
       this.$emit('hadleTree')
     },
@@ -78,34 +85,11 @@ export default {
       const params = {
         scope: this.childScope
       }
-      queryViewTrees(params).then((res) => {
-        const dataArry = {
-          "id": "1721144850016964610",
-          "createUserId": "593989699542978560",
-          "updateUserId": "",
-          "createTime": "",
-          "updateTime": "",
-          "projectId": "593988941040848898",
-          "title": "全部",
-          "scopeName": "",
-          "isPrivate": 1,
-          "creater": "",
-          "filter": "",
-          "sql": "",
-          "oneFilters": "",
-          "updateUser": "",
-          "parentId": "",
-          "scopeId": "",
-          "level": 0,
-          "isAuto": "",
-          "childViews": ""
-        };
-        this.setTree = res.data;
-        this.setTree.unshift(dataArry)
 
-        // console.log('setTree: ', this.setTree)
-        // 先找父节点
+      queryViewTrees(params).then((res) => {
+        this.setTree = res.data;
       })
+
     }
   }
 }
@@ -131,11 +115,13 @@ export default {
   width: 100%;
   overflow: auto;
   position: relative;
+  top: 3.8%;
 
   .big-width {
     width: 100%;
     font-size: 14px;
   }
+
 
   .el-tree-node__content {
     .custom-tree-node {

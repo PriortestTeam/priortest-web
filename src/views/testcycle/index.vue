@@ -1,10 +1,13 @@
 <template>
   <div class="project-container app-container">
+    <!-- <el-button class="all-btn" type="text" @click="hadleTreeshow">全部</el-button> -->
     <div v-if="treeCol == 0" class="showBtn" @click="hadleTreeshow">
       <i class="el-icon-d-arrow-right" />
     </div>
+    <el-button class="all-btn" type="text" @click="hadleToViewAll">全部</el-button>
     <el-row>
       <el-col :span="treeCol">
+
         <view-tree :child-scope="currentScope" @hadleTree="hadleTreeshow" @childByValue="childByValue" />
       </el-col>
       <el-col :span="24 - treeCol">
@@ -83,11 +86,14 @@
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import { testCycleList, deltestCycle, clonetestCycle, testCycleListByClick, testCycleSave, saveInstance } from '@/api/testcycle'
+import { handle } from 'express/lib/application'
 // import { queryViews } from '@/api/project'
 
 export default {
   name: 'testCycle',
-  components: { viewTree },
+  components: {
+    viewTree
+  },
   data() {
     return {
       treeCol: 3,
@@ -159,6 +165,7 @@ export default {
     /** 项目列表表格开始 */
     getqueryFortestCycle() {
       console.log("getqueryFortestCycle被调用了");
+      console.log("this.viewSearchQueryId: ", this.viewSearchQueryId);
       if (this.viewSearchQueryId === '') {
         this.isLoading = true
         const query = {
@@ -203,12 +210,16 @@ export default {
     },
     // 刷新
     async projectRefresh() {
+      this.viewSearchQueryId = ''
       const res = await this.getqueryFortestCycle()
       if (res.code === '200') {
         message('success', '刷新成功')
         this.viewSearchQueryId = ''
       }
+
     },
+    //
+
     //点击 添加到用例周期
     addTestCase() {
       const parms = {
@@ -299,10 +310,27 @@ export default {
     },
     hadleTreeshow() {
       this.treeCol = this.treeCol === 3 ? 0 : 3
+    },
+    async hadleToViewAll() {
+      this.viewSearchQueryId = ''
+      await this.getqueryFortestCycle()
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
+
+.app-container {
+  position: absolute;
+
+  .all-btn {
+    z-index: 999999999999;
+    position: relative;
+    top: 9.8%;
+    left: 0.7%;
+    color: rgb(96, 98, 102);
+    font-size: 14px;
+  }
+}
 </style>

@@ -3,6 +3,7 @@
     <div v-if="treeCol == 0" class="showBtn" @click="hadleTreeshow">
       <i class="el-icon-d-arrow-right" />
     </div>
+    <el-button class="all-btn" type="text" @click="hadleToViewAll">全部</el-button>
     <el-row>
       <el-col :span="treeCol">
         <view-tree :child-scope="currentScope" @hadleTree="hadleTreeshow" @childByValue="childByValue" />
@@ -25,7 +26,7 @@
               <el-button type="text" @click="selectMoreCol">更多列</el-button>
               <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
             </div>
-            <div v-loading="isLoading" class="protable table">
+            <div v-loading="isLoading" class="table protable">
               <el-table ref=" projecttableData" :data="projecttableData" :header-cell-style="tableHeader" stripe
                 style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="45" />
@@ -247,10 +248,27 @@ export default {
     },
     hadleTreeshow() {
       this.treeCol = this.treeCol === 3 ? 0 : 3
+    },
+    async hadleToViewAll() {
+      this.viewSearchQueryId = ''
+      await this.getqueryForproject()
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
+
+.app-container {
+  position: absolute;
+
+  .all-btn {
+    z-index: 999999999999;
+    position: relative;
+    top: 9.8%;
+    left: 0.7%;
+    color: rgb(96, 98, 102);
+    font-size: 14px;
+  }
+}
 </style>

@@ -3,6 +3,7 @@
     <div v-if="treeCol == 0" class="showBtn" @click="hadleTreeshow">
       <i class="el-icon-d-arrow-right" />
     </div>
+    <el-button class="all-btn" type="text" @click="hadleToViewAll">全部</el-button>
     <el-row>
       <el-col :span="treeCol">
         <view-tree :child-scope="currentScope" @hadleTree="hadleTreeshow" @childByValue="childByValue" />
@@ -266,6 +267,10 @@ export default {
         this.isLoading = false
       })
     },
+    async hadleToViewAll() {
+      this.viewSearchQueryId = ''
+      await this.getqueryForFeature()
+    },
     hadleTreeshow() {
       this.treeCol = this.treeCol === 3 ? 0 : 3
     }
@@ -274,4 +279,17 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
+
+.app-container {
+  position: absolute;
+
+  .all-btn {
+    z-index: 999999999999;
+    position: relative;
+    top: 9.8%;
+    left: 0.7%;
+    color: rgb(96, 98, 102);
+    font-size: 14px;
+  }
+}
 </style>
