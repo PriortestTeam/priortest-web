@@ -73,6 +73,7 @@ export default {
     getList: function (data, labels) {
       console.log("data: ", data, labels)
       const query = {
+        labels: labels,
         projectId: this.projectInfo.userUseOpenProject.projectId,
         viewTreeDto: {
           id: data.id
@@ -87,7 +88,9 @@ export default {
       }
 
       queryViewTrees(params).then((res) => {
+
         this.setTree = res.data;
+
       })
 
     }
@@ -115,7 +118,7 @@ export default {
   width: 100%;
   overflow: auto;
   position: relative;
-  top: 3.8%;
+  top: 20px;
 
   .big-width {
     width: 100%;

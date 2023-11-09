@@ -40,7 +40,7 @@
 					</span>
 					<!-- 没有选择自动创建时 选择条件 -->
 					<div class="oneFilters" v-if="addfilter && form.isAuto == 0">
-						<div v-for="(item, index) in form.oneFilters" :key="index">
+						<div v-for="(item, index) in  form.oneFilters " :key="index">
 							<el-row v-if="index !== 0">
 								<el-col :span="1">~</el-col>
 								<el-col :span="2">
@@ -61,15 +61,15 @@
 								</el-col>
 								<el-col :span="4">
 
-									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" ref="select1" size="small"
-										placeholder="请选择字段" @change="filterChange($event, index)">
-										<el-option v-for="i in filedChildParams" :key="i.fieldNameEn" :label="i.fieldNameCn" :value="i" />
+									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
+										@change="filterChange($event, index)">
+										<el-option v-for=" i  in  filedChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn" :value="i" />
 									</el-select>
 								</el-col>
 								<!-- 选择了字段后出现 第二个条件-->
 								<el-col :span="4" v-show="item.type">
 									<el-select v-model="item.condition" size="small" placeholder="请选择条件">
-										<el-option v-for="i in conditionList" :key="i.value" :label="i.nameCn" :value="i.nameCn" />
+										<el-option v-for=" i  in  conditionList " :key="i.value" :label="i.nameCn" :value="i.nameCn" />
 									</el-select>
 								</el-col>
 								<!-- 选择了条件后且条件部位空或不为空时 -->
@@ -79,7 +79,7 @@
 										v-if="item.fieldType === 'number' || item.fieldType === 'dropDown' || item.fieldType === 'multiList' || item.fieldType === 'linkedMoudue' || item.fieldType === 'userList'"
 										v-model="item.sourceVal" clearable size="small" placeholder="请选择状态">
 
-										<el-option v-for="i in filterSelValue[index].possibleValue" :key="i.optionValue" :label="i"
+										<el-option v-for=" i  in  filterSelValue[index].possibleValue " :key="i.optionValue" :label="i"
 											:value="i" />
 									</el-select>
 									<!-- 链式下拉框 -->
@@ -98,7 +98,7 @@
 					<!-- 自动创建子视图下拉框 -->
 					<el-select v-if="addfilter && form.isAuto == 1" v-model="filterSelValue" value-key="fieldNameEn" size="small"
 						placeholder="请选择字段" @change="filterChange">
-						<el-option v-for="i in filedChildParams" :key="i.fieldNameEn" :label="i.fieldNameEn" :value="i" />
+						<el-option v-for=" i  in  filedChildParams " :key="i.fieldNameEn" :label="i.fieldNameEn" :value="i" />
 					</el-select>
 				</div>
 			</el-form-item>
@@ -278,23 +278,22 @@ export default {
 			this.form.scopeName = this.scopeOptions[id].label
 			this.form.scopeId = this.scopeOptions[id].scopeId
 			this.scopeSelvalue = this.scopeOptions[id]
-
+			this.scopeSelvalue.selected = true
+			this.viewScopeChildParams(this.scopeOptions[id])
 
 		})
-
-
 	},
 	watch: {
-		filterConditionList: function (val, valold) {
-			console.log("list", val, valold)
+		filterConditionList: function (val) {
+			console.log("list", val)
 		},
-		filterSelValue: function (val, valold) {
-			console.log("selvalue", val, valold, "refs", this.$refs)
-			// this.$$refs.select1?this.$$refs.select1.value==
+		conditionList: function (val) {
+			console.log("conlist", val)
 		},
-		addfilter: function (val) {
-			console.log("add", val)
+		filterSelValue: function (val) {
+			console.log("selvalue", val)
 		},
+
 
 	},
 	computed: {
@@ -408,8 +407,9 @@ export default {
 
 		//范围修改时获取参数
 		async viewScopeChildParams(selVal) {
-			console.log("44", selVal)
+			console.log("gg");
 			if (this.filterSelValue.length > 1) {
+
 				await this.$confirm('重新选择可能会丢失页面内容请确认？', {
 					title: '提示',
 					showCancelButton: true,
@@ -421,6 +421,7 @@ export default {
 						return
 					})
 			}
+			this.form.oneFilters = []
 			this.form.scopeId = selVal.scopeId
 			this.form.scopeName = selVal.scopeName
 			this.addfilter = false
@@ -532,8 +533,10 @@ export default {
 			console.log("条件: ", selVal, index, this.filterSelValue)
 			const form = {
 				type: selVal.type,
-				fieldNameEn: selVal.fieldNameEn
+				fieldNameEn: selVal.fieldNameEn,
+				fieldName: selVal.fieldNameCn
 			}
+
 			// 如果type为custom 需要customFieldId
 			if (selVal.type === 'custom') {
 				form.customFieldId = selVal.customFieldId
@@ -544,7 +547,6 @@ export default {
 			if (this.form.isAuto == 0) {
 				form.fieldType = selVal.fieldType
 				Object.assign(this.form.oneFilters[index], form)
-				console.log("selVal.possibleValue", selVal)
 				if (selVal.possibleValue) {
 					if (typeof (selVal.possibleValue) === 'string') {
 						selVal.possibleValue = JSON.parse(selVal.possibleValue)
@@ -625,7 +627,7 @@ export default {
 			})
 		},
 		// 表格多选
-		handleSelectionChange(val) {
+		async handleSelectionChange(val) {
 			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = val[0].oneFilters : console.log(val[0].oneFilters.fieldNameEn) : console.log(2)
 			if (val.length) {
 				this.addfilter = true
@@ -638,7 +640,10 @@ export default {
 				this.scopeSelvalue.selected = true
 				this.form.title = val[0].title
 				//表格单击选中时查询条件渲染
-				// getFilterCondition(this.form.scopeId);
+				// getViewAllScopeParams(this.form.scopeId).then((res) => {
+				// 	this.scopeDownChildParams = res.data
+				// 	console.log("scopeDownChildParams :", this.scopeDownChildParams)
+				// })
 
 				//
 

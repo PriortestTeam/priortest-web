@@ -429,13 +429,14 @@ export default {
 @import "index.scss";
 
 .app-container {
-  position: absolute;
+
+  position: relative;
 
   .all-btn {
     z-index: 999999999999;
-    position: relative;
-    top: 9.8%;
-    left: 0.7%;
+    position: absolute;
+    top: 68px;
+    left: 1.75%;
     color: rgb(96, 98, 102);
     font-size: 14px;
   }
