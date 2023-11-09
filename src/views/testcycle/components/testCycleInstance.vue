@@ -15,10 +15,20 @@
 							<el-input v-model="searchValue" size="mini" prefix-icon="el-icon-search" placeholder="用例UUID 或标题" clearable
 								@input="handleChange"></el-input>
 						</div>
-						<ul class="list">
-							<li :class="active === item.id ? 'active' : ''" v-for="item in fillerInstanceListData" :key="item.id"
-								@click="listItemClick(item)">{{ item.title }}</li>
-						</ul>
+						<!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
+							@change="handleCheckAllChange">全选</el-checkbox>
+						<div style="margin: 15px 0;"></div> -->
+
+						<!-- <ul class="list"> -->
+						<el-checkbox-group class="list" v-model="checkedlLists" @change="listItemClick">
+							<el-checkbox v-for="item in fillerInstanceListData" :key="item.id" :label="item.id">{{ item.title
+							}}</el-checkbox>
+						</el-checkbox-group>
+						<!-- <li :class="active === item.id ? 'active' : ''" v-for="item in fillerInstanceListData" :key="item.id"
+								@click="listItemClick(item)">{{ item.title }}</li> -->
+
+
+						<!-- </ul> -->
 					</div>
 				</div>
 			</el-col>
@@ -89,6 +99,7 @@ export default {
 			cycleId: '',
 			show: false,
 			active: '',
+			checkedlLists: [],
 			InstanceListData: [],
 			fillerInstanceListData: [],
 			searchValue: '',
@@ -149,16 +160,16 @@ export default {
 			})
 		},
 		//点击列表，选择case，高亮
-		listItemClick(item) {
-			console.log(item)
-			if (this.active === item.id) {
-				this.active = ''
-				this.selectCaseIds = []
-				return
-			}
-			this.active = item.id
-			this.selectCaseIds = []
-			this.selectCaseIds.push(item.id)
+		listItemClick(val) {
+			this.selectCaseIds = val
+			// if (this.active === item.id) {
+			// 	this.active = ''
+			// 	this.selectCaseIds = []
+			// 	return
+			// }
+			// this.active = item.id
+			// this.selectCaseIds = []
+			// this.selectCaseIds.push(item.id)
 		},
 		// 添加案例
 		addCase() {

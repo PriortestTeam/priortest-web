@@ -68,7 +68,7 @@
               </el-table>
 
               <pagination v-show="featureTotal > 0" :total="featureTotal" :page.sync="featureQuery.pageNum"
-                :limit.sync="featureQuery.pageSize" @pagination="getqueryForfeature" />
+                :limit.sync="featureQuery.pageSize" @pagination="getqueryForFeature" />
             </div>
           </div>
         </el-card>
