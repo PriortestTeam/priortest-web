@@ -62,8 +62,14 @@
 								<el-col :span="4">
 
 									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
-										@change="filterChange($event, index)">
-										<el-option v-for=" i  in  filedChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn" :value="i" />
+										v-if="resolveView" @change="filterChange($event, index)">
+										<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn"
+											:value="computedValue(i)" />
+									</el-select>
+									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
+										v-if="!resolveView" @change="filterChange($event, index)">
+										<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn"
+											:value="computedValue(i)" />
 									</el-select>
 								</el-col>
 								<!-- 选择了字段后出现 第二个条件-->
@@ -269,6 +275,8 @@ export default {
 			viewId: '',
 			conditionList: [],
 			filter: false,
+			isClick: false,
+			resolveView: true,
 
 		}
 	},
@@ -284,6 +292,13 @@ export default {
 
 		})
 	},
+	created() {
+		if (!this.isClick) {
+			console.log("-----33----");
+
+
+		}
+	},
 	watch: {
 		filterConditionList: function (val) {
 			console.log("list", val)
@@ -293,6 +308,10 @@ export default {
 		},
 		filterSelValue: function (val) {
 			console.log("selvalue", val)
+		},
+		isClick: function (val) {
+			console.log("isClick", val)
+
 		},
 
 
@@ -329,6 +348,18 @@ export default {
 		// this.getViewFilter()
 	},
 	methods: {
+		computedValue(i) {
+
+			// 在这里根据 i 计算 value 的值
+			// 例如，如果你想要 value 是 i.fieldNameEn 和 i.fieldNameCn 的拼接，你可以这样写：
+			if (this.isClick) {
+				return i.fieldNameCn
+			} else {
+				return i
+			}
+
+
+		},
 		// 新增视图
 		submitForm(action) {
 			if (this.form.isAuto == 0 && this.form.oneFilters !== '') {
@@ -531,6 +562,9 @@ export default {
 
 		//条件字段下拉框被选择
 		filterChange(selVal, index) {
+			this.isClick = false
+
+			this.resolveView = false
 			console.log("条件: ", selVal, index, this.filterSelValue)
 			const form = {
 				type: selVal.type,
@@ -629,8 +663,9 @@ export default {
 		},
 		// 表格多选
 		async handleSelectionChange(val) {
+			console.log("val: ", val);
 			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = JSON.parse(val[0].filter) : "" : ""
-			if (val.length) {
+			if (val.length == 1) {
 				this.addfilter = true
 				this.filterSelValue = [{}]
 				this.form.auto_filter = ''
@@ -642,7 +677,7 @@ export default {
 				this.form.title = val[0].title
 				//表格单击选中时查询条件渲染
 
-
+				this.isClick = true
 
 				// getViewAllScopeParams(this.form.scopeId).then((res) => {
 				// 	this.scopeDownChildParams = res.data
@@ -660,6 +695,7 @@ export default {
 		//视图修改
 		async toEdit(row) {
 
+			this.isClick = true
 			this.resetForm()
 			this.form.id = row.id
 			this.$refs.viewData.clearSelection()
