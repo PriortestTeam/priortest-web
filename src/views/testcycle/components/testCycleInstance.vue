@@ -153,10 +153,13 @@ export default {
 
 			}
 			const p = {
-				scope: 'testCycle',
+				scope: 'testCase',
 				viewId: data.id,
 			}
-			testCycleListByClick(p, "").then(res => {
+			testCycleListByClick(p, {
+				pageNum: "",
+				pageSize: ""
+			}).then(res => {
 				console.log('viewClick: ', res, p)
 				this.InstanceListData = res.data.list
 				this.fillerInstanceListData = this.InstanceListData
@@ -215,7 +218,9 @@ export default {
 			const params = {
 				testCycleId: this.cycleId
 			}
+			console.log(params);
 			getListBytestCycle(params).then(res => {
+				console.log(res.data.list);
 				this.InstanceTableData = res.data.list
 			})
 
@@ -240,10 +245,11 @@ export default {
 				testCycleId: this.cycleId,
 				testCaseIds: this.selectCaseIds
 			}
+			console.log(data);
 			saveInstance(data).then(res => {
 				console.log(res.code === '200')
 				if (res.code === '200') {
-					console.log(1)
+					console.log(11, data)
 					message('success', '添加成功')
 					this.reloadTable()
 				}

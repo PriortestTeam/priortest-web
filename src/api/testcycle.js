@@ -134,6 +134,7 @@ export function getListBytestCycle(data) {
 
 //添加运行计划
 export function saveInstance(data) {
+  console.log(99, data);
   return request({
     url: "/testCycle/instance/saveInstance",
     method: "post",

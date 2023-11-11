@@ -465,9 +465,9 @@ export default {
 				projectId: this.projectInfo.userUseOpenProject.projectId
 			}
 			//获取
-			getViewAllScopeParams(scope).then((res) => {
+			getViewAllScopeParams(scope, this.projectInfo.userUseOpenProject.projectId).then((res) => {
 				this.scopeDownChildParams = res.data
-				console.log("scopeDownChildParams :", this.scopeDownChildParams)
+				console.log("scopeDownChildParams :", params.projectId)
 			})
 			//过滤条件参数
 			getFilterCondition(scope).then((res) => {
