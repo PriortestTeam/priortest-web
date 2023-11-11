@@ -302,6 +302,7 @@ export default {
     childByValue: function (query) {
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id
+      console.log('query: ', query);
       const params = {
         scope: 'testCycle',
         viewId: this.viewSearchQueryId

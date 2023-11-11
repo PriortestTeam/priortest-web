@@ -20,10 +20,18 @@
 						<div style="margin: 15px 0;"></div> -->
 
 						<!-- <ul class="list"> -->
-						<el-checkbox-group class="list" v-model="checkedlLists" @change="listItemClick">
-							<el-checkbox v-for="item in fillerInstanceListData" :key="item.id" :label="item.id">{{ item.title
-							}}</el-checkbox>
-						</el-checkbox-group>
+						<div class="list">
+							<el-tree :data="setTree" :props="defaultProps" node-key="id" default-expand-all
+								:expand-on-click-node="false" class="list-L">
+								<span slot-scope="{ node }" class="custom-tree-node">
+									<span @click="getList(node.data, node.label)">{{ node.label }}</span>
+								</span>
+							</el-tree>
+							<el-checkbox-group class="list-R" v-model="checkedlLists" @change="listItemClick">
+								<el-checkbox v-for="item in fillerInstanceListData" :key="item.id" :label="item.id">{{ item.title
+								}}</el-checkbox>
+							</el-checkbox-group>
+						</div>
 						<!-- <li :class="active === item.id ? 'active' : ''" v-for="item in fillerInstanceListData" :key="item.id"
 								@click="listItemClick(item)">{{ item.title }}</li> -->
 
@@ -90,8 +98,10 @@ import {
 import {
 	getListBytestCycle,
 	saveInstance,
-	deleteInstance
+	deleteInstance,
+	testCycleListByClick
 } from '@/api/testcycle'
+import { queryViewTrees } from '@/api/project'
 export default {
 	data() {
 		return {
@@ -105,36 +115,85 @@ export default {
 			searchValue: '',
 			selectCaseIds: [],
 			InstanceTableData: [],
-			cycleId: '1677883697677856769',
+			cycleId: '',
 			tableHeader: {
 				color: '#d4dce3',
 				background: '#4286CD'
-			} // 表头颜色加粗设置
+			}, // 表头颜色加粗设置,
+			setTree: [], // tree数据,
+			defaultProps: {
+				children: 'childViews',
+				label: 'title'
+			},
 		}
 	},
 	created() {
+
+		// 仅在整个视图都被渲染之后才会运行的代码
 		this.projectId = this.$store.state.user.userinfo.userUseOpenProject.projectId
 		this.cycleId = this.$route.query.id
-		this.getInstanceListData()
+		// this.getInstanceListData()
 		this.getInstanceTableData()
+
+
+
+
 	},
 	methods: {
 		// 获取左侧列表数据
-		getInstanceListData() {
-			const data = {
-				projectId: this.projectId,
-				viewTreeDto: {
-					id: ''
-				}
-			}
+		getList: function (data, labels) {
+			console.log("data: ", data, labels)
 			const query = {
-				pageNum: 1,
-				pageSize: 10
+				labels: labels,
+				projectId: JSON.parse(localStorage.getItem('projectId')),
+				viewTreeDto: {
+					id: data.id
+				}
+
+
 			}
-			testCaseList(query, data).then((res) => {
+			const p = {
+				scope: 'testCycle',
+				viewId: data.id,
+			}
+			testCycleListByClick(p, "").then(res => {
+				console.log('viewClick: ', res, p)
 				this.InstanceListData = res.data.list
 				this.fillerInstanceListData = this.InstanceListData
+			}).catch(() => {
+				this.InstanceListData = []
+				this.fillerInstanceListData = []
+				// this.isLoading = false
 			})
+
+
+		},
+		getInstanceListData() {
+
+			queryViewTrees({
+				"scope": "3000001"
+			}).then((res) => {
+
+				this.setTree = res.data
+				console.log("tree", this.setTree);
+
+			})
+			// const data = {
+			// 	projectId: this.projectId,
+			// 	viewTreeDto: {
+			// 		id: "1677883697677856769",
+			// 	}
+			// }
+			// const query = {
+			// 	// pageNum: 1,
+			// 	// pageSize: 10
+			// }
+			// console.log(data);
+			// testCaseList(query, data).then((res) => {
+			// 	this.InstanceListData = res.data.list
+			// 	this.fillerInstanceListData = this.InstanceListData
+			// })
+
 		},
 		// 搜索框过滤数据
 		handleChange(value) {
@@ -152,12 +211,14 @@ export default {
 		},
 		// 获取表格数据
 		getInstanceTableData() {
+			if (!this.cycleId) return
 			const params = {
 				testCycleId: this.cycleId
 			}
 			getListBytestCycle(params).then(res => {
 				this.InstanceTableData = res.data.list
 			})
+
 		},
 		//点击列表，选择case，高亮
 		listItemClick(val) {
@@ -191,6 +252,7 @@ export default {
 		// 展示左侧列表
 		showInstanceList() {
 			this.show = !this.show
+			this.show ? this.getInstanceListData() : ""
 		},
 		//删除案例
 		deleteCase(ids) {
@@ -248,9 +310,17 @@ export default {
 		padding: 15px;
 
 		.list {
+
+
 			display: flex;
-			flex-direction: column;
+			justify-content: space-between;
+
+			.list-R {
+				display: flex;
+				flex-direction: column;
+			}
 		}
+
 
 		.btns {
 			margin-bottom: 10px;

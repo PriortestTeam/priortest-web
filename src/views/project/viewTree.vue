@@ -86,9 +86,9 @@ export default {
       const params = {
         scope: this.childScope
       }
-
+      console.log("params: ", params);
       queryViewTrees(params).then((res) => {
-
+        console.log("res: ", res.data);
         this.setTree = res.data;
 
       })

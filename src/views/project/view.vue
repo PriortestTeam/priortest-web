@@ -73,7 +73,8 @@
 									</el-select>
 								</el-col>
 								<!-- 选择了条件后且条件部位空或不为空时 -->
-								<el-col :span="4" v-show="item.condition && item.condition != 'not empty' && item.condition != 'empty'">
+								<el-col :span="4"
+									v-show="item.condition && item.condition != 'not empty' && item.condition != '不为空' && item.condition != 'empty' && item.condition != '为空'">
 									<!-- 下拉框 -->
 									<el-select
 										v-if="item.fieldType === 'number' || item.fieldType === 'dropDown' || item.fieldType === 'multiList' || item.fieldType === 'linkedMoudue' || item.fieldType === 'userList'"
@@ -421,7 +422,7 @@ export default {
 						return
 					})
 			}
-			this.form.oneFilters = []
+
 			this.form.scopeId = selVal.scopeId
 			this.form.scopeName = selVal.scopeName
 			this.addfilter = false
@@ -585,7 +586,7 @@ export default {
 				andOr: '',
 				type: '',
 				customFieldId: '',
-				fieldNamen: '',
+				fieldNameEn: '',
 				fieldType: '',
 				condition: '',
 				sourceVal: ''
@@ -628,7 +629,7 @@ export default {
 		},
 		// 表格多选
 		async handleSelectionChange(val) {
-			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = val[0].oneFilters : console.log(val[0].oneFilters.fieldNameEn) : console.log(2)
+			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = JSON.parse(val[0].filter) : "" : ""
 			if (val.length) {
 				this.addfilter = true
 				this.filterSelValue = [{}]
@@ -640,6 +641,9 @@ export default {
 				this.scopeSelvalue.selected = true
 				this.form.title = val[0].title
 				//表格单击选中时查询条件渲染
+
+
+
 				// getViewAllScopeParams(this.form.scopeId).then((res) => {
 				// 	this.scopeDownChildParams = res.data
 				// 	console.log("scopeDownChildParams :", this.scopeDownChildParams)
@@ -655,6 +659,7 @@ export default {
 
 		//视图修改
 		async toEdit(row) {
+
 			this.resetForm()
 			this.form.id = row.id
 			this.$refs.viewData.clearSelection()
@@ -662,12 +667,17 @@ export default {
 			this.$refs.viewData.toggleRowSelection(row)
 			console.log(row, 'filter')
 			this.form.title = row.title
+			this.form.oneFilters = JSON.parse(row.filter)
 			this.scopeSelvalue = this.scopeObj[0]
 			await this.viewScopeChildParams(this.scopeObj[0])
 			if (row.parentId !== '') {
 				this.parentViewChange()
 				this.form.parentId = row.parentId
 			}
+			this.addfilter = true
+			this.filterSelValue = [{}]
+			this.form.auto_filter = ''
+
 		}
 	}
 }
