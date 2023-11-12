@@ -523,9 +523,9 @@ export default {
 				]
 				this.form.auto_filter = ''
 			} else {
-				this.form.oneFilters = ''
-				this.filterSelValue = ''
-				this.filterConditionList = ''
+				this.form.oneFilters = []
+				this.filterSelValue = []
+				this.filterConditionList = []
 				this.form.auto_filter = []
 			}
 		},
@@ -658,7 +658,7 @@ export default {
 		// 表格多选
 		async handleSelectionChange(val) {
 
-			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = JSON.parse(val[0].filter) : "" : ""
+			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = JSON.parse(val[0].filter) : this.form.oneFilters = [] : ""
 			if (val.length == 1) {
 				this.form.oneFilters.forEach((item) => {
 					delete item.fieldNameEnCamelCase
@@ -700,7 +700,7 @@ export default {
 			this.$refs.viewData.toggleRowSelection(row)
 			console.log(row, 'filter')
 			this.form.title = row.title
-			this.form.oneFilters = JSON.parse(row.filter)
+			row.filter.length ? this.form.oneFilters = JSON.parse(row.filter) : this.form.oneFilters = []
 			this.form.oneFilters.forEach((item) => {
 				delete item.fieldNameEnCamelCase
 			})
