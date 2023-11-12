@@ -28,7 +28,7 @@
 							<div class="list-R">
 								<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
 									@change="handleCheckAllChange">全选</el-checkbox>
-								<el-checkbox-group v-model="checkedlLists" @change="listItemClick">
+								<el-checkbox-group v-model="checkedlLists" @change="listItemClick" class="list_R_D">
 									<el-checkbox v-for="item in fillerInstanceListData" :key="item.id" :label="item.id">{{ item.title
 									}}</el-checkbox>
 								</el-checkbox-group>
@@ -334,6 +334,7 @@ export default {
 	border: 1px solid rgb(210, 210, 210);
 	background-color: white;
 
+
 	.listHeader {
 		background-color: rgb(66, 134, 205);
 		font-size: 14px;
@@ -344,18 +345,33 @@ export default {
 
 	.listContent {
 		padding: 15px;
+		overflow-x: scroll !important;
+		overflow-y: scroll !important;
 
 		.list {
-
-
+			// width: 400px;
 			display: flex;
 			justify-content: start;
+			flex-wrap: nowrap !important;
 			// overflow: hidden;
 
 			.list-R {
+
+				height: 60vh;
 				display: flex;
 				flex-direction: column;
+
+				.list_R_D {
+					flex: 1;
+
+
+					// background-color: aqua;
+					display: flex;
+					flex-direction: column;
+					flex-wrap: nowrap !important;
+				}
 			}
+
 		}
 
 
