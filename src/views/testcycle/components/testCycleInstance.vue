@@ -161,14 +161,27 @@ export default {
 				scope: 'testCase',
 				viewId: data.id,
 			}
-			testCycleListByClick(p).then(res => {
-				console.log('viewClick: ', res, p)
-				this.InstanceListData = res.data.list
-				this.fillerInstanceListData = this.InstanceListData
-			}).catch(() => {
-				this.InstanceListData = []
-				this.fillerInstanceListData = []
-				// this.isLoading = false
+			let pageSize = ''
+
+			testCycleListByClick(p, {
+
+			},).then(res => {
+				console.log('viewClick: ', res.data.total, p)
+				pageSize = res.data.total
+			}).then(() => {
+				testCycleListByClick(p, {
+					pageNum: 1,
+					pageSize: pageSize
+				},
+
+				).then(res => {
+					console.log('viewClick: ', res.data.total, p)
+					this.InstanceListData = res.data.list
+					this.fillerInstanceListData = this.InstanceListData
+				}).catch(() => {
+					this.InstanceListData = []
+					this.fillerInstanceListData = []
+				})
 			})
 
 
@@ -337,7 +350,7 @@ export default {
 
 			display: flex;
 			justify-content: start;
-			overflow: hidden;
+			// overflow: hidden;
 
 			.list-R {
 				display: flex;
