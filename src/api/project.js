@@ -156,7 +156,6 @@ export function getViewScopeChildParams(scope) {
 }
 
 export function getViewAllScopeParams(scope, projectId) {
-  console.log(77777, scope, projectId);
   return request({
     url: `/customFields/getAllCustomList?projectId=${projectId}`,
     method: "get",

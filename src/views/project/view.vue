@@ -62,15 +62,11 @@
 								<el-col :span="4">
 
 									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
-										v-if="resolveView" @change="filterChange($event, index)">
+										@change="filterChange($event, index)">
 										<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn"
 											:value="computedValue(i)" />
 									</el-select>
-									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
-										v-if="!resolveView" @change="filterChange($event, index)">
-										<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn"
-											:value="computedValue(i)" />
-									</el-select>
+
 								</el-col>
 								<!-- 选择了字段后出现 第二个条件-->
 								<el-col :span="4" v-show="item.type">
@@ -103,9 +99,10 @@
 						</div>
 					</div>
 					<!-- 自动创建子视图下拉框 -->
+
 					<el-select v-if="addfilter && form.isAuto == 1" v-model="filterSelValue" value-key="fieldNameEn" size="small"
 						placeholder="请选择字段" @change="filterChange">
-						<el-option v-for=" i  in  filedChildParams " :key="i.fieldNameEn" :label="i.fieldNameEn" :value="i" />
+						<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn" :value="i" />
 					</el-select>
 				</div>
 			</el-form-item>
@@ -138,7 +135,7 @@
 				</el-table-column>
 				<el-table-column prop="status" label="视图状态">
 					<template slot-scope="scope">
-						{{ scope.row.isPrivate == 0 ? "仅自己" : "公开" }}
+						{{ scope.row.isPrivate ? "仅自己" : "公开" }}
 					</template>
 				</el-table-column>
 				<el-table-column prop="parentTitle" label="父级视图" />
@@ -277,6 +274,7 @@ export default {
 			filter: false,
 			isClick: false,
 			resolveView: true,
+			resolveView: false
 
 		}
 	},
@@ -292,13 +290,7 @@ export default {
 
 		})
 	},
-	created() {
-		if (!this.isClick) {
-			console.log("-----33----");
 
-
-		}
-	},
 	watch: {
 		filterConditionList: function (val) {
 			console.log("list", val)
@@ -352,9 +344,7 @@ export default {
 
 			// 在这里根据 i 计算 value 的值
 			// 例如，如果你想要 value 是 i.fieldNameEn 和 i.fieldNameCn 的拼接，你可以这样写：
-			if (this.isClick) {
-				return i.fieldNameCn
-			} else {
+			{
 				return i
 			}
 
@@ -369,7 +359,9 @@ export default {
 			}
 			if (action === 'add') {
 				this.$refs['form'].validate((valid) => {
+					console.log(this.form, "0000000");
 					addViewRE(this.form).then((res) => {
+						console.log("res1: ", res, this.form);
 						if (res.code === '200') {
 							this.resetForm()
 							message('success', res.msg)
@@ -565,6 +557,7 @@ export default {
 			this.isClick = false
 
 			this.resolveView = false
+			this.resolveView2 = true
 			console.log("条件: ", selVal, index, this.filterSelValue)
 			const form = {
 				type: selVal.type,
@@ -594,6 +587,7 @@ export default {
 			}
 			// 如果选择自动创建子视图， 给form.auto_filter赋值
 			else {
+				this.form.oneFilters = []
 				this.form.auto_filter = []
 				this.form.auto_filter.push(form)
 			}
@@ -663,9 +657,12 @@ export default {
 		},
 		// 表格多选
 		async handleSelectionChange(val) {
-			console.log("val: ", val);
+
 			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = JSON.parse(val[0].filter) : "" : ""
 			if (val.length == 1) {
+				this.form.oneFilters.forEach((item) => {
+					delete item.fieldNameEnCamelCase
+				})
 				this.addfilter = true
 				this.filterSelValue = [{}]
 				this.form.auto_filter = ''
@@ -704,6 +701,9 @@ export default {
 			console.log(row, 'filter')
 			this.form.title = row.title
 			this.form.oneFilters = JSON.parse(row.filter)
+			this.form.oneFilters.forEach((item) => {
+				delete item.fieldNameEnCamelCase
+			})
 			this.scopeSelvalue = this.scopeObj[0]
 			await this.viewScopeChildParams(this.scopeObj[0])
 			if (row.parentId !== '') {
