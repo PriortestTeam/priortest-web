@@ -62,11 +62,15 @@
 								<el-col :span="4">
 
 									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
-										@change="filterChange($event, index)">
+										@change="filterChange($event, index)" v-if="resolveView">
 										<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn"
 											:value="computedValue(i)" />
 									</el-select>
-
+									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
+										@change="filterChange($event, index)" v-if="!resolveView">
+										<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn"
+											:value="computedValue(i)" />
+									</el-select>
 								</el-col>
 								<!-- 选择了字段后出现 第二个条件-->
 								<el-col :span="4" v-show="item.type">
@@ -239,7 +243,7 @@ export default {
 			},
 			scopeSelvalue: '',
 			filterSelValue: '',
-			filterConditionList: '',
+			filterConditionList: [],
 			//是否显示选择条件下拉框
 			addfilter: false,
 			formTemp: {},
@@ -274,7 +278,6 @@ export default {
 			filter: false,
 			isClick: false,
 			resolveView: true,
-			resolveView: false
 
 		}
 	},
@@ -344,6 +347,8 @@ export default {
 
 			// 在这里根据 i 计算 value 的值
 			// 例如，如果你想要 value 是 i.fieldNameEn 和 i.fieldNameCn 的拼接，你可以这样写：
+			if (this.isClick)
+				return i.fieldNameCn
 			{
 				return i
 			}
@@ -359,9 +364,8 @@ export default {
 			}
 			if (action === 'add') {
 				this.$refs['form'].validate((valid) => {
-					console.log(this.form, "0000000");
 					addViewRE(this.form).then((res) => {
-						console.log("res1: ", res, this.form);
+
 						if (res.code === '200') {
 							this.resetForm()
 							message('success', res.msg)
@@ -379,6 +383,9 @@ export default {
 						this.getqueryViews()
 						this.filter = false
 					}
+					else {
+						message('success', res.msg)
+					}
 				})
 			}
 		},
@@ -390,14 +397,26 @@ export default {
 		cancelUpdate() {
 			this.$refs.viewData.clearSelection()
 			this.resetForm()
+			this.form = {
+				isPrivate: '1',
+				level: 0,
+				parentId: '',
+				isAuto: 0,
+				oneFilters: [],
+				auto_filter: '',
+				scopeId: '',
+				scopeName: '',
+				title: '',
+
+			}
 		},
 		// 重置表单
 		resetForm() {
 			this.scopeDis = false
-			this.filterConditionList = ''
-			this.scopeSelvalue = ''
+			this.filterConditionList = []
+			this.scopeSelvalue = []
 			this.viewParents = []
-			this.filterSelValue = ''
+			this.filterSelValue = []
 			this.addfilter = false
 			this.$refs['form'].resetFields()
 		},
@@ -555,47 +574,50 @@ export default {
 		//条件字段下拉框被选择
 		filterChange(selVal, index) {
 			this.isClick = false
-
 			this.resolveView = false
-			this.resolveView2 = true
-			console.log("条件: ", selVal, index, this.filterSelValue)
-			const form = {
-				type: selVal.type,
-				fieldNameEn: selVal.fieldNameEn,
-				fieldName: selVal.fieldNameCn
-			}
 
-			// 如果type为custom 需要customFieldId
-			if (selVal.type === 'custom') {
-				form.customFieldId = selVal.customFieldId
-			} else {
-				form.customFieldId = ''
-			}
-			// 如果没有选择自动创建子视图，需要fieldType, 给form.onefilter[index]赋值
-			if (this.form.isAuto == 0) {
-				form.fieldType = selVal.fieldType
-				Object.assign(this.form.oneFilters[index], form)
-				if (selVal.possibleValue) {
-					if (typeof (selVal.possibleValue) === 'string') {
-						selVal.possibleValue = JSON.parse(selVal.possibleValue)
-					}
-					if (selVal.fieldType === 'linkedDropDown') {
-						selVal.possibleValue = this.convertData([selVal.possibleValue])
-					}
+			console.log("条件: ", selVal, index, this.filterSelValue)
+			if (selVal.fieldType) {
+				const form = {
+					type: selVal.type,
+					fieldNameEn: selVal.fieldNameEn,
+					fieldName: selVal.fieldNameCn
 				}
-				this.filterCondition(selVal.fieldType, index)
-			}
-			// 如果选择自动创建子视图， 给form.auto_filter赋值
-			else {
-				this.form.oneFilters = []
-				this.form.auto_filter = []
-				this.form.auto_filter.push(form)
+
+				// 如果type为custom 需要customFieldId
+				if (selVal.type === 'custom') {
+					form.customFieldId = selVal.customFieldId
+				} else {
+					form.customFieldId = ''
+				}
+				// 如果没有选择自动创建子视图，需要fieldType, 给form.onefilter[index]赋值
+				if (this.form.isAuto == 0) {
+					form.fieldType = selVal.fieldType
+					Object.assign(this.form.oneFilters[index], form)
+					if (selVal.possibleValue) {
+						if (typeof (selVal.possibleValue) === 'string') {
+							selVal.possibleValue = JSON.parse(selVal.possibleValue)
+						}
+						if (selVal.fieldType === 'linkedDropDown') {
+							selVal.possibleValue = this.convertData([selVal.possibleValue])
+						}
+					}
+					this.filterCondition(selVal.fieldType, index)
+				}
+
+				// 如果选择自动创建子视图， 给form.auto_filter赋值
+				else {
+					this.form.oneFilters = []
+					this.form.auto_filter = []
+					this.form.auto_filter.push(form)
+				}
 			}
 		},
 		//当条件的filedType 为 checkbox和 radio，conditon的选项只显示 为空，不等于和 等于
 		filterCondition(fieldType, index) {
-
+			console.log("07");
 			if (fieldType === 'radio' || fieldType === 'checkbox') {
+				console.log("08");
 				this.conditionList.forEach(item => {
 					if (item.nameCn === '为空' || item.nameCn === '等于' || item.nameCn ===
 						'不等于') {
@@ -604,8 +626,10 @@ export default {
 					}
 				})
 			} else {
+				console.log("09", this.filterConditionList);
 				this.filterConditionList[index] = this.conditionList
 			}
+
 		},
 		//增加查询条件
 		addCondition() {
@@ -658,11 +682,13 @@ export default {
 		// 表格多选
 		async handleSelectionChange(val) {
 
-			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = JSON.parse(val[0].filter) : this.form.oneFilters = [] : ""
+			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = JSON.parse(val[0].filter) : this.form.oneFilters = [{ "id": "", "andOr": "", "type": "", "customFieldId": "", "fieldNameEn": "", "fieldType": "", "condition": "", "sourceVal": "" }] : ""
 			if (val.length == 1) {
 				this.form.oneFilters.forEach((item) => {
 					delete item.fieldNameEnCamelCase
 				})
+				this.form.isPrivate = val[0].isPrivate.toString()
+				console.log(typeof (val[0].isPrivate));
 				this.addfilter = true
 				this.filterSelValue = [{}]
 				this.form.auto_filter = ''
@@ -676,13 +702,6 @@ export default {
 
 				this.isClick = true
 
-				// getViewAllScopeParams(this.form.scopeId).then((res) => {
-				// 	this.scopeDownChildParams = res.data
-				// 	console.log("scopeDownChildParams :", this.scopeDownChildParams)
-				// })
-
-				//
-
 			}
 
 			this.multipleSelection = val
@@ -695,12 +714,13 @@ export default {
 			this.isClick = true
 			this.resetForm()
 			this.form.id = row.id
+			this.form.isPrivate = row.isPrivate.toString()
 			this.$refs.viewData.clearSelection()
 			this.form.scopeName = row.scopeName
 			this.$refs.viewData.toggleRowSelection(row)
 			console.log(row, 'filter')
 			this.form.title = row.title
-			row.filter.length ? this.form.oneFilters = JSON.parse(row.filter) : this.form.oneFilters = []
+			row.filter.length ? this.form.oneFilters = JSON.parse(row.filter) : this.form.oneFilters = [{ "id": "", "andOr": "", "type": "", "customFieldId": "", "fieldNameEn": "", "fieldType": "", "condition": "", "sourceVal": "" }]
 			this.form.oneFilters.forEach((item) => {
 				delete item.fieldNameEnCamelCase
 			})
