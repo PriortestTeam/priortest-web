@@ -15,9 +15,7 @@
 							<el-input v-model="searchValue" size="mini" prefix-icon="el-icon-search" placeholder="用例UUID 或标题" clearable
 								@input="handleChange"></el-input>
 						</div>
-						<!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
-							@change="handleCheckAllChange">全选</el-checkbox>
-						<div style="margin: 15px 0;"></div> -->
+
 
 						<!-- <ul class="list"> -->
 						<div class="list">
@@ -27,10 +25,15 @@
 									<span @click="getList(node.data, node.label)">{{ node.label }}</span>
 								</span>
 							</el-tree>
-							<el-checkbox-group class="list-R" v-model="checkedlLists" @change="listItemClick">
-								<el-checkbox v-for="item in fillerInstanceListData" :key="item.id" :label="item.id">{{ item.title
-								}}</el-checkbox>
-							</el-checkbox-group>
+							<div class="list-R">
+								<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
+									@change="handleCheckAllChange">全选</el-checkbox>
+								<el-checkbox-group v-model="checkedlLists" @change="listItemClick">
+									<el-checkbox v-for="item in fillerInstanceListData" :key="item.id" :label="item.id">{{ item.title
+									}}</el-checkbox>
+								</el-checkbox-group>
+							</div>
+
 						</div>
 						<!-- <li :class="active === item.id ? 'active' : ''" v-for="item in fillerInstanceListData" :key="item.id"
 								@click="listItemClick(item)">{{ item.title }}</li> -->
@@ -115,6 +118,8 @@ export default {
 			searchValue: '',
 			selectCaseIds: [],
 			InstanceTableData: [],
+			isIndeterminate: true,
+			checkAll: false,
 			cycleId: '',
 			tableHeader: {
 				color: '#d4dce3',
@@ -156,10 +161,7 @@ export default {
 				scope: 'testCase',
 				viewId: data.id,
 			}
-			testCycleListByClick(p, {
-				pageNum: "",
-				pageSize: ""
-			}).then(res => {
+			testCycleListByClick(p).then(res => {
 				console.log('viewClick: ', res, p)
 				this.InstanceListData = res.data.list
 				this.fillerInstanceListData = this.InstanceListData
@@ -212,6 +214,13 @@ export default {
 				})
 			}, 300)
 		},
+		// 全选
+		handleCheckAllChange(val) {
+			this.selectCaseIds = this.checkedlLists = val ? this.fillerInstanceListData.map(item => {
+				return item.id
+			}) : []
+			this.isIndeterminate = false
+		},
 		// 获取表格数据
 		getInstanceTableData() {
 			if (!this.cycleId) return
@@ -227,7 +236,12 @@ export default {
 		},
 		//点击列表，选择case，高亮
 		listItemClick(val) {
+			console.log(val);
 			this.selectCaseIds = val
+			this.checkedlLists = val
+			let checkedCount = val.length;
+			this.checkAll = checkedCount === this.fillerInstanceListData.length;
+			this.isIndeterminate = checkedCount > 0 && checkedCount < this.fillerInstanceListData.length;
 			// if (this.active === item.id) {
 			// 	this.active = ''
 			// 	this.selectCaseIds = []
@@ -251,6 +265,9 @@ export default {
 				if (res.code === '200') {
 					console.log(11, data)
 					message('success', '添加成功')
+					this.checkedlLists = []
+					this.isIndeterminate = true
+					this.checkAll = false
 					this.reloadTable()
 				}
 			})
@@ -319,7 +336,8 @@ export default {
 
 
 			display: flex;
-			justify-content: space-between;
+			justify-content: start;
+			overflow: hidden;
 
 			.list-R {
 				display: flex;

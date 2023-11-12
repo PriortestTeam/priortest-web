@@ -92,7 +92,6 @@ export function addViewRE(data) {
 }
 // 更新view
 export function updateView(data) {
-  console.log("0000", data);
   return request({
     url: "/view/updateView",
     method: "post",

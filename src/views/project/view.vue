@@ -62,15 +62,15 @@
 								<el-col :span="4">
 
 									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
-										@change="filterChange($event, index)" v-if="resolveView">
+										@change="filterChange($event, index)">
 										<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn"
-											:value="computedValue(i)" />
+											:value="i" />
 									</el-select>
-									<el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
+									<!-- <el-select v-model="filterSelValue[index]" value-key="fieldNameEn" size="small" placeholder="请选择字段"
 										@change="filterChange($event, index)" v-if="!resolveView">
 										<el-option v-for=" i  in  scopeDownChildParams " :key="i.fieldNameEn" :label="i.fieldNameCn"
 											:value="computedValue(i)" />
-									</el-select>
+									</el-select> -->
 								</el-col>
 								<!-- 选择了字段后出现 第二个条件-->
 								<el-col :span="4" v-show="item.type">
@@ -302,6 +302,7 @@ export default {
 			console.log("conlist", val)
 		},
 		filterSelValue: function (val) {
+
 			console.log("selvalue", val)
 		},
 		isClick: function (val) {
@@ -575,7 +576,6 @@ export default {
 		filterChange(selVal, index) {
 			this.isClick = false
 			this.resolveView = false
-
 			console.log("条件: ", selVal, index, this.filterSelValue)
 			if (selVal.fieldType) {
 				const form = {
@@ -681,14 +681,12 @@ export default {
 		},
 		// 表格多选
 		async handleSelectionChange(val) {
-
 			val.length == 1 && val[0].oneFilters.length ? val[0].oneFilters[0].fieldNameEn ? this.form.oneFilters = JSON.parse(val[0].filter) : this.form.oneFilters = [{ "id": "", "andOr": "", "type": "", "customFieldId": "", "fieldNameEn": "", "fieldType": "", "condition": "", "sourceVal": "" }] : ""
 			if (val.length == 1) {
 				this.form.oneFilters.forEach((item) => {
 					delete item.fieldNameEnCamelCase
 				})
 				this.form.isPrivate = val[0].isPrivate.toString()
-				console.log(typeof (val[0].isPrivate));
 				this.addfilter = true
 				this.filterSelValue = [{}]
 				this.form.auto_filter = ''
@@ -710,7 +708,7 @@ export default {
 
 		//视图修改
 		async toEdit(row) {
-
+			console.log("row", row);
 			this.isClick = true
 			this.resetForm()
 			this.form.id = row.id
