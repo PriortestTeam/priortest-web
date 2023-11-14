@@ -5,143 +5,76 @@
       <el-button type="primary" @click="addTestCaseStep">保存</el-button>
       <el-button type="danger" @click="clear">清空</el-button>
     </div>
-    <el-table
-      ref="table"
-      :data="testCaseStepTableData"
-      border
-      style="width: 100%"
-    >
+    <el-table ref="table" :data="testCaseStepTableData" border style="width: 100%">
       <el-table-column fixed="left" label="操作" width="100">
         <template v-slot="scope">
-          <el-button
-            type="text"
-            size="small"
-            @click.native.prevent="deleteRow(scope.$index, testCaseStepTableData)"
-          >
+          <el-button type="text" size="small" @click.native.prevent="deleteRow(scope.$index, testCaseStepTableData)">
             删除
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column
-        v-for="field in sysCustomFields"
-        :key="field.id"
-        :prop="field.fieldNameEn"
-        :label="field.fieldNameCn"
-        width="200"
-      >
+      <el-table-column v-for="field in sysCustomFields" :key="field.id" :prop="field.fieldNameEn"
+        :label="field.fieldNameCn" width="200">
         <template v-slot="scope">
-          <el-input
-            v-if="field.fieldType === 'text'"
-            v-model="scope.row[field.fieldNameEn]"
-            type="text"
-          />
-          <el-input
-            v-if="field.fieldType === 'memo'"
-            v-model="scope.row[field.fieldNameEn]"
-            type="textarea"
-            :rows="2"
-            :placeholder="`请输入${field.fieldNameCn}`"
-          />
-          <el-radio-group v-if="field.fieldType === 'radio'" v-model="scope.row[field.fieldNameEn]">
+          <el-input v-if="field.fieldType === 'text'" v-model="scope.row[field.fieldNameEn]" type="text" />
+          <el-input v-if="field.fieldType === 'memo'" v-model="scope.row[field.fieldNameEn]" type="textarea" :rows="2"
+            :placeholder="`请输入${field.fieldNameCn}`" />
+          <el-radio-group v-if="field.fieldType === 'radio'" v-model="scope.row[field.defaultValue]">
             <el-radio label="1">是</el-radio>
             <el-radio label="0">否</el-radio>
           </el-radio-group>
-          <el-checkbox-group
-            v-if="field.fieldType === 'checkbox'"
-            v-model="scope.row[field.fieldNameEn]"
-          >
+          <el-checkbox-group v-if="field.fieldType === 'checkbox'" v-model="scope.row[field.fieldNameEn]">
             <el-checkbox label="1">是</el-checkbox>
             <el-checkbox label="0">否</el-checkbox>
           </el-checkbox-group>
-          <el-select
-            v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
-            v-model="scope.row[field.fieldNameEn]"
-            :multiple="['multiList'].includes(field.fieldType)"
-            :placeholder="`请选择${field.fieldNameCn}`"
-          >
-            <el-option
-              v-for="item in handleOptions(field.possibleValue)"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+          <el-select v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
+            v-model="scope.row[field.fieldNameEn]" :multiple="['multiList'].includes(field.fieldType)"
+            :placeholder="`请选择${field.fieldNameCn}`">
+            <el-option v-for="item in handleOptions(field.possibleValue)" :key="item.value" :label="item.label"
+              :value="item.value" />
             <el-option label="添加新值" value="999" @click.native="handleAddPossibleValue(field)" />
           </el-select>
           <el-link v-if="field.fieldType === 'link'" :href="field.defaultValue" target="_blank">
             {{ field.defaultValue }}
           </el-link>
           <el-input v-if="field.fieldType === 'link'" v-model="scope.row[field.fieldNameEn]" type="text" />
-          <el-date-picker
-            v-if="field.fieldType === 'Date'"
-            v-model="scope.row[field.fieldNameEn]"
-            type="date"
-            placeholder="选择日期"
-          />
+          <el-date-picker v-if="field.fieldType === 'Date'" v-model="scope.row[field.fieldNameEn]" type="date"
+            placeholder="选择日期" />
         </template>
       </el-table-column>
       <el-table-column label="自定义字段" prop="customField" width="auto" min-width="200">
         <template v-slot="scope">
-          <el-form>
+          <el-form v-model="scope.row.customFieldDatas" ref="formData">
             <el-row :gutter="20">
-              <el-col
-                v-for="field in scope.row.customFieldDatas"
-                :key="field.customFieldId"
-                span="24"
-              >
-                <el-form-item
-                  size="small"
-                  :label="field.fieldNameCn"
-                  label-width="80px"
-                  :prop="'custom' + field.fieldNameEn"
-                >
-                  <el-input
-                    v-if="field.fieldType === 'text'"
-                    v-model="field.valueData"
-                    type="text"
-                    :length="field.length"
-                  />
-                  <el-input
-                    v-if="field.fieldType === 'memo'"
-                    v-model="field.valueData"
-                    type="textarea"
-                    :rows="2"
-                    placeholder="请输入内容"
-                    :length="field.length"
-                  />
-                  <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.valueData">
+              <el-col v-for="field in scope.row.customFieldDatas" :key="field.customFieldId" :span="24">
+                <el-form-item size="small" :label="field.fieldNameCn" label-width="80px" prop="radio"
+                  :rules="field.fieldNameCn === 'ujkk' ? [{ required: true, message: ' ', trigger: 'change' }] : []">
+                  <el-input v-if="field.fieldType === 'text'" v-model="field.valueData" type="text"
+                    :length="field.length" />
+                  <el-input v-if="field.fieldType === 'memo'" v-model="field.valueData" type="textarea" :rows="2"
+                    placeholder="请输入内容" :length="field.length" />
+
+                  <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.defaultValue">
                     <el-radio label="1">是</el-radio>
                     <el-radio label="0">否</el-radio>
                   </el-radio-group>
-                  <el-checkbox
-                    v-if="field.fieldType === 'checkbox'"
-                    :checked="field.valueData === 'checked'"
-                    @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'"
-                  />
-                  <el-select
-                    v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
-                    v-model="field.valueData"
-                    :multiple="['multiList'].includes(field.fieldType)"
-                    :placeholder="`请选择${field.fieldNameCn}`"
-                    :value="field.id"
-                  >
-                    <el-option
-                      v-for="item in handleOptions(field.possibleValue)"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
+
+                  <el-checkbox v-if="field.fieldType === 'checkbox'" :checked="field.valueData === 'checked'"
+                    @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'" />
+
+                  <el-select v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
+                    v-model="field.valueData" :multiple="['multiList'].includes(field.fieldType)"
+                    :placeholder="`请选择${field.fieldNameCn}`" :value="field.id">
+                    <el-option v-for="item in handleOptions(field.possibleValue)" :key="item.value" :label="item.label"
+                      :value="item.value" />
                     <el-option label="添加新值" value="999" @click.native="handleAddPossibleValue(field)" />
                   </el-select>
                   <el-link v-if="field.fieldType === 'link'" :href="field.defaultValue" target="_blank">
                     {{ field.defaultValue }}
                   </el-link>
                   <el-input v-if="field.fieldType === 'link'" v-model="field.valueData" type="text" />
-                  <el-date-picker
-                    v-if="field.fieldType === 'Date'"
-                    v-model="field.valueData"
-                    type="date"
-                    placeholder="选择日期"
-                  />
+                  <el-date-picker v-if="field.fieldType === 'Date'" v-model="field.valueData" type="date"
+                    placeholder="选择日期" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -151,12 +84,11 @@
       </el-table-column>
     </el-table>
   </div>
-
 </template>
 
 <script>
 import { addTestCaseStepApi, queryTestCaseStepApi } from '@/api/testcaseStep'
-import { message } from '@/utils/common'
+import { formData, message } from '@/utils/common'
 import { getAllCustomField } from '@/api/getFields'
 import addPossibleValue from '@/views/testcase/components/addPossibleValue.vue'
 
@@ -173,19 +105,27 @@ export default {
       currentField: {},
       addPossibleValueVisible: false,
       // 表格数据
-      testCaseStepTableData: []
+      testCaseStepTableData: [],
+      radio: [{ required: true, message: '请选择', trigger: 'change' }]
     }
   },
   computed: {
     projectInfo() {
       return this.$store.state.user.userinfo
-    }
+    },
+
   },
   created() {
     // 初始化自定义字段
     this.getData()
   },
+  mounted() {
+
+    //
+
+  },
   methods: {
+
     deleteRow(index, rows) {
       rows.splice(index, 1)
     },
@@ -263,6 +203,7 @@ export default {
               teststepExpand.forEach(tt => {
                 if (o.customFieldId === tt.customFieldId) {
                   o.valueData = tt.valueData
+                  o.defaultValue = tt.defaultValue
                 }
               })
             })
@@ -303,6 +244,9 @@ export default {
     // 保存步骤
     addTestCaseStep() {
       // 步骤重新排序
+      this.$refs.formData.validate((valid) => {
+        console.log(valid);
+      })
       let num = 1
       this.testCaseStepTableData.forEach(obj => {
         obj.testStepId = num
@@ -312,6 +256,7 @@ export default {
         testCaseId: this.caseId,
         steps: this.testCaseStepTableData
       }
+      console.log(caseStepList);
       addTestCaseStepApi(caseStepList).then((res) => {
         if (res.code === '200') {
           message('success', '保存成功')
@@ -328,3 +273,6 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+@import '../index.scss';
+</style>

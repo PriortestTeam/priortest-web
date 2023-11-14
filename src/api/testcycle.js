@@ -124,11 +124,12 @@ export function addSchedule(data) {
 }
 
 //获得测试用例
-export function getListBytestCycle(data) {
+export function getListBytestCycle(data, params) {
   return request({
     url: "/testCycle/instance/listByTestCycle",
     method: "post",
     data,
+    params: params,
   });
 }
 

@@ -256,6 +256,7 @@ export default {
 		}
 	},
 	created() {
+		this.activeName = localStorage.getItem('tabName')
 		this.id = this.$route.query.id
 		this.isEdit = !!this.$route.query.isEdit
 		// 获取自定义字段
@@ -523,6 +524,9 @@ export default {
 
 		// 处理 tab 切换逻辑
 		handBeforeLeave(activeName, oldActiveName) {
+			localStorage.setItem('tabName', activeName)
+			console.log(localStorage.getItem('tabName'));
+			this.activeName = localStorage.getItem('tabName')
 			if (activeName === 'second' && !this.id) {
 				message(200, '请先保存测试周期再添加用例')
 				return false

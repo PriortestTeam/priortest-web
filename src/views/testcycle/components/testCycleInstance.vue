@@ -57,7 +57,10 @@
 					<el-table-column type="selection">
 					</el-table-column>
 					<el-table-column label="运行">
-						<img @click="$router.push('/testcycle/useCase')" class="runIcon" src="@/icons/img/runIcon.png" alt="">
+						<template slot-scope="scope">
+							<el-button type="primary" class="run-btn" @click="handelRun(scope.row.id)"></el-button>
+						</template>
+						<!-- <img class="runIcon" src="@/icons/img/runIcon.png" alt=""> -->
 					</el-table-column>
 					<el-table-column label="UUID" prop="id" width="180px">
 					</el-table-column>
@@ -242,8 +245,10 @@ export default {
 			}
 			console.log(params);
 			getListBytestCycle(params).then(res => {
-				console.log(res.data.list);
-				this.InstanceTableData = res.data.list
+				getListBytestCycle(params, { pageNum: 1, pageSize: res.data.total }).then(res => {
+					this.InstanceTableData = res.data.list
+				})
+
 			})
 
 		},
@@ -289,6 +294,12 @@ export default {
 		showInstanceList() {
 			this.show = !this.show
 			this.show ? this.getInstanceListData() : ""
+		},
+		//运行
+		handelRun(id) {
+			console.log("run", this.cycleId);
+			// localStorage.setItem('tableid', id)
+			this.$router.push(`/testcycle/useCase?id=${this.cycleId}&tableid=${id}`)
 		},
 		//删除案例
 		deleteCase(ids) {
@@ -349,7 +360,7 @@ export default {
 		overflow-y: scroll !important;
 
 		.list {
-			// width: 400px;
+
 			display: flex;
 			justify-content: start;
 			flex-wrap: nowrap !important;
@@ -392,6 +403,22 @@ export default {
 .InstanceTable {
 	.btns {
 		margin-bottom: 10px;
+	}
+
+	.run-btn {
+		width: 22px;
+		height: 22px;
+		background-image: url("../../../icons/img/runIcon.png");
+		background-size: cover;
+		/* 控制背景图片的大小，cover 表示尽可能填充整个元素 */
+		background-repeat: no-repeat;
+		/* 禁止背景图片重复 */
+		border: none;
+		/* 去掉按钮的边框 */
+		background-color: (#00ff00);
+		border-radius: 50%;
+
+
 	}
 
 	.runIcon {
