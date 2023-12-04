@@ -37,22 +37,19 @@
         <div class="table-title">测试用例-标题</div>
         <el-table :header-cell-style="{ background: '#4286CD', color: '#fff' }" border :data="useCaseData"
           style="width: 100%">
-          <el-table-column type="index">
-          </el-table-column>
+
           <el-table-column prop="Step" label="步骤">
           </el-table-column>
           <el-table-column prop='teststepCondition' label="执行条件">
           </el-table-column>
           <el-table-column prop='TestData' label="测试数据">
           </el-table-column>
-          <el-table-column label="期待结果">
-            <template slot-scope="input">
-              <el-input v-model="input.row.ExpectedResult"></el-input>
-            </template>
+          <el-table-column prop='ExpectedResult' label="期待结果" >
+
           </el-table-column>
           <el-table-column label="实际结果">
-            <template slot-scope="input">
-              <el-input v-model="input.row.ActualResult"></el-input>
+            <template slot-scope="textarea">
+              <el-input v-model="textarea.row.ActualResult"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="执行" width="530">

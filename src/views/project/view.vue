@@ -581,7 +581,7 @@ export default {
 				const form = {
 					type: selVal.type,
 					fieldNameEn: selVal.fieldNameEn,
-					fieldName: selVal.fieldNameCn
+					fieldNameCn: selVal.fieldNameCn
 				}
 
 				// 如果type为custom 需要customFieldId
