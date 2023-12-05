@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// queryForProjects
+export function getProjectListByUser(){
+ return request({
+    url: '/signOff/getProjectListByUser',
+    method: 'get'
+   })
+}
+
 // 获取测试环境
 export function getProjectEnv (params) {
   return request({
@@ -19,7 +27,7 @@ export function getProjectVersion (params) {
 }
 
 // 获取测试周期
-export function getTestCycleVersion (params) {
+export function getTestCycleTitle (params) {
   return request({
     url: '/signOff/getTestCycleDetail',
     method: 'get',

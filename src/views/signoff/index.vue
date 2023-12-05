@@ -9,7 +9,7 @@
           </div>
         </div>
         <el-form-item label="项目" prop="scope" class="form-small">
-          <el-select v-model="projectId" size="small" disabled @change="getProjectInfo">
+          <el-select v-model="projectId" size="small"  @change="getProjectInfo">
             <el-option v-for="(item, index) in projectList" :key="index" :label="item.title" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -17,12 +17,11 @@
         <el-form-item label="发布版本" prop="version" class="form-small">
           <el-row class="radiu">
             <el-radio-group v-model="baseInfo.version" @change="versionTypeChange">
-              <el-radio :label="true">最新版本({{ lastVersion }})</el-radio>
+              <el-radio :label="true">最新版本({{LatestVersion}})</el-radio>
               <el-radio :label="false">
                 <el-select v-model="from.version" size="mini" placeholder="测试版本" :disabled="baseInfo.version === true"
                   @change="versionChange">
-                  <el-option v-for="(item, index) in projectVersionList.mergeValues" :key="index" :label="item"
-                    :value="item" />
+                  <el-option v-for="(value, key) in projectVersionList" :key="key" :label="value" :value="value" />
                 </el-select>
               </el-radio>
             </el-radio-group>
@@ -30,9 +29,8 @@
         </el-form-item>
         <el-form-item label="测试环境" prop="env" class="form-small">
           <!-- <el-row class="radiu"> -->
-          <el-select v-model="from.env" size="mini" placeholder="1.0" @change="envChange">
-            <el-option v-for="(item, index) in projectEnvList.mergeValues" :key="index" :label="item" :value="item" />
-            <!-- <el-option label="PRO" value="2.0" /> -->
+          <el-select v-model="from.env" size="mini" placeholder="测试环境" @change="envChange">
+            <el-option v-for="(value, key) in projectEnvList" :key="key" :label="value" :value="value" />
           </el-select>
           <!-- </el-row> -->
         </el-form-item>
@@ -43,7 +41,7 @@
               <el-radio :label="false">
                 <el-select v-model="from.testCycle" size="mini" placeholder="测试周期标题"
                   :disabled="baseInfo.testCycle === 'curentReleaseVersion'" multiple>
-                  <el-option v-for="(item, index) in testCycleVersionList" :key="index" :label="item.title"
+                  <el-option v-for="(item, index) in testCycleTitleList" :key="index" :label="item.title"
                     :value="item.title" multiple />
                 </el-select>
               </el-radio>
@@ -113,18 +111,17 @@
 <script>
 import { mapGetters } from 'vuex'
 import {
+  getProjectListByUser,
   getProjectEnv,
   getProjectVersion,
-  getTestCycleVersion,
+  getTestCycleTitle,
   createGenerate,
   getSignaturePath,
   getIssue,
   getRecord,
   deleteSign
 } from '@/api/signoff.js'
-import {
-  queryForProjects
-} from '@/api/project.js'
+
 import UploadSigenatrue from '@/components/Upload/UploadSigenatrue.vue'
 import { getLastVersion } from '@/utils/compareVersion.js'
 // 缺陷参数
@@ -206,7 +203,7 @@ export default {
       checkAll: false,
       projectEnvList: [],
       projectVersionList: [],
-      testCycleVersionList: [],
+      testCycleTitleList: [],
       projectId: '',
       records: []
     }
@@ -233,7 +230,7 @@ export default {
     this.projectId = localStorage.getItem('projectId')
     // 获取测试环境
     try {
-      await this.getProject()
+      await this.getProjectListByUser()
       await this.getProjectVersion()
       await this.getProjectEnv()
       await this.getTestCycleVersion()
@@ -265,13 +262,13 @@ export default {
     // 下拉框切换版本
     versionChange(val) {
       this.searchFrom.verison = val
-      this.getTestCycleVersion()
+      this.getTestCycleTitle()
     },
     // 测试环境下拉切换
     envChange(val) {
       this.searchFrom.env = val
       this.from.env = val
-      this.getTestCycleVersion()
+      this.getTestCycleTitle()
     },
     // 测试周期切换
     cycleTypeChange(val) {
@@ -336,7 +333,7 @@ export default {
             const res = await createGenerate(data)
             if (res.code === '200') {
               this.$message.success('生成成功')
-              await this.getProject()
+              await this.getProjectListByUser()
               await this.getProjectVersion()
               await this.getProjectEnv()
               await this.getTestCycleVersion()
@@ -358,40 +355,43 @@ export default {
     },
     async getProjectEnv() {
       const res = await getProjectEnv({ projectId: this.projectId })
-      this.projectEnvList = res.data
-      this.from.env = this.projectEnvList.mergeValues[0] || ''
-      this.baseInfo.env = this.projectEnvList.mergeValues[0] || ''
-      this.searchFrom.env = this.projectEnvList.mergeValues[0] || ''
+      const possibleValueString = res.data[0].possible_value;
+      this.projectEnvList = JSON.parse(possibleValueString);
+
+      //this.from.env = this.projectEnvList.mergeValues[0] || ''
+      //this.baseInfo.env = this.projectEnvList.mergeValues[0] || ''
+      //this.searchFrom.env = this.projectEnvList.mergeValues[0] || ''
     },
+
     async getProjectVersion() {
       const res = await getProjectVersion({ projectId: this.projectId })
-      this.projectVersionList = res.data
-      this.lastVersion = getLastVersion(this.projectVersionList.mergeValues)
-      this.baseInfo.version = true
-      this.searchFrom.version = this.lastVersion
+      const possibleValueString = res.data[0].possible_value;
+      this.projectVersionList = JSON.parse(possibleValueString);
+
+
+      //this.lastVersion = getLastVersion(this.projectVersionList.mergeValues)
+      //this.baseInfo.version = true
+      //this.searchFrom.version = this.lastVersion
     },
-    async getTestCycleVersion() {
-      this.from.testCycle = []
-      const res = await getTestCycleVersion({ projectId: this.projectId, env: this.searchFrom.env, version: this.baseInfo.version ? this.lastVersion : this.from.version })
-      this.testCycleVersionList = res.data || []
+
+    async getTestCycleTitle() {
+      //this.from.testCycle = []
+      const res = await getTestCycleTitle({ projectId: this.projectId, env: this.searchFrom.env, version: this.baseInfo.version ? this.lastVersion : this.from.version })
+      this.testCycleTitleList = res.data || []
     },
     async getSign() {
       const res = await getSignaturePath()
       this.signiList = res.data
       this.from.fileUrl = res.data[0] ? res.data[0].file_path : ''
     },
-    async getProject() {
-      const res = await queryForProjects({
-        pageNum: 1,
-        pageSize: 10
-      }, {})
+    async getProjectListByUser() {
+      const res = await getProjectListByUser()
       this.projectList = res.data
-      console.log("77", res.data)
     },
     getProjectInfo() {
       this.getProjectEnv()
       this.getProjectVersion()
-      this.getTestCycleVersion()
+      this.getTestCycleTitle()
     },
     async issueList() {
       this.from.issue = []
