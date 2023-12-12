@@ -34,33 +34,46 @@
         </div>
       </div>
       <div class="table">
-        <div class="table-title">测试用例-标题</div>
+        <div class="table-title">{{ DrawerList[Drawerindex].title }}</div>
         <el-table :header-cell-style="{ background: '#4286CD', color: '#fff' }" border :data="useCaseData"
           style="width: 100%">
 
-          <el-table-column prop="Step" label="步骤">
+          <el-table-column prop="testStep" label="步骤">
+          </el-table-column>
+          <el-table-column prop="remarks" label="备注">
           </el-table-column>
           <el-table-column prop='teststepCondition' label="执行条件">
           </el-table-column>
-          <el-table-column prop='TestData' label="测试数据">
+          <el-table-column prop='testData' label="测试数据">
           </el-table-column>
-          <el-table-column prop='ExpectedResult' label="期待结果" >
+          <el-table-column prop='expectedResult' label="期待结果">
 
           </el-table-column>
           <el-table-column label="实际结果">
             <template slot-scope="textarea">
-              <el-input v-model="textarea.row.ActualResult"></el-input>
+              <el-input v-model="textarea.row.actualResult"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="执行" width="530">
             <template slot-scope="scope">
-              <el-button @click="handlePass(scope.$index, scope.row)" type="text" style="color: #64C9A1">通过</el-button>|
-              <el-button type="text" style="color: #DF3D66">失败&缺陷（自动）</el-button>|
-              <el-button @click="handleFailIssue(scope.$index, scope.row)" type="text"
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
+                style="color: #FF6600">无效(NA)</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
+                style="color: #64C9A1">通过</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
+                style="color: #FF0000">失败</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event, DrawerList[Drawerindex])" type="text"
+                style="color: #DF3D66">失败&缺陷（自动）</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
                 style="color: #FF0000">失败&缺陷</el-button>|
-              <el-button @click="handleFail(scope.$index, scope.row)" type="text" style="color: #FF0000">失败</el-button>|
-              <el-button @click="handleBlock(scope.$index, scope.row)" type="text" style="color: #CC00FF">停滞</el-button>|
-              <el-button @click="handleNa(scope.$index, scope.row)" type="text" style="color: #FF6600">NA</el-button>
+              <el-drawer title="缺陷" :visible.sync="drawer" :with-header="false" size="50%" show-close="true">
+                <issue></issue>
+              </el-drawer>
+
+              <!-- <el-button @click="handleFail(scope.$index, scope.row)" type="text" style="color: #FF0000">跳过</el-button>| -->
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
+                style="color: #CC00FF">停滞</el-button>
+
             </template>
           </el-table-column>
         </el-table>
@@ -71,7 +84,7 @@
           </div>
           <div class="recordList">
             <template v-for=" (item, index) in showRecordList">
-              <div class="item" :key="index">
+              <div class="item" :key="index">33333
                 <i class="el-icon-error" @click="deleteRecord(index)"></i>
                 <span v-if="index == 0" style="color: #4286CD">{{ item }}</span>
                 <span v-else>{{ item }}</span>
@@ -124,23 +137,27 @@
 </template>
 <script>
 import { queryTestCaseStepApi } from '@/api/testcaseStep'
-import { getListBytestCycle } from '@/api/testcycle'
+import { getListBytestCycle, passInstance } from '@/api/testcycle'
+import Issue from '@/views/testcycle/caseRun/Issue.vue'
 import { get } from 'js-cookie';
 export default {
   name: 'useCase',
+  components: { Issue },
   data() {
     return {
       visible: false,
+      drawer: false,
       DrawerSearch: '测试用例表标 模糊查询',
       DrawerList: [],
       Drawerindex: 0,
       // 第一个table数据
       useCaseData: [{
-        Step: '',
+        testStep: '',
+        remarks: '',
         teststepCondition: '',
-        TestData: "",
-        ExpectedResult: '',
-        ActualResult: '',
+        testData: "",
+        expectedResult: '',
+        actualResult: '',
       }],
       inputSearch: '输入关联缺陷ID， 标题',
       recordList: ['第一条', '第二条', '第三条', '第四条', '第五条', '第六条', '第七条'], // 缺陷记录列表
@@ -189,10 +206,11 @@ export default {
       if (res.data !== null) {
         this.useCaseData = res.data
         res.data.forEach((item, index) => {
-          this.useCaseData[index].Step = item.testStep
+          this.useCaseData[index].testStep = item.testStep
+          this.useCaseData[index].remarks = item.remarks
           this.useCaseData[index].teststepCondition = item.teststepCondition
-          this.useCaseData[index].TestData = item.testData
-          this.useCaseData[index].ExpectedResult = item.expectedResult
+          this.useCaseData[index].testData = item.testData
+          this.useCaseData[index].expectedResult = item.expectedResult
         })
       }
     })
@@ -200,6 +218,9 @@ export default {
       getListBytestCycle({ testCycleId: this.$route.query.id }, { pageNum: 1, pagSize: res.data.total }).then(res => {
         if (res.data !== null) {
           this.DrawerList = res.data.list
+          this.Drawerindex = res.data.list.findIndex((item) => {
+            return item.id == this.$route.query.tableid
+          })
         }
       })
     })
@@ -218,9 +239,51 @@ export default {
     }
   },
   methods: {
-    handlePass(index, row) {
-      console.log('Pass按钮', index, row);
+    async handleOperate(index, row, e, list) {
+      let indexs = e.target.innerText == '通过' ? 1 : e.target.innerText == '失败' || e.target.innerText == '失败&缺陷（自动）' || e.target.innerText == '失败&缺陷' ? 2 : e.target.innerText == '停滞' ? 4 : e.target.innerText == '无效(NA)' ? 0 : ''``
+      let Row = {
+        "projectId": localStorage.getItem("projectId"),
+        "testCycleId": row.id,
+        "testCaseId": row.testCaseId,
+        "testStep": row.testStep,
+        "expectedResult": row.expectedResult,
+        "actualResult": row.actualResult,
+        "testData": row.testData,
+        "remarks": row.remarks,
+        "testStepId": row.testStepId,
+        "teststepExpand": row.teststepExpand,
+        "teststepCondition": row.teststepCondition,
+        "stepStatus": `${indexs}`
+      }
+      console.log('Pass按钮', index, row, list);
+      if (e.target.innerText == '失败&缺陷（自动）') {
+        Row = { ...Row, ...list }
+      }
+      await passInstance(Row).then(res => {
+        console.log("res-pass", 1, res);
+      })
+      if (e.target.innerText == '失败&缺陷') {
+        this.drawer = true
+        console.log(this.dialogVisible);
+        // this.$prompt('请输入缺陷', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   inputPattern: /\S/,
+        //   inputErrorMessage: '不能为空'
+        // }).then(({ value }) => {
+        //   this.$message({
+        //     type: 'success',
+        //     message: '缺陷: ' + value
+        //   });
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '取消输入'
+        //   });
+        // });
+      }
     },
+
     // 删除记录
     deleteRecord(index) {
       this.recordList.splice(index, 1)
@@ -249,10 +312,11 @@ export default {
         if (res.data !== null) {
           this.useCaseData = res.data
           res.data.forEach((item, index) => {
-            this.useCaseData[index].Step = item.testStep
+            this.useCaseData[index].testStep = item.testStep
+            this.useCaseData[index].remarks = item.remarks
             this.useCaseData[index].teststepCondition = item.teststepCondition
-            this.useCaseData[index].TestData = item.testData
-            this.useCaseData[index].ExpectedResult = item.expectedResult
+            this.useCaseData[index].testData = item.testData
+            this.useCaseData[index].expectedResult = item.expectedResult
           })
         }
       })
@@ -266,7 +330,8 @@ export default {
       localStorage.setItem('tabName', 'second')
     },
 
-  }
+  },
+
 }
 </script>
 <style scoped lang="scss">

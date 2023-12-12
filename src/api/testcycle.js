@@ -151,3 +151,28 @@ export function deleteInstance(data) {
     data,
   });
 }
+
+//通过测试用例
+export function passInstance(data) {
+  return request({
+    url: "/testCycle/caseRun/step",
+    method: "post",
+    data,
+  });
+}
+
+// export function failAutoCreateIssue(data) {
+//   return request({
+//     url: "/testCycle/caseRun/step/failAutoCreateIssue",
+//     method: "post",
+//     data,
+//   });
+// }
+
+// export function failCreateIssue(data) {
+//   return request({
+//     url: "/testCycle/caseRun/step/",
+//     method: "post",
+//     data,
+//   });
+// }
