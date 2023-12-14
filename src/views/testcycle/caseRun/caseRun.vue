@@ -51,7 +51,7 @@
           </el-table-column>
           <el-table-column label="实际结果">
             <template slot-scope="textarea">
-              <el-input v-model="textarea.row.actualResult"></el-input>
+              <el-input type="textarea" :rows="2" placeholder="请输入结果" v-model="textarea.row.actualResult"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="执行" width="530">
@@ -243,21 +243,23 @@ export default {
       let indexs = e.target.innerText == '通过' ? 1 : e.target.innerText == '失败' || e.target.innerText == '失败&缺陷（自动）' || e.target.innerText == '失败&缺陷' ? 2 : e.target.innerText == '停滞' ? 4 : e.target.innerText == '无效(NA)' ? 0 : ''``
       let Row = {
         "projectId": localStorage.getItem("projectId"),
-        "testCycleId": row.id,
+        "testCycleId": this.$route.query.id,
         "testCaseId": row.testCaseId,
+
         "testStep": row.testStep,
         "expectedResult": row.expectedResult,
-        "actualResult": row.actualResult,
+        "actualResult": row.actualResult ? row.actualResult : '',
         "testData": row.testData,
         "remarks": row.remarks,
         "testStepId": row.testStepId,
+        "testStepNo": row.id,
         "teststepExpand": row.teststepExpand,
         "teststepCondition": row.teststepCondition,
-        "stepStatus": `${indexs}`
+        "statusCode": `${indexs}`
       }
       console.log('Pass按钮', index, row, list);
       if (e.target.innerText == '失败&缺陷（自动）') {
-        Row = { ...Row, ...list }
+        Row = { ...Row, testCaseData: { ...list } }
       }
       await passInstance(Row).then(res => {
         console.log("res-pass", 1, res);
