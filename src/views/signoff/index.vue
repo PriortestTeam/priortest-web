@@ -9,7 +9,7 @@
           </div>
         </div>
         <el-form-item label="项目" prop="scope" class="form-small">
-          <el-select v-model="projectId" size="small"  @change="getProjectInfo">
+          <el-select v-model="projectId" size="small"  @change="getProjectInfo" disabled>
             <el-option v-for="(item, index) in projectList" :key="index" :label="item.title" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -55,7 +55,7 @@
                 @change="handleCheckAllChange">全选</el-checkbox>
             </el-row>
             <el-checkbox-group v-model="from.issue" @change="issueChecked">
-              <el-checkbox v-for="(item, i) in issues" :key="i" :label="item" :value="item" />
+              <el-checkbox v-for="(item, index) in issues" :key="index" :label="item" :value="item.title" />
             </el-checkbox-group>
           </el-row>
         </el-form-item>
@@ -114,27 +114,17 @@ import {
   getProjectListByUser,
   getProjectEnv,
   getProjectVersion,
+  getIssueList,
   getTestCycleTitle,
   createGenerate,
   getSignaturePath,
-  getIssue,
   getRecord,
   deleteSign
 } from '@/api/signoff.js'
 
 import UploadSigenatrue from '@/components/Upload/UploadSigenatrue.vue'
 import { getLastVersion } from '@/utils/compareVersion.js'
-// 缺陷参数
-// const lssueList = [
-//   '修改',
-//   '关闭',
-//   '未分配',
-//   '已分配',
-//   '拒绝',
-//   '已验证',
-//   '验证成功',
-//   '验证失败'
-// ]
+
 export default {
   name: 'Dashboard',
   components: {
@@ -231,10 +221,11 @@ export default {
     // 获取测试环境
     try {
       await this.getProjectListByUser()
-      await this.getProjectVersion()
+      await this.getIssueList()
+
       await this.getProjectEnv()
+      await this.getProjectVersion()
       await this.getTestCycleVersion()
-      await this.issueList()
       await this.getSign()
       await this.recordList()
     } catch (err) {
@@ -263,6 +254,7 @@ export default {
     versionChange(val) {
       this.searchFrom.verison = val
       this.getTestCycleTitle()
+
     },
     // 测试环境下拉切换
     envChange(val) {
@@ -334,10 +326,10 @@ export default {
             if (res.code === '200') {
               this.$message.success('生成成功')
               await this.getProjectListByUser()
-              await this.getProjectVersion()
+              await this.getIssueList()
               await this.getProjectEnv()
+              await this.getProjectVersion()
               await this.getTestCycleVersion()
-              await this.issueList()
               await this.getSign()
               await this.recordList()
             }
@@ -363,15 +355,16 @@ export default {
       //this.searchFrom.env = this.projectEnvList.mergeValues[0] || ''
     },
 
-    async getProjectVersion() {
+    async getIssueList() {
+      const res = await getIssueList({ projectId: this.projectId })
+      const possibleValueString = res.data[0].possible_value;
+      this.issues = JSON.parse(possibleValueString);
+    },
+
+  async getProjectVersion() {
       const res = await getProjectVersion({ projectId: this.projectId })
       const possibleValueString = res.data[0].possible_value;
       this.projectVersionList = JSON.parse(possibleValueString);
-
-
-      //this.lastVersion = getLastVersion(this.projectVersionList.mergeValues)
-      //this.baseInfo.version = true
-      //this.searchFrom.version = this.lastVersion
     },
 
     async getTestCycleTitle() {
@@ -388,24 +381,15 @@ export default {
       const res = await getProjectListByUser()
       this.projectList = res.data
     },
+
+
     getProjectInfo() {
       this.getProjectEnv()
-      this.getProjectVersion()
+      this.getIssueList()
       this.getTestCycleTitle()
+      this.getProjectVersion()
     },
-    async issueList() {
-      this.from.issue = []
-      try {
-        const res = await getIssue()
-        if (res.code === '200') {
-          this.issues = res.data.mergeValues || []
-        } else {
-          this.issues = []
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    },
+
     async recordList() {
       this.records = []
       try {

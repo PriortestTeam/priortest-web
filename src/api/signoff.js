@@ -17,6 +17,16 @@ export function getProjectEnv (params) {
   })
 }
 
+// 获取缺陷
+export function getIssueList () {
+  return request({
+    url: '/signOff/getIssue',
+    method: 'get'
+
+  })
+}
+
+
 // 获取发布版本
 export function getProjectVersion (params) {
   return request({
@@ -61,13 +71,6 @@ export function getSignaturePath () {
   })
 }
 
-// 获取缺陷
-export function getIssue () {
-  return request({
-    url: '/signOff/getIssue',
-    method: 'get'
-  })
-}
 
 // 获取签收记录
 export function getRecord () {
