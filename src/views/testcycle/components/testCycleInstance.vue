@@ -35,11 +35,7 @@
 							</div>
 
 						</div>
-						<!-- <li :class="active === item.id ? 'active' : ''" v-for="item in fillerInstanceListData" :key="item.id"
-								@click="listItemClick(item)">{{ item.title }}</li> -->
 
-
-						<!-- </ul> -->
 					</div>
 				</div>
 			</el-col>
@@ -51,48 +47,56 @@
 					<el-button type="primary" @click="reloadTable">加载用例</el-button>
 					<el-button type="primary">批量运行</el-button>
 					<el-button type="primary">字段调整</el-button>
+
 				</div>
+
 				<el-table ref="InstanceTable" :data="InstanceTableData" :header-cell-style="tableHeader" stripe
 					style="width: 100%">
+
 					<el-table-column type="selection">
 					</el-table-column>
 					<el-table-column label="运行">
 						<template slot-scope="scope">
-							<el-button type="primary" class="run-btn" @click="handelRun(scope.row.id)"></el-button>
+							<el-button type="primary" class="run-btn" @click="handelRun(scope.row.testCase.id)"></el-button>
 						</template>
-						<!-- <img class="runIcon" src="@/icons/img/runIcon.png" alt=""> -->
 					</el-table-column>
-					<el-table-column label="UUID" prop="id" width="180px">
+					<el-table-column v-if="InstanceTableData.every(item => item.testCaseRun.runStatus !== 5)"" label="再运行">
+          	<template slot-scope="scope">
+    				<el-button type="primary" class="run-btn" @click="handelRun(scope.row.testCase.id)"></el-button>
+    				</template>
+    			</el-table-column>
+
+					<el-table-column label="UUID" prop="testCase.id" width="180px">
 					</el-table-column>
-					<el-table-column label="标题" prop="title" width="160px">
+					<el-table-column label="标题" prop="testCase.title" width="160px">
 					</el-table-column>
-					<el-table-column label="发布版本" prop="version" width="120px">
+					<el-table-column label="发布版本" prop="testCase.version" width="120px">
 					</el-table-column>
 					<el-table-column label="缺陷" width="120px">
 					</el-table-column>
 					<el-table-column label="故事" prop="feature">
 					</el-table-column>
-					<el-table-column label="测试方法" prop="testMethod" width="160px">
+					<el-table-column label="测试方法" prop="testCase.testMethod" width="160px">
 					</el-table-column>
-					<el-table-column label="运行状态" prop="runStatus" width="120px">
+					<el-table-column label="运行状态" prop="testCaseRun.runStatus" width="120px">
+					<template slot-scope="scope">
+                    {{ interpretRunStatus(scope.row.testCaseRun.runStatus) }}
+                  </template>
 					</el-table-column>
-					<el-table-column label="L_状态" prop="lastRunStatus">
+					<el-table-column label="运行时间" prop="testCaseRun.updateTime">
 					</el-table-column>
-					<el-table-column label="L_时长" width="140px">
+					<el-table-column label="执行者" prop="testCaseRun.updateUserId">
 					</el-table-column>
-					<el-table-column label="运行时间">
-					</el-table-column>
-
-					<el-table-column label="执行者">
-					</el-table-column>
-					<el-table-column label="操作" width="148" fixed="right">
+					<el-table-column label="操作" width="58" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="primary" @click="removeRowTestCase(scope.row.id)">移徐</el-button>
+							<el-button type="primary" @click="removeRowTestCase(scope.row.testCase.id)">移徐</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
+
 			</el-col>
 		</el-row>
+
 	</div>
 </template>
 
@@ -136,14 +140,11 @@ export default {
 		}
 	},
 	created() {
-
 		// 仅在整个视图都被渲染之后才会运行的代码
 		this.projectId = this.$store.state.user.userinfo.userUseOpenProject.projectId
 		this.cycleId = this.$route.query.id
 		// this.getInstanceListData()
 		this.getInstanceTableData()
-
-
 
 
 	},
@@ -190,30 +191,12 @@ export default {
 
 		},
 		getInstanceListData() {
-
 			queryViewTrees({
 				"scope": "3000001"
 			}).then((res) => {
-
 				this.setTree = res.data
 				console.log("tree", this.setTree);
-
 			})
-			// const data = {
-			// 	projectId: this.projectId,
-			// 	viewTreeDto: {
-			// 		id: "1677883697677856769",
-			// 	}
-			// }
-			// const query = {
-			// 	// pageNum: 1,
-			// 	// pageSize: 10
-			// }
-			// console.log(data);
-			// testCaseList(query, data).then((res) => {
-			// 	this.InstanceListData = res.data.list
-			// 	this.fillerInstanceListData = this.InstanceListData
-			// })
 
 		},
 		// 搜索框过滤数据
@@ -252,6 +235,30 @@ export default {
 			})
 
 		},
+		computed: {
+        hasRunStatus() {
+          return this.InstanceTableData.every(item => item.testCaseRun.runStatus === '5');
+        }
+      },
+		interpretRunStatus(runStatus) {
+          switch (runStatus) {
+           case 0:
+              return '无效';
+            case 1:
+              return '通过';
+            case 2:
+              return '失败';
+            case 3:
+              return '跳过';
+            case 4:
+              return '停滞';
+            case 5:
+              return '未运行';
+            case 6:
+              return '未完成';
+
+          }
+        },
 		//点击列表，选择case，高亮
 		listItemClick(val) {
 			console.log(val);
@@ -298,7 +305,6 @@ export default {
 		//运行
 		handelRun(id) {
 			console.log("run", this.cycleId);
-			// localStorage.setItem('tableid', id)
 			this.$router.push(`/testcycle/useCase?id=${this.cycleId}&tableid=${id}`)
 		},
 		//删除案例

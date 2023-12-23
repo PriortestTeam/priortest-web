@@ -23,21 +23,21 @@
         </div>
         <div class="title-down">
           <el-button style="width: 100px" type="danger" @click="ToTestCycle">返回测试周期</el-button>
-          <el-button style="width: 70px" @click="changeDrawerindex(Drawerindex, 'up')" type="success">用例翻动</el-button>
-          <el-button style="width: 60px" @click="changeDrawerindex(Drawerindex, 'next')" type="success">Next</el-button>
+          <el-button style="width: 70px" @click="changeDrawerindex(Drawerindex, 'up')" type="success">上个</el-button>
+          <el-button style="width: 60px" @click="changeDrawerindex(Drawerindex, 'next')" type="success">下个</el-button>
           <el-button type="text" style="color: #64C9A1">通过</el-button>|
           <el-button type="text" style="color: #DF3D66">失败&缺陷（自动）</el-button>|
           <el-button type="text" style="color: #FF0000">失败&缺陷（手动）</el-button>|
           <el-button type="text" style="color: #FF0000">失败</el-button>|
           <el-button type="text" style="color: #CC00FF">停滞</el-button>|
-          <el-button type="text" style="color: #FF6600">NA</el-button>
+          <el-button type="text" style="color: #FF6600">无效</el-button>
+          <el-button type="text" style="color: #FF6600">跳过</el-button>
         </div>
       </div>
       <div class="table">
-        <div class="table-title">{{ DrawerList[Drawerindex].title }}</div>
+        <div class="table-title">{{ DrawerList[Drawerindex].testCase.title }}</div>
         <el-table :header-cell-style="{ background: '#4286CD', color: '#fff' }" border :data="useCaseData"
           style="width: 100%">
-
           <el-table-column prop="testStep" label="步骤">
           </el-table-column>
           <el-table-column prop="remarks" label="备注">
@@ -47,7 +47,6 @@
           <el-table-column prop='testData' label="测试数据">
           </el-table-column>
           <el-table-column prop='expectedResult' label="期待结果">
-
           </el-table-column>
           <el-table-column label="实际结果">
             <template slot-scope="textarea">
@@ -56,25 +55,17 @@
           </el-table-column>
           <el-table-column label="执行" width="530">
             <template slot-scope="scope">
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
-                style="color: #FF6600">无效(NA)</el-button>|
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
-                style="color: #64C9A1">通过</el-button>|
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
-                style="color: #FF0000">失败</el-button>|
-              <el-button @click="handleOperate(scope.$index, scope.row, $event, DrawerList[Drawerindex])" type="text"
-                style="color: #DF3D66">失败&缺陷（自动）</el-button>|
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
-                style="color: #FF0000">失败&缺陷</el-button>|
-              <el-drawer title="缺陷" :visible.sync="drawer" :with-header="false" size="50%" show-close="true">
-                <issue></issue>
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #64C9A1">通过</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF0000">失败</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event, DrawerList[Drawerindex])" type="text" style="color: #DF3D66">失败&缺陷（自动）</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF0000">失败&缺陷</el-button>|
+              <el-drawer title="缺陷" :visible.sync="drawer" :with-header="false" size="50%" show-close="true"> <issue></issue>
               </el-drawer>
-
-              <!-- <el-button @click="handleFail(scope.$index, scope.row)" type="text" style="color: #FF0000">跳过</el-button>| -->
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text"
-                style="color: #CC00FF">停滞</el-button>
-
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #CC00FF">停滞</el-button>
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF6600">无效(NA)</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF0000">跳过</el-button>
             </template>
+
           </el-table-column>
         </el-table>
         <div class="record">
@@ -150,6 +141,7 @@ export default {
       DrawerSearch: '测试用例表标 模糊查询',
       DrawerList: [],
       Drawerindex: 0,
+
       // 第一个table数据
       useCaseData: [{
         testStep: '',
@@ -162,21 +154,7 @@ export default {
       inputSearch: '输入关联缺陷ID， 标题',
       recordList: ['第一条', '第二条', '第三条', '第四条', '第五条', '第六条', '第七条'], // 缺陷记录列表
       // 分页
-      pageList: [
-        {
-          value: "20",
-          label: '20 / page'
-        }, {
-          value: "50",
-          label: '50 / page'
-        }, {
-          value: "100",
-          label: '100 / page'
-        }, {
-          value: "ALL",
-          label: 'ALL / page'
-        }
-      ],
+
       pageValue: '20',
       tableRadioDown: "1",
       HistoryData: [{
@@ -218,8 +196,8 @@ export default {
       getListBytestCycle({ testCycleId: this.$route.query.id }, { pageNum: 1, pagSize: res.data.total }).then(res => {
         if (res.data !== null) {
           this.DrawerList = res.data.list
-          this.Drawerindex = res.data.list.findIndex((item) => {
-            return item.id == this.$route.query.tableid
+          this.Drawerindex = res.data.list.every((item) => {
+            return testCase.id == this.$route.query.tableid
           })
         }
       })
@@ -267,22 +245,6 @@ export default {
       if (e.target.innerText == '失败&缺陷') {
         this.drawer = true
         console.log(this.dialogVisible);
-        // this.$prompt('请输入缺陷', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   inputPattern: /\S/,
-        //   inputErrorMessage: '不能为空'
-        // }).then(({ value }) => {
-        //   this.$message({
-        //     type: 'success',
-        //     message: '缺陷: ' + value
-        //   });
-        // }).catch(() => {
-        //   this.$message({
-        //     type: 'info',
-        //     message: '取消输入'
-        //   });
-        // });
       }
     },
 
@@ -310,7 +272,7 @@ export default {
           break;
       }
       console.log('按钮', index, type, this.Drawerindex);
-      queryTestCaseStepApi(this.DrawerList[this.Drawerindex].id).then((res) => {
+      queryTestCaseStepApi(this.DrawerList[this.Drawerindex].testCase.id).then((res) => {
         if (res.data !== null) {
           this.useCaseData = res.data
           res.data.forEach((item, index) => {
@@ -404,7 +366,7 @@ export default {
     }
 
     .table {
-      width: 65%;
+      width: 100%;
 
       .table-title {
 
