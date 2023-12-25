@@ -75,7 +75,7 @@
 								<!-- 选择了字段后出现 第二个条件-->
 								<el-col :span="4" v-show="item.type">
 									<el-select v-model="item.condition" size="small" placeholder="请选择条件">
-										<el-option v-for=" i  in  conditionList " :key="i.value" :label="i.nameCn" :value="i.nameCn" />
+										<el-option v-for=" i  in  conditionList " :key="i.value" :label="i.nameCn" :value="i.scopeName" />
 									</el-select>
 								</el-col>
 								<!-- 选择了条件后且条件部位空或不为空时 -->
