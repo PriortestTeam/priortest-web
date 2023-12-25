@@ -111,6 +111,9 @@ import {
 	deleteInstance,
 	testCycleListByClick
 } from '@/api/testcycle'
+
+import {axios} from '@/api/axios'
+
 import { queryViewTrees } from '@/api/project'
 export default {
 	data() {
@@ -143,10 +146,7 @@ export default {
 		// 仅在整个视图都被渲染之后才会运行的代码
 		this.projectId = this.$store.state.user.userinfo.userUseOpenProject.projectId
 		this.cycleId = this.$route.query.id
-		// this.getInstanceListData()
 		this.getInstanceTableData()
-
-
 	},
 	methods: {
 		// 获取左侧列表数据
@@ -235,11 +235,7 @@ export default {
 			})
 
 		},
-		computed: {
-        hasRunStatus() {
-          return this.InstanceTableData.every(item => item.testCaseRun.runStatus === '5');
-        }
-      },
+
 		interpretRunStatus(runStatus) {
           switch (runStatus) {
            case 0:
@@ -267,14 +263,7 @@ export default {
 			let checkedCount = val.length;
 			this.checkAll = checkedCount === this.fillerInstanceListData.length;
 			this.isIndeterminate = checkedCount > 0 && checkedCount < this.fillerInstanceListData.length;
-			// if (this.active === item.id) {
-			// 	this.active = ''
-			// 	this.selectCaseIds = []
-			// 	return
-			// }
-			// this.active = item.id
-			// this.selectCaseIds = []
-			// this.selectCaseIds.push(item.id)
+
 		},
 		// 添加案例
 		addCase() {
@@ -304,8 +293,27 @@ export default {
 		},
 		//运行
 		handelRun(id) {
-			console.log("run", this.cycleId);
-			this.$router.push(`/testcycle/useCase?id=${this.cycleId}&tableid=${id}`)
+	    //console.log("run", this.cycleId);
+			//this.$router.push(`/testcycle/useCase?id=${this.cycleId}&tableid=${id}`)
+		const data ={
+		   // projectId: this.projectId,
+		    testCycleId: this.cycleId,
+		    //testCaseId: id
+		};
+		  console.log('Data to be sent:', data);
+
+       // Perform the API call
+       // axios.post('testCycle/caseRun/testCase', data)
+       axios.post('testCycle/instance/listByTestCycle', data)
+         .then(response => {
+           console.log('API call successful:', response);
+           // Once the API call is completed, navigate to the desired route
+           this.$router.push({ path: '/testcycle/useCase', query: { id: this.cycleId, tableid: id } });
+         })
+         .catch(error => {
+           console.error('Error executing test case or navigating:', error);
+         });
+
 		},
 		//删除案例
 		deleteCase(ids) {

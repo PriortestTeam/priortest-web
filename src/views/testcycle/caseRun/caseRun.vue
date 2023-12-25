@@ -40,8 +40,6 @@
           style="width: 100%">
           <el-table-column prop="testStep" label="步骤">
           </el-table-column>
-          <el-table-column prop="remarks" label="备注">
-          </el-table-column>
           <el-table-column prop='teststepCondition' label="执行条件">
           </el-table-column>
           <el-table-column prop='testData' label="测试数据">
@@ -53,7 +51,9 @@
               <el-input type="textarea" :rows="2" placeholder="请输入结果" v-model="textarea.row.actualResult"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="执行" width="530">
+
+
+          <el-table-column label="执行" width="580">
             <template slot-scope="scope">
               <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #64C9A1">通过</el-button>|
               <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF0000">失败</el-button>|
@@ -65,8 +65,8 @@
               <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF6600">无效(NA)</el-button>|
               <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF0000">跳过</el-button>
             </template>
-
           </el-table-column>
+
         </el-table>
         <div class="record">
           <div class="search">
@@ -218,7 +218,34 @@ export default {
   },
   methods: {
     async handleOperate(index, row, e, list) {
-      let indexs = e.target.innerText == '通过' ? 1 : e.target.innerText == '失败' || e.target.innerText == '失败&缺陷（自动）' || e.target.innerText == '失败&缺陷' ? 2 : e.target.innerText == '停滞' ? 4 : e.target.innerText == '无效(NA)' ? 0 : ''``
+      //let indexs = e.target.innerText == '通过' ? 1 : e.target.innerText == '失败' || e.target.innerText == '失败&缺陷（自动）' || e.target.innerText == '失败&缺陷' ? 2 : e.target.innerText == '停滞' ? 4 : e.target.innerText == '无效(NA)' ? 0 : ''``
+      let indexs = '';
+switch (e.target.innerText) {
+  case '无效(NA)':
+      indexs = '0';
+      break;
+    case '通过':
+      indexs = '1';
+      break;
+    case '失败':
+      indexs = '2';
+      break;
+    case '失败&缺陷（自动）':
+      indexs = '2';
+      break;
+    case '失败&缺陷':
+      indexs = '2';
+      break;
+       case '跳过':
+            indexs = '3'; // Set status to 3 for "Skip"
+            break;
+    case '停滞':
+      indexs = '4';
+      break;
+    default:
+      break;
+  }
+
       let Row = {
         "projectId": localStorage.getItem("projectId"),
         "testCycleId": this.$route.query.id,
@@ -361,24 +388,22 @@ export default {
 
       .title-down {
         color: #A1A1A1;
-        margin-bottom: 16px;
+        margin-bottom: 4px;
       }
     }
 
     .table {
       width: 100%;
-
       .table-title {
-
         height: 20px;
         line-height: 20px;
-        // margin-bottom: 10px;
+
       }
 
       .record {
         margin-left: 6px;
-        margin-top: 80px;
-        margin-bottom: 44px;
+        margin-top: 20px;
+        margin-bottom: 4px;
 
         .search {
           margin-bottom: 20px;
