@@ -59,7 +59,7 @@
 					</el-table-column>
 					<el-table-column v-if="InstanceTableData.every(item => ![0, 1, 3,5].includes(item.testCaseRun.runStatus))" label="再运行">
           	<template slot-scope="scope">
-    				<el-button type="primary" class="run-btn" @click="handelReRun(scope.row.testCase.id)"></el-button>
+    				<el-button type="primary" class="run-btn" @click="handelReRun(scope.row.testCase.id,scope.row.testCase.title)"></el-button>
     				</template>
     			</el-table-column>
 
@@ -112,6 +112,7 @@ import {
 import {axios} from '@/utils/request'
 
 import { queryViewTrees } from '@/api/project'
+import { title } from '@/settings'
 export default {
 	data() {
 		return {
@@ -127,7 +128,8 @@ export default {
 			InstanceTableData: [],
 			isIndeterminate: true,
 			checkAll: false,
-			cycleId: '',
+			
+			cycleId: '',			
 			tableHeader: {
 				color: '#d4dce3',
 				background: '#4286CD'
@@ -142,8 +144,8 @@ export default {
 	created() {
 		// 仅在整个视图都被渲染之后才会运行的代码
 		this.projectId = this.$store.state.user.userinfo.userUseOpenProject.projectId
-		this.cycleId = this.$route.query.id
-		this.getInstanceTableData()
+		this.cycleId = this.$route.query.id		
+		this.getInstanceTableData()		
 	},
 	methods: {
 		// 获取左侧列表数据
@@ -312,23 +314,21 @@ export default {
 		},
 
 		//再运行
-    	async handelReRun(tcId) {
+    	async handelReRun(tcId,testCase) {
     		const data ={
     		    projectId: this.projectId,
     		    testCycleId: this.cycleId,
     		    testCaseId: tcId,
     		    runCountIndicator: false
-    		};
-
+    		};			
 try {
         //const response = await fetch('re-run.api');
         const response = await axios.post('/testCycle/caseRun/execute', data)
         const data1 = response.data;
 
         // Assuming Vue Router is used for navigation
-        if (response.code === '200') {
-          console.log('dskdfs',data1.list);
-          this.$router.push({ name: 'reRunCase', params: { dataList: data1.list } });
+        if (response.code === '200') {         
+          this.$router.push({ name: 'reRunCase', params: { dataList: data1.list,testCaseTitle: title } });
         } else {
           console.error('Invalid API response');
         }

@@ -35,7 +35,11 @@ export const constantRoutes = [
     path: "/reRunCase",
     name: 'reRunCase',
     component: () => import("@/views/testcycle/caseRun/reRunCase"),
-    props: true
+    props: true,
+    meta: {
+      title: "Project",
+      icon: "Project",
+    },
   },
 
   {
