@@ -32,6 +32,13 @@ import Layout from "@/layout";
  */
 export const constantRoutes = [
   {
+    path: "/reRunCase",
+    name: 'reRunCase',
+    component: () => import("@/views/testcycle/caseRun/reRunCase"),
+    props: true
+  },
+
+  {
     path: "/login",
     component: () => import("@/views/login/index"),
     hidden: true,
@@ -251,9 +258,9 @@ export const constantRoutes = [
         },
       },
       {
-        path: "useCase",
-        name: "useCase",
-        component: () => import("@/views/testcycle/caseRun/caseRun"),
+        path: "/runCase",
+        name: "runCase",
+        component: () => import("@/views/testcycle/caseRun/runCase"),
         meta: {
           title: "Project",
           icon: "Project",
@@ -413,5 +420,6 @@ export function resetRouter() {
   const newRouter = createRouter();
   router.matcher = newRouter.matcher; // reset router
 }
+
 
 export default router;

@@ -123,7 +123,7 @@ export function addSchedule(data) {
   });
 }
 
-//获得测试用例
+//获得运行用例基于测试周期
 export function getListBytestCycle(data, params) {
   return request({
     url: "/testCycle/instance/listByTestCycle",
@@ -133,7 +133,7 @@ export function getListBytestCycle(data, params) {
   });
 }
 
-//添加运行计划
+//添加运行用例
 export function saveInstance(data) {
   console.log(99, data);
   return request({
@@ -143,7 +143,7 @@ export function saveInstance(data) {
   });
 }
 
-//删除运行计划
+//删除运行用例
 export function deleteInstance(data) {
   return request({
     url: "/testCycle/instance/deleteInstance",
@@ -152,27 +152,11 @@ export function deleteInstance(data) {
   });
 }
 
-//通过测试用例
-export function passInstance(data) {
+//测试用例运行
+export function caseStepRun(data) {
   return request({
-    url: "/testCycle/caseRun/step",
+    url: "/testCycle/caseRun/testCase",
     method: "post",
     data,
   });
 }
-
-// export function failAutoCreateIssue(data) {
-//   return request({
-//     url: "/testCycle/caseRun/step/failAutoCreateIssue",
-//     method: "post",
-//     data,
-//   });
-// }
-
-// export function failCreateIssue(data) {
-//   return request({
-//     url: "/testCycle/caseRun/step/",
-//     method: "post",
-//     data,
-//   });
-// }

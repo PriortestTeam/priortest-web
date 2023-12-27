@@ -87,12 +87,10 @@
 
                 <el-table-column prop="testMethod" :show-overflow-tooltip="true" label="测试方法" />
                 <el-table-column prop="priority" label="优先级" />
-                <el-table-column prop="feature" :show-overflow-tooltip="true" label="需求" />
+                <!--<el-table-column prop="feature" :show-overflow-tooltip="true" label="需求" /> -->
                 <el-table-column prop="module" :show-overflow-tooltip="true" label="模块" />
-
                 <el-table-column prop="version" :show-overflow-tooltip="true" label="版本" />
-
-                <!--<el-table-column prop="caseCategory"  :show-overflow-tooltip="true" label="测试分类" />-->
+                <el-table-column prop="caseCategory"  :show-overflow-tooltip="true" label="分类" />
                 <el-table-column prop="testType" :show-overflow-tooltip="true" label="测试类型" />
                 <el-table-column prop="lastRunStatus" label="L-运行状态" />
                 <!-- <el-table-column
@@ -101,9 +99,9 @@
                   :show-overflow-tooltip="true"
                   label="步骤运行状态"
                 /> -->
-                <el-table-column prop="executeTime" label="执行时间" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column prop="executeTime" label="执行日期" min-width="120" :show-overflow-tooltip="true" />
 
-                <el-table-column prop="createTime" label="创建日期" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column prop="env" label="环境" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column prop="id" :show-overflow-tooltip="true" min-width="160" label="UUID" />
 
                 <el-table-column label="操作" min-width="148" fixed="right">

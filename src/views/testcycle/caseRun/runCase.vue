@@ -11,124 +11,61 @@
         <template v-for="(item, index) in DrawerList">
           <div class="item" @click="changeDrawerindex(index, 'change')" :key="index"
             :style="{ backgroundColor: (Drawerindex == index ? '#eee' : '#fff') }">
-            {{ item }}
+            {{item }}
           </div>
         </template>
       </div>
     </div>
-    <div class="content" :style="{ width: (visible ? '1560px' : '1902px') }">
-      <div class="title">
-        <div class="title-up">
-          <el-button style="width: 100px" type="danger" @click="changeVisible">用例执行列表</el-button>
-        </div>
-        <div class="title-down">
+
+    <div class="content" >
+      <div class="container">
+          <el-button style="width: 80px" type="danger" @click="changeVisible">运行列表</el-button>
           <el-button style="width: 100px" type="danger" @click="ToTestCycle">返回测试周期</el-button>
-          <el-button style="width: 70px" @click="changeDrawerindex(Drawerindex, 'up')" type="success">上个</el-button>
+          <el-button style="width: 60px" @click="changeDrawerindex(Drawerindex, 'up')" type="success">上个</el-button>
           <el-button style="width: 60px" @click="changeDrawerindex(Drawerindex, 'next')" type="success">下个</el-button>
-          <el-button type="text" style="color: #64C9A1">通过</el-button>|
-          <el-button type="text" style="color: #DF3D66">失败&缺陷（自动）</el-button>|
-          <el-button type="text" style="color: #FF0000">失败&缺陷（手动）</el-button>|
-          <el-button type="text" style="color: #FF0000">失败</el-button>|
-          <el-button type="text" style="color: #CC00FF">停滞</el-button>|
-          <el-button type="text" style="color: #FF6600">无效</el-button>
-          <el-button type="text" style="color: #FF6600">跳过</el-button>
-        </div>
-      </div>
+          <el-button @click="handleCaseOperate('通过',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button passed">通过All</el-button>|
+          <el-button @click="handleCaseOperate('失败&缺陷（自动）',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button fail">失败&缺陷（自动）All</el-button>|
+          <el-button @click="handleCaseOperate('失败&缺陷',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button fail">失败&缺陷 all</el-button>|
+          <el-button @click="handleCaseOperate('失败',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button fail">失败 all</el-button>|
+          <el-button @click="handleCaseOperate('停滞',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button block">停滞 all</el-button>|
+          <el-button @click="handleCaseOperate('无效',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button NA">无效 all</el-button>|
+          <el-button @click="handleCaseOperate('跳过',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button skip">跳过 all</el-button>
+     </div>
       <div class="table">
-        <div class="table-title">{{ DrawerList[Drawerindex].testCase.title }}</div>
+        <div class="table-title">{{DrawerList[Drawerindex].testCase.title }}</div>
         <el-table :header-cell-style="{ background: '#4286CD', color: '#fff' }" border :data="useCaseData"
           style="width: 100%">
-          <el-table-column prop="testStep" label="步骤">
-          </el-table-column>
-          <el-table-column prop='teststepCondition' label="执行条件">
-          </el-table-column>
-          <el-table-column prop='testData' label="测试数据">
-          </el-table-column>
-          <el-table-column prop='expectedResult' label="期待结果">
-          </el-table-column>
+          <el-table-column prop="testStep" label="步骤">  </el-table-column>
+          <el-table-column prop='teststepCondition' label="执行条件">  </el-table-column>
+          <el-table-column prop='testData' label="测试数据">          </el-table-column>
+          <el-table-column prop='expectedResult' label="期待结果">          </el-table-column>
           <el-table-column label="实际结果">
             <template slot-scope="textarea">
-              <el-input type="textarea" :rows="2" placeholder="请输入结果" v-model="textarea.row.actualResult"></el-input>
+                    <el-input type="textarea" :rows="2" placeholder="请输入运行结果" v-model="textarea.row.actualResult"></el-input>
             </template>
           </el-table-column>
-
-
           <el-table-column label="执行" width="580">
             <template slot-scope="scope">
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #64C9A1">通过</el-button>|
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF0000">失败</el-button>|
-              <el-button @click="handleOperate(scope.$index, scope.row, $event, DrawerList[Drawerindex])" type="text" style="color: #DF3D66">失败&缺陷（自动）</el-button>|
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF0000">失败&缺陷</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" class="custom-button pass">通过</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" class="custom-button fail">失败</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event, DrawerList[Drawerindex])" type="text" class="custom-button fail">失败&缺陷（自动）</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" class="custom-button fail">失败&缺陷</el-button>|
               <el-drawer title="缺陷" :visible.sync="drawer" :with-header="false" size="50%" show-close="true"> <issue></issue>
               </el-drawer>
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #CC00FF">停滞</el-button>
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF6600">无效(NA)</el-button>|
-              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" style="color: #FF0000">跳过</el-button>
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" class="custom-button block">停滞</el-button>
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" class="custom-button NA">无效</el-button>|
+              <el-button @click="handleOperate(scope.$index, scope.row, $event)" type="text" class="custom-button skip">跳过</el-button>
             </template>
           </el-table-column>
-
         </el-table>
-        <div class="record">
-          <div class="search">
-            <el-input style="width: 310px" placeholder="请输入内容" prefix-icon="el-icon-search" v-model="inputSearch">
-            </el-input>
-          </div>
-          <div class="recordList">
-            <template v-for=" (item, index) in showRecordList">
-              <div class="item" :key="index">33333
-                <i class="el-icon-error" @click="deleteRecord(index)"></i>
-                <span v-if="index == 0" style="color: #4286CD">{{ item }}</span>
-                <span v-else>{{ item }}</span>
-              </div>
-            </template>
-          </div>
-          <div class="text">最多显示 5条缺陷记录</div>
-        </div>
-      </div>
-      <div class="foot">
-        <div class="heard">
-          <div class="title">执行记录：显示历次执行记录， 以执行时间排列在前</div>
-          <div class="pageconfig">
-            <div class="total">Total 5 / 100</div>
-            <el-select v-model="pageValue">
-              <el-option v-for="item in pageList" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-            <div class="Radio">
-              <el-radio-group v-model="tableRadioDown">
-                <el-radio label="1">{{ "" }}</el-radio>
-                <el-radio label="2">{{ "" }}</el-radio>
-                <el-radio label="3">{{ "" }}</el-radio>
-                <el-radio label="4">{{ "" }}</el-radio>
-                <el-radio label="5">{{ "" }}</el-radio>
-              </el-radio-group>
-            </div>
-          </div>
-        </div>
-        <div class="table">
-          <el-table :header-cell-style="{ background: '#4286CD', color: '#fff' }" border :data="HistoryData"
-            style="width: 100%">
-            <el-table-column type="index">
-            </el-table-column>
-            <el-table-column prop="Runner" label="执行人">
-            </el-table-column>
-            <el-table-column prop='TestCycle' label="测试周期">
-            </el-table-column>
-            <el-table-column label="执行时间" prop="ExecutionTime">
-            </el-table-column>
-            <el-table-column prop="Status" label="执行状态">
-            </el-table-column>
-            <el-table-column label="关联缺陷" width="530" prop="Issue">
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
+</div>
+
     </div>
   </div>
 </template>
 <script>
 import { queryTestCaseStepApi } from '@/api/testcaseStep'
-import { getListBytestCycle, passInstance } from '@/api/testcycle'
+import { getListBytestCycle, caseStepRun } from '@/api/testcycle'
 import Issue from '@/views/testcycle/caseRun/Issue.vue'
 import { get } from 'js-cookie';
 export default {
@@ -217,56 +154,63 @@ export default {
     }
   },
   methods: {
-    async handleOperate(index, row, e, list) {
-      //let indexs = e.target.innerText == '通过' ? 1 : e.target.innerText == '失败' || e.target.innerText == '失败&缺陷（自动）' || e.target.innerText == '失败&缺陷' ? 2 : e.target.innerText == '停滞' ? 4 : e.target.innerText == '无效(NA)' ? 0 : ''``
-      let indexs = '';
-switch (e.target.innerText) {
-  case '无效(NA)':
-      indexs = '0';
-      break;
-    case '通过':
-      indexs = '1';
-      break;
-    case '失败':
-      indexs = '2';
-      break;
-    case '失败&缺陷（自动）':
-      indexs = '2';
-      break;
-    case '失败&缺陷':
-      indexs = '2';
-      break;
-       case '跳过':
-            indexs = '3'; // Set status to 3 for "Skip"
-            break;
-    case '停滞':
-      indexs = '4';
-      break;
-    default:
-      break;
-  }
+  async handleCaseOperate(action,testCaseId) {
+      const statusMap = {
+        '通过': '1',
+        '失败': '2',
+        '失败&缺陷（自动）': '2',
+        '失败&缺陷': '2',
+        '停滞': '4',
+        '无效': '0',
+        '跳过': '3',
+      };
 
+      const statusCode = statusMap[action] || '';
+      const Row = {
+        projectId: localStorage.getItem('projectId'),
+        testCycleId: this.$route.query.id,
+        testCaseId: testCaseId,
+        "testCaseStepId": '',  //empty always
+        actualResult: '批量运行', // empty
+        statusCode: `${statusCode}`,
+      };
+
+      // Example of sending data to the backend using caseStepRun API
+      await caseStepRun(Row)
+        .then((res) => {
+          console.log('Action performed:', action, res);
+          // Handle the response from the API if needed
+        })
+        .catch((error) => {
+          console.error('Error performing action:', action, error);
+          // Handle errors if necessary
+        });
+    },
+
+    async handleOperate(index, row, e, list) {
+    const statusMap = {
+        '无效': '0',
+        '通过': '1',
+        '失败': '2',
+        '失败&缺陷（自动）': '2',
+        '失败&缺陷': '2',
+        '跳过': '3',
+        '停滞': '4'
+      };
+      const statusCode = statusMap[e.target.innerText] || '';
       let Row = {
         "projectId": localStorage.getItem("projectId"),
         "testCycleId": this.$route.query.id,
         "testCaseId": row.testCaseId,
-
-        "testStep": row.testStep,
-        "expectedResult": row.expectedResult,
         "actualResult": row.actualResult ? row.actualResult : '',
-        "testData": row.testData,
-        "remarks": row.remarks,
-        "testStepId": row.testStepId,
-        "testStepNo": row.id,
-        "teststepExpand": row.teststepExpand,
-        "teststepCondition": row.teststepCondition,
-        "statusCode": `${indexs}`
+        "testCaseStepId": row.id,
+        "statusCode": `${statusCode}`
       }
       console.log('Pass按钮', index, row, list);
       if (e.target.innerText == '失败&缺陷（自动）') {
         Row = { ...Row, testCaseData: { ...list } }
       }
-      await passInstance(Row).then(res => {
+      await caseStepRun(Row).then(res => {
         console.log("res-pass", 1, res);
       })
       if (e.target.innerText == '失败&缺陷') {
@@ -326,8 +270,35 @@ switch (e.target.innerText) {
 }
 </script>
 <style scoped lang="scss">
+  .custom-button {
+    color: #000; /* Default text color */
+    border: none; /* Remove button border */
+    margin-right: 0px; /* Add some margin between buttons */
+    padding: 0; /* Remove default padding */
+    font-size: 12px; /* Adjust font size */
+    cursor: pointer; /* Show pointer on hover */
+  }
+  .custom-button.pass {
+    color: #54BF34; /* Color for '通过' button */
+  }
+  .custom-button.fail {
+    color: #ED1C24; /* Color for '失败' button */
+  }
+  .custom-button.skip {
+    color: #EA3FF7; /* Color for '跳过' button */
+  }
+  .custom-button.NA {
+    color: #774342; /* Color for '无效' button */
+  }
+  .custom-button.block {
+    color:#3A083E; /* Color for 'block' button */
+  }
+
+
 .all {
   display: flex;
+  width: 100%;
+  height: 100%;
 
   .Drawer {
     background-color: #f2f2f2;
@@ -373,33 +344,34 @@ switch (e.target.innerText) {
     }
   }
 
-  .content {
-    ::v-deep .el-input .el-input__inner {
-      border: 0;
-    }
+.container {
+      display: flex; /* Use flexbox */
+      justify-content: flex-start; /* Align items at the start of the container */
+      gap: 5px; /* Gap between buttons */
+      flex-wrap: wrap; /* Allow buttons to wrap when container width is insufficient */
+      margin-bottom: 10px; /* Optional margin to separate from the table */
+      }
 
-    padding: 5px 14px;
+  .content {
+    padding: 1px 12px;
     background-color: #f2f2f2;
 
     .title {
       .title-up {
         margin-bottom: 3px;
       }
-
       .title-down {
         color: #A1A1A1;
         margin-bottom: 4px;
       }
     }
+    }
 
     .table {
-      width: 100%;
       .table-title {
         height: 20px;
         line-height: 20px;
-
-      }
-
+     }
       .record {
         margin-left: 6px;
         margin-top: 20px;
@@ -408,7 +380,6 @@ switch (e.target.innerText) {
         .search {
           margin-bottom: 20px;
         }
-
         .recordList {
           .item {
             color: #A7B4C9;
@@ -422,20 +393,18 @@ switch (e.target.innerText) {
               color: #999999;
               margin-right: 5px;
             }
-
             .el-icon-error:hover {
               cursor: pointer;
             }
           }
         }
-
         .text {
           color: #A7B4C9;
           font-size: 16px;
           line-height: 21px;
         }
       }
-    }
+      }
 
     .foot {
       .heard {
@@ -465,6 +434,6 @@ switch (e.target.innerText) {
         }
       }
     }
-  }
+
 }
 </style>

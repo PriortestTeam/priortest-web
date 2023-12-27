@@ -15,9 +15,6 @@
 							<el-input v-model="searchValue" size="mini" prefix-icon="el-icon-search" placeholder="用例UUID 或标题" clearable
 								@input="handleChange"></el-input>
 						</div>
-
-
-						<!-- <ul class="list"> -->
 						<div class="list">
 							<el-tree :data="setTree" :props="defaultProps" node-key="id" default-expand-all
 								:expand-on-click-node="false" class="list-L">
@@ -60,9 +57,9 @@
 							<el-button type="primary" class="run-btn" @click="handelRun(scope.row.testCase.id)"></el-button>
 						</template>
 					</el-table-column>
-					<el-table-column v-if="InstanceTableData.every(item => item.testCaseRun.runStatus !== 5)"" label="再运行">
+					<el-table-column v-if="InstanceTableData.every(item => ![0, 1, 3,5].includes(item.testCaseRun.runStatus))" label="再运行">
           	<template slot-scope="scope">
-    				<el-button type="primary" class="run-btn" @click="handelRun(scope.row.testCase.id)"></el-button>
+    				<el-button type="primary" class="run-btn" @click="handelReRun(scope.row.testCase.id)"></el-button>
     				</template>
     			</el-table-column>
 
@@ -112,7 +109,7 @@ import {
 	testCycleListByClick
 } from '@/api/testcycle'
 
-import {axios} from '@/api/axios'
+import {axios} from '@/utils/request'
 
 import { queryViewTrees } from '@/api/project'
 export default {
@@ -291,30 +288,57 @@ export default {
 			this.show = !this.show
 			this.show ? this.getInstanceListData() : ""
 		},
+
 		//运行
-		handelRun(id) {
-	    //console.log("run", this.cycleId);
-			//this.$router.push(`/testcycle/useCase?id=${this.cycleId}&tableid=${id}`)
+		handelRun(tcId) {
 		const data ={
-		   // projectId: this.projectId,
+		    projectId: this.projectId,
 		    testCycleId: this.cycleId,
-		    //testCaseId: id
+		    testCaseId: tcId,
+		    runCountIndicator: true
 		};
 		  console.log('Data to be sent:', data);
-
        // Perform the API call
-       // axios.post('testCycle/caseRun/testCase', data)
-       axios.post('testCycle/instance/listByTestCycle', data)
+       //axios.post('/testCycle/instance/listByTestCycle', data)
+       axios.post('/testCycle/caseRun/execute', data)
          .then(response => {
            console.log('API call successful:', response);
            // Once the API call is completed, navigate to the desired route
-           this.$router.push({ path: '/testcycle/useCase', query: { id: this.cycleId, tableid: id } });
+           this.$router.push({ name: 'runCase', query: { id: this.cycleId, tableid: tcId } });
          })
          .catch(error => {
            console.error('Error executing test case or navigating:', error);
          });
-
 		},
+
+		//再运行
+    	async handelReRun(tcId) {
+    		const data ={
+    		    projectId: this.projectId,
+    		    testCycleId: this.cycleId,
+    		    testCaseId: tcId,
+    		    runCountIndicator: false
+    		};
+
+try {
+        //const response = await fetch('re-run.api');
+        const response = await axios.post('/testCycle/caseRun/execute', data)
+        const data1 = response.data;
+
+        // Assuming Vue Router is used for navigation
+        if (response.code === '200') {
+          console.log('dskdfs',data1.list);
+          this.$router.push({ name: 'reRunCase', params: { dataList: data1.list } });
+        } else {
+          console.error('Invalid API response');
+        }
+      } catch (error) {
+        console.error('Error occurred while fetching data:', error);
+      }
+
+    		 },
+
+
 		//删除案例
 		deleteCase(ids) {
 			const data = {
