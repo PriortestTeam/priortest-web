@@ -66,6 +66,7 @@ export default {
       DrawerSearch: '测试用例表标 模糊查询',
       tcaseInTcycleList: [],
       tcaseListIndex: 0,
+      
 
       // 测试步骤详情
       useCaseData: [{
@@ -98,9 +99,11 @@ export default {
       getListBytestCycle({ testCycleId: this.$route.query.id }, { pageNum: 1, pagSize: res.data.total }).then(res => {
         if (res.data !== null) {
           this.tcaseInTcycleList = res.data.list
-          this.tcaseListIndex = res.data.list.every((item) => {
-            return testCase.id == this.$route.query.tableid
-          })
+          // use this line to fix testCase undefined issue
+          this.tcaseListIndex = res.data.list.findIndex(item => item.testCase.id === this.$route.query.tableid); 
+         // this.tcaseListIndex = res.data.list.every((item) => {
+         //   return testCase.id == this.$route.query.tableid
+        //  })
         }
       })
     })
@@ -162,8 +165,7 @@ export default {
         "actualResult": row.actualResult ? row.actualResult : '',
         "testCaseStepId": row.id,
         "statusCode": `${statusCode}`
-      }
-      console.log('Pass按钮', index, row, list);
+      }     
       if (e.target.innerText == '失败&缺陷（自动）') {
         Row = { ...Row, testCaseData: { ...list } }
       }
