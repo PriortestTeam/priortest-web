@@ -261,7 +261,15 @@ export const constantRoutes = [
           icon: "Project",
         },
       },
-
+      {
+        path: "/runCase",
+        name: "runCase",
+        component: () => import("@/views/testcycle/caseRun/runCase"),
+        meta: {
+          title: "Project",
+          icon: "Project",
+        },
+      },
       {
         path: "/reRunCase",
         name: "reRunCase",
