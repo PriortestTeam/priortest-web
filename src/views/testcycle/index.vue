@@ -64,12 +64,12 @@
                 <el-table-column prop="env" label="环境" width="120" />
                 <el-table-column prop="testPlatform" :show-overflow-tooltip="true" label="平台" />
                 <el-table-column prop="instanceCount" label="用例数" />
-                <el-table-column prop="planExecuteDate" label="计划执行" min-width="120" :show-overflow-tooltip="true" >
-                 <template slot-scope="scope">
-                  {{ formatDateOnly(scope.row.planExecuteDate) }}
-                 </template>
-               
-              </el-table-column>
+                <el-table-column prop="planExecuteDate" label="计划执行" min-width="120" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    {{ formatDateOnly(scope.row.planExecuteDate) }}
+                  </template>
+
+                </el-table-column>
 
                 <el-table-column prop="id" :show-overflow-tooltip="true" min-width="160" label="UUID" />
 
@@ -169,12 +169,12 @@ export default {
     // 日期格式重置
     formatDateOnly(dateTimeString) {
       const date = new Date(dateTimeString);
-    if (isNaN(date)) {
+      if (isNaN(date)) {
         return 'NA';
-    }
-    return date.toISOString().split('T')[0];
-    
-  },
+      }
+      return date.toISOString().split('T')[0];
+
+    },
 
     // 选择更多列
     selectMoreCol() {
@@ -311,18 +311,20 @@ export default {
       // }
       let inputValue = '';
       console.log(row);
-      this.$prompt('请输入要删除的测试周期标题', ' ', {
+      this.$prompt(`请输入要删除的测试周期标题：${row.title}`, ' ', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-        inputErrorMessage: '测试周期标题不匹配'
+        inputPattern: /\S+/,
+        inputErrorMessage: '请输入删除的测试周期标题'
       }).then(({ value }) => {
         let meg;
+        let type;
         inputValue = value;
-        value == row.title ? meg = '删除成功' : meg = '删除失败'
+        if (value == row.title) { meg = '删除成功', type = 'success' }
+        else { meg = '输入的测试周期标题与删除测试周期标题不一致', type = 'error' }
         this.$message({
 
-          type: 'success',
+          type: type,
           message: meg
         });
       }).catch(() => {
@@ -336,7 +338,7 @@ export default {
         } else {
           deltestCycle(row.id).then(res => {
             if (res.code === '200') {
-              message('success', res.msg)
+              // message('success', res.msg)
               this.getqueryFortestCycle()
             }
           })
