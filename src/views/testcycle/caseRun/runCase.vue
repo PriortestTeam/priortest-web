@@ -5,43 +5,42 @@
    <div class="container">
    <el-button style="width: 80px" type="primary" @click="changeVisible">运行列表</el-button>
    <el-button style="width: 80px" type="primary" @click="ToTestCycle">返回周期</el-button>
-   <el-button style="width: 60px" @click="changeDrawerindex(Drawerindex, 'up')" type="success">上个</el-button>
-   <el-button style="width: 60px" @click="changeDrawerindex(Drawerindex, 'next')" type="success">下个</el-button>
+   <el-button style="width: 60px" @click="changetcaseListIndex(tcaseListIndex, 'up')" type="success">上个</el-button>
+   <el-button style="width: 60px" @click="changetcaseListIndex(tcaseListIndex, 'next')" type="success">下个</el-button>
     
-   <el-button @click="handleCaseOperate('通过',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button pass">通过All</el-button>
-   <el-button @click="handleCaseOperate('失败&缺陷（自动）',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button fail">失败&缺陷（自动）All</el-button>
-   <el-button @click="handleCaseOperate('失败&缺陷',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button fail">失败&缺陷 all </el-button>
-   <el-button @click="handleCaseOperate('失败',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button fail">失败 all </el-button>
-   <el-button @click="handleCaseOperate('停滞',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button block">停滞 all </el-button>
-   <el-button @click="handleCaseOperate('无效',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button NA">无效 all </el-button>
-   <el-button @click="handleCaseOperate('跳过',DrawerList[Drawerindex].testCase.id)" type="text" class="custom-button skip">跳过 all</el-button>
+   <el-button @click="executeCase('1',tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text" class="custom-button pass">通过All</el-button>
+   <el-button @click="executeCase('2',tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text" class="custom-button fail">失败&缺陷（自动）All</el-button>
+   <el-button @click="executeCase('2',tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text" class="custom-button fail">失败&缺陷 all </el-button>
+   <el-button @click="executeCase('2',tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text" class="custom-button fail">失败 all </el-button>
+   <el-button @click="executeCase('4',tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text" class="custom-button block">停滞 all </el-button>
+   <el-button @click="executeCase('3',tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text" class="custom-button skip">跳过 all</el-button>
+   <el-button @click="executeCase('0',tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text" class="custom-button NA">无效 all </el-button>
+   
   </div>
 
-  <div class="tcTitle">{{DrawerList[Drawerindex].testCase.title }}</div>
+  <div class="tcTitle">测试用例：{{tcaseInTcycleList[tcaseListIndex].testCase.title }}</div>
 
   <el-table :data="useCaseData">          
   <el-table-column prop="testStep" label="步骤">  </el-table-column>
   <el-table-column prop='teststepCondition' label="执行条件" >  </el-table-column>
   <el-table-column prop='testData' label="测试数据">          </el-table-column>
   <el-table-column prop='expectedResult' label="期待结果">          </el-table-column>
-  <el-table-column label="实际结果" class="table_column">
+  <el-table-column label="运行结果">
       <template slot-scope="textarea">
-            <el-input type="textarea" :rows="2" placeholder="请输入运行结果" v-model="textarea.row.actualResult"></el-input>
+            <el-input type="textarea" :rows="2" placeholder='请输入运行结果' v-model="textarea.row.actualResult"></el-input>
       </template>
   </el-table-column>
-
-
   <el-table-column label="执行">
      <template  slot-scope="scope">
-        <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button pass">通过</el-button> |
-        <el-button @click="handleOperate(scope.$index, scope.row, $event)" class="custom-button fail">失败</el-button> |
-        <el-button @click="handleOperate(scope.$index, scope.row, $event, DrawerList[Drawerindex])" class="custom-button fail">失败&缺陷（自动）</el-button> |
-        <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button fail">失败&缺陷</el-button> |
+        <el-button @click="executeStep(scope.$index, scope.row, $event)"  class="custom-button pass">通过</el-button> |
+        <el-button @click="executeStep(scope.$index, scope.row, $event)" class="custom-button fail">失败</el-button> |
+        <el-button @click="executeStep(scope.$index, scope.row, $event, tcaseInTcycleList[tcaseListIndex])" class="custom-button fail">失败&缺陷（自动）</el-button> |
+        <el-button @click="executeStep(scope.$index, scope.row, $event)"  class="custom-button fail">失败&缺陷</el-button> |
           <el-drawer title="缺陷" :visible.sync="drawer" :with-header="false" size="50%" show-close="true"> <issue></issue>
             </el-drawer>
-         <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button block">停滞</el-button> |
-         <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button NA">无效</el-button> |
-         <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button skip">跳过</el-button>
+         <el-button @click="executeStep(scope.$index, scope.row, $event)"  class="custom-button block">停滞</el-button> |
+         <el-button @click="executeStep(scope.$index, scope.row, $event)"  class="custom-button NA">无效</el-button> |
+         <el-button @click="executeStep(scope.$index, scope.row, $event)"  class="custom-button skip">跳过</el-button>
       </template>
    </el-table-column>  
   </el-table>
@@ -55,6 +54,7 @@
 import { queryTestCaseStepApi } from '@/api/testcaseStep'
 import { getListBytestCycle, caseStepRun } from '@/api/testcycle'
 import Issue from '@/views/testcycle/caseRun/Issue.vue'
+import { message } from '@/utils/common'
 
 export default {
   name: 'useCase',
@@ -64,8 +64,8 @@ export default {
       visible: false,
       drawer: false,
       DrawerSearch: '测试用例表标 模糊查询',
-      DrawerList: [],
-      Drawerindex: 0,
+      tcaseInTcycleList: [],
+      tcaseListIndex: 0,
 
       // 测试步骤详情
       useCaseData: [{
@@ -97,8 +97,8 @@ export default {
     getListBytestCycle({ testCycleId: this.$route.query.id }).then(res => {
       getListBytestCycle({ testCycleId: this.$route.query.id }, { pageNum: 1, pagSize: res.data.total }).then(res => {
         if (res.data !== null) {
-          this.DrawerList = res.data.list
-          this.Drawerindex = res.data.list.every((item) => {
+          this.tcaseInTcycleList = res.data.list
+          this.tcaseListIndex = res.data.list.every((item) => {
             return testCase.id == this.$route.query.tableid
           })
         }
@@ -119,32 +119,24 @@ export default {
     }
   },
   methods: {
-  async handleCaseOperate(action,testCaseId) {
-      const statusMap = {
-        '通过': '1',
-        '失败': '2',
-        '失败&缺陷（自动）': '2',
-        '失败&缺陷': '2',
-        '停滞': '4',
-        '无效': '0',
-        '跳过': '3',
-      };
-
-      const statusCode = statusMap[action] || '';
-      const Row = {
+  async executeCase(action,testCaseId) {
+        const Row = {
         projectId: localStorage.getItem('projectId'),
         testCycleId: this.$route.query.id,
         testCaseId: testCaseId,
-        "testCaseStepId": '',  //empty always
+        testCaseStepId: '',  //empty always
         actualResult: '批量运行', // empty
-        statusCode: `${statusCode}`,
+        statusCode: action,
       };
 
       // Example of sending data to the backend using caseStepRun API
       await caseStepRun(Row)
         .then((res) => {
+          if (res.code === '200') {
           console.log('Action performed:', action, res);
-          // Handle the response from the API if needed
+          message('success', res.msg)
+          }            
+         
         })
         .catch((error) => {
           console.error('Error performing action:', action, error);
@@ -152,7 +144,7 @@ export default {
         });
     },
 
-    async handleOperate(index, row, e, list) {
+    async executeStep(index, row, e, list) {
     const statusMap = {
         '无效': '0',
         '通过': '1',
@@ -175,8 +167,12 @@ export default {
       if (e.target.innerText == '失败&缺陷（自动）') {
         Row = { ...Row, testCaseData: { ...list } }
       }
-      await caseStepRun(Row).then(res => {
-        console.log("res-pass", 1, res);
+      await caseStepRun(Row).then(res => {   
+        if (res.code === '200') {
+          console.log("res-pass", 1, res);
+          message('success', res.msg)
+          }            
+         
       })
       if (e.target.innerText == '失败&缺陷') {
         this.drawer = true
@@ -189,26 +185,26 @@ export default {
       this.recordList.splice(index, 1)
     },
     // 按钮
-    changeDrawerindex(index, type) {
+    changetcaseListIndex(index, type) {
 
       switch (type) {
         case 'change':
-          this.Drawerindex = index; break;
+          this.tcaseListIndex = index; break;
         case 'up':
-          if (this.Drawerindex != 0) {
-            this.Drawerindex -= 1
+          if (this.tcaseListIndex != 0) {
+            this.tcaseListIndex -= 1
           }
           break;
         case 'next':
-          if (this.Drawerindex < this.DrawerList.length - 1) {
-            this.Drawerindex += 1
+          if (this.tcaseListIndex < this.tcaseInTcycleList.length - 1) {
+            this.tcaseListIndex += 1
           }
           break;
         default:
           break;
       }
-      console.log('按钮', index, type, this.Drawerindex);
-      queryTestCaseStepApi(this.DrawerList[this.Drawerindex].testCase.id).then((res) => {
+      console.log('按钮', index, type, this.tcaseListIndex);
+      queryTestCaseStepApi(this.tcaseInTcycleList[this.tcaseListIndex].testCase.id).then((res) => {
         if (res.data !== null) {
           this.useCaseData = res.data
           res.data.forEach((item, index) => {
@@ -237,8 +233,10 @@ export default {
 <style scoped lang="scss">
 @import "../index.scss";
 
+
 .tcTitle{
-  font-size: 18px;
+  padding-bottom: 10px;
+  font-size:medium
 }
 
 .container {

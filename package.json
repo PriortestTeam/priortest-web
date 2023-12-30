@@ -1,8 +1,8 @@
 {
-  "name": "vue-admin-template",
-  "version": "4.4.0",
-  "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
-  "author": "Pan <panfree23@gmail.com>",
+  "name": "vue-priortest-project",
+  "version": "1.0.0",
+  "description": "priorTest project",
+  "author": "priorTest team",
   "scripts": {
     "dev": "vue-cli-service serve --open ",
     "build:prod": "vue-cli-service build",
@@ -31,6 +31,7 @@
     "postcss": "^7.0.39",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
     "vue": "2.6.10",
+    "vue-dialog": "0.0.3",
     "vue-i18n": "^8.22.2",
     "vue-router": "3.0.6",
     "vuex": "3.1.0",

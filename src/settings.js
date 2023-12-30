@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'one-click',
+  title: 'PriorTest',
 
   /**
    * @type {boolean} true | false

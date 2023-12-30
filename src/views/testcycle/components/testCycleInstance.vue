@@ -314,7 +314,7 @@ export default {
 		},
 
 		//再运行
-    	async handelReRun(tcId,testCase) {
+    	async handelReRun(tcId,testCaseTitle) {
     		const data ={
     		    projectId: this.projectId,
     		    testCycleId: this.cycleId,
@@ -327,8 +327,8 @@ try {
         const data1 = response.data;
 
         // Assuming Vue Router is used for navigation
-        if (response.code === '200') {         
-          this.$router.push({ name: 'reRunCase', params: { dataList: data1.list,testCaseTitle: title } });
+        if (response.code === '200') {     
+          this.$router.push({ name: 'reRunCase', params: { dataList: data1.list,testCaseTitle: testCaseTitle } });
         } else {
           console.error('Invalid API response');
         }

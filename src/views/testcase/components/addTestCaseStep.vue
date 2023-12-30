@@ -2,11 +2,11 @@
   <div>
     <div class="mb-2">
       <el-button type="primary" @click="createRow">添加</el-button>
-      <el-button type="primary" @click="addTestCaseStep">保存</el-button>
-      <el-button type="danger" @click="clear">清空</el-button>
+      <el-button type="primary" @click="addTestCaseStep" :disabled="!isModified">保存</el-button>
+      <el-button type="danger" @click="clearAll" :disabled="testCaseStepTableData.length === 0">清空</el-button>
     </div>
-    <el-table ref="table" :data="testCaseStepTableData" border style="width: 100%">
-      <el-table-column fixed="left" label="操作" width="100">
+    <el-table ref="table" :data="testCaseStepTableData" style="width: 100%">
+      <el-table-column fixed="left" label="操作" width="80">
         <template v-slot="scope">
           <el-button type="text" size="small" @click.native.prevent="deleteRow(scope.$index, testCaseStepTableData)">
             删除
@@ -15,21 +15,22 @@
       </el-table-column>
       <el-table-column v-for="field in sysCustomFields" :key="field.id" :prop="field.fieldNameEn"
         :label="field.fieldNameCn" width="200">
-        <template v-slot="scope">
-          <el-input v-if="field.fieldType === 'text'" v-model="scope.row[field.fieldNameEn]" type="text" />
+        <template v-slot="scope">          
+          <el-input v-if="field.fieldType === 'text'" v-model="scope.row[field.fieldNameEn]" type="text" @input="handleInput(scope.row)" />
+      
           <el-input v-if="field.fieldType === 'memo'" v-model="scope.row[field.fieldNameEn]" type="textarea" :rows="2"
-            :placeholder="`请输入${field.fieldNameCn}`" />
-          <el-radio-group v-if="field.fieldType === 'radio'" v-model="scope.row[field.defaultValue]">
+            :placeholder="`请输入${field.fieldNameCn}`"  @input="handleInput(scope.row)"/>
+          <el-radio-group v-if="field.fieldType === 'radio'" v-model="scope.row[field.defaultValue]" @input="handleInput(scope.row)">
             <el-radio label="1">是</el-radio>
             <el-radio label="0">否</el-radio>
           </el-radio-group>
-          <el-checkbox-group v-if="field.fieldType === 'checkbox'" v-model="scope.row[field.fieldNameEn]">
+          <el-checkbox-group v-if="field.fieldType === 'checkbox'" v-model="scope.row[field.fieldNameEn]"  @input="handleInput(scope.row)">
             <el-checkbox label="1">是</el-checkbox>
             <el-checkbox label="0">否</el-checkbox>
           </el-checkbox-group>
           <el-select v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
             v-model="scope.row[field.fieldNameEn]" :multiple="['multiList'].includes(field.fieldType)"
-            :placeholder="`请选择${field.fieldNameCn}`">
+            :placeholder="`请选择${field.fieldNameCn}`"  @input="handleInput(scope.row)">
             <el-option v-for="item in handleOptions(field.possibleValue)" :key="item.value" :label="item.label"
               :value="item.value" />
             <el-option label="添加新值" value="999" @click.native="handleAddPossibleValue(field)" />
@@ -39,7 +40,7 @@
           </el-link>
           <el-input v-if="field.fieldType === 'link'" v-model="scope.row[field.fieldNameEn]" type="text" />
           <el-date-picker v-if="field.fieldType === 'Date'" v-model="scope.row[field.fieldNameEn]" type="date"
-            placeholder="选择日期" />
+            placeholder="选择日期"  @input="handleInput(scope.row)"/>
         </template>
       </el-table-column>
       <el-table-column label="自定义字段" prop="customField" width="auto" min-width="200">
@@ -50,11 +51,11 @@
                 <el-form-item size="small" :label="field.fieldNameCn" label-width="80px" prop="radio"
                   :rules="field.fieldNameCn === 'ujkk' ? [{ required: true, message: ' ', trigger: 'change' }] : []">
                   <el-input v-if="field.fieldType === 'text'" v-model="field.valueData" type="text"
-                    :length="field.length" />
+                    :length="field.length"  @input="handleInput(scope.row)"/>
                   <el-input v-if="field.fieldType === 'memo'" v-model="field.valueData" type="textarea" :rows="2"
-                    placeholder="请输入内容" :length="field.length" />
+                    placeholder="请输入内容" :length="field.length"  @input="handleInput(scope.row)"/>
 
-                  <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.defaultValue">
+                  <el-radio-group v-if="field.fieldType === 'radio'" v-model="field.defaultValue"  @input="handleInput(scope.row)">
                     <el-radio label="1">是</el-radio>
                     <el-radio label="0">否</el-radio>
                   </el-radio-group>
@@ -87,16 +88,18 @@
 </template>
 
 <script>
-import { addTestCaseStepApi, queryTestCaseStepApi } from '@/api/testcaseStep'
+import { addTestCaseStepApi, queryTestCaseStepApi,delTestCaseStepApi,editTestCaseStepApi } from '@/api/testcaseStep'
 import { formData, message } from '@/utils/common'
 import { getAllCustomField } from '@/api/getFields'
 import addPossibleValue from '@/views/testcase/components/addPossibleValue.vue'
+import { Empty } from 'element-ui'
 
 export default {
   components: { addPossibleValue },
   props: ['caseId'],
   data() {
     return {
+      isModified: false ,// Flag to track modifications
       // 选择框
       checkedDetail: [],
       // 自定义字段
@@ -125,15 +128,43 @@ export default {
 
   },
   methods: {
+    // 删除步骤
+    
+    deleteRow(index,rows) {       
+    const idToDelete = rows[index]?.id;     
+    if (!idToDelete) {
+      rows.splice(index, 1); 
+    }
+    else{
+    delTestCaseStepApi(idToDelete).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)
+          rows.splice(index, 1);         
+        }
+      })
+    }
+    },
 
-    deleteRow(index, rows) {
-      rows.splice(index, 1)
-    },
-    clear() {
+    // 删除清空所有步骤
+    clearAll() {
+      const idsToDelete = this.testCaseStepTableData.map(row => row.id).filter(id => id.trim() !== '');      
+      if (idsToDelete.length > 0){     
+      delTestCaseStepApi(idsToDelete).then(res => {
+        if (res.code === '200') {
+          message('success', res.msg)        
+         this.testCaseStepTableData = []
+        }
+      })
+    }
+    else{
       this.testCaseStepTableData = []
+    }
+    this.isModified =false;
     },
+
+    // 创建行 
     createRow() {
-      // 创建行
+      this.isModified = true; 
       var obj = {
         id: '',
         testCaseId: this.caseId,
@@ -185,7 +216,7 @@ export default {
     queryTestCaseStep() {
       queryTestCaseStepApi(this.caseId).then((res) => {
         if (res !== null) {
-          this.testCaseStepTableData = res.data
+          this.testCaseStepTableData = res.data 
           // 转换自定义字段
           this.testCaseStepTableData.forEach(obj => {
             const cc = this.customFields.map(item => {
@@ -193,7 +224,7 @@ export default {
                 ...item
               }
             })
-            // obj.customFieldDatas = cc
+           
             this.$set(obj, 'customFieldDatas', cc)
           })
           // 自定义字段赋值
@@ -241,11 +272,13 @@ export default {
       this.currentField = { ...field }
       this.addPossibleValueVisible = true
     },
+
+
     // 保存步骤
     addTestCaseStep() {
       // 步骤重新排序
       this.$refs.formData.validate((valid) => {
-        console.log(valid);
+        
       })
       let num = 1
       this.testCaseStepTableData.forEach(obj => {
@@ -256,7 +289,7 @@ export default {
         testCaseId: this.caseId,
         steps: this.testCaseStepTableData
       }
-      console.log(caseStepList);
+     
       addTestCaseStepApi(caseStepList).then((res) => {
         if (res.code === '200') {
           message('success', '保存成功')
@@ -264,13 +297,22 @@ export default {
           this.refresh()
         }
       })
+      this.isModified = false;
     },
     // 刷新表格数据
     refresh() {
       this.getData()
       this.$refs.table.reload()
-    }
+    },
+
+    // 修改任何一个字段时，要求点击保存
+    handleInput(row){
+      this.isModified = true;
+      row.isRowModified = true;
   }
+  }
+
+ 
 }
 </script>
 <style lang="scss" scoped>

@@ -24,7 +24,7 @@ export default {
   },
   data () {
     return {
-      title: 'one-click',
+      title: 'PriorTest',
       logo: '../../../icons/img/one-logo.png'
     }
   }

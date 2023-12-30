@@ -2,39 +2,39 @@
   <div class="project-container app-container">
     
     <el-button  style="width: 80px" type="primary" @click="goBack"> 用例列表</el-button>
-        <el-button @click="prevCase" style="width: 60px" type="primary">上个</el-button>
-        <el-button @click="nextCase" style="width: 60px" type="primary">下个</el-button>
+        <el-button style="width: 60px" type="primary">上个</el-button>
+        <el-button style="width: 60px" type="primary">下个</el-button>
 
-        <el-button @click="handleCaseAction('1')" class='custom-button pass'>通过</el-button>
-        <el-button @click="handleCaseAction('2')" class='custom-button fail'>失败</el-button>
-        <el-button @click="handleCaseAction('2')" class='custom-button fail'>失败&缺陷（自动）</el-button>
-        <el-button @click="handleCaseAction('2')" class='custom-button fail'>失败&缺陷</el-button>        
-        <el-button @click="handleCaseAction('4')" class='custom-button block' >停滞</el-button>
-        <el-button @click="handleCaseAction('3')" class='custom-button skip' >跳过</el-button>
-        <el-button @click="handleCaseAction('0')" class='custom-button NA'>无效</el-button>
+        <el-button @click="executeCase('1')" class='custom-button pass'>通过</el-button>
+        <el-button @click="executeCase('2')" class='custom-button fail'>失败</el-button>
+        <el-button @click="executeCase('2')" class='custom-button fail'>失败&缺陷（自动）</el-button>
+        <el-button @click="executeCase('2')" class='custom-button fail'>失败&缺陷</el-button>        
+        <el-button @click="executeCase('4')" class='custom-button block' >停滞</el-button>
+        <el-button @click="executeCase('3')" class='custom-button skip' >跳过</el-button>
+        <el-button @click="executeCase('0')" class='custom-button NA'>无效</el-button>
       
-  <div>dataList.title</div>
+  <div style="font-size: medium; padding-top: 20px; padding-bottom: 20px;" >测试用例：{{testCaseTitle}}</div>
+
   <el-table :data="dataList">          
   <el-table-column prop="testStep" label="步骤">  </el-table-column>
   <el-table-column prop="teststepCondition" label="执行条件">  </el-table-column>
   <el-table-column prop="testData" label="测试数据">  </el-table-column>
   <el-table-column prop="expectedResult" label="期待结果">  </el-table-column>
-  <el-table-column label="实际结果">
+  <el-table-column label="运行结果">
       <template slot-scope="textarea">
-            <el-input type="textarea" :rows="2" placeholder="请输入运行结果" v-model="textarea.row.actualResult"></el-input>
+            <el-input type="textarea" :rows="2" placeholder='actualResult' v-model="textarea.row.actualResult"></el-input>
       </template>
   </el-table-column>
   <el-table-column label="执行">
-     <template  slot-scope="scope">
-        <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button pass">通过</el-button> |
-        <el-button @click="handleOperate(scope.$index, scope.row, $event)" class="custom-button fail">失败</el-button> |
-        <el-button @click="handleOperate(scope.$index, scope.row, $event, DrawerList[Drawerindex])" class="custom-button fail">失败&缺陷（自动）</el-button> |
-        <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button fail">失败&缺陷</el-button> |
-          <el-drawer title="缺陷" :visible.sync="drawer" :with-header="false" size="50%" show-close="true"> <issue></issue>
-            </el-drawer>
-         <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button block">停滞</el-button> |
-         <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button NA">无效</el-button> |
-         <el-button @click="handleOperate(scope.$index, scope.row, $event)"  class="custom-button skip">跳过</el-button>
+     <template slot-scope="scope">
+        <el-button @click="executeStep('1',scope.row)"  class="custom-button pass">通过</el-button> |
+        <el-button @click="executeStep('2',scope.row)" class="custom-button fail">失败</el-button> |
+        <el-button @click="executeStep('2',scope.row)" class="custom-button fail">失败&缺陷（自动）</el-button> |
+        <el-button @click="executeStep('2',scope.row)" class="custom-button fail">失败&缺陷</el-button> |
+        <el-button @click="executeStep('4',scope.row)"  class="custom-button block">停滞</el-button> |
+        <el-button @click="executeStep('3',scope.row)"  class="custom-button skip">跳过</el-button> |
+        <el-button @click="executeStep('0',scope.row)" class="custom-button NA">无效</el-button>
+        
       </template>
    </el-table-column>  
 
@@ -46,40 +46,100 @@
 
 
 <script>
-
+import { caseStepRun } from '@/api/testcycle'
+import { message } from '@/utils/common'
 
 export default {
 
+  data(){
+    return{
+      testCaseId: this.dataList[0].testCaseId,
+      testCaseStepId:this.dataList[0].testCaseStepId,
+      testCycleId:this.dataList[0].testCycleId,      
+    }
+  },
+
   methods: {
     goBack() {
-      this.$router.go(-1); // Navigates back to the previous page
-    }
+      this.$router.back(); // Navigates back to the previous page
+      
+    },
+  async executeCase(action) {  
+      const Row = {
+        projectId: localStorage.getItem('projectId'),
+        testCycleId: this.testCycleId,
+        testCaseId: this.testCaseId,
+        "testCaseStepId": '',  //empty always
+        actualResult: '批量运行', // empty
+        statusCode: action,
+      };
+      // Example of sending data to the backend using caseStepRun API
+      await caseStepRun(Row)
+        .then((res) => {
+          if (res.code === '200') {
+          console.log('Action performed:', action, res);
+          message('success', res.msg)
+          }      
+          // Handle the response from the API if needed
+        })
+        .catch((error) => {
+          console.error('Error performing action:', action, error);
+          // Handle errors if necessary
+        });
+      },
+
+      async executeStep(action,row) {  
+      const Row = {
+        projectId: localStorage.getItem('projectId'),
+        testCycleId: this.testCycleId,
+        testCaseId: this.testCaseId,
+        testCaseStepId: row.testCaseStepId,  //empty always
+        actualResult: row.actualResult ? row.actualResult : '',
+        statusCode: action,
+      };
+      // Example of sending data to the backend using caseStepRun API
+      await caseStepRun(Row)
+        .then((res) => {
+          if (res.code === '200') {
+          console.log('Action performed:', action, res);
+          message('success', res.msg)
+          }      
+        })
+        .catch((error) => {
+          console.error('Error performing action:', action, error);
+          // Handle errors if necessary
+        });
+      }
+
+
+
+
   },
 
   props: {
     dataList: {
       type: Array,
       default: () => []
+    },
+    testCaseTitle:{
+      type: String,
+      default:() => ""
     }
   },
   mounted() {
-      console.log('Received dataList:', this.dataList);
+      console.log('Received dataList:', this.dataList, this.testCaseTitle);
+    
     }
+
+
 };
 </script>
 
-
 <style scoped lang="scss">
 @import "../index.scss";
-.container {
-   display: flex; /* Use flexbox */
-   justify-content: flex-start; /* Align items at the start of the container */
-   gap: 5px; /* Gap between buttons */
-   flex-wrap: wrap; /* Allow buttons to wrap when container width is insufficient */
-   margin-bottom: 10px; /* Optional margin to separate from the table */
-}
+
   .custom-button {
-    color: #000; /* Default text color */
+    color: #e4dfdf; /* Default text color */
     border: none; /* Remove button border */
     margin-right: 0px; /* Add some margin between buttons */
     padding: 0; /* Remove default padding */

@@ -19,7 +19,7 @@
               </el-button>
             </div>
 
-            <div class="oprate_btn">
+            <div class="oprate_btn">              
               <el-button type="text" @click="projectRefresh">刷新</el-button>
               <el-button type="text" @click="addTestCase">添加用例到周期</el-button>
               <el-button type="text" :disabled="multiple" @click="projectClone">克隆
@@ -40,7 +40,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="testCycleStatus" :show-overflow-tooltip="true" label="状态" />
-                <el-table-column prop="title" :show-overflow-tooltip="true" width="140"
+                <el-table-column prop="title" :show-overflow-tooltip="true" width="180"
                   :label="$t('lang.CommonFiled.Title')">
                   <template slot-scope="scope">
                     <span class="title" @click="openEdit(scope.row, 1)">
@@ -50,29 +50,35 @@
                 </el-table-column>
                 <el-table-column prop="testMethod" :show-overflow-tooltip="true" label="测试方法" />
                 <el-table-column prop="version" label="版本" />
-                <el-table-column prop="currentRelease" :show-overflow-tooltip="true" label="当前版本" />
-                <el-table-column prop="released" :show-overflow-tooltip="true" label="发布版本" />
-                <el-table-column prop="runStatus" :show-overflow-tooltip="true" label="运行状态" />
-                <el-table-column prop="env" :show-overflow-tooltip="true" label="环境" />
-                <el-table-column prop="testFrame" :show-overflow-tooltip="true" label="平台" />
-                <el-table-column prop="instanceCount"  :show-overflow-tooltip="true" label="运行用例数" />
-                <el-table-column prop="planExecuteDate" label="执行时间" min-width="120" :show-overflow-tooltip="true" />
-                <!--<el-table-column prop="createTime" label="创建日期" min-width="120" :show-overflow-tooltip="true" />-->
+                <el-table-column prop="currentRelease" label="当前版本" >
+                    <template slot-scope="scope">
+                      {{ scope.row.currentRelease === 1 ? '是' : '否' }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="released" label="发布版本" > 
+                    <template slot-scope="scope">
+                      {{ scope.row.released === 1 ? '是' : '否' }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="runStatus"  label="运行状态" />
+                <el-table-column prop="env" label="环境"  width="120" />
+                <el-table-column prop="testPlatform" :show-overflow-tooltip="true" label="平台" />
+                <el-table-column prop="instanceCount" label="用例数" />
+                <el-table-column prop="planExecuteDate" label="计划执行时间" min-width="120" :show-overflow-tooltip="true" />                
                 <el-table-column prop="id" :show-overflow-tooltip="true" min-width="160" label="UUID" />
+
+                <deletionDialog @confirm="confirmDelete" ref="deleteDialog" />
+
                 <el-table-column label="操作" min-width="148" fixed="right">
-                  <template slot-scope="scope">
-                    <!-- <el-button type="text" class="table-btn">克隆</el-button>
-                  <span class="line">|</span> -->
-                    <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
-                    </el-button>
-                    <el-button type="text" class="table-btn"
-                      @click.stop="projectClone(scope.row.id, 'single')">克隆</el-button>
-                    <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除
-                    </el-button>
+                  <template slot-scope="scope">                  
+                    <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)" style="margin-right: 1px;">详情</el-button>
+                    <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id, 'single')" style="margin-right: 1px;">克隆</el-button>
+                    <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)" >删除</el-button>
+                    <el-button type="text" class="table-btn" @click.stop="openDeleteConfirmation(scope.row)">删除确认</el-button>
+                   
                   </template>
                 </el-table-column>
               </el-table>
-
               <pagination v-show="testCycleTotal > 0" :total="testCycleTotal" :page.sync="testCycleQuery.pageNum"
                 :limit.sync="testCycleQuery.pageSize" @pagination="getqueryFortestCycle" />
             </div>
@@ -86,14 +92,18 @@
 <script>
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
-import { testCycleList, deltestCycle, clonetestCycle, testCycleListByClick, testCycleSave, saveInstance } from '@/api/testcycle'
+import { testCycleList, deltestCycle, clonetestCycle, testCycleListByClick, saveInstance } from '@/api/testcycle'
 import { handle } from 'express/lib/application'
+import deletionDialog from './components/deletionDialog.vue';
+
 // import { queryViews } from '@/api/project'
 
 export default {
   name: 'testCycle',
   components: {
-    viewTree
+    viewTree,
+    deletionDialog,
+    
   },
   data() {
     return {
@@ -147,10 +157,12 @@ export default {
     }
   },
   methods: {
+ 
     // 选择更多列
     selectMoreCol() {
-
+   
     },
+  
     // 新建项目
     newproject() {
       this.$router.push({ name: 'Addtestcycle', query: { isEdit: 1 } })
@@ -219,7 +231,6 @@ export default {
       }
 
     },
-    //
 
     //点击 添加到用例周期
     addTestCase() {
@@ -257,6 +268,22 @@ export default {
       })
     },
 
+   // Display the confirmation dialog
+    openDeleteConfirmation(row) {      
+      console.log('openDeleteConfirmation method is invoked!');
+      this.$refs.deleteDialog.showDialog(row);
+    },
+
+    confirmDelete(enteredTitle, selectedTestCycle) {
+      console.log('confirmDelete method is invoked!');
+      if (enteredTitle === selectedTestCycle.title) {
+        // 删作
+        this.delproject(selectedTestCycle.id);
+      } else {
+        // Display an error message for title mismatch
+        this.$message.error('输入的测试周期标题与删除除的不一致.');
+      }
+    },
 
     // 删除项目
     delproject(id) {
@@ -265,9 +292,9 @@ export default {
         return
       }
       deltestCycle(id).then(res => {
-        if (res.code === '200') {
-          message('success', res.msg)
+        if (res.code === '200') {         
           this.getqueryFortestCycle()
+          message('success', res.msg)
         }
       })
     },
@@ -287,19 +314,7 @@ export default {
     openEdit(row, isEdit) {
       this.$router.push({ name: 'Addtestcycle', query: { id: row.id, isEdit } })
     },
-    // childByValue: function (query) {
-    //   this.isLoading = true
-    //   this.viewSearchQueryId = query.viewTreeDto.id
-    //   testCycleList(this.testCycleQuery, query).then(res => {
-    //     this.testCycletableData = res.data
-    //     this.testCycleTotal = res.total
-    //     this.isLoading = false
-    //   }).catch(() => {
-    //     this.testCycletableData = []
-    //     this.testCycleTotal = 0
-    //     this.isLoading = false
-    //   })
-    // },
+
     childByValue: function (query) {
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id

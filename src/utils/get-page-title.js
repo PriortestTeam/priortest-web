@@ -1,6 +1,6 @@
 import defaultSettings from '@/settings'
 
-const title = defaultSettings.title || 'one-click'
+const title = defaultSettings.title || 'priorTest'
 
 export default function getPageTitle (pageTitle) {
   if (pageTitle) {
