@@ -64,7 +64,13 @@
                 <el-table-column prop="env" label="环境" width="120" />
                 <el-table-column prop="testPlatform" :show-overflow-tooltip="true" label="平台" />
                 <el-table-column prop="instanceCount" label="用例数" />
-                <el-table-column prop="planExecuteDate" label="计划执行时间" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column prop="planExecuteDate" label="计划执行" min-width="120" :show-overflow-tooltip="true" >
+                 <template slot-scope="scope">
+                  {{ formatDateOnly(scope.row.planExecuteDate) }}
+                 </template>
+               
+              </el-table-column>
+
                 <el-table-column prop="id" :show-overflow-tooltip="true" min-width="160" label="UUID" />
 
                 <deletionDialog @confirm="confirmDelete" ref="deleteDialog" />
@@ -160,6 +166,15 @@ export default {
     }
   },
   methods: {
+    // 日期格式重置
+    formatDateOnly(dateTimeString) {
+      const date = new Date(dateTimeString);
+    if (isNaN(date)) {
+        return 'NA';
+    }
+    return date.toISOString().split('T')[0];
+    
+  },
 
     // 选择更多列
     selectMoreCol() {

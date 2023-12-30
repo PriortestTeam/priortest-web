@@ -332,7 +332,8 @@ export default {
 
 				// Assuming Vue Router is used for navigation
 				if (response.code === '200') {
-					this.$router.push({ name: 'reRunCase', query: { dataList: data1.list, testCaseTitle: testCaseTitle } });
+					console.error('reRun data', data1,testCaseTitle);
+					this.$router.push({ name: 'reRunCase', params: { dataList: data1.list, testCaseTitle: testCaseTitle } });
 				} else {
 					console.error('Invalid API response');
 				}

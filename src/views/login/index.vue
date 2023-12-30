@@ -139,7 +139,7 @@
           <img src="@/icons/img/one-logo.png" alt="" srcset="">
         </div>
         <el-link type="primary" style="margin-right: 10px;" @click="backLoginIndex">返回登录</el-link>
-        <div class="one-tip">感谢您试用OneClick, 请通过您的<span class="email" @click="routerEmail">注册邮箱{{ registerForm.email }}</span>激活注册帐号开启您的体验之旅</div>
+        <div class="one-tip">感谢您试用PriorTest, 请通过您的<span class="email" @click="routerEmail">注册邮箱{{ registerForm.email }}</span>激活注册帐号开启您的体验之旅</div>
       </el-form>
 
     </div>
@@ -428,7 +428,6 @@ export default {
 
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 </style>
 
 <style lang="scss" scoped>

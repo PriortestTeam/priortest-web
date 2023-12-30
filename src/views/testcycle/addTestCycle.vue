@@ -53,7 +53,7 @@
 										</el-link>
 										<el-input v-if="field.fieldType === 'link' && isEdit" v-model="field.valueData" type="text" />
 										<el-date-picker v-if="field.fieldType === 'Date'" v-model="field.valueData" :disabled="!isEdit"
-											value-format="yyyy-MM-dd HH:mm:ss" type="date" placeholder="选择日期" />
+											value-format="yyyy-MM-dd HH:mm:ss" type="date" placeholder="选择日期" :picker-options="dateOption" />
 									</el-form-item>
 								</el-col>
 								<el-col :span="24">
@@ -145,6 +145,13 @@ export default {
 	data() {
 		return {
 			//openDia: false,
+			// 日期选择设置
+			dateOption:{
+				disabledDate(time){
+				return time.getTime() < Date.now();
+				}
+			},
+		
 			sysCustomFields: [], //sField即上半部分
 			customFields: [], //custom即下半部分
 			oldSysCustomFields: [],

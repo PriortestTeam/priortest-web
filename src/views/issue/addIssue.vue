@@ -91,8 +91,7 @@
                   v-model="field.valueData"
                   :disabled="!isEdit"
                   type="date"
-                  placeholder="选择日期"
-                />
+                  placeholder="选择日期" :picker-options="dateOption" />
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -190,6 +189,13 @@ export default {
   },
   data() {
     return {
+      // 日期选择设置
+      dateOption:{
+				disabledDate(time){
+				return time.getTime() < Date.now();
+				}
+			},
+
       openDia: false,
       sysCustomFields: [],
       customFields: [],
@@ -218,19 +224,23 @@ export default {
     },
     issueRules() {
       try {
-        return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
-          if (b.mandatory) {
-            return {
-              ...a,
-              [b.label]: [{ required: true, message: '不能为空', trigger: 'blur' }]
-            }
-          } else {
-            return a
-          }
-        }, {})
-      } catch (error) {
-        return []
-      }
+				return [...this.sysCustomFields, ...this.customFields].reduce((a, b) => {
+					if (b.mandatory) {
+						return {
+							...a,
+							[b.label]: [{
+								required: true,
+								message: '不能为空',
+								trigger: 'blur'
+							}]
+						}
+					} else {
+						return a
+					}
+				}, {})
+			} catch (error) {
+				return []
+			}
     },
     ...mapGetters({
       lang: (state) => state.header.lang

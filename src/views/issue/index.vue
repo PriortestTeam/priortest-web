@@ -54,15 +54,23 @@
                 <!--   <el-table-column prop="module"  :show-overflow-tooltip="true" label="模块" /> -->
                 <el-table-column prop="issueVersion" :show-overflow-tooltip="true" label="缺陷版本" />
                 <el-table-column prop="caseCategory" :show-overflow-tooltip="true" label="测试分类" />
-                <el-table-column prop="lastRunStatus" label="L-运行状态" />
+                <el-table-column prop="lastRunStatus" label="L-状态" />
                 <!-- <el-table-column
                   prop="stepStatus"
                   :show-overflow-tooltip="true"
                   label="步骤运行状态"
                 /> -->
 
-                <el-table-column prop="planFixDate" label="计划修改" :formatter="formatDate" :show-overflow-tooltip="true" />
-                <el-table-column prop="createTime" label="创建日期" :show-overflow-tooltip="true" />
+                <el-table-column prop="planFixDate" label="计划修改" :formatter="formatDate" :show-overflow-tooltip="true" >
+                <template slot-scope="scope">
+                  {{ formatDateOnly(scope.row.planFixDate) }}
+                 </template>
+                 </el-table-column>
+                <el-table-column prop="createTime" label="创建日期" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                  {{ formatDateOnly(scope.row.createTime) }}
+                 </template>
+                </el-table-column>
                 <el-table-column prop="id" :show-overflow-tooltip="true" width="165" label="UUID" />
                 <el-table-column label="操作" min-width="148" fixed="right">
                   <template slot-scope="scope">
@@ -133,6 +141,8 @@ export default {
     }
   },
   computed: {
+
+
     projectInfo() {
       return this.$store.state.user.userinfo
     }
@@ -153,6 +163,17 @@ export default {
     }
   },
   methods: {
+
+     // 日期格式重置
+     formatDateOnly(dateTimeString) {
+      const date = new Date(dateTimeString);
+    if (isNaN(date)) {
+        return 'NA';
+    }
+    return date.toISOString().split('T')[0];
+    
+  },
+
     // 选择更多列
     selectMoreCol() {
 
