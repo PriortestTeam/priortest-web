@@ -19,7 +19,7 @@
               </el-button>
             </div>
 
-            <div class="oprate_btn">              
+            <div class="oprate_btn">
               <el-button type="text" @click="projectRefresh">刷新</el-button>
               <el-button type="text" @click="addTestCase">添加用例到周期</el-button>
               <el-button type="text" :disabled="multiple" @click="projectClone">克隆
@@ -50,32 +50,35 @@
                 </el-table-column>
                 <el-table-column prop="testMethod" :show-overflow-tooltip="true" label="测试方法" />
                 <el-table-column prop="version" label="版本" />
-                <el-table-column prop="currentRelease" label="当前版本" >
-                    <template slot-scope="scope">
-                      {{ scope.row.currentRelease === 1 ? '是' : '否' }}
-                    </template>
+                <el-table-column prop="currentRelease" label="当前版本">
+                  <template slot-scope="scope">
+                    {{ scope.row.currentRelease === 1 ? '是' : '否' }}
+                  </template>
                 </el-table-column>
-                <el-table-column prop="released" label="发布版本" > 
-                    <template slot-scope="scope">
-                      {{ scope.row.released === 1 ? '是' : '否' }}
-                    </template>
+                <el-table-column prop="released" label="发布版本">
+                  <template slot-scope="scope">
+                    {{ scope.row.released === 1 ? '是' : '否' }}
+                  </template>
                 </el-table-column>
-                <el-table-column prop="runStatus"  label="运行状态" />
-                <el-table-column prop="env" label="环境"  width="120" />
+                <el-table-column prop="runStatus" label="运行状态" />
+                <el-table-column prop="env" label="环境" width="120" />
                 <el-table-column prop="testPlatform" :show-overflow-tooltip="true" label="平台" />
                 <el-table-column prop="instanceCount" label="用例数" />
-                <el-table-column prop="planExecuteDate" label="计划执行时间" min-width="120" :show-overflow-tooltip="true" />                
+                <el-table-column prop="planExecuteDate" label="计划执行时间" min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column prop="id" :show-overflow-tooltip="true" min-width="160" label="UUID" />
 
                 <deletionDialog @confirm="confirmDelete" ref="deleteDialog" />
 
                 <el-table-column label="操作" min-width="148" fixed="right">
-                  <template slot-scope="scope">                  
-                    <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)" style="margin-right: 1px;">详情</el-button>
-                    <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id, 'single')" style="margin-right: 1px;">克隆</el-button>
-                    <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)" >删除</el-button>
-                    <el-button type="text" class="table-btn" @click.stop="openDeleteConfirmation(scope.row)">删除确认</el-button>
-                   
+                  <template slot-scope="scope">
+                    <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)"
+                      style="margin-right: 1px;">详情</el-button>
+                    <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id, 'single')"
+                      style="margin-right: 1px;">克隆</el-button>
+                    <el-button type="text" class="table-btn" @click.stop="delproject(scope.row)">删除</el-button>
+                    <!-- <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)" >删除</el-button>
+                    <el-button type="text" class="table-btn" @click.stop="openDeleteConfirmation(scope.row)">删除确认</el-button> -->
+
                   </template>
                 </el-table-column>
               </el-table>
@@ -103,7 +106,7 @@ export default {
   components: {
     viewTree,
     deletionDialog,
-    
+
   },
   data() {
     return {
@@ -157,12 +160,12 @@ export default {
     }
   },
   methods: {
- 
+
     // 选择更多列
     selectMoreCol() {
-   
+
     },
-  
+
     // 新建项目
     newproject() {
       this.$router.push({ name: 'Addtestcycle', query: { isEdit: 1 } })
@@ -268,8 +271,8 @@ export default {
       })
     },
 
-   // Display the confirmation dialog
-    openDeleteConfirmation(row) {      
+    // Display the confirmation dialog
+    openDeleteConfirmation(row) {
       console.log('openDeleteConfirmation method is invoked!');
       this.$refs.deleteDialog.showDialog(row);
     },
@@ -286,17 +289,44 @@ export default {
     },
 
     // 删除项目
-    delproject(id) {
-      if (id === 'all') {
-        message('error', '暂未开发')
-        return
-      }
-      deltestCycle(id).then(res => {
-        if (res.code === '200') {         
-          this.getqueryFortestCycle()
-          message('success', res.msg)
+    delproject(row) {
+      // if (id === 'all') {
+      //   message('error', '暂未开发')
+      //   return
+      // }
+      let inputValue = '';
+      console.log(row);
+      this.$prompt('请输入要删除的测试周期标题', ' ', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        inputErrorMessage: '测试周期标题不匹配'
+      }).then(({ value }) => {
+        let meg;
+        inputValue = value;
+        value == row.title ? meg = '删除成功' : meg = '删除失败'
+        this.$message({
+
+          type: 'success',
+          message: meg
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });
+      }).then(() => {
+        if (inputValue !== row.title) {
+          return
+        } else {
+          deltestCycle(row.id).then(res => {
+            if (res.code === '200') {
+              message('success', res.msg)
+              this.getqueryFortestCycle()
+            }
+          })
         }
-      })
+      });
     },
     // 表格多选
     handleSelectionChange(val) {

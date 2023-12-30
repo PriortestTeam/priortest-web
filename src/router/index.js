@@ -31,16 +31,16 @@ import Layout from "@/layout";
  * all roles can be accessed
  */
 export const constantRoutes = [
-  {
-    path: "/reRunCase",
-    name: 'reRunCase',
-    component: () => import("@/views/testcycle/caseRun/reRunCase"),
-    props: true,
-    meta: {
-      title: "Project",
-      icon: "Project",
-    },
-  },
+  // {
+  //   path: "/reRunCase",
+  //   name: "reRunCase",
+  //   component: () => import("@/views/testcycle/caseRun/reRunCase"),
+  //   props: true,
+  //   meta: {
+  //     title: "Project",
+  //     icon: "Project",
+  //   },
+  // },
 
   {
     path: "/login",
@@ -261,10 +261,12 @@ export const constantRoutes = [
           icon: "Project",
         },
       },
+
       {
-        path: "/runCase",
-        name: "runCase",
-        component: () => import("@/views/testcycle/caseRun/runCase"),
+        path: "/reRunCase",
+        name: "reRunCase",
+        props: true,
+        component: () => import("@/views/testcycle/caseRun/reRunCase"),
         meta: {
           title: "Project",
           icon: "Project",
@@ -424,6 +426,5 @@ export function resetRouter() {
   const newRouter = createRouter();
   router.matcher = newRouter.matcher; // reset router
 }
-
 
 export default router;

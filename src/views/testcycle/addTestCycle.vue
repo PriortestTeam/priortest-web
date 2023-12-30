@@ -91,7 +91,7 @@
 											type="date" placeholder="选择日期" />
 									</el-form-item>
 								</el-col>
-								
+
 							</el-row>
 						</div>
 					</el-form>
@@ -226,6 +226,8 @@ export default {
 		}
 	},
 	created() {
+		console.log('t:', !!(localStorage.getItem('tabName')));
+		// localStorage.getItem('tabName') ? '' : localStorage.setItem('tabName', 'first')
 		this.activeName = localStorage.getItem('tabName')
 		this.id = this.$route.query.id
 		this.isEdit = !!this.$route.query.isEdit
