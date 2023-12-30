@@ -59,7 +59,8 @@
 					</el-table-column>
 					<!-- <el-table-column v-if="InstanceTableData.every(item => ![0, 1, 3, 5].includes(item.testCaseRun.runStatus))"
 						label="再运行"> -->
-					<el-table-column label="再运行">
+					<el-table-column v-if="InstanceTableData.every(item => ![0, 1, 3, 5].includes(item.testCaseRun.runStatus))"
+						label="再运行">
 						<template slot-scope="scope">
 							<el-button type="primary" class="run-btn"
 								@click="handelReRun(scope.row.testCase.id, scope.row.testCase.title)"></el-button>
