@@ -61,12 +61,12 @@
                   label="步骤运行状态"
                 /> -->
 
-                <el-table-column prop="planFixDate" label="计划修改" :formatter="formatDate" :show-overflow-tooltip="true" >
+                <el-table-column prop="planFixDate" label="计划修改" >
                 <template slot-scope="scope">
                   {{ formatDateOnly(scope.row.planFixDate) }}
                  </template>
                  </el-table-column>
-                <el-table-column prop="createTime" label="创建日期" :show-overflow-tooltip="true">
+                <el-table-column prop="createTime" label="创建日期">
                 <template slot-scope="scope">
                   {{ formatDateOnly(scope.row.createTime) }}
                  </template>
@@ -105,6 +105,7 @@
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
 import { issueList, delIssue, cloneIssue, issueListByClick } from '@/api/issue.js'
+import moment from 'moment';
 // import { queryViews } from '@/api/project'
 
 export default {
@@ -165,14 +166,18 @@ export default {
   methods: {
 
      // 日期格式重置
-     formatDateOnly(dateTimeString) {
-      const date = new Date(dateTimeString);
-    if (isNaN(date)) {
-        return 'NA';
-    }
-    return date.toISOString().split('T')[0];
-    
-  },
+
+  formatDateOnly(dateTimeString) {
+  // Use moment.js to parse the date string and format it as desired
+  if (!dateTimeString) {
+    return 'NA'; // Return 'NA' if the dateTimeString is falsy
+  }
+  const date = moment(dateTimeString);
+  if (!date.isValid()) {
+    return 'NA'; // Return 'NA' if the date is invalid
+  }  
+  return moment(dateTimeString).format('MM/DD/YYYY');
+},
 
     // 选择更多列
     selectMoreCol() {

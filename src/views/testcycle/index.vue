@@ -61,9 +61,10 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="runStatus" label="运行状态" />
+                <el-table-column prop="instanceCount" label="用例数" />
                 <el-table-column prop="env" label="环境" width="120" />
                 <el-table-column prop="testPlatform" :show-overflow-tooltip="true" label="平台" />
-                <el-table-column prop="instanceCount" label="用例数" />
+                
                 <el-table-column prop="planExecuteDate" label="计划执行" min-width="120" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
                     {{ formatDateOnly(scope.row.planExecuteDate) }}
@@ -104,7 +105,7 @@ import { message } from '@/utils/common'
 import { testCycleList, deltestCycle, clonetestCycle, testCycleListByClick, saveInstance } from '@/api/testcycle'
 import { handle } from 'express/lib/application'
 import deletionDialog from './components/deletionDialog.vue';
-
+import moment from 'moment';
 // import { queryViews } from '@/api/project'
 
 export default {
@@ -167,14 +168,17 @@ export default {
   },
   methods: {
     // 日期格式重置
-    formatDateOnly(dateTimeString) {
-      const date = new Date(dateTimeString);
-      if (isNaN(date)) {
-        return 'NA';
-      }
-      return date.toISOString().split('T')[0];
-
-    },
+  formatDateOnly(dateTimeString) {
+  // Use moment.js to parse the date string and format it as desired
+  if (!dateTimeString) {
+    return 'NA'; // Return 'NA' if the dateTimeString is falsy
+  }
+  const date = moment(dateTimeString);
+  if (!date.isValid()) {
+    return 'NA'; // Return 'NA' if the date is invalid
+  }  
+  return moment(dateTimeString).format('MM/DD/YYYY');
+},
 
     // 选择更多列
     selectMoreCol() {
