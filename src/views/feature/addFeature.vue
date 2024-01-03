@@ -187,10 +187,9 @@
             </div>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="步骤" name="second">
-          <add-test-case-step v-if="!verification(id)" :case-id="id" />
-        </el-tab-pane>
-        <el-tab-pane label="运行记录" name="third">运行记录</el-tab-pane>
+        <el-tab-pane label="故事用例" name="storyUseCase" @click="navigateToStoryUseCases">
+          <story-use-case v-if="!verification(id)" :case-id="id" />
+        </el-tab-pane>       
       </el-tabs>
     </el-card>
 
@@ -202,7 +201,6 @@ import { mapGetters } from 'vuex'
 import { getAllCustomField } from '@/api/getFields'
 import addPossibleValue from './components/addPossibleValue.vue'
 
-import { featureListAll } from '@/api/feature'
 import {
   featureSave,
   featureUpdate,
@@ -210,12 +208,14 @@ import {
 } from '@/api/feature'
 
 import { message, returntomenu, formatChangedPara, verification } from '@/utils/common'
-import { fieldTypeAPI } from '@/api/customFFields'
+import StoryUseCase from './components/storyUseCase.vue'
+
 
 export default {
   name: 'AddFeature',
    components: {
-      addPossibleValue
+      addPossibleValue,
+      StoryUseCase
     },
   data() {
     return {
@@ -289,6 +289,12 @@ export default {
     this.getData()
   },
   methods: {
+
+  // Navigate to the story use cases page
+    navigateToStoryUseCases() {
+      this.$router.push({ name: 'storyUseCases' })
+    },
+    
     verification,
     getData() {
       const that = this;
@@ -525,26 +531,13 @@ export default {
       }
       this.returntomenu(this)
     },
-    // 新建步骤
-    resetStepFrom() {
-      this.stepFrom = {
-        featureId: undefined,
-        step: undefined,
-        stepData: undefined,
-        expectedResult: undefined
-      }
-      this.$refs['stepFrom'].resetFields()
-    },
+   
     // 处理 tab 切换逻辑
-    handBeforeLeave(activeName, oldActiveName) {
-      if (activeName === 'second' && !this.id) {
-        message(200, '请先保存故事')
+    handBeforeLeave(activeName) {
+      if (activeName === 'storyUseCase' && !this.id) {
+        message(200, '请先新建/保存故事')
         return false
-      }
-      if (activeName === 'third') {
-        message(200, '正在开发中')
-        return false
-      }
+      }     
     },
     hasParentFiled(filed){
       if(filed.fieldType === 'linkedDropDown'){
