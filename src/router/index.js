@@ -280,6 +280,13 @@ export const constantRoutes = [
           icon: "Project",
         },
       },
+
+      {
+        path: '/storyUseCase',
+        name: 'storyUseCase',
+        component: () => import("@/views/feature/components/storyUseCase"),
+      }
+
     ],
   },
   {
