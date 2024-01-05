@@ -56,9 +56,7 @@
 						<template slot-scope="scope">
 							<el-button type="primary" class="run-btn" @click="handelRun(scope.row.testCase.id)"></el-button>
 						</template>
-					</el-table-column>
-					<!-- <el-table-column v-if="InstanceTableData.every(item => ![0, 1, 3, 5].includes(item.testCaseRun.runStatus))"
-						label="再运行"> -->
+					</el-table-column>					
 					<el-table-column v-if="InstanceTableData.every(item => ![0, 1, 3, 5].includes(item.testCaseRun.runStatus))"
 						label="再运行">
 						<template slot-scope="scope">
@@ -84,6 +82,19 @@
 							{{ interpretRunStatus(scope.row.testCaseRun.runStatus) }}
 						</template>
 					</el-table-column>
+					<el-table-column label="运行时长" prop="testCaseRun.caseRunDuration">		
+					  <template slot-scope="{ row }">						
+  					 {{ ((row.testCaseRun.caseRunDuration) / 60000).toFixed(4) }} mins
+					</template>
+
+					</el-table-column>
+					<el-table-column label="共计" prop="testCaseRun.caseTotalPeriod">
+						<template slot-scope="{ row }">
+  					 {{ ((row.testCaseRun.caseTotalPeriod) / 60000).toFixed(4) }} mins ({{ row.testCaseRun.runCount }}) 
+					</template>
+					
+					</el-table-column>
+
 					<el-table-column label="运行时间" prop="testCaseRun.updateTime">
 					</el-table-column>
 					<el-table-column label="执行者" prop="testCaseRun.updateUserId">

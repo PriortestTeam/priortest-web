@@ -1,117 +1,238 @@
 <template>
-   <div>
-    <h1>Dynamic Form Rendering</h1>
-    <form @submit.prevent="submitForm">
-      <div v-for="field in categorizedFields" :key="field.customFieldId">
-        <label :for="field.fieldNameEn">{{ field.fieldNameCn }}:</label>
-        <template v-if="field.fieldType === 'text' || field.fieldType === 'memo'">
-          <input v-if="field.fieldType === 'text'" type="text" :maxlength="field.length" :required="field.mandatory === 1" v-model="field.inputValue">
-          <textarea v-else :maxlength="field.length" :required="field.mandatory === 1" v-model="field.inputValue"></textarea>
-        </template>
-        <template v-else-if="field.fieldType === 'dropDown' || field.fieldType === 'linkedDropDown' || field.fieldType === 'number' || field.fieldType === 'multiList' || field.fieldType === 'userList'">
-          <select :required="field.mandatory === 1" v-model="field.selectedValue">
-            <option v-for="(value, label) in parsePossibleValues(field.possibleValue)" :key="value" :value="value">{{ label }}</option>
-          </select>
-        </template>
-        <template v-else-if="field.fieldType === 'radio' || field.fieldType === 'checkbox'">
-          <input :type="field.fieldType" :required="field.mandatory === 1" :checked="field.defaultValue === '1'" v-model="field.checked">
-        </template>
-        <template v-else-if="field.fieldType === 'Date'">
-          <input type="date" :required="field.mandatory === 1" v-model="field.dateValue">
-        </template>
+    <div>
+    <el-form :model="form" label-width="120px">
+      <div v-for="field in sysCustomFields" :key="field.customFieldId">
+
+        <el-form-item :label="generateLabel(field)">
+
+      <!--  <span v-if="field.mandatory" style="color: red; margin-right: 2px;">*</span>
+        <el-form-item :label="field.fieldNameCn" :prop="field.label"> -->
+            
+            
+
+          <template  v-if="['text', 'link'].includes(field.fieldType)">
+            <el-input
+              v-model="form[createUniqueLabel(field)]"
+              :placeholder="field.fieldNameCn"
+              :maxlength="field.length"
+              type="text"
+            />
+          </template>
+          <template v-else-if="field.fieldType === 'memo'">
+            <el-input
+              v-model="form[createUniqueLabel(field)]"
+              :placeholder="field.fieldNameCn"
+              :maxlength="field.length"
+              type="textarea"
+              :rows="4"
+            />
+          </template>
+          
+
+
+          <template v-else-if="['userList', 'dropDown', 'number'].includes(field.fieldType)">
+  <el-select v-model="form[createUniqueLabel(field)]" placeholder="Select">
+    <el-option
+      v-for="option in parseOptions(field.possibleValue)"
+      :key="option.value"
+      :label="option.label"
+      :value="option.value"
+      type="dropDown"
+    />
+  </el-select>
+</template>
+
+
+          <template v-else-if="field.fieldType === 'checkbox'">
+            <el-checkbox v-model="form[createUniqueLabel(field)]" />
+          </template>
+          <template v-else-if="field.fieldType === 'radio'">
+            <el-radio-group v-model="form[createUniqueLabel(field)]">
+              <el-radio :label="1">Yes</el-radio>
+              <el-radio :label="0">No</el-radio>
+            </el-radio-group>
+          </template>
+        </el-form-item>
       </div>
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+  
+        <div v-for="field in customFields" :key="field.customFieldId">
+          <el-form-item :label="field.fieldNameCn" :prop="field.label">
+            <template v-if="field.mandatory">
+              <span style="color: red; margin-right: 0px;">*</span>
+            </template>
+            <template v-if="['text', 'link'].includes(field.fieldType)">
+              <el-input
+              v-model="form[field.label + '_' + field.fieldType]"
+                :placeholder="field.fieldNameCn"
+                :maxlength="field.length"               
+                type="text"    
+                value=field.defaultValue            
+              />
+             
+            </template>
+            <template v-else-if="field.fieldType === 'memo'">
+              <el-input
+              v-model="form[field.label + '_' + field.fieldType]"
+                :placeholder="field.fieldNameCn"
+                :maxlength="field.length"
+                type="textarea"
+                :rows="4"
+              />
+            </template>
+            <template v-else-if="['userList', 'dropDown','number'].includes(field.fieldType)">
+              <el-select  v-model="form[field.label + '_' + field.fieldType]" placeholder="Select">
+                <el-option
+                  v-for="option in parseOptions(field.possibleValue)"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
+                  type="dropDown"
+                />
+              </el-select>
+            </template>
+            <template v-else-if="field.fieldType === 'checkbox'">
+        <el-checkbox 
+          :checked="field.default === 1 ? true : false"
+          @change="updateCheckboxValue(field.label, field.fieldType)"
+        />
+      </template>
+            <template v-else-if="field.fieldType === 'radio'">
+              <el-radio-group v-model="form[field.label + '_' + field.fieldType]">
+                <el-radio :label="1">Yes</el-radio>
+                <el-radio :label="0">No</el-radio>
+              </el-radio-group>
+            </template>
+         
+         <template v-if="field.fieldType === 'multiList'">
+         <el-select
+          v-model="form[field.label + '_' + field.fieldType]"
+          placeholder="Select"
+          multiple   
+        >
+          <el-option
+            v-for="option in parseOptions(field.possibleValue)"
+            :key="option.value"
+            :label="option.label"
+            :value="option.value"
+          />
+        </el-select>
+      </template>
+
+      <template v-if="field.fieldType === 'Date'">
+        <el-date-picker
+          v-model="form[field.label + '_' + field.fieldType]"
+          :picker-options="datePickerOptions"
+          type="date"
+          placeholder="Select date"
+        ></el-date-picker>
+      </template>
+
+    </el-form-item>
+        </div>
+  
+       <el-form-item>
+        <el-button type="primary" @click="submitForm">Submit</el-button>
+      </el-form-item>
+    </el-form>
+    </div>
   </template>
   
-
   <script>
-  import { getAllCustomField } from '@/api/getFields'
-
+  import { getAllCustomField } from '@/api/getFields'; // Replace with your actual import path
+  
   export default {
     data() {
-      return {
-        allFields: []
-      };
-    },
-    mounted() {
-      // Make the API call when the component is mounted
-      console.log("this is stroyUserCasePage")
-      this.getAllCustomField();
-    },
-    computed: {
-        projectInfo() {
-      return this.$store.state.user.userinfo
-    },
-      
-    categorizedFields() {
-      const categorized = {
-        textFields: [],
-        dropdownFields: [],
-        radioFields: [],
-        checkboxFields: [],
-        dateFields: []
-      };
-    this.allFields.forEach((field) => {
-        switch (field.fieldType) {
-          case 'text':
-          case 'memo':
-            categorized.textFields.push({ ...field, inputValue: field.defaultValue || '' });
-            break;
-          case 'dropDown':
-          case 'linkedDropDown':
-          case 'number':
-          case 'multiList':
-          case 'userList':
-            categorized.dropdownFields.push({ ...field, selectedValue: field.defaultValue || '' });
-            break;
-          case 'radio':
-            categorized.radioFields.push({ ...field, checked: field.defaultValue === '1' });
-            break;
-          case 'checkbox':
-            categorized.checkboxFields.push({ ...field, checked: field.defaultValue === '1' });
-            break;
-          case 'Date':
-            categorized.dateFields.push({ ...field, dateValue: field.defaultValue || '' });
-            break;
-        }
-      });
-      return categorized;
-    }
+    return {
+      sysCustomFields: [],
+      customFields: [],
+      form: {}, // Each field in the form should have a unique property
+      datePickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now(); // Disable dates before the current time
+        },
+      },
+    };
   },
-      
-    methods: {
-        async getAllCustomField() {
-      try {
-        const response = await getAllCustomField({
-          projectId: this.projectInfo.userUseOpenProject.projectId,
-          scopeId: '2000002'
-        });
+  computed: {
+    projectInfo() {
+      return this.$store.state.user.userinfo;
+    },
+  },
+  methods: { 
 
-        if (response.code === '200') {
-          const data = response.data; // Assuming data contains the fetched fields
-          // Log the fetched data for verification
-          console.log('Fetched Fields:', data);
-          // Assign the fetched fields to a variable or data property in your Vue component
-          this.allFields = data;
-        }
-      } catch (error) {
-        console.error('Error fetching fields:', error);
-      }
+    generateLabel(field) {
+        const mandatory = field.mandatory ? '*' : '';
+        return '${mandatory}${field.fieldNameCn}';
+    },
+    
+    createUniqueLabel(field) {
+        return `${field.label}_${field.fieldType}_${field.customFieldId}`; 
 },
-submitForm() {
-      // Handle form submission here
-      // Access form values from categorizedFields
-      console.log(this.categorizedFields);
+  
+    updateCheckboxValue(label, fieldType) {
+      // Set the form field based on checkbox change
+      this.$set(this.form, label + '_' + fieldType, !this.form[label + '_' + fieldType]);
     },
+    submitForm() {
+      console.log('Form submitted:', this.form);
+    },
+    getData() {
+      const projectId = this.projectInfo.userUseOpenProject.projectId;
+      const scopeId = '2000002';
 
-    parsePossibleValues(possibleValue) {
-      // Implement your logic to parse possible values
-      // Return an object or array that can be iterated in the template
-      // This function is not defined in the provided code snippet
-    }
-  },
-}
+      getAllCustomField({ projectId, scopeId })
+        .then((res) => {
+          if (res.code === '200') {
+            const data = res.data;
+
+            this.sysCustomFields = data.filter((item) => item.type === 'sField');
+            this.customFields = data.filter((item) => item.type === 'custom');
+
+            this.initializeForm();
+          } else {
+            console.error('Error fetching custom fields:', res.msg);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching custom fields:', error);
+        });
+    },
+    initializeForm() {
+     
+
+    this.sysCustomFields.forEach((field) => {
+    const uniqueLabel = this.createUniqueLabel(field);
+    this.$set(this.form, uniqueLabel, '');
+  });
+
+
+      this.customFields.forEach((field) => {
+        // Each field in the form should have a unique property
+        const uniqueLabel = field.label + '_' + field.fieldType; // Append fieldType to label
+        this.$set(this.form, uniqueLabel, ''); // Set each field with its 
+      });
+    },
+      parseOptions(possibleValue) {
+        let options = [];
+        try {
+          const parsedOptions = JSON.parse(possibleValue);
+          options = Object.values(parsedOptions).map((value) => ({
+            value,
+            label: value,
+          }));
+        } catch (error) {
+          console.error('Error parsing possibleValue:', error);
+        }
+        return options;
+      },
+    },
+    created() {
+      this.getData();
+    },
+  };
   </script>
+  
+  <style>
+  /* Add custom styles if needed */
+  </style>
   
