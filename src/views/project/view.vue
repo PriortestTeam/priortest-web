@@ -42,7 +42,7 @@
 					<div class="oneFilters" v-if="addfilter && form.isAuto == 0">
 						<div v-for="(item, index) in  form.oneFilters " :key="index">
 							<el-row v-if="index !== 0">
-								<el-col :span="1">~</el-col>
+								<el-col :span="1">~</el-col>								
 								<el-col :span="2">
 									<el-radio-group v-model="item.andOr">
 										<el-radio label="and">并且</el-radio>

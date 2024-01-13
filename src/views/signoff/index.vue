@@ -9,12 +9,11 @@
           </div>
         </div>
         <el-form-item label="项目" prop="scope" class="form-small">
-          <el-select v-model="projectId" size="small"  @change="getProjectInfo" disabled>
-            <el-option v-for="(item, index) in projectList" :key="index" :label="item.title" :value="item.id" />
-          </el-select>
+        <el-select v-model="projectId" size="small" @change="getProjectInfo" disabled :style="{ width: '130px' }">
+        <el-option v-for="(item, index) in projectList" :key="index" :label="item.title" :value="item.id" />
+        </el-select>
         </el-form-item>
-
-        <el-form-item label="发布版本" prop="version" class="form-small">
+        <el-form-item label="版本" prop="version" class="form-small">
           <el-row class="radiu">
             <el-radio-group v-model="baseInfo.version" @change="versionTypeChange">
               <el-radio :label="true">最新版本({{LatestVersion}})</el-radio>
@@ -27,14 +26,14 @@
             </el-radio-group>
           </el-row>
         </el-form-item>
-        <el-form-item label="测试环境" prop="env" class="form-small">
+        <el-form-item label="环境" prop="env" class="form-small">
           <!-- <el-row class="radiu"> -->
-          <el-select v-model="from.env" size="mini" placeholder="测试环境" @change="envChange">
+          <el-select v-model="from.env" size="mini" placeholder="选择环境" @change="envChange">
             <el-option v-for="(value, key) in projectEnvList" :key="key" :label="value" :value="value" />
           </el-select>
           <!-- </el-row> -->
         </el-form-item>
-        <el-form-item label="测试周期" prop="testCycle" class="form-small">
+        <el-form-item label="周期" prop="testCycle" class="form-small">
           <el-row class="radiu">
             <el-radio-group v-model="baseInfo.testCycle" @change="cycleTypeChange">
               <el-radio label="curentReleaseVersion">当前版本</el-radio>
@@ -48,11 +47,19 @@
             </el-radio-group>
           </el-row>
         </el-form-item>
+
+        <el-form-item label="testCycle" class="form-small">
+          <el-row>
+            <el-radio-group>
+              <el-radio label="curentReleaseVersion">current版本</el-radio>
+              <el-radio label="curentReleaseVersion">周期列表</el-radio>
+             </el-radio-group>
+            </el-row>
+          </el-form-item>
         <el-form-item label="缺陷" prop="issue" class="form-small">
           <el-row>
             <el-row :span="4">
-              <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate"
-                @change="handleCheckAllChange">全选</el-checkbox>
+              <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
             </el-row>
             <el-checkbox-group v-model="from.issue" @change="issueChecked">
               <el-checkbox v-for="(item, index) in issues" :key="index" :label="item" :value="item.title" />
@@ -233,6 +240,10 @@ export default {
     }
     loading.close()
   },
+  created() {
+  // Assuming getTestCycleTitle is an async function that fetches the data
+  this.getTestCycleTitle();
+},
   methods: {
     // 查看pdf
     lookPdf(file) {
@@ -242,11 +253,12 @@ export default {
     // 发布版本类型切换
     versionTypeChange(val) {
       this.baseInfo.verison = val
-      if (val === true) {
+      if (val === true) {       
         this.searchFrom.verison = this.lastVersion
         this.from.version = ''
       } else {
         this.from.version = this.searchFrom.version = this.projectVersionList.mergeValues ? this.projectVersionList.mergeValues[0] : ''
+      
       }
       this.getTestCycleVersion()
     },
@@ -274,8 +286,8 @@ export default {
       this.getTestCycleVersion()
     },
     handleCheckAllChange(val) {
-      this.from.issue = val ? this.issues : []
-      this.isIndeterminate = false
+      this.from.issue = val ? this.issues.map(item => item.title) : [];
+      this.isIndeterminate = false;
     },
     issueChecked(value) {
       const checkedCount = value.length
@@ -369,8 +381,14 @@ export default {
 
     async getTestCycleTitle() {
       //this.from.testCycle = []
+      try{
       const res = await getTestCycleTitle({ projectId: this.projectId, env: this.searchFrom.env, version: this.baseInfo.version ? this.lastVersion : this.from.version })
-      this.testCycleTitleList = res.data || []
+      //this.testCycleTitleList = res.data || []
+      this.testCycleTitleList = res.data.titles;
+    }
+      catch (error) {
+      console.error('Error fetching test cycle titles:', error);
+    }
     },
     async getSign() {
       const res = await getSignaturePath()
