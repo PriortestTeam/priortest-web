@@ -70,7 +70,12 @@ export default {
         {
           index: 'Project',
           name: ''
-        }, {
+        },
+        {
+          index: 'VersionManagement',
+          name: 'VersionManagement'
+        },
+        {
           index: 'Feature',
           name: 'Feature'
         }, {
@@ -98,6 +103,7 @@ export default {
       userinfo: {},
       clickItem: [
         '项目',
+        'VersionManagement',
         'Feature',
         'Sprint',
         'Testcase',
@@ -132,6 +138,7 @@ export default {
     this.menuList[1].name = this.userInfo.userUseOpenProject.title
     if (window.localStorage.currentMenu) {
       this.activeIndex = window.localStorage.currentMenu
+
       if (this.activeIndex === 'Project') {
         this.$router.push({ name: 'Project' })
       } else {

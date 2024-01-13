@@ -3,39 +3,29 @@
     <el-row>
       <el-col :span="3">
         <!-- 头部选择栏 -->
-        <img
-          class="one_logo"
-          src="@/icons/img/one-logo.png"
-          alt=""
-          srcset=""
-          @click="gohome"
-        >
+        <img class="one_logo" src="@/icons/img/one-logo.png" alt="" srcset="" @click="gohome">
       </el-col>
       <el-col :span="19">
         <div class="one_title">
           <div>
-            <div
-              v-for="(item, index) in clickItem"
-              :key="index"
-              :class="['item', index == activeIndex ? 'active' : '']"
-              @click="goOther(item, index)"
-            >
+            <div v-for="(item, index) in clickItem" :key="index" :class="['item', index == activeIndex ? 'active' : '']"
+              @click="goOther(item, index)">
               {{
                 index === 0
-                  ? item
-                  : index === 1
-                    ? $t("lang.menuTitle.Feature")
-                    : index === 2
-                      ? $t("lang.menuTitle.Sprint")
-                      : index === 3
-                        ? $t("lang.menuTitle.TestCase")
-                        : index === 4
-                          ? $t("lang.menuTitle.TestCycle")
-                          : index === 5
-                            ? $t("lang.menuTitle.Issue")
-                            : index === 6
-                              ? $t("lang.menuTitle.SignOff")
-                              : ""
+                ? item
+                : index === 1
+                  ? $t("lang.menuTitle.Feature")
+                  : index === 2
+                    ? $t("lang.menuTitle.Sprint")
+                    : index === 3
+                      ? $t("lang.menuTitle.TestCase")
+                      : index === 4
+                        ? $t("lang.menuTitle.TestCycle")
+                        : index === 5
+                          ? $t("lang.menuTitle.Issue")
+                          : index === 6
+                            ? $t("lang.menuTitle.SignOff")
+                            : ""
               }}
             </div>
           </div>
@@ -51,12 +41,8 @@
         <div class="right-menu">
           <div v-if="false" class="lang">
             <el-dropdown :hide-on-click="false" @command="changeLang">
-              <span
-                class="el-dropdown-link"
-              >{{ $t("lang.custom.name")
-              }}<i
-                class="el-icon-arrow-down el-icon--right"
-              /></span>
+              <span class="el-dropdown-link">{{ $t("lang.custom.name")
+              }}<i class="el-icon-arrow-down el-icon--right" /></span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="zh-CN">{{
                   $t("lang.chinese")
@@ -82,7 +68,7 @@
 import { mapGetters } from 'vuex'
 import { message } from '@/utils/common'
 export default {
-  data () {
+  data() {
     return {
       Idsearch: '',
       projectName: '',
@@ -90,6 +76,7 @@ export default {
       userinfo: {},
       clickItem: [
         '项目',
+        "VersionManagement",
         'Feature',
         'Sprint',
         'Testcase',
@@ -108,7 +95,7 @@ export default {
         // navName: state => state.common.nvaName
       }
     ]),
-    userInfo () {
+    userInfo() {
       return this.$store.state.user.userinfo
     }
   },
@@ -119,7 +106,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     if (this.userInfo.userUseOpenProject.title) {
       this.clickItem[0] = this.userInfo.userUseOpenProject.title
     }
@@ -130,15 +117,15 @@ export default {
     }
   },
   methods: {
-    toggleSideBar () {
+    toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout () {
+    async logout() {
       this.remove('activeIndex')
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
-    goOther (item, index) {
+    goOther(item, index) {
       this.$store.commit('common/setNavName', item)
       this.activeIndex = index
       this.set('activeIndex', index)
@@ -150,12 +137,12 @@ export default {
         this.$router.push({ name: item })
       }
     },
-    gohome () {
+    gohome() {
       this.$router.push({ name: 'Dashboard' })
     },
 
     // 切换语言
-    changeLang (command) {
+    changeLang(command) {
       if (command === 'zh-CN') {
         this.$i18n.locale = 'zh-CN'
       }
@@ -181,17 +168,20 @@ export default {
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   display: flex;
   align-items: center;
+
   .right-menu {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     height: 46px;
+
     .user-avatar {
       cursor: pointer;
       width: 38px;
       height: 38px;
       border-radius: 25px;
     }
+
     .tuichu {
       font-size: 28px;
       color: #333;
@@ -199,10 +189,12 @@ export default {
       cursor: pointer;
       margin-left: 20px;
     }
+
     .lang {
       margin-right: 20px;
     }
   }
+
   .one_title {
     display: flex;
     // border: 1px solid $tabcolorBG;
@@ -213,6 +205,7 @@ export default {
     box-sizing: border-box;
     color: #2a344b;
     justify-content: space-between;
+
     >div {
       &:first-child {
         flex: 1;
@@ -221,6 +214,7 @@ export default {
         align-items: center;
       }
     }
+
     .item {
       height: 100%;
       padding: 0 15px;
@@ -228,26 +222,30 @@ export default {
       cursor: pointer;
       font-size: 14px;
       margin: 0 20px;
-      &:hover{
-          position: relative;
-      &::after{
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: $tabcolorBG;
-        content: "";
-      }
+
+      &:hover {
+        position: relative;
+
+        &::after {
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: $tabcolorBG;
+          content: "";
+        }
       }
     }
+
     .active {
       background: #fff;
       color: $tabcolorBG;
       border-radius: 23px;
       // margin: 5px 0;
       position: relative;
-      &::after{
+
+      &::after {
         position: absolute;
         bottom: -1px;
         left: 0;
@@ -257,14 +255,17 @@ export default {
         content: "";
       }
     }
+
     ::v-deep .el-input {
       width: 300px;
       margin-left: 30px;
+
       .el-input__inner {
         border-radius: 15px;
       }
     }
   }
+
   .one_logo {
     cursor: pointer;
     width: 90%;

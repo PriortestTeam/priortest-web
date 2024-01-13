@@ -91,7 +91,19 @@ export const constantRoutes = [
       },
     ],
   },
-
+  {
+    path: "/VersionManagement",
+    component: Layout,
+    redirect: "/VersionManagement",
+    children: [
+      {
+        path: "VersionManagement",
+        name: "VersionManagement",
+        component: () => import("@/views/versionManagement/index"),
+        meta: { title: "VersionManagement", icon: "Feature" },
+      },
+    ],
+  },
   {
     path: "/feature",
     component: Layout,
