@@ -135,7 +135,6 @@ export function getListBytestCycle(data, params) {
 
 //添加运行用例
 export function saveInstance(data) {
-  console.log(99, data);
   return request({
     url: "/testCycle/instance/saveInstance",
     method: "post",

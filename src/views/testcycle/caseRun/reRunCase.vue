@@ -4,13 +4,13 @@
     <el-button style="width: 60px" type="primary">上个</el-button>
     <el-button style="width: 60px" type="primary">下个</el-button>
 
-    <el-button @click="executeCase('1')" class='custom-button pass'>通过</el-button>
-    <el-button @click="executeCase('2')" class='custom-button fail'>失败</el-button>
-    <el-button @click="executeCase('2')" class='custom-button fail'>失败&缺陷（自动）</el-button>
-    <el-button @click="executeCase('2')" class='custom-button fail'>失败&缺陷</el-button>
-    <el-button @click="executeCase('4')" class='custom-button block'>停滞</el-button>
-    <el-button @click="executeCase('3')" class='custom-button skip'>跳过</el-button>
-    <el-button @click="executeCase('0')" class='custom-button NA'>无效</el-button>
+    <el-button @click="executeCase($event,'通过')" class='custom-button pass'>通过</el-button>
+    <el-button @click="executeCase($event,'失败')" class='custom-button fail'>失败</el-button>
+    <el-button @click="executeCase($event,'缺陷(自动)')" class='custom-button fail'>缺陷(自动)</el-button>
+    <el-button @click="executeCase($event,'缺陷')" class='custom-button fail'>缺陷</el-button>
+    <el-button @click="executeCase($event,'停滞')" class='custom-button block'>停滞</el-button>
+    <el-button @click="executeCase($event,'跳过')" class='custom-button skip'>跳过</el-button>
+    <el-button @click="executeCase($event,'无效')" class='custom-button NA'>无效</el-button>
 
     <div style="font-size: medium; padding-top: 20px; padding-bottom: 20px;">测试用例：{{ testCaseTitle }}</div>
 
@@ -26,13 +26,13 @@
       </el-table-column>
       <el-table-column label="执行">
         <template slot-scope="scope">
-          <el-button @click="executeStep('1', scope.row)" class="custom-button pass">通过</el-button> |
-          <el-button @click="executeStep('2', scope.row)" class="custom-button fail">失败</el-button> |
-          <el-button @click="executeStep('2', scope.row)" class="custom-button fail">失败&缺陷（自动）</el-button> |
-          <el-button @click="executeStep('2', scope.row)" class="custom-button fail">失败&缺陷</el-button> |
-          <el-button @click="executeStep('4', scope.row)" class="custom-button block">停滞</el-button> |
-          <el-button @click="executeStep('3', scope.row)" class="custom-button skip">跳过</el-button> |
-          <el-button @click="executeStep('0', scope.row)" class="custom-button NA">无效</el-button>
+          <el-button @click="executeStep('通过', scope.row)" class="custom-button pass">通过</el-button> |
+          <el-button @click="executeStep('失败', scope.row)" class="custom-button fail">失败</el-button> |
+          <el-button @click="executeStep('缺陷(自动)', scope.row)" class="custom-button fail">缺陷(自动)</el-button> |
+          <el-button @click="executeStep('缺陷', scope.row)" class="custom-button fail">缺陷</el-button> |
+          <el-button @click="executeStep('停滞', scope.row)" class="custom-button block">停滞</el-button> |
+          <el-button @click="executeStep('跳过', scope.row)" class="custom-button skip">跳过</el-button> |
+          <el-button @click="executeStep('无效', scope.row)" class="custom-button NA">无效</el-button>
 
         </template>
       </el-table-column>
@@ -54,6 +54,7 @@ export default {
       testCaseId: this.dataList[0].testCaseId,
       testCaseStepId: this.dataList[0].testCaseStepId,
       testCycleId: this.dataList[0].testCycleId,
+      runCount:this.dataList[0].runCount,
     }
   },
 
@@ -62,52 +63,87 @@ export default {
       this.$router.back(); // Navigates back to the previous page
 
     },
-    async executeCase(action) {
+    async executeCase(event, action) {
+      try {
+      const statusMap = {
+        '无效': '0',
+        '通过': '1',
+        '失败': '2',
+        '缺陷(自动)': '2',
+        '缺陷': '2',
+        '跳过': '3',
+        '停滞': '4'
+      };
+      const statusCode = statusMap[action] || '';
       const Row = {
         projectId: localStorage.getItem('projectId'),
         testCycleId: this.testCycleId,
         testCaseId: this.testCaseId,
         "testCaseStepId": '',  //empty always
         actualResult: '批量运行', // empty
-        statusCode: action,
+        statusCode: `${statusCode}`,      
       };
       // Example of sending data to the backend using caseStepRun API
-      await caseStepRun(Row)
-        .then((res) => {
-          if (res.code === '200') {
-            console.log('Action performed:', action, res);
-            message('success', res.msg)
-          }
-          // Handle the response from the API if needed
-        })
-        .catch((error) => {
-          console.error('Error performing action:', action, error);
-          // Handle errors if necessary
-        });
-    },
-
-    async executeStep(action, row) {
-      const Row = {
-        projectId: localStorage.getItem('projectId'),
-        testCycleId: this.testCycleId,
-        testCaseId: this.testCaseId,
-        testCaseStepId: row.testCaseStepId,  //empty always
-        actualResult: row.actualResult ? row.actualResult : '',
-        statusCode: action,
-      };
-      // Example of sending data to the backend using caseStepRun API
-      await caseStepRun(Row)
-        .then((res) => {
-          if (res.code === '200') {
-            console.log('Action performed:', action, res);
-            message('success', res.msg)
-          }
-        })
-        .catch((error) => {
-          console.error('Error performing action:', action, error);
-          // Handle errors if necessary
-        });
+      const res = await caseStepRun(Row);
+      if (res.code === '200') {
+      console.log('Action performed:', action, res);
+      message('success', res.msg);
+      } else {
+      console.error('Error performing action:', action, res);
+      // Handle the response from the API if needed
+      message('error', res.msg || 'Failed to perform action');
+      }
+  }  catch (error) {
+    console.error('Error performing action:', action, error);
+    // Handle errors if necessary
+    message('error', 'An error occurred while performing the action');
+      }
+  },
+  
+  async executeStep(action, row) {
+  try {
+    const statusMap = {
+      '无效': '0',
+      '通过': '1',
+      '失败': '2',
+      '缺陷(自动)': '2',
+      '缺陷': '2',
+      '跳过': '3',
+      '停滞': '4'
+    };
+    const statusCode = statusMap[action];
+    if (!statusCode) {
+      console.error('Invalid action:', action);
+      // Handle invalid action if necessary
+      return;
     }
+    const Row = {
+      projectId: localStorage.getItem('projectId'),
+      testCycleId: this.testCycleId,
+      testCaseId: this.testCaseId,
+      testCaseStepId: row.testCaseStepId,
+      actualResult: row.actualResult ? row.actualResult : '',
+      statusCode: statusCode,
+      runCount: this.runCount,
+    };
+
+    // Example of sending data to the backend using caseStepRun API
+    const res = await caseStepRun(Row);
+
+    if (res.code === '200') {
+      console.log('Action performed:', action, res);
+      message('success', res.msg);
+    } else {
+      console.error('Error performing action:', action, res);
+      // Handle the response from the API if needed
+      message('error', res.msg || 'Failed to perform action');
+    }
+  } catch (error) {
+    console.error('Error performing action:', action, error);
+    // Handle errors if necessary
+    message('error', 'An error occurred while performing the action');
+  }
+}
 
 
 

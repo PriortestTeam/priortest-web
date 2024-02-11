@@ -8,19 +8,19 @@
       <el-button style="width: 60px" @click="changetcaseListIndex(tcaseListIndex, 'next')" type="success">下个</el-button>
 
       <el-button @click="executeCase('1', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
-        class="custom-button pass">通过All</el-button>
+        class="custom-button pass">通过</el-button>
       <el-button @click="executeCase('2', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
-        class="custom-button fail">失败&缺陷（自动）All</el-button>
+        class="custom-button fail">失败&缺陷（自动）</el-button>
       <el-button @click="executeCase('2', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
-        class="custom-button fail">失败&缺陷 all </el-button>
+        class="custom-button fail">失败&缺陷</el-button>
       <el-button @click="executeCase('2', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
-        class="custom-button fail">失败 all </el-button>
+        class="custom-button fail">失败</el-button>
       <el-button @click="executeCase('4', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
-        class="custom-button block">停滞 all </el-button>
+        class="custom-button block">停滞</el-button>
       <el-button @click="executeCase('3', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
-        class="custom-button skip">跳过 all</el-button>
+        class="custom-button skip">跳过</el-button>
       <el-button @click="executeCase('0', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
-        class="custom-button NA">无效 all </el-button>
+        class="custom-button NA">无效</el-button>
 
     </div>
 
@@ -171,7 +171,8 @@ export default {
         "testCaseId": row.testCaseId,
         "actualResult": row.actualResult ? row.actualResult : '',
         "testCaseStepId": row.id,
-        "statusCode": `${statusCode}`
+        "statusCode": `${statusCode}`,
+        "runCount": ''
       }
       if (e.target.innerText == '失败&缺陷（自动）') {
         Row = { ...Row, testCaseData: { ...list } }
