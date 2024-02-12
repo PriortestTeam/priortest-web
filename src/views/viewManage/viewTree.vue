@@ -2,8 +2,7 @@
   <div class="comp-tree">
     <div class="new_project">
       <el-button type="primary">
-        <!-- <router-link :to="viewUrl"> 新建/管理视图 </router-link> -->
-        <div @click="toViewManage"> 新建/管理视图 </div>
+        <div @click="toViewManage"> 新建/管理视图 - from viewManage </div>
       </el-button>
       <span class="icon-box">
         <i class="el-icon-d-arrow-left" title="折叠" @click="hadleShow" />
@@ -11,9 +10,11 @@
     </div>
     <div class="comp-data">
       <div class="big-width">
-
         <el-tree :data="setTree" :props="defaultProps" node-key="id" default-expand-all :expand-on-click-node="false">
           <span slot-scope="{ node }" class="custom-tree-node">
+            <!-- Add edit and delete icons here -->
+            <i class="el-icon-edit edit-icon" @click="editNode(node)" />
+            <i class="el-icon-delete delete-icon" @click="deleteNode(node)" />
             <span @click="getList(node.data, node.label)">{{ node.label }}</span>
           </span>
         </el-tree>
@@ -23,8 +24,8 @@
 </template>
 
 <script>
-import { queryViewTrees } from '@/api/project'
-import { getqueryFortestCycle } from '@/api/testcycle'
+import { queryViewTrees } from '@/api/view'
+
 export default {
   name: 'ViewTree',
   props: {
@@ -40,7 +41,7 @@ export default {
         children: 'childViews',
         label: 'title'
       },
-      viewUrl: '/project/projectview?scope=' + this.childScope,
+      viewUrl: '/viewManage/viewManage?scope=' + this.childScope,
       projectQuery: {
         pageNum: 1,
         pageSize: 20
@@ -52,26 +53,20 @@ export default {
       return this.$store.state.user.userinfo
     }
   },
-
   created() {
     this.queryViewTree()
   },
+
+  // 
   methods: {
     toViewManage() {
       this.$store.commit('common/setNavName', this.childScope)
-      this.$router.push({ path: '/project/projectview' })
-
+      this.$router.push({ path: '/viewManage/viewManage' })
     },
-    toViewAll() {
-      console.log("ts");
-
-    }
-    ,
     hadleShow() {
       this.$emit('hadleTree')
     },
-    getList: function (data, labels) {
-      console.log("data: ", data, labels)
+    getList(data, labels) {
       const query = {
         labels: labels,
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -79,61 +74,61 @@ export default {
           id: data.id
         }
       }
-
       this.$emit('childByValue', query)
     },
     queryViewTree() {
       const params = {
         scope: this.childScope
       }
-      console.log("params: ", params);
       queryViewTrees(params).then((res) => {
-        console.log("res: ", res.data);
         this.setTree = res.data;
-
       })
-
+    },
+    editNode(node) {
+      // Implement edit logic here
+      console.log('Editing node:', node);
+    },
+    deleteNode(node) {
+      // Implement delete logic here
+      console.log('Deleting node:', node);
     }
   }
 }
 </script>
-<style scoped lang="scss">
-@import "index.scss";
 
+<style scoped lang="scss">
 .comp-tree {
   padding: 20px 0px;
   overflow: auto;
   background: #fff;
-  // padding: $spacing;
   box-sizing: border-box;
   margin-right: 20px;
   height: calc(100vh - 100px);
-
   .icon-box {
     margin-left: 0;
   }
 }
-
 .comp-data {
   width: 100%;
   overflow: auto;
   position: relative;
   top: 20px;
-
   .big-width {
     width: 100%;
-    font-size: 14px;
+    font-size: 12px;
   }
-
-
   .el-tree-node__content {
     .custom-tree-node {
       flex: 1;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start; // Align items to the start
       padding-right: 8px;
       z-index: 10;
+      .edit-icon, .delete-icon {
+        cursor: pointer;
+        margin-right: 5px; // Adjust margin as needed
+      }
     }
   }
 }

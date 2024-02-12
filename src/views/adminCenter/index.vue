@@ -225,7 +225,7 @@ import {
 import Jurisdiction from '@/views/adminCenter/jurisdiction'
 import System from '@/views/adminCenter/system'
 import Dashboard from '@/views/adminCenter/dashboard'
-import ViewPage from '@/views/project/view'
+import ViewPage from '@/views/viewManage/viewManage'
 import MyAccount from '@/views/adminCenter/myAccount'
 import Dateindex from '@/views/adminCenter/date'
 import CustomFFields from '@/views/adminCenter/customFFields'

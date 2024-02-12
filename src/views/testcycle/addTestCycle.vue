@@ -134,12 +134,6 @@ import {
 	formatChangedPara,
 	verification
 } from '@/utils/common'
-import {
-	fieldTypeAPI
-} from '@/api/customFFields'
-
-import { queryViewTree } from '@/views/project/viewTree'
-
 export default {
 	name: 'AddTestCycle',
 	data() {

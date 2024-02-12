@@ -76,7 +76,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="testStatus" :show-overflow-tooltip="true" label="状态" />
-                <el-table-column prop="title" :show-overflow-tooltip="true" width="120"
+                <el-table-column prop="title" :show-overflow-tooltip="true" width="200"
                   :label="$t('lang.CommonFiled.Title')">
                   <template slot-scope="scope">
                     <span class="title" @click="openEdit(scope.row, 1)">
@@ -85,30 +85,21 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column prop="testMethod" :show-overflow-tooltip="true" label="测试方法" />
+                <el-table-column prop="testMethod" :show-overflow-tooltip="true" label="方法" />
                 <el-table-column prop="priority" label="优先级" />
-                <!--<el-table-column prop="feature" :show-overflow-tooltip="true" label="需求" /> -->
+              
                 <el-table-column prop="module" :show-overflow-tooltip="true" label="模块" />
                 <el-table-column prop="version" :show-overflow-tooltip="true" label="版本" />
-                <el-table-column prop="caseCategory"  :show-overflow-tooltip="true" label="分类" />
-                <el-table-column prop="testType" :show-overflow-tooltip="true" label="测试类型" />
-                <el-table-column prop="lastRunStatus" label="L-运行状态" />
-                <!-- <el-table-column
-                  prop="stepStatus"
-
-                  :show-overflow-tooltip="true"
-                  label="步骤运行状态"
-                /> -->
-                <el-table-column prop="executeTime" label="执行日期" min-width="120" :show-overflow-tooltip="true" />
-
-                <el-table-column prop="env" label="环境" min-width="120" :show-overflow-tooltip="true" />
+                <el-table-column prop="caseCategory"  :show-overflow-tooltip="true" min-width="60" label="分类" />
+                <el-table-column prop="testType" :show-overflow-tooltip="true" min-width="60" label="类型" />
+                <el-table-column prop="lastRunStatus" label="L-运行状态" />            
+                <el-table-column prop="executeTime" label="执行" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column prop="env" label="环境" min-width="80" :show-overflow-tooltip="true" />
                 <el-table-column prop="id" :show-overflow-tooltip="true" min-width="160" label="UUID" />
-
-                <el-table-column label="操作" min-width="148" fixed="right">
-                  <template slot-scope="scope">
-                    <!-- <el-button type="text" class="table-btn">克隆</el-button>
-                  <span class="line">|</span> -->
+                <el-table-column label="操作" min-width="170" fixed="right">
+                  <template slot-scope="scope">                  
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情</el-button>
+                    <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">步骤</el-button>
                     <el-button type="text" class="table-btn"
                       @click.stop="projectClone(scope.row.id, 'single')">克隆</el-button>
                     <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)">删除 </el-button>
@@ -127,12 +118,11 @@
 </template>
 
 <script>
-import viewTree from '../project/viewTree.vue'
+import viewTree from '../viewManage/viewTree.vue'
 import { message } from '@/utils/common'
 import { testCaseList, delTestCase, cloneTestCase, testCaseListByClick } from '@/api/testcase'
 import { getqueryFortestCycle } from '../testcycle/index.vue'
 import { testCycleList, saveInstance } from '@/api/testcycle'
-// import { queryViews } from '@/api/project'
 
 export default {
   name: 'Testcase',

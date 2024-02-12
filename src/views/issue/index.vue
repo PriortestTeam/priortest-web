@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import viewTree from '../project/viewTree.vue'
+import viewTree from '../viewManage/viewTree.vue'
 import { message } from '@/utils/common'
 import { issueList, delIssue, cloneIssue, issueListByClick } from '@/api/issue.js'
 import moment from 'moment';

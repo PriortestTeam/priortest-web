@@ -5,7 +5,7 @@
 		<el-form ref="form" :model="form" :rules="rules" label-width="100px" class="demo-ruleForm">
 			<div class="btns">
 				<!-- 表单标题form.title为空时，新增按钮禁止点击 -->
-				<el-button v-if="!form.id" type="primary" :disabled="!form.title" @click.stop="submitForm('add')">新增</el-button>
+				<el-button v-if="!form.id" type="primary" :disabled="!form.title" @click.stop="submitForm('add')">新增-from</el-button>
 				<el-button v-if="!form.id" type="primary" @click.stop="waiveForm">取消</el-button>
 				<el-button v-if="form.id" type="primary" @click.stop="submitForm('edit')">确定修改</el-button>
 				<el-button v-if="form.id" type="primary" @click.stop="cancelUpdate">取消修改</el-button>
@@ -164,7 +164,12 @@ import {
 	returntomenu,
 	formatChangedPara
 } from '@/utils/common'
+
 import {
+	getFilterCondition
+} from '@/api/customFFields'
+import {
+	getQueryViewParents,
 	queryViews,
 	lookView,
 	addViewRE,
@@ -173,21 +178,14 @@ import {
 	getViewScopeChildParams,
 	getViewAllScopeParams,
 	queryViewParents
-	//getViewFilter
-} from '@/api/project'
-import {
-	getFilterCondition
-} from '@/api/customFFields'
-import {
-	getQueryViewParents
 } from '@/api/view.js'
-// import { getSysCustomField } from '@/api/admincenter'
+
 import {
 	mapState
 } from 'vuex'
-import { Logger } from 'runjs/lib/common'
+
 export default {
-	name: 'Projectview',
+	name: 'viewManage',
 	data() {
 		return {
 			aaa: '',
@@ -736,9 +734,7 @@ export default {
 	}
 }
 </script>
-<style lang="scss" scoped>
-@import "index.scss";
-</style>
+
 <style lang="scss">
 .view {
 	.wd200 {

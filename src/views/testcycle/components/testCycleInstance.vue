@@ -119,7 +119,7 @@ import {
 
 import { axios } from '@/utils/request'
 
-import { queryViewTrees } from '@/api/project'
+import { queryViewTrees } from '@/api/view'
 
 export default {
 	data() {

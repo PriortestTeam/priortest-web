@@ -337,6 +337,24 @@ export const constantRoutes = [
     ],
   },
 
+  
+  {
+    path: "/viewManage",
+    component: Layout,
+    redirect: "/viewManage",
+    children: [    
+      {
+        path: "viewManage",
+        name: "viewManage",
+        component: () => import("@/views/viewManage/viewManage"),
+        meta: {
+          title: "viewManage",
+          icon: "viewManage",
+        },
+      },
+    ]
+  },
+
   {
     path: "/project",
     component: Layout,
@@ -347,16 +365,7 @@ export const constantRoutes = [
         name: "Project",
         component: () => import("@/views/project/index"),
         meta: { title: "Project", icon: "Project" },
-      },
-      {
-        path: "projectview",
-        name: "Projectview",
-        component: () => import("@/views/project/view"),
-        meta: {
-          title: "Project",
-          icon: "Project",
-        },
-      },
+      },     
       {
         path: "addproject",
         name: "Addproject",
