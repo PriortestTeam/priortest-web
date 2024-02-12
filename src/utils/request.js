@@ -8,9 +8,11 @@ import router from '../router/index.js'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 10000 // request timeout
+  timeout: 1000000 // request timeout
 })
-console.log(process.env,'process.envprocess.env')
+
+export { service as axios };
+
 // request interceptor
 service.interceptors.request.use(
   config => {

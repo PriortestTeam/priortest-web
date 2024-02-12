@@ -84,10 +84,10 @@ export default {
       const data = {};
       data.sysCustomField = item.sysCustomField;
       data.mergeValues = item.mergeValues;
-      updateSysCustomFields(data).then((res) => {
-        this.getData();
-        this.flag = true;
-      });
+      // updateSysCustomFields(data).then((res) => {
+      //   this.getData();
+      //   this.flag = true;
+      // });
     },
     tabClick() {
       if (!this.flag) {

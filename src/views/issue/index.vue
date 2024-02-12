@@ -3,6 +3,7 @@
     <div v-if="treeCol == 0" class="showBtn" @click="hadleTreeshow">
       <i class="el-icon-d-arrow-right" />
     </div>
+    <el-button class="all-btn" type="text" @click="hadleToViewAll">全部</el-button>
     <el-row>
       <el-col :span="treeCol">
         <view-tree :child-scope="currentScope" @hadleTree="hadleTreeshow" @childByValue="childByValue" />
@@ -11,7 +12,7 @@
         <el-card>
           <div class="project_table">
             <div class="new_project">
-              <el-button type="primary" @click="newproject" >新建缺陷
+              <el-button type="primary" @click="newproject">新建缺陷
               </el-button>
             </div>
 
@@ -25,10 +26,10 @@
               <el-button type="text" @click="selectMoreCol">更多列</el-button>
               <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
             </div>
-            <div v-loading="isLoading" class="protable table">
+            <div v-loading="isLoading" class="table protable">
               <el-table ref="issuetableData" :data="issuetableData" :header-cell-style="tableHeader" stripe
-                style="width: 100%"  @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="35" :cell-style="{padding: '0'}"/>
+                style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="35" :cell-style="{ padding: '0' }" />
                 <el-table-column type="index" label="序号">
                   <template slot-scope="scope">
                     {{ scope.$index + 1 }}
@@ -38,7 +39,7 @@
 
                 <el-table-column prop="issueStatus" :show-overflow-tooltip="true" label="状态" />
 
-                <el-table-column prop="title" :show-overflow-tooltip="true"  width="120"
+                <el-table-column prop="title" :show-overflow-tooltip="true" width="120"
                   :label="$t('lang.CommonFiled.Title')">
                   <template slot-scope="scope">
                     <span class="title" @click="openEdit(scope.row, 1)">
@@ -47,28 +48,35 @@
                   </template>
                 </el-table-column>
 
-               <!-- <el-table-column prop="testMethod" :show-overflow-tooltip="true" align="center" label="测试方法" /> -->
-                <el-table-column prop="priority"  label="优先级" />
-                <el-table-column prop="severity"  :show-overflow-tooltip="true" label="严重级别" />
-               <!--   <el-table-column prop="module"  :show-overflow-tooltip="true" label="模块" /> -->
-                <el-table-column prop="issueVersion"  :show-overflow-tooltip="true" label="缺陷版本" />
+                <!-- <el-table-column prop="testMethod" :show-overflow-tooltip="true" align="center" label="测试方法" /> -->
+                <el-table-column prop="priority" label="优先级" />
+                <el-table-column prop="severity" :show-overflow-tooltip="true" label="严重级别" />
+                <!--   <el-table-column prop="module"  :show-overflow-tooltip="true" label="模块" /> -->
+                <el-table-column prop="issueVersion" :show-overflow-tooltip="true" label="缺陷版本" />
                 <el-table-column prop="caseCategory" :show-overflow-tooltip="true" label="测试分类" />
-                <el-table-column prop="lastRunStatus" label="L-运行状态" />
+                <el-table-column prop="lastRunStatus" label="L-状态" />
                 <!-- <el-table-column
                   prop="stepStatus"
                   :show-overflow-tooltip="true"
                   label="步骤运行状态"
                 /> -->
 
-                 <el-table-column prop="planFixDate" label="计划修改" :formatter="formatDate"
-                  :show-overflow-tooltip="true" />
-                <el-table-column prop="createTime" label="创建日期"
-                  :show-overflow-tooltip="true" />
- <el-table-column prop="id" :show-overflow-tooltip="true" width="165" label="UUID" />
+                <el-table-column prop="planFixDate" label="计划修改" >
+                <template slot-scope="scope">
+                  {{ formatDateOnly(scope.row.planFixDate) }}
+                 </template>
+                 </el-table-column>
+                <el-table-column prop="createTime" label="创建日期">
+                <template slot-scope="scope">
+                  {{ formatDateOnly(scope.row.createTime) }}
+                 </template>
+                </el-table-column>
+                <el-table-column prop="id" :show-overflow-tooltip="true" width="165" label="UUID" />
                 <el-table-column label="操作" min-width="148" fixed="right">
                   <template slot-scope="scope">
-                   <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id,'single')">克隆</el-button>
-                   <!-- <span class="line">|</span> -->
+                    <el-button type="text" class="table-btn"
+                      @click.stop="projectClone(scope.row.id, 'single')">克隆</el-button>
+                    <!-- <span class="line">|</span> -->
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)">详情
                     </el-button>
                     <!-- <el-button
@@ -96,7 +104,8 @@
 <script>
 import viewTree from '../project/viewTree.vue'
 import { message } from '@/utils/common'
-import { issueList, delIssue, cloneIssue } from '@/api/issue.js'
+import { issueList, delIssue, cloneIssue, issueListByClick } from '@/api/issue.js'
+import moment from 'moment';
 // import { queryViews } from '@/api/project'
 
 export default {
@@ -115,7 +124,7 @@ export default {
 
       issueQuery: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20
       },
       issueTotal: 0,
       issuetableData: [],
@@ -133,6 +142,8 @@ export default {
     }
   },
   computed: {
+
+
     projectInfo() {
       return this.$store.state.user.userinfo
     }
@@ -153,6 +164,20 @@ export default {
     }
   },
   methods: {
+
+     // 日期格式重置
+  formatDateOnly(dateTimeString) {
+  // Use moment.js to parse the date string and format it as desired
+  if (!dateTimeString) {
+    return 'NA'; // Return 'NA' if the dateTimeString is falsy
+  }
+  const date = moment(dateTimeString);
+  if (!date.isValid()) {
+    return 'NA'; // Return 'NA' if the date is invalid
+  }  
+  return moment(dateTimeString).format('MM/DD/YYYY');
+},
+
     // 选择更多列
     selectMoreCol() {
 
@@ -162,7 +187,7 @@ export default {
       this.$router.push({ name: 'Addissue', query: { isEdit: 1 } })
     },
     // 导出
-    exportIssue(){
+    exportIssue() {
     },
 
 
@@ -203,7 +228,7 @@ export default {
     // 克隆
     projectClone(id, operation) {
       let parms = []
-      if (operation === 'single'){
+      if (operation === 'single') {
         parms = [id]
       } else {
         parms = this.projectIds.split(',')
@@ -244,11 +269,29 @@ export default {
     openEdit(row, isEdit) {
       this.$router.push({ name: 'Addissue', query: { id: row.id, isEdit } })
     },
+    // childByValue: function (query) {
+    //   this.isLoading = true
+    //   this.viewSearchQueryId = query.viewTreeDto.id
+    //   issueList(this.issueQuery, query).then(res => {
+    //     this.issuetableData = res.data
+    //     this.issueTotal = res.total
+    //     this.isLoading = false
+    //   }).catch(() => {
+    //     this.issuetableData = []
+    //     this.issueTotal = 0
+    //     this.isLoading = false
+    //   })
+    // },
     childByValue: function (query) {
       this.isLoading = true
       this.viewSearchQueryId = query.viewTreeDto.id
-      issueList(this.issueQuery, query).then(res => {
-        this.issuetableData = res.data
+      const params = {
+        scope: 'issue',
+        viewId: this.viewSearchQueryId
+      }
+      // console.log('query.viewTreeDto.id: ', query.viewTreeDto.id);
+      issueListByClick(params).then(res => {
+        this.issuetableData = res.data.list
         this.issueTotal = res.total
         this.isLoading = false
       }).catch(() => {
@@ -259,6 +302,10 @@ export default {
     },
     hadleTreeshow() {
       this.treeCol = this.treeCol === 3 ? 0 : 3
+    },
+    async hadleToViewAll() {
+      this.viewSearchQueryId = ''
+      await this.getqueryForIssue()
     }
   }
 }
@@ -267,4 +314,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "index.scss";
+
+.app-container {
+
+  position: relative;
+
+  .all-btn {
+    z-index: 999999999999;
+    position: absolute;
+    top: 68px;
+    left: 1.75%;
+    color: rgb(96, 98, 102);
+    font-size: 14px;
+  }
+}
 </style>

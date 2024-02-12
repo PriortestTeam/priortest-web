@@ -4,33 +4,19 @@
       <img src="@/icons/img/one-logo.png" alt="" srcset="" @click="gohome">
     </div>
     <div class="nav-menu">
-      <el-menu
-        :default-active="activeIndex"
-        active-text-color="#409EFF"
-        mode="horizontal"
-        @select="menuSelect"
-      >
-        <el-menu-item
-          v-for="(item, i) in menuList"
-          :key="i"
-          :index="item.index"
-        >{{
-            item.index === 'Project'
-              ? item.name
-              : $t(`lang.menuTitle.${item.name}`)
-          }}
+      <el-menu :default-active="activeIndex" active-text-color="#409EFF" mode="horizontal" @select="menuSelect">
+        <el-menu-item v-for="(item, i) in menuList" :key="i" :index="item.index">{{
+          item.index === 'Project'
+          ? item.name
+          : $t(`lang.menuTitle.${item.name}`)
+        }}
         </el-menu-item>
       </el-menu>
     </div>
     <div class="user-menu">
       <div class="search-menu">
-        <el-input
-          v-model="Idsearch"
-          size="mini"
-          placeholder="id/text"
-          style="width: 240px"
-        >
-          <i slot="prefix" class="el-input__icon el-icon-search"/>
+        <el-input v-model="Idsearch" size="mini" placeholder="id/text" style="width: 240px">
+          <i slot="prefix" class="el-input__icon el-icon-search" />
         </el-input>
       </div>
       <div class="lan-menu">
@@ -44,7 +30,7 @@
       </div>
       <div class="info-menu">
         <el-dropdown>
-          <el-avatar icon="el-icon-user-solid" :size="40"/>
+          <el-avatar icon="el-icon-user-solid" :size="40" />
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>
               <div @click="menuSelect('Admincenter')">
@@ -57,7 +43,7 @@
             </el-dropdown-item>
             <el-dropdown-item style="color: #f56c6c">
               <div @click="logout">
-                <svg-icon icon-class="tuichu" class="tuichu"/>
+                <svg-icon icon-class="tuichu" class="tuichu" />
                 退出
               </div>
             </el-dropdown-item>
@@ -71,6 +57,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { message } from '@/utils/common'
+import { testCycleListByClick } from '@/api/testcycle'
 
 export default {
   data() {
@@ -83,7 +70,12 @@ export default {
         {
           index: 'Project',
           name: ''
-        }, {
+        },
+        {
+          index: 'VersionManagement',
+          name: 'VersionManagement'
+        },
+        {
           index: 'Feature',
           name: 'Feature'
         }, {
@@ -111,6 +103,7 @@ export default {
       userinfo: {},
       clickItem: [
         '项目',
+        'VersionManagement',
         'Feature',
         'Sprint',
         'Testcase',
@@ -145,6 +138,7 @@ export default {
     this.menuList[1].name = this.userInfo.userUseOpenProject.title
     if (window.localStorage.currentMenu) {
       this.activeIndex = window.localStorage.currentMenu
+
       if (this.activeIndex === 'Project') {
         this.$router.push({ name: 'Project' })
       } else {
@@ -158,6 +152,7 @@ export default {
   methods: {
     // 菜单切换事件
     menuSelect(name) {
+      localStorage.setItem('tabName', 'first');
       const index = this.menuList.findIndex(v => v.index === name)
       window.localStorage.setItem('currentMenu', name)
       if (name === 'Project') {
@@ -165,6 +160,7 @@ export default {
       } else if (index < 0) {
         window.localStorage.removeItem('currentMenu')
         this.activeIndex = ''
+
         this.$router.push({ name })
       } else {
         this.$router.push({ name })
@@ -273,7 +269,7 @@ export default {
     color: #2a344b;
     justify-content: space-between;
 
-    > div {
+    >div {
       &:first-child {
         flex: 1;
         display: flex;
@@ -341,7 +337,7 @@ export default {
     align-items: center;
     justify-content: center;
 
-    & > img {
+    &>img {
       height: 40px;
     }
   }

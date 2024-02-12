@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// queryForProjects
+export function getProjectListByUser(){
+ return request({
+    url: '/signOff/getProjectListByUser',
+    method: 'get'
+   })
+}
+
 // 获取测试环境
 export function getProjectEnv (params) {
   return request({
@@ -8,6 +16,16 @@ export function getProjectEnv (params) {
     params
   })
 }
+
+// 获取缺陷
+export function getIssueList () {
+  return request({
+    url: '/signOff/getIssue',
+    method: 'get'
+
+  })
+}
+
 
 // 获取发布版本
 export function getProjectVersion (params) {
@@ -19,7 +37,7 @@ export function getProjectVersion (params) {
 }
 
 // 获取测试周期
-export function getTestCycleVersion (params) {
+export function getTestCycleTitle (params) {
   return request({
     url: '/signOff/getTestCycleDetail',
     method: 'get',
@@ -53,13 +71,6 @@ export function getSignaturePath () {
   })
 }
 
-// 获取缺陷
-export function getIssue () {
-  return request({
-    url: '/signOff/getIssue',
-    method: 'get'
-  })
-}
 
 // 获取签收记录
 export function getRecord () {

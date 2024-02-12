@@ -7,47 +7,22 @@
 
             <div class="oprate_btn">
               <el-button type="text" @click="projectRefresh">刷新</el-button>
-              <el-button
-                type="text"
-                :disabled="isAllowChangePro"
-                @click="projectChange"
-                >切换项目</el-button
-              >
+              <el-button type="text" :disabled="isAllowChangePro" @click="projectChange">切换项目</el-button>
               <!-- <el-button type="text" :disabled="multiple">批量编辑</el-button> -->
             </div>
-            <div v-loading="isLoading" class="protable table">
-              <el-table
-                ref="projecttableData"
-                :data="projecttableData"
-                :header-cell-style="tableHeader"
-                stripe
-                style="width: 100%"
-                @row-click="switcproject"
-                @selection-change="handleSelectionChange"
-              >
+            <div v-loading="isLoading" class="table protable">
+              <el-table ref="projecttableData" :data="projecttableData" :header-cell-style="tableHeader" stripe
+                style="width: 100%" @row-click="switcproject" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="40" />
-                <el-table-column
-                  type="index"
-                  align="left"
-                  :label="$t('lang.CommonFiled.ID')"
-                >
+                <el-table-column type="index" align="left" :label="$t('lang.CommonFiled.ID')">
                   <template slot-scope="scope">
                     {{ scope.$index + 1 }}
                   </template>
                 </el-table-column>
-                <el-table-column
-                  prop="title"
-                  :show-overflow-tooltip="true"
-                  align="left"
-                  width="155"
-                  :label="$t('lang.CommonFiled.Title')"
-                >
+                <el-table-column prop="title" :show-overflow-tooltip="true" align="left" width="155"
+                  :label="$t('lang.CommonFiled.Title')">
                   <template slot-scope="scope">
-                    <span
-                      v-if="scope.row.id === userUseOpenProject.projectId"
-                      class="title"
-                      @click="openEdit(scope.row)"
-                    >
+                    <span v-if="scope.row.id === userUseOpenProject.projectId" class="title" @click="openEdit(scope.row)">
                       {{ scope.row.title }}
                     </span>
                     <span v-else>
@@ -55,99 +30,46 @@
                     </span>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  prop="reportToName"
-                  align="left"
-                  :label="$t('lang.CommonFiled.ReportTo')"
-                />
-                <el-table-column
-                  prop="customer"
-                  align="left"
-                  :label="$t('lang.Project.Customer')"
-                />
+                <el-table-column prop="reportToName" align="left" :label="$t('lang.CommonFiled.ReportTo')" />
+                <el-table-column prop="customer" align="left" :label="$t('lang.Project.Customer')" />
 
-                <el-table-column
-                  prop="testFrame"
-                  align="left"
-                  :label="$t('lang.Project.TestFrame')"
-                  width="200"
-                />
-                <el-table-column
-                  prop="projectCategory"
-                  align="left"
-                  :label="$t('lang.Project.ProjectCategory')"
-                />
+                <el-table-column prop="testFrame" align="left" :label="$t('lang.Project.TestFrame')" width="200" />
+                <el-table-column prop="projectCategory" align="left" :label="$t('lang.Project.ProjectCategory')" />
 
-                <el-table-column
-                  prop="status"
-                  align="left"
-                  :label="$t('lang.Project.Status')"
-                />
+                <el-table-column prop="status" align="left" :label="$t('lang.Project.Status')" />
 
-                <el-table-column
-                  prop="planReleaseDate"
-                  align="left"
-                  :label="$t('lang.Project.planReleaseDate')"
-                  min-width="120"
-                  :show-overflow-tooltip="true"
-                >
+                <el-table-column prop="planReleaseDate" align="left" :label="$t('lang.Project.planReleaseDate')"
+                  min-width="120" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
                     <span>{{ scope.row.planReleaseDate || "-" }}</span>
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  prop="closeDate"
-                  align="left"
-                  :label="$t('lang.CommonFiled.ClosedDate')"
-                  min-width="120"
-                  :show-overflow-tooltip="true"
-                >
+                <el-table-column prop="closeDate" align="left" :label="$t('lang.CommonFiled.ClosedDate')" min-width="120"
+                  :show-overflow-tooltip="true">
                   <template slot-scope="scope">
                     <span>{{ scope.row.closeDate || "-" }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  prop="createTime"
-                  align="left"
-                  :label="$t('lang.CommonFiled.CreatedDate')"
-                  min-width="120"
-                  :show-overflow-tooltip="true"
-                />
+                <el-table-column prop="createTime" align="left" :label="$t('lang.CommonFiled.CreatedDate')"
+                  min-width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" min-width="148" align="center">
                   <template slot-scope="scope">
                     <!-- <el-button type="text" class="table-btn">克隆</el-button>
                 <span class="line">|</span> -->
-                    <el-button
-                      v-if="
-                        scope.row.status !== '关闭' &&
-                        scope.row.id === userUseOpenProject.projectId
-                      "
-                      type="text"
-                      class="table-btn"
-                      @click.stop="closeAction(scope.row)"
-                      >关闭</el-button
-                    >
-                    <el-button
-                      v-if="scope.row.id !== userUseOpenProject.projectId"
-                      type="text"
-                      class="table-btn"
-                      @click.stop="delproject(scope.row.id)"
-                      >删除</el-button
-                    >
+                    <el-button v-if="scope.row.status !== '关闭' &&
+                      scope.row.id === userUseOpenProject.projectId
+                      " type="text" class="table-btn" @click.stop="closeAction(scope.row)">关闭</el-button>
+                    <el-button v-if="scope.row.id !== userUseOpenProject.projectId" type="text" class="table-btn"
+                      @click.stop="delproject(scope.row.id)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
-              <pagination
-                v-show="projectTotal > 0"
-                :total="projectTotal"
-                :page.sync="projectQuery.pageNum"
-                :limit.sync="projectQuery.pageSize"
-                @pagination="getqueryForProjects"
-              />
+              <pagination v-show="projectTotal > 0" :total="projectTotal" :page.sync="projectQuery.pageNum"
+                :limit.sync="projectQuery.pageSize" @pagination="getqueryForProjects" />
             </div>
-          </div> </el-card
-      ></el-col>
+          </div>
+        </el-card></el-col>
     </el-row>
   </div>
 </template>

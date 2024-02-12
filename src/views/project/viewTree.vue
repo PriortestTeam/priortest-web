@@ -11,15 +11,10 @@
     </div>
     <div class="comp-data">
       <div class="big-width">
-        <el-tree
-          :data="setTree"
-          :props="defaultProps"
-          node-key="id"
-          default-expand-all
-          :expand-on-click-node="false"
-        >
+
+        <el-tree :data="setTree" :props="defaultProps" node-key="id" default-expand-all :expand-on-click-node="false">
           <span slot-scope="{ node }" class="custom-tree-node">
-            <span @click="getList(node.data)">{{ node.label }}</span>
+            <span @click="getList(node.data, node.label)">{{ node.label }}</span>
           </span>
         </el-tree>
       </div>
@@ -29,6 +24,7 @@
 
 <script>
 import { queryViewTrees } from '@/api/project'
+import { getqueryFortestCycle } from '@/api/testcycle'
 export default {
   name: 'ViewTree',
   props: {
@@ -37,7 +33,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       setTree: [], // tree数据,
       defaultProps: {
@@ -47,51 +43,63 @@ export default {
       viewUrl: '/project/projectview?scope=' + this.childScope,
       projectQuery: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20
       }
     }
   },
   computed: {
-    projectInfo () {
+    projectInfo() {
       return this.$store.state.user.userinfo
     }
   },
 
-  created () {
+  created() {
     this.queryViewTree()
   },
   methods: {
-    toViewManage () {
+    toViewManage() {
       this.$store.commit('common/setNavName', this.childScope)
-      this.$router.push('/project/projectview')
+      this.$router.push({ path: '/project/projectview' })
+
     },
-    hadleShow () {
+    toViewAll() {
+      console.log("ts");
+
+    }
+    ,
+    hadleShow() {
       this.$emit('hadleTree')
     },
-    getList: function (data) {
-      console.log(data)
+    getList: function (data, labels) {
+      console.log("data: ", data, labels)
       const query = {
+        labels: labels,
         projectId: this.projectInfo.userUseOpenProject.projectId,
         viewTreeDto: {
           id: data.id
         }
       }
+
       this.$emit('childByValue', query)
     },
-    queryViewTree () {
+    queryViewTree() {
       const params = {
         scope: this.childScope
       }
+      console.log("params: ", params);
       queryViewTrees(params).then((res) => {
-        this.setTree = res.data
-        // 先找父节点
+        console.log("res: ", res.data);
+        this.setTree = res.data;
+
       })
+
     }
   }
 }
 </script>
 <style scoped lang="scss">
 @import "index.scss";
+
 .comp-tree {
   padding: 20px 0px;
   overflow: auto;
@@ -100,18 +108,23 @@ export default {
   box-sizing: border-box;
   margin-right: 20px;
   height: calc(100vh - 100px);
-  .icon-box{
-  	margin-left: 0;
+
+  .icon-box {
+    margin-left: 0;
   }
 }
+
 .comp-data {
   width: 100%;
   overflow: auto;
   position: relative;
+  top: 20px;
+
   .big-width {
     width: 100%;
     font-size: 14px;
   }
+
 
   .el-tree-node__content {
     .custom-tree-node {

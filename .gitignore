@@ -6,6 +6,15 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 tests/**/coverage/
+.yarn/*
+./yarnrc.y
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+yarn/lock
 
 # Editor directories and files
 .idea
@@ -14,3 +23,4 @@ tests/**/coverage/
 *.ntvs*
 *.njsproj
 *.sln
+package.json

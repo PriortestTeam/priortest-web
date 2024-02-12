@@ -22,7 +22,7 @@ function message (type, msg) {
     showClose: true,
     message: msg,
     type: type,
-    duration: 2 * 1000
+    duration: 1 * 1000
   })
 }
 // 返回上级路由
