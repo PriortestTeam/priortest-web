@@ -408,29 +408,7 @@ export const constantRoutes = [
       },
     ],
   },
-  {
-    path: "/settingCenter",
-    component: Layout,
-    redirect: "/settingCenter",
-    children: [
-      {
-        path: "settingCenter",
-        name: "SettingCenter",
-        component: () => import("@/views/settingCenter/index"),
-        meta: { title: "settingCenter", icon: "settingCenter" },
-      },
-    ],
-  },
-  {
-    path: "external-link",
-    component: Layout,
-    children: [
-      {
-        path: "https://panjiachen.github.io/vue-element-admin-site/#/",
-        meta: { title: "External Link", icon: "link" },
-      },
-    ],
-  },
+  
   {
     path: "/manageUser",
     component: () => import("@/views/manageUser/index"),

@@ -14,8 +14,9 @@
           <span slot-scope="{ node }" class="custom-tree-node">
             <!-- Add edit and delete icons here -->
             <i class="el-icon-edit edit-icon" @click="editNode(node)" />
-            <i class="el-icon-delete delete-icon" @click="deleteNode(node)" />
-            <span @click="getList(node.data, node.label)">{{ node.label }}</span>
+            
+            <i class="el-icon-delete delete-icon" @click="deleteNode(nod)" /> 
+            <span @click="getList(node.data, node.label)">{{ node.label}}</span>
           </span>
         </el-tree>
       </div>
@@ -24,7 +25,7 @@
 </template>
 
 <script>
-import { queryViewTrees } from '@/api/view'
+import { queryViewTrees, deleteView } from '@/api/view'
 
 export default {
   name: 'ViewTree',
@@ -66,7 +67,7 @@ export default {
     hadleShow() {
       this.$emit('hadleTree')
     },
-    getList(data, labels) {
+    getList(data, labels) {      
       const query = {
         labels: labels,
         projectId: this.projectInfo.userUseOpenProject.projectId,
@@ -74,6 +75,7 @@ export default {
           id: data.id
         }
       }
+     
       this.$emit('childByValue', query)
     },
     queryViewTree() {
@@ -81,18 +83,16 @@ export default {
         scope: this.childScope
       }
       queryViewTrees(params).then((res) => {
-        this.setTree = res.data;
+        this.setTree = res.data;       
       })
     },
     editNode(node) {
       // Implement edit logic here
       console.log('Editing node:', node);
+      
+
     },
-    deleteNode(node) {
-      // Implement delete logic here
-      console.log('Deleting node:', node);
-    }
-  }
+  }  
 }
 </script>
 

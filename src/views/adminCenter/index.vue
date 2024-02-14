@@ -230,14 +230,7 @@ import MyAccount from '@/views/adminCenter/myAccount'
 import Dateindex from '@/views/adminCenter/date'
 import CustomFFields from '@/views/adminCenter/customFFields'
 import CustomFieldSetting from '@/views/adminCenter/customFieldSetting.vue'
-// import Radioindex from '@/views/adminCenter/radio'
-// import Textindex from '@/views/adminCenter/text'
-// import Memoindex from '@/views/adminCenter/memo'
-// import Dropdown from '@/views/adminCenter/dropDown'
-// import Checkbox from '@/views/adminCenter/checkbox'
-// import Userindex from '@/views/adminCenter/user'
-// import Link from '@/views/adminCenter/link'
-// import Link2 from '@/views/adminCenter/link2'
+
 import ServicePlan from '@/views/servicePlan/index'
 
 
