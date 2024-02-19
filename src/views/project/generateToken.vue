@@ -140,6 +140,9 @@ export default {
           that.$refs.form.resetFields()
           that.queryListTokens()
         }
+        if (res.code === '401') {
+          console.log("401");
+        }
       } catch (error) {
         console.log(error)
       }

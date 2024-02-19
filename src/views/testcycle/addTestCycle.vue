@@ -140,12 +140,12 @@ export default {
 		return {
 			//openDia: false,
 			// 日期选择设置
-			dateOption:{
-				disabledDate(time){
-				return time.getTime() < Date.now();
+			dateOption: {
+				disabledDate(time) {
+					return time.getTime() < Date.now();
 				}
 			},
-		
+
 			sysCustomFields: [], //sField即上半部分
 			customFields: [], //custom即下半部分
 			oldSysCustomFields: [],

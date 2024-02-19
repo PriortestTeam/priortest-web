@@ -8,7 +8,7 @@
 						添加测试用例
 					</div>
 					<div class="listContent">
-						<div class="btns">						
+						<div class="btns">
 							<el-button type="primary" @click="addCaseIntoTestCycle" :loading="loading">添加到周期</el-button>
 						</div>
 						<div class="search">
@@ -55,13 +55,13 @@
 						<template slot-scope="scope">
 							<el-button type="primary" class="run-btn" @click="handelRun(scope.row.testCase.id)"></el-button>
 						</template>
-					</el-table-column>		
+					</el-table-column>
 					<el-table-column label="再运行">
-  <template slot-scope="scope">
-    <el-button v-if="[2,4,6].includes(scope.row.testCaseRun.runStatus)" type="primary" class="run-btn"
-      @click="handelReRun(scope.row.testCase.id, scope.row.testCase.title)"></el-button>
-  </template>
-</el-table-column>					
+						<template slot-scope="scope">
+							<el-button v-if="[2, 4, 6].includes(scope.row.testCaseRun.runStatus)" type="primary" class="run-btn"
+								@click="handelReRun(scope.row.testCase.id, scope.row.testCase.title)"></el-button>
+						</template>
+					</el-table-column>
 					<el-table-column label="UUID" prop="testCase.id" width="180px">
 					</el-table-column>
 					<el-table-column label="标题" prop="testCase.title" width="160px">
@@ -79,16 +79,16 @@
 							{{ interpretRunStatus(scope.row.testCaseRun.runStatus) }}
 						</template>
 					</el-table-column>
-					<el-table-column label="运行时长" prop="testCaseRun.caseRunDuration">		
-					  <template slot-scope="{ row }">						
-  					 {{ ((row.testCaseRun.caseRunDuration) / 60000).toFixed(4) }} mins
-					</template>
+					<el-table-column label="运行时长" prop="testCaseRun.caseRunDuration">
+						<template slot-scope="{ row }">
+							{{ ((row.testCaseRun.caseRunDuration) / 60000).toFixed(4) }} mins
+						</template>
 
 					</el-table-column>
 					<el-table-column label="共计" prop="testCaseRun.caseTotalPeriod">
 						<template slot-scope="{ row }">
-    {{ formatTotalPeriod(row.testCaseRun.caseTotalPeriod, row.testCaseRun.runCount) }}
-  </template>
+							{{ formatTotalPeriod(row.testCaseRun.caseTotalPeriod, row.testCaseRun.runCount) }}
+						</template>
 					</el-table-column>
 
 					<el-table-column label="运行时间" prop="testCaseRun.updateTime">
@@ -147,10 +147,10 @@ export default {
 				children: 'childViews',
 				label: 'title'
 			},
-	
-		
-      // Other 添加用例到周期时
-      loading: false, // Add loading property to control loading state
+
+
+			// Other 添加用例到周期时
+			loading: false, // Add loading property to control loading state
 		}
 	},
 
@@ -162,19 +162,19 @@ export default {
 	},
 	methods: {
 
- 	
+
 		formatTotalPeriod(totalPeriod, runCount) {
-    if (totalPeriod === 0) {
-      return `0 mins (${runCount})`;
-    } else if (totalPeriod > 60 * 60 * 1000) {
-      // Convert to hours if total period exceeds 60 minutes
-      const hours = (totalPeriod / (60 * 60 * 1000)).toFixed(4);
-      return `${hours} hours (${runCount})`;
-    } else {
-      // Convert to minutes if total period is less or equal to 60 minutes
-      const minutes = (totalPeriod / (60 * 1000)).toFixed(4);
-      return `${minutes} mins (${runCount})`;
-    }
+			if (totalPeriod === 0) {
+				return `0 mins (${runCount})`;
+			} else if (totalPeriod > 60 * 60 * 1000) {
+				// Convert to hours if total period exceeds 60 minutes
+				const hours = (totalPeriod / (60 * 60 * 1000)).toFixed(4);
+				return `${hours} hours (${runCount})`;
+			} else {
+				// Convert to minutes if total period is less or equal to 60 minutes
+				const minutes = (totalPeriod / (60 * 1000)).toFixed(4);
+				return `${minutes} mins (${runCount})`;
+			}
 		},
 
 
@@ -182,39 +182,39 @@ export default {
 
 		// 获取左侧列表数据
 		getList: function (data, labels) {
-    const query = {
-        labels: labels,
-        projectId: JSON.parse(localStorage.getItem('projectId')),
-        viewTreeDto: {
-            id: data.id
-        }
-    };
-    const p = {
-        scope: 'testCase',
-        viewId: data.id,
-    };
+			const query = {
+				labels: labels,
+				projectId: JSON.parse(localStorage.getItem('projectId')),
+				viewTreeDto: {
+					id: data.id
+				}
+			};
+			const p = {
+				scope: 'testCase',
+				viewId: data.id,
+			};
 
-    testCycleListByClick(p, {}).then(res => {
-     //   console.log('viewClick: ', res.data.total, p);
-     //   const pageSize = res.data.total;
-     //   return testCycleListByClick(p, {
-     //       pageNum: 1,
-     //       pageSize: pageSize
-     //   });
-   // }).then(res => {
-        console.log('viewClick: ', res.data.total, p);
-        this.InstanceListData = res.data.list;
-        this.fillerInstanceListData = this.InstanceListData;
-    }).catch(() => {
-        this.InstanceListData = [];
-        this.fillerInstanceListData = [];
-    });
-},
+			testCycleListByClick(p, {}).then(res => {
+				//   console.log('viewClick: ', res.data.total, p);
+				//   const pageSize = res.data.total;
+				//   return testCycleListByClick(p, {
+				//       pageNum: 1,
+				//       pageSize: pageSize
+				//   });
+				// }).then(res => {
+				console.log('viewClick: ', res.data.total, p);
+				this.InstanceListData = res.data.list;
+				this.fillerInstanceListData = this.InstanceListData;
+			}).catch(() => {
+				this.InstanceListData = [];
+				this.fillerInstanceListData = [];
+			});
+		},
 		getInstanceListData() {
 			queryViewTrees({
 				"scope": "3000001"
 			}).then((res) => {
-				this.setTree = res.data				
+				this.setTree = res.data
 			})
 		},
 		// 搜索框过滤数据
@@ -244,10 +244,11 @@ export default {
 			const params = {
 				testCycleId: this.cycleId
 			}
-		
+
 			getListBytestCycle(params, { pageNum: 1, pageSize: 10 }).then(res => {
-		    this.InstanceTableData = res.data.list;
-			});		
+				this.InstanceTableData = res.data.list;
+				console.log('InstanceTableData', res.data.list);
+			});
 
 		},
 
@@ -280,38 +281,38 @@ export default {
 			this.isIndeterminate = checkedCount > 0 && checkedCount < this.fillerInstanceListData.length;
 
 		},
-		
-		// 添加用例到周期
-		addCaseIntoTestCycle(){
-      if (this.selectCaseIds.length === 0) return message('error', '请选择case');
-      
-      // Set loading to true to lock the page
-      this.loading = true;
-      const data = {
-        projectId: this.projectId,
-        testCycleId: this.cycleId,
-        testCaseIds: this.selectCaseIds,
-      };
 
-      saveInstance(data)
-        .then((res) => {
-          if (res.code === '200') {
-            message('success', '添加成功');
-            this.checkedlLists = [];
-            this.isIndeterminate = true;
-            this.checkAll = false;
-            this.reloadTable();
-          }
-        })
-        .catch((error) => {
-          console.error('Error adding case:', error);
-          // Handle error if needed
-        })
-        .finally(() => {
-          // Toggle loading back to false after the API call completes
-          this.loading = false;
-        });
-    },
+		// 添加用例到周期
+		addCaseIntoTestCycle() {
+			if (this.selectCaseIds.length === 0) return message('error', '请选择case');
+
+			// Set loading to true to lock the page
+			this.loading = true;
+			const data = {
+				projectId: this.projectId,
+				testCycleId: this.cycleId,
+				testCaseIds: this.selectCaseIds,
+			};
+
+			saveInstance(data)
+				.then((res) => {
+					if (res.code === '200') {
+						message('success', '添加成功');
+						this.checkedlLists = [];
+						this.isIndeterminate = true;
+						this.checkAll = false;
+						this.reloadTable();
+					}
+				})
+				.catch((error) => {
+					console.error('Error adding case:', error);
+					// Handle error if needed
+				})
+				.finally(() => {
+					// Toggle loading back to false after the API call completes
+					this.loading = false;
+				});
+		},
 		// 展示左侧列表
 		showInstanceList() {
 			this.show = !this.show
@@ -355,7 +356,7 @@ export default {
 
 				// Assuming Vue Router is used for navigation
 				if (response.code === '200') {
-					console.error('reRun data', data1,testCaseTitle);
+					console.error('reRun data', data1, testCaseTitle);
 					this.$router.push({ name: 'reRunCase', params: { dataList: data1.list, testCaseTitle: testCaseTitle } });
 				} else {
 					console.error('Invalid API response');
@@ -384,25 +385,25 @@ export default {
 		},
 		// 表格顶部移除测试案例按钮 - 批量移除
 		removeTestCase() {
-		
 
-		// Check if the table component reference exists
+
+			// Check if the table component reference exists
 			if (!this.$refs['InstanceTable']) {
-        console.error("InstanceTable ref not found.");
-        return;
-    }
-	 // Retrieve the selection from the table component
-	 const selection = this.$refs['InstanceTable'].selection;
-	 // Check if any cases are selected
-	 if (!selection || selection.length === 0) {
-        console.error("No cases selected.");
-        message('error', '请选择 移除用例');
-        return;
-    }
-	// Extract IDs from the selected cases
-    const ids = selection.map(item => item.testCase.id);
-    // Call deleteCase method with the extracted IDs
-    this.deleteCase(ids);	
+				console.error("InstanceTable ref not found.");
+				return;
+			}
+			// Retrieve the selection from the table component
+			const selection = this.$refs['InstanceTable'].selection;
+			// Check if any cases are selected
+			if (!selection || selection.length === 0) {
+				console.error("No cases selected.");
+				message('error', '请选择 移除用例');
+				return;
+			}
+			// Extract IDs from the selected cases
+			const ids = selection.map(item => item.testCase.id);
+			// Call deleteCase method with the extracted IDs
+			this.deleteCase(ids);
 
 		},
 

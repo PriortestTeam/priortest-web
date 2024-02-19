@@ -61,15 +61,15 @@
                   label="步骤运行状态"
                 /> -->
 
-                <el-table-column prop="planFixDate" label="计划修改" >
-                <template slot-scope="scope">
-                  {{ formatDateOnly(scope.row.planFixDate) }}
-                 </template>
-                 </el-table-column>
+                <el-table-column prop="planFixDate" label="计划修改">
+                  <template slot-scope="scope">
+                    {{ formatDateOnly(scope.row.planFixDate) }}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="createTime" label="创建日期">
-                <template slot-scope="scope">
-                  {{ formatDateOnly(scope.row.createTime) }}
-                 </template>
+                  <template slot-scope="scope">
+                    {{ formatDateOnly(scope.row.createTime) }}
+                  </template>
                 </el-table-column>
                 <el-table-column prop="id" :show-overflow-tooltip="true" width="165" label="UUID" />
                 <el-table-column label="操作" min-width="148" fixed="right">
@@ -165,18 +165,18 @@ export default {
   },
   methods: {
 
-     // 日期格式重置
-  formatDateOnly(dateTimeString) {
-  // Use moment.js to parse the date string and format it as desired
-  if (!dateTimeString) {
-    return 'NA'; // Return 'NA' if the dateTimeString is falsy
-  }
-  const date = moment(dateTimeString);
-  if (!date.isValid()) {
-    return 'NA'; // Return 'NA' if the date is invalid
-  }  
-  return moment(dateTimeString).format('MM/DD/YYYY');
-},
+    // 日期格式重置
+    formatDateOnly(dateTimeString) {
+      // Use moment.js to parse the date string and format it as desired
+      if (!dateTimeString) {
+        return 'NA'; // Return 'NA' if the dateTimeString is falsy
+      }
+      const date = moment(dateTimeString);
+      if (!date.isValid()) {
+        return 'NA'; // Return 'NA' if the date is invalid
+      }
+      return moment(dateTimeString).format('MM/DD/YYYY');
+    },
 
     // 选择更多列
     selectMoreCol() {
