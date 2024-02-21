@@ -33,8 +33,6 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   (response) => {
-    console.log("response=>", response);
-
     const res = response.data;
     if (response.headers.authorization) {
       setToken(response.headers.authorization);
