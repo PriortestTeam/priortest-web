@@ -442,16 +442,16 @@ export default {
 
   watch: {
     filterConditionList: function (val) {
-      console.log("list", val);
+      // console.log("list", val);
     },
     conditionList: function (val) {
-      console.log("conlist", val);
+      // console.log("conlist", val);
     },
     filterSelValue: function (val) {
-      console.log("selvalue", val);
+      // console.log("selvalue", val);
     },
     isClick: function (val) {
-      console.log("isClick", val);
+      // console.log("isClick", val);
     },
   },
   computed: {
@@ -857,44 +857,57 @@ export default {
 
     //视图修改
     async toEdit(row) {
-      console.log("修改查询条件数据...");
-      console.log("row", row);
+      console.log("获取查询条件数据...");
+      // console.log("row", row);
       
       this.isClick = true;
       this.resetForm();
       this.form.id = row.id;
-      this.form.isPrivate = row.isPrivate.toString();
-      this.$refs.viewData.clearSelection();
-      this.form.scopeName = row.scopeName;
-      this.$refs.viewData.toggleRowSelection(row);
-      console.log(row, "filter");
+      // this.form.isPrivate = row.isPrivate.toString();
+      // this.$refs.viewData.clearSelection();
+      // this.$refs.viewData.toggleRowSelection(row);
+
+      // console.log(row, "filter");
+
       this.form.title = row.title;
-      row.filter.length
-        ? (this.form.oneFilters = JSON.parse(row.filter))
-        : (this.form.oneFilters = [
-            {
-              id: "",
-              andOr: "",
-              type: "",
-              customFieldId: "",
-              fieldNameEn: "",
-              fieldType: "",
-              condition: "",
-              sourceVal: "",
-            },
-          ]);
-      this.form.oneFilters.forEach((item) => {
-        delete item.fieldNameEnCamelCase;
-      });
-      this.scopeSelvalue = this.scopeObj[0];
-      await this.viewScopeChildParams(this.scopeObj[0]);
-      if (row.parentId !== "") {
-        this.parentViewChange();
-        this.form.parentId = row.parentId;
-      }
-      this.addfilter = true;
-      this.filterSelValue = [{}];
-      this.form.auto_filter = "";
+
+      this.form.scopeName = row.scopeName;
+      this.scopeSelvalue = this.form.scopeName; 
+
+      console.log("this.form.isPrivate："+this.form.isPrivate);
+      console.log("row.isPrivate："+row.isPrivate);
+      // console.log("this.isPrivate："+this.isPrivate);
+
+      this.form.parentId= row.parentId;
+      this.form.isPrivate=row.isPrivate.toString();
+
+      
+      // row.filter.length
+      //   ? (this.form.oneFilters = JSON.parse(row.filter))
+      //   : (this.form.oneFilters = [
+      //       {
+      //         id: "",
+      //         andOr: "",
+      //         type: "",
+      //         customFieldId: "",
+      //         fieldNameEn: "",
+      //         fieldType: "",
+      //         condition: "",
+      //         sourceVal: "",
+      //       },
+      //     ]);
+      // this.form.oneFilters.forEach((item) => {
+      //   delete item.fieldNameEnCamelCase;
+      // });
+      // this.scopeSelvalue = this.scopeObj[0];
+      // await this.viewScopeChildParams(this.scopeObj[0]);
+      // if (row.parentId !== "") {
+      //   this.parentViewChange();
+      //   this.form.parentId = row.parentId;
+      // }
+      // this.addfilter = true;
+      // this.filterSelValue = [{}];
+      // this.form.auto_filter = "";
     },
   },
 };
