@@ -446,6 +446,9 @@ export default {
     },
     // 处理 tab 切换逻辑
     handBeforeLeave(activeName, oldActiveName) {
+      if (this.id) {
+        this.$router.push({ query: { id: this.id } })
+      }
       if (activeName === 'second' && !this.id) {
         message(200, '请先保存故事')
         return false
