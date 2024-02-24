@@ -47,15 +47,7 @@
             </el-radio-group>
           </el-row>
         </el-form-item>
-
-        <el-form-item label="testCycle" class="form-small">
-          <el-row>
-            <el-radio-group>
-              <el-radio label="curentReleaseVersion">current版本</el-radio>
-              <el-radio label="curentReleaseVersion">周期列表</el-radio>
-             </el-radio-group>
-            </el-row>
-          </el-form-item>
+    
         <el-form-item label="缺陷" prop="issue" class="form-small">
           <el-row>
             <el-row :span="4">
