@@ -2,7 +2,7 @@
   <div>
     <div class="mb-2">
       <el-button type="primary" @click="handleRele">关联</el-button>
-      <div class="test-text"><span>测试用例ID </span><el-input v-model="testCaseID" placeholder="请输入用例ID"
+      <div class="test-text"><span>测试用例 </span><el-input v-model="testCaseID" placeholder="请输入用例 ID"
           style="width: 200px;" /></div>
       <el-button type="primary" @click="handleDelRele">移除关联</el-button>
 
@@ -14,10 +14,10 @@
       <el-table-column label="ID">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column prop="targertId" label="Targert ID">
+      <el-table-column prop="targertId" label="测试用例">
         <template slot-scope="scope">{{ scope.row.targetId }}</template>
       </el-table-column>
-      <el-table-column prop="Action" label="Action" show-overflow-tooltip>
+      <el-table-column prop="Action" label="操作" show-overflow-tooltip>
         <template slot-scope="scope"><el-button type="primary" @click="handleDelReles(scope.row.id)">移除</el-button>
         </template>
       </el-table-column>
@@ -131,7 +131,6 @@ export default {
 
     // 选择变化
     handleSelectionChange(val) {
-
       this.issueLinkSelection = val;
     },
     //
