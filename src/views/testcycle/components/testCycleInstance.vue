@@ -285,7 +285,7 @@ export default {
 		// 添加用例到周期
 		addCaseIntoTestCycle() {
 			if (this.selectCaseIds.length === 0) return message('error', '请选择case');
-
+			this.cycleId = this.$route.query.id
 			// Set loading to true to lock the page
 			this.loading = true;
 			const data = {

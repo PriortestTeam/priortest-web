@@ -500,6 +500,9 @@ export default {
 			localStorage.setItem('tabName', activeName)
 			console.log(localStorage.getItem('tabName'));
 			this.activeName = localStorage.getItem('tabName')
+			if (this.id) {
+				this.$router.push({ query: { id: this.id } })
+			}
 			if (activeName === 'second' && !this.id) {
 				message(200, '请先保存测试周期再添加用例')
 				return false
