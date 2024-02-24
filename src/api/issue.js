@@ -82,7 +82,6 @@ export function issueLinkList(data) {
 
 // 保存关联某条记录-链接
 export function issueLinkSave(data) {
-  console.log(data, "data");
   return request({
     url: "/relation/save",
     method: "post",
