@@ -34,6 +34,8 @@
         <el-form-item label="视图标题：" prop="title" class="form-small">
           <el-input v-model="form.title" size="small" />
         </el-form-item>
+
+        <!-- 范围选择框 -->
         <el-form-item label="范围：" class="form-small">
           <el-select
             v-model="scopeSelvalue"
@@ -52,6 +54,8 @@
             />
           </el-select>
         </el-form-item>
+        <!-- 范围选择框 -->
+
         <el-form-item label="父级视图：" prop="parentId" class="form-small">
           <el-select
             :disabled="form.isAuto == 1"
@@ -233,12 +237,16 @@
         </el-form-item>
       </div>
     </el-form>
+
     <div class="table">
+      <!-- 刷新&批量删除 -->
       <el-button type="text" @click="viewjectRefresh">刷新</el-button>
       <el-button type="text" :disabled="multiple" @click="delview('all')"
         >批量删除</el-button
       >
+      <!-- 刷新&批量删除 -->
 
+      <!-- 查询条件表格 -->
       <el-table
         ref="viewData"
         :data="viewData"
@@ -290,6 +298,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 查询条件表格 -->
+
+      <!-- 分页 -->
       <pagination
         v-show="viewTotal > 0"
         :total="viewTotal"
@@ -297,6 +308,7 @@
         :limit.sync="viewQuery.pageSize"
         @pagination="getqueryViews"
       />
+      <!-- 分页 -->
     </div>
   </div>
 </template>
@@ -430,16 +442,16 @@ export default {
 
   watch: {
     filterConditionList: function (val) {
-      console.log("list", val);
+      // console.log("list", val);
     },
     conditionList: function (val) {
-      console.log("conlist", val);
+      // console.log("conlist", val);
     },
     filterSelValue: function (val) {
-      console.log("selvalue", val);
+      // console.log("selvalue", val);
     },
     isClick: function (val) {
-      console.log("isClick", val);
+      // console.log("isClick", val);
     },
   },
   computed: {
@@ -573,7 +585,10 @@ export default {
 
     //范围修改时获取参数
     async viewScopeChildParams(selVal) {
-      console.log("gg");
+      console.log("执行修改范围...");
+
+      this.form.oneFilters.splice(0, 1);
+
       if (this.filterSelValue.length > 1) {
         await this.$confirm("重新选择可能会丢失页面内容请确认？", {
           title: "提示",
@@ -842,42 +857,57 @@ export default {
 
     //视图修改
     async toEdit(row) {
-      console.log("row", row);
+      console.log("获取查询条件数据...");
+      // console.log("row", row);
+      
       this.isClick = true;
       this.resetForm();
       this.form.id = row.id;
-      this.form.isPrivate = row.isPrivate.toString();
-      this.$refs.viewData.clearSelection();
-      this.form.scopeName = row.scopeName;
-      this.$refs.viewData.toggleRowSelection(row);
-      console.log(row, "filter");
+      // this.form.isPrivate = row.isPrivate.toString();
+      // this.$refs.viewData.clearSelection();
+      // this.$refs.viewData.toggleRowSelection(row);
+
+      // console.log(row, "filter");
+
       this.form.title = row.title;
-      row.filter.length
-        ? (this.form.oneFilters = JSON.parse(row.filter))
-        : (this.form.oneFilters = [
-            {
-              id: "",
-              andOr: "",
-              type: "",
-              customFieldId: "",
-              fieldNameEn: "",
-              fieldType: "",
-              condition: "",
-              sourceVal: "",
-            },
-          ]);
-      this.form.oneFilters.forEach((item) => {
-        delete item.fieldNameEnCamelCase;
-      });
-      this.scopeSelvalue = this.scopeObj[0];
-      await this.viewScopeChildParams(this.scopeObj[0]);
-      if (row.parentId !== "") {
-        this.parentViewChange();
-        this.form.parentId = row.parentId;
-      }
-      this.addfilter = true;
-      this.filterSelValue = [{}];
-      this.form.auto_filter = "";
+
+      this.form.scopeName = row.scopeName;
+      this.scopeSelvalue = this.form.scopeName; 
+
+      console.log("this.form.isPrivate："+this.form.isPrivate);
+      console.log("row.isPrivate："+row.isPrivate);
+      // console.log("this.isPrivate："+this.isPrivate);
+
+      this.form.parentId= row.parentId;
+      this.form.isPrivate=row.isPrivate.toString();
+
+      
+      // row.filter.length
+      //   ? (this.form.oneFilters = JSON.parse(row.filter))
+      //   : (this.form.oneFilters = [
+      //       {
+      //         id: "",
+      //         andOr: "",
+      //         type: "",
+      //         customFieldId: "",
+      //         fieldNameEn: "",
+      //         fieldType: "",
+      //         condition: "",
+      //         sourceVal: "",
+      //       },
+      //     ]);
+      // this.form.oneFilters.forEach((item) => {
+      //   delete item.fieldNameEnCamelCase;
+      // });
+      // this.scopeSelvalue = this.scopeObj[0];
+      // await this.viewScopeChildParams(this.scopeObj[0]);
+      // if (row.parentId !== "") {
+      //   this.parentViewChange();
+      //   this.form.parentId = row.parentId;
+      // }
+      // this.addfilter = true;
+      // this.filterSelValue = [{}];
+      // this.form.auto_filter = "";
     },
   },
 };
