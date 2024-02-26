@@ -97,3 +97,12 @@ export function issueLinkDelete(ids) {
     // data: data,
   });
 }
+
+// 获取关联记录-链接的列表
+export function issueLinkIdList(data) {
+  console.log("issueLinkIdList", data);
+  return request({
+    url: `testCase/info/${data.id}`,
+    method: "get",
+  });
+}

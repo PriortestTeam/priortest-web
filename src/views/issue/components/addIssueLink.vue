@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="mb-2">
-      <el-button type="primary" @click="handleRele">关联</el-button>
+      <el-button type="primary" :disabled="DelRele" @click="handleRele">关联</el-button>
       <div class="test-text"><span>测试用例 </span><el-input v-model="testCaseID" placeholder="请输入用例 ID"
           style="width: 200px;" /></div>
-      <el-button type="primary" @click="handleDelRele">移除关联</el-button>
+      <el-button type="primary" :disabled="DelReles" @click="handleDelRele">移除关联</el-button>
 
     </div>
     <el-table ref="issuelinklist" :data="issueLinkList" tooltip-effect="dark" style="width: 100%"
@@ -15,7 +15,118 @@
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
       <el-table-column prop="targertId" label="测试用例">
-        <template slot-scope="scope">{{ scope.row.targetId }}</template>
+        <template slot-scope="scope">
+          <el-button slot="reference" type="primary" @click="handleShowId(scope.row.targetId)">{{ scope.row.targetId
+          }}</el-button>
+          <el-drawer title="标题" size="45%" :visible.sync="drawer" :with-header="false">
+            <el-form ref="form" :model="testCaseData" label-width="140px" class="form">
+              <el-form-item label="标题">
+                <el-input v-model="testCaseData.title" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="版本">
+                <el-input v-model="testCaseData.version" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="分类">
+                <el-input v-model="testCaseData.caseCategory" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="描述">
+                <el-input v-model="testCaseData.description" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="优先级">
+                <el-input v-model="testCaseData.priority" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="负责人">
+                <el-input v-model="testCaseData.reportTo" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="关联故事">
+                <el-input v-model="testCaseData.feature" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="测试数据">
+                <el-input v-model="testCaseData.testData" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="测试方法">
+                <el-input v-model="testCaseData.testMethod" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="用例状态">
+                <el-input v-model="testCaseData.testStatus" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="环境">
+                <el-input v-model="testCaseData.env" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="测试类型">
+                <el-input v-model="testCaseData.testType" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="testDevice">
+                <el-input v-model="testCaseData.testDevice" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="浏览器">
+                <el-input v-model="testCaseData.browser" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="外部ID">
+                <el-input v-model="testCaseData.externalLinkId" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="平台">
+                <el-input v-model="testCaseData.platform" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="测试条件">
+                <el-input v-model="testCaseData.testCondition" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="备注">
+                <el-input v-model="testCaseData.remarks" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="单选框测试">
+                <el-radio v-model="radio" label="1" disabled>是</el-radio>
+                <el-radio v-model="radio" label="0" disabled>否</el-radio>
+              </el-form-item>
+              <el-form-item label="数值型">
+                <el-input v-model="numeric" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="测试">
+                <el-input v-model="test" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="测试值">
+                <el-input v-model="testingVluen" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="故事必填">
+                <el-input v-model="StoryRequired" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="链接型字段">
+                <el-input v-model="LinkedField" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="多选项定义不是必填">
+                <el-input v-model="multipleOptions" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="测试日期类型">
+                <el-input v-model="testDate" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="链接下拉框">
+                <el-input v-model="LinkDropdownBox" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="用户列表">
+                <el-input v-model="userList" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="fsf">
+                <el-input v-model="fsf" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="复选框用例">
+
+                <el-checkbox v-model="checkboxuseCase" disabled></el-checkbox>
+
+
+              </el-form-item>
+
+
+
+
+            </el-form>
+          </el-drawer>
+          <!-- <el-popover placement="right" width="700" trigger="click"> -->
+
+
+
+          <!-- </el-popover> -->
+
+        </template>
       </el-table-column>
       <el-table-column prop="Action" label="操作" show-overflow-tooltip>
         <template slot-scope="scope"><el-button type="primary" @click="handleDelReles(scope.row.id)">移除</el-button>
@@ -28,10 +139,11 @@
 
 <script>
 
-import { issueLinkList, issueLinkDelete, issueLinkSave } from '@/api/issue'
+import { issueLinkList, issueLinkDelete, issueLinkSave, issueLinkIdList } from '@/api/issue'
 import addPossibleValue from '@/views/issue/components/addPossibleValue.vue'
 
 import { Empty } from 'element-ui'
+import { relativeTimeThreshold } from 'moment'
 
 
 export default {
@@ -43,6 +155,23 @@ export default {
       issueLinkSelection: [],
       testCaseID: '',
       addPossibleValueVisible: false,
+      DelRele: false,
+      DelReles: false,
+      testCaseData: {},
+      drawer: false,
+      radio: '1',
+      numeric: '',
+      test: '',
+      testingVluen: '',
+      StoryRequired: '',
+      LinkedField: '',
+      multipleOptions: '',
+      testDate: '',
+      LinkDropdownBox: '',
+      userList: '',
+      fsf: '',
+      checkboxuseCase: ''
+
     }
   },
   computed: {
@@ -81,8 +210,15 @@ export default {
       let objectId = this.$route.query.id
       let targetId = this.testCaseID
       let category = "ISSUE_TEST_CASE"
-      let extJson = ""
-      let id = ""
+      if (targetId.length) {
+
+        this.DelRele = true;
+
+      }
+      else {
+        this.DelRele = false
+        return
+      }
       let params = {
         "category": category, "objectId": objectId, "targetId": targetId
       }
@@ -98,8 +234,15 @@ export default {
     },
     // 移除关联
     handleDelRele() {
+
       let ids = this.issueLinkSelection.map(item => item.id)
-      console.log("ids", ids);
+      if (ids.length) {
+        this.DelReles = true;
+      }
+      else {
+        this.DelReles = false;
+        return
+      }
       issueLinkDelete({
         ids
       }).then(res => {
@@ -113,6 +256,31 @@ export default {
       })
     },
 
+    // 显示用例列表数据
+    handleShowId(id) {
+      console.log("id", id);
+      issueLinkIdList({
+        id
+      }).then(res => {
+        if (res.code === '200') {
+          this.drawer = true
+          this.testCaseData = res.data
+          this.testCaseData.testcaseExpand = JSON.parse(res.data.testcaseExpand)
+          this.radio = res.data.testcaseExpand.attributes[0].valueData.toString()
+          this.numeric = this.testCaseData.testcaseExpand.attributes[1].valueData
+          this.test = this.testCaseData.testcaseExpand.attributes[2].valueData
+          this.testingVluen = this.testCaseData.testcaseExpand.attributes[3].valueData
+          this.StoryRequired = this.testCaseData.testcaseExpand.attributes[4].valueData
+          this.LinkedField = this.testCaseData.testcaseExpand.attributes[5].valueData
+          this.multipleOptions = this.testCaseData.testcaseExpand.attributes[6].valueData
+          this.testDate = this.testCaseData.testcaseExpand.attributes[7].valueData
+          this.LinkDropdownBox = this.testCaseData.testcaseExpand.attributes[10].valueData
+          this.userList = this.testCaseData.testcaseExpand.attributes[11].valueData
+          this.fsf = this.testCaseData.testcaseExpand.attributes[12].valueData
+          this.checkboxuseCase = this.testCaseData.testcaseExpand.attributes[13].valueData ? true : false
+        }
+      })
+    },
     // 移除关联
     handleDelReles(id) {
       let ids = [`${id}`]
@@ -155,5 +323,9 @@ export default {
 
   }
 
+}
+
+.form {
+  // font-size: 11px;
 }
 </style>
