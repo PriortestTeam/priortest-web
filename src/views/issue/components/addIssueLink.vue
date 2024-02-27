@@ -18,7 +18,7 @@
         <template slot-scope="scope">
           <el-button slot="reference" type="primary" @click="handleShowId(scope.row.targetId)">{{ scope.row.targetId
           }}</el-button>
-          <el-drawer title="标题" size="45%" :visible.sync="drawer" :with-header="false">
+          <el-drawer title="标题" size="55%" :visible.sync="drawer" :with-header="false">
             <el-form ref="form" :model="testCaseData" label-width="140px" class="form">
               <el-form-item label="标题">
                 <el-input v-model="testCaseData.title" disabled></el-input>
@@ -109,15 +109,26 @@
                 <el-input v-model="fsf" disabled></el-input>
               </el-form-item>
               <el-form-item label="复选框用例">
-
                 <el-checkbox v-model="checkboxuseCase" disabled></el-checkbox>
-
-
               </el-form-item>
-
-
-
-
+              <el-form-item label="">
+                <el-table :data="testCaseData.testCaseStepList" fit style="width: 100%">
+                  <el-table-column prop="testStep" label="步骤" width="180">
+                  </el-table-column>
+                  <el-table-column prop="teststepCondition" label="执行条件" width="180">
+                  </el-table-column>
+                  <el-table-column prop="testData" label="测试数据">
+                  </el-table-column>
+                  <el-table-column prop="expectedResult" label="期待结果">
+                  </el-table-column>
+                  <el-table-column prop="remarks" label="备注">
+                  </el-table-column>
+                  <!-- <el-table-column label="自定义字段">
+                    <span>缺陷必填</span> <el-input v-model="teststepExpand[0].valueData" disabled></el-input>
+                    <span>自定义字段</span><el-checkbox v-model="checkboxuseCase"></el-checkbox>
+                  </el-table-column> -->
+                </el-table>
+              </el-form-item>
             </el-form>
           </el-drawer>
           <!-- <el-popover placement="right" width="700" trigger="click"> -->
@@ -143,6 +154,7 @@ import { issueLinkList, issueLinkDelete, issueLinkSave, issueLinkIdList } from '
 import addPossibleValue from '@/views/issue/components/addPossibleValue.vue'
 
 import { Empty } from 'element-ui'
+
 import { relativeTimeThreshold } from 'moment'
 
 
@@ -278,6 +290,12 @@ export default {
           this.userList = this.testCaseData.testcaseExpand.attributes[11].valueData
           this.fsf = this.testCaseData.testcaseExpand.attributes[12].valueData
           this.checkboxuseCase = this.testCaseData.testcaseExpand.attributes[13].valueData ? true : false
+
+          //自定字段
+          //   this.testCaseData.testCaseStepList.forEach((item) => {
+          //     item.teststepExpand = JSON.parse(item.teststepExpand)
+          //   })
+          //   console.log("-------", this.testCaseData.testCaseStepList[0].teststepExpand);
         }
       })
     },
@@ -323,9 +341,5 @@ export default {
 
   }
 
-}
-
-.form {
-  // font-size: 11px;
 }
 </style>
