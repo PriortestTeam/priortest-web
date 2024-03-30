@@ -56,7 +56,7 @@
                 <el-col :span="24">
                   <el-divider />
                 </el-col>
-                <el-col v-for="(field, index) in customFields" :key="field.id" :xs="24" :sm="24" :md="12" :lg="12"
+                <el-col v-for="field in customFields" :key="field.id" :xs="24" :sm="24" :md="12" :lg="12"
                   :xl="8">
                   <el-form-item size="small" :label="field.fieldNameCn" label-width="150px"
                     :prop="'custom' + field.customFieldId" v-if="hasParentFiled(field)">

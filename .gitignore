@@ -15,6 +15,7 @@ tests/**/coverage/
 !.yarn/versions
 .pnp.*
 yarn/lock
+.history
 
 # Editor directories and files
 .idea

@@ -2,8 +2,19 @@
   <div>
     <div class="mb-2">
       <el-button type="primary" :disabled="DelRele" @click="handleRele">关联</el-button>
-      <div class="test-text"><span>测试用例 </span><el-input v-model="testCaseID" placeholder="请输入用例 ID"
-          style="width: 200px;" /></div>
+      <div class="test-text">
+        <span>测试用例 </span>
+        <el-autocomplete
+          class="inline-input"
+          v-model="testCaseTitle"
+          :fetch-suggestions="testCaseIDSearch"
+          placeholder="请输入用例 ID"
+          :trigger-on-focus="false"
+          @select="handleSelect"
+          :clearable='true'
+          style="width: 200px;"
+        ></el-autocomplete>
+      </div>
       <el-button type="primary" :disabled="DelReles" @click="handleDelRele">移除关联</el-button>
 
     </div>
@@ -150,7 +161,7 @@
 
 <script>
 
-import { issueLinkList, issueLinkDelete, issueLinkSave, issueLinkIdList } from '@/api/issue'
+import { issueLinkList, issueLinkDelete, issueLinkSave, issueLinkIdList, testCaseSerach } from '@/api/issue'
 import addPossibleValue from '@/views/issue/components/addPossibleValue.vue'
 
 import { Empty } from 'element-ui'
@@ -165,6 +176,7 @@ export default {
     return {
       issueLinkList: [],
       issueLinkSelection: [],
+      testCaseTitle: '',
       testCaseID: '',
       addPossibleValueVisible: false,
       DelRele: false,
@@ -217,7 +229,7 @@ export default {
         }
       })
     },
-    //
+    //关联测试用例
     handleRele() {
       let objectId = this.$route.query.id
       let targetId = this.testCaseID
@@ -240,6 +252,8 @@ export default {
             message: '关联成功',
             type: 'success'
           });
+          this.testCaseTitle = ''
+          this.testCaseID = ''
           this.getIssueLinkList()
         }
       })
@@ -319,8 +333,32 @@ export default {
     handleSelectionChange(val) {
       this.issueLinkSelection = val;
     },
-    //
-
+    //搜索输入用例
+    testCaseIDSearch (title, cb) {
+      if (!title)  return
+      testCaseSerach({
+        title,
+        projectId: this.projectInfo.userUseOpenProject.projectId
+      }).then(res => {
+        if (res.code == '200') {
+          let results = [{ value: '暂无数据' }]
+          if (res.data.length) {
+            this.DelRele = false
+            results = res.data.map(item => { return { ...item, value: item.title } })
+          }
+          else {
+            this.DelRele = true
+          }
+          // 调用 callback 返回建议列表的数据
+          cb(results);
+        }
+      })
+    },
+    // 选择用例关联
+    handleSelect (item) {
+      this.testCaseID = item.id
+      console.log(item,this.testCaseID,'item---');
+     }
   }
 
 

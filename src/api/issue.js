@@ -106,3 +106,12 @@ export function issueLinkIdList(data) {
     method: "get",
   });
 }
+
+// 获取关联记录-链接的列表
+export function testCaseSerach(params) {
+  return request({
+    url: `testCase/testCaseSearch`,
+    method: "get",
+    params
+  });
+}
