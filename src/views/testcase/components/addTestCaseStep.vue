@@ -50,6 +50,7 @@
               <el-col v-for="field in scope.row.customFieldDatas" :key="field.customFieldId" :span="12">
                 <el-form-item size="small" :label="field.fieldNameCn" label-width="80px" prop="radio"
                   :rules="field.mandatory ? [{ required: true, message: ' ', trigger: 'change' }] : []"
+                  v-if="hasParentFiled(field)"
                   >
                   <el-input v-if="field.fieldType === 'text'" v-model="field.valueData" type="text"
                     :length="field.length"  @input="handleInput(scope.row)"/>
@@ -71,14 +72,14 @@
                       :value="item.value" />
                     <el-option label="添加新值" value="999" @click.native="handleAddPossibleValue(field)" />
                   </el-select>
-                  <el-link v-if="field.fieldType === 'link'" :href="field.defaultValue" target="_blank">
+                  <!-- <el-link v-if="field.fieldType === 'link'" :href="field.defaultValue" target="_blank">
                     {{ field.defaultValue }}
-                  </el-link>
-                 
-                  <el-input v-if="field.fieldType === 'linkedModue'" v-model="field.valueData" type="text" />
+                  </el-link> -->
+                  <el-input v-if="['link', 'linkedModue'].includes(field.fieldType)" v-model="field.valueData" type="text" />
                   <el-date-picker v-if="field.fieldType === 'Date'" v-model="field.valueData" type="date"
                     placeholder="选择日期" />
                 </el-form-item>
+                <div  v-else class="tips"><i class="el-icon-info"></i>{{ field.fieldNameCn }}没显示是因为没有父级关联字段</div>
               </el-col>
             </el-row>
             <addPossibleValue :field="currentField" :visible.sync="addPossibleValueVisible" @refresh="getData" />
@@ -246,11 +247,6 @@ export default {
         if (flag) {
           const list = []
           const parent = [...that.sysCustomFields, ...data.customFieldDatas].find(item => item.customFieldId === obj.others.parentListId);
-          console.log(parent, 'parent');
-          //TODO: 没有找到父级的时候 给出警告
-          if (!parent) {
-            return 
-          }
           Object.keys(obj).forEach(key => {
             if (key === parent.valueData && obj[key] instanceof Array) {
               obj[key].forEach((value) => {
@@ -270,6 +266,15 @@ export default {
       } catch (error) {
         return []
       }
+    },
+    // 如果找不到父级 就不显示 并提示用户
+    hasParentFiled (filed) {
+      if (filed.fieldType === 'linkedDropDown') {
+        const possibleValue = JSON.parse(filed.possibleValue);
+        const index = [...this.sysCustomFields, ...this.customFields].findIndex(item => item.customFieldId === possibleValue.others.parentListId);
+        return index > -1;
+      }
+      return true;
     },
     // 添加下拉框值
     handleAddPossibleValue(field) {
@@ -323,5 +328,12 @@ export default {
 @import '../index.scss';
 ::v-deep .el-table .el-table__cell{
   vertical-align: top;
+}
+.tips{
+  font-size: 14px;
+  color: #909399;
+   .el-icon-info {
+    margin-right: 10px;
+}
 }
 </style>
