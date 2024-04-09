@@ -15,19 +15,12 @@
     </div>
     <div class="user-menu">
       <div class="search-menu">
-        <el-input v-model="Idsearch" size="mini" placeholder="id/text" style="width: 240px">
+        <el-input v-model="Idsearch" size="mini" placeholder="记录ID 或 标题" style="width: 250px">
           <i slot="prefix" class="el-input__icon el-icon-search" />
         </el-input>
+        <el-button type="text">搜索</el-button>
       </div>
-      <div class="lan-menu">
-        <el-dropdown>
-          <el-button type="text">语言切换</el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item> 中文</el-dropdown-item>
-            <el-dropdown-item> English</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
+     
       <div class="info-menu">
         <el-dropdown>
           <el-avatar icon="el-icon-user-solid" :size="40" />
@@ -37,14 +30,9 @@
                 <img class="user-avatar" :src="userInfo.photo">
                 个人中心
               </div>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <div @click="menuSelect('SettingCenter')">设置中心</div>
-            </el-dropdown-item>
+            </el-dropdown-item>           
             <el-dropdown-item style="color: #f56c6c">
-              <div @click="logout">
-                <svg-icon icon-class="tuichu" class="tuichu" />
-                退出
+              <div @click="logout"> 退出              
               </div>
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -214,132 +202,23 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 20, 20, 0.08);
   display: flex;
   align-items: center;
 
   .nav-menu {
     flex: 1;
     height: 100%;
-    margin: 0 30px;
+    margin: 0 20px;
   }
 
   .user-menu {
-    width: 400px;
+    width: 500px;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  .right-menu {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 46px;
-
-    .user-avatar {
-      cursor: pointer;
-      width: 38px;
-      height: 38px;
-      border-radius: 25px;
-    }
-
-    .tuichu {
-      font-size: 28px;
-      color: #333;
-      margin-left: 10px;
-      cursor: pointer;
-      margin-left: 20px;
-    }
-
-    .lang {
-      margin-right: 20px;
-    }
-  }
-
-  .one_title {
-    display: flex;
-    // border: 1px solid $tabcolorBG;
-    border-radius: 23px;
-    height: 46px;
-    // background: $tabcolorBG;
-    align-items: center;
-    box-sizing: border-box;
-    color: #2a344b;
-    justify-content: space-between;
-
-    >div {
-      &:first-child {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-
-    .item {
-      height: 100%;
-      padding: 0 15px;
-      line-height: 44px;
-      cursor: pointer;
-      font-size: 14px;
-      margin: 0 20px;
-
-      &:hover {
-        position: relative;
-
-        &::after {
-          position: absolute;
-          bottom: -1px;
-          left: 0;
-          width: 100%;
-          height: 2px;
-          background: $tabcolorBG;
-          content: "";
-        }
-      }
-    }
-
-    .active {
-      background: #fff;
-      color: $tabcolorBG;
-      border-radius: 23px;
-      // margin: 5px 0;
-      position: relative;
-
-      &::after {
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: $tabcolorBG;
-        content: "";
-      }
-    }
-
-    ::v-deep .el-input {
-      width: 300px;
-      margin-left: 30px;
-
-      .el-input__inner {
-        border-radius: 15px;
-      }
-    }
-  }
-
-  .one_logo {
-    cursor: pointer;
-    height: auto;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &>img {
-      height: 40px;
-    }
-  }
 }
 </style>

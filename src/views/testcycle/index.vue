@@ -73,9 +73,6 @@
                 </el-table-column>
 
                 <el-table-column prop="id" :show-overflow-tooltip="true" min-width="160" label="UUID" />
-
-                <deletionDialog @confirm="confirmDelete" ref="deleteDialog" />
-
                 <el-table-column label="操作" min-width="148" fixed="right">
                   <template slot-scope="scope">
                     <el-button type="text" class="table-btn" @click.stop="openEdit(scope.row)"
@@ -83,9 +80,7 @@
                     <el-button type="text" class="table-btn" @click.stop="projectClone(scope.row.id, 'single')"
                       style="margin-right: 1px;">克隆</el-button>
                     <el-button type="text" class="table-btn" @click.stop="delproject(scope.row)">删除</el-button>
-                    <!-- <el-button type="text" class="table-btn" @click.stop="delproject(scope.row.id)" >删除</el-button>
-                    <el-button type="text" class="table-btn" @click.stop="openDeleteConfirmation(scope.row)">删除确认</el-button> -->
-
+                 
                   </template>
                 </el-table-column>
               </el-table>
@@ -100,20 +95,15 @@
 </template>
 
 <script>
-import viewTree from '../project/viewTree.vue'
+import viewTree from '../viewManage/viewTree.vue'
 import { message } from '@/utils/common'
 import { testCycleList, deltestCycle, clonetestCycle, testCycleListByClick, saveInstance } from '@/api/testcycle'
-import { handle } from 'express/lib/application'
-import deletionDialog from './components/deletionDialog.vue';
 import moment from 'moment';
-// import { queryViews } from '@/api/project'
 
 export default {
   name: 'testCycle',
   components: {
-    viewTree,
-    deletionDialog,
-
+    viewTree
   },
   data() {
     return {
@@ -290,12 +280,7 @@ export default {
       })
     },
 
-    // Display the confirmation dialog
-    openDeleteConfirmation(row) {
-      console.log('openDeleteConfirmation method is invoked!');
-      this.$refs.deleteDialog.showDialog(row);
-    },
-
+    // Display the confirmation dialog  
     confirmDelete(enteredTitle, selectedTestCycle) {
       console.log('confirmDelete method is invoked!');
       if (enteredTitle === selectedTestCycle.title) {

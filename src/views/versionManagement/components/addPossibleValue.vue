@@ -37,7 +37,7 @@
 </template>
 <script>
 import { updateValueDropDownBox } from "@/api/customFFields";
-import Text from '@/views/adminCenter/text.vue';
+import Text from "@/views/adminCenter/text.vue";
 export default {
   props: {
     field: {

@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import viewTree from "./viewTree.vue";
+import viewTree from '../viewManage/viewTree.vue'
 import { message } from "@/utils/common";
 import store from "@/store";
 import {

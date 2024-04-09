@@ -134,24 +134,18 @@ import {
 	formatChangedPara,
 	verification
 } from '@/utils/common'
-import {
-	fieldTypeAPI
-} from '@/api/customFFields'
-
-import { queryViewTree } from '@/views/project/viewTree'
-
 export default {
 	name: 'AddTestCycle',
 	data() {
 		return {
 			//openDia: false,
 			// 日期选择设置
-			dateOption:{
-				disabledDate(time){
-				return time.getTime() < Date.now();
+			dateOption: {
+				disabledDate(time) {
+					return time.getTime() < Date.now();
 				}
 			},
-		
+
 			sysCustomFields: [], //sField即上半部分
 			customFields: [], //custom即下半部分
 			oldSysCustomFields: [],
@@ -506,6 +500,9 @@ export default {
 			localStorage.setItem('tabName', activeName)
 			console.log(localStorage.getItem('tabName'));
 			this.activeName = localStorage.getItem('tabName')
+			if (this.id) {
+				this.$router.push({ query: { id: this.id } })
+			}
 			if (activeName === 'second' && !this.id) {
 				message(200, '请先保存测试周期再添加用例')
 				return false

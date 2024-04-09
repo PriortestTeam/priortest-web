@@ -16,7 +16,7 @@
       <el-button @click="executeCase('2', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
         class="custom-button fail">失败</el-button>
       <el-button @click="executeCase('4', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
-        class="custom-button block">停滞</el-button>
+        class="block custom-button">停滞</el-button>
       <el-button @click="executeCase('3', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
         class="custom-button skip">跳过</el-button>
       <el-button @click="executeCase('0', tcaseInTcycleList[tcaseListIndex].testCase.id)" type="text"
@@ -46,7 +46,7 @@
           <el-drawer title="缺陷" :visible.sync="drawer" :with-header="false" size="50%" show-close="true">
             <issue></issue>
           </el-drawer>
-          <el-button @click="executeStep(scope.$index, scope.row, $event)" class="custom-button block">停滞</el-button> |
+          <el-button @click="executeStep(scope.$index, scope.row, $event)" class="block custom-button">停滞</el-button> |
           <el-button @click="executeStep(scope.$index, scope.row, $event)" class="custom-button NA">无效</el-button> |
           <el-button @click="executeStep(scope.$index, scope.row, $event)" class="custom-button skip">跳过</el-button>
         </template>
@@ -102,18 +102,18 @@ export default {
         })
       }
     })
-    getListBytestCycle({ testCycleId: this.$route.query.id }).then(res => {
-      getListBytestCycle({ testCycleId: this.$route.query.id }, { pageNum: 1, pagSize: res.data.total }).then(res => {
-        if (res.data !== null) {
-          this.tcaseInTcycleList = res.data.list
-          // use this line to fix testCase undefined issue
-          this.tcaseListIndex = res.data.list.findIndex(item => item.testCase.id === this.$route.query.tableid);
-          // this.tcaseListIndex = res.data.list.every((item) => {
-          //   return testCase.id == this.$route.query.tableid
-          //  })
-        }
-      })
+
+    getListBytestCycle({ testCycleId: this.$route.query.id }, { pageNum: 1, pagSize: 10 }).then(res => {
+      if (res.data !== null) {
+        this.tcaseInTcycleList = res.data.list
+        // use this line to fix testCase undefined issue
+        this.tcaseListIndex = res.data.list.findIndex(item => item.testCase.id === this.$route.query.tableid);
+        // this.tcaseListIndex = res.data.list.every((item) => {
+        //   return testCase.id == this.$route.query.tableid
+        //  })
+      }
     })
+
 
   },
   computed: {
@@ -297,4 +297,5 @@ export default {
 .custom-button.block {
   color: #72027a;
   /* Color for 'block' button */
-}</style>
+}
+</style>

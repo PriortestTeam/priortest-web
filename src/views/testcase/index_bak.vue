@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import viewTree from '../project/viewTree.vue'
+import viewTree from '../viewManage/viewTree.vue'
 import { message } from '@/utils/common'
 import { testCaseList, delTestCase, cloneTestCase } from '@/api/testcase'
 // import { queryViews } from '@/api/project'

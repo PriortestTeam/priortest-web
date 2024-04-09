@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import viewTree from '../project/viewTree.vue'
+import viewTree from '../viewManage/viewTree.vue'
 import { message } from '@/utils/common'
 import { featureList, delFeature, cloneFeature, featureListByClick } from '@/api/feature'
 // import { queryViews } from '@/api/project'

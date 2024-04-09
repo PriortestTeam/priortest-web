@@ -3,13 +3,17 @@
     <div class="new_project">
       <el-button type="primary" class="Vm">
         <!-- <router-link :to="viewUrl"> 新建/管理视图 </router-link> -->
-        <div> 版本管理 </div>
+        <div>版本管理</div>
       </el-button>
-
     </div>
     <div class="comp-data">
       <div class="big-width">
-        <el-input class="search" placeholder="版本ID" prefix-icon="el-icon-search" v-model="input">
+        <el-input
+          class="search"
+          placeholder="版本ID"
+          prefix-icon="el-icon-search"
+          v-model="input"
+        >
         </el-input>
         <div class="all-btn" type="text">所有版本</div>
         <div v-for="(item, index) in setTree" :key="index" class="versiojn">
@@ -21,76 +25,70 @@
 </template>
 
 <script>
-import { getProjectVersion } from '@/api/customFFields'
-import { getqueryFortestCycle } from '@/api/testcycle'
+import { getProjectVersion } from "@/api/customFFields";
+import { getqueryFortestCycle } from "@/api/testcycle";
 export default {
-  name: 'ViewTree_vM',
+  name: "ViewTree_vM",
   props: {
     childScope: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       setTree: [], // tree数据,
-      input: '',
+      input: "",
       defaultProps: {
-        children: 'childViews',
-        label: 'title'
+        children: "childViews",
+        label: "title",
       },
-      viewUrl: '/project/projectview?scope=' + this.childScope,
+      viewUrl: "/project/projectview?scope=" + this.childScope,
       projectQuery: {
         pageNum: 1,
-        pageSize: 20
-      }
-    }
+        pageSize: 20,
+      },
+    };
   },
   computed: {
     projectInfo() {
-      return this.$store.state.user.userinfo
-    }
+      return this.$store.state.user.userinfo;
+    },
   },
 
   created() {
-    this.queryViewTree()
+    this.queryViewTree();
   },
 
   methods: {
-
-
     hadleShow() {
-      this.$emit('hadleTree')
+      this.$emit("hadleTree");
     },
     getList: function (data, labels) {
-      console.log("data: ", data, labels)
+      console.log("data: ", data, labels);
       const query = {
         labels: labels,
         projectId: this.projectInfo.userUseOpenProject.projectId,
         viewTreeDto: {
-          id: data.id
-        }
-      }
+          id: data.id,
+        },
+      };
 
-      this.$emit('childByValue', query)
+      this.$emit("childByValue", query);
     },
     async queryViewTree() {
-
-
-      await getProjectVersion(localStorage.getItem('projectId')).then((res) => {
+      await getProjectVersion(localStorage.getItem("projectId")).then((res) => {
         let treelist = JSON.parse(res.data[0].possible_value);
         let index = 0;
         this.setTree = Object.values(treelist);
         // for (let key in treelist) {
         //   this.setTree[index++] = treelist[key]
-        //   // 
+        //   //
         // }
-
-      })
-
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 <style scoped lang="scss">
 @import "../index.scss";
@@ -103,6 +101,8 @@ export default {
   box-sizing: border-box;
   // margin-right: 20px;
   height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
 
   .Vm {
     padding: 0 !important;
@@ -118,12 +118,10 @@ export default {
 
 .comp-data {
   width: 100%;
-  height: 80%;
+  height: 100%;
   overflow: auto;
-  overflow-y: scroll;
-  position: relative;
-  top: 20px;
-  border: 1px solid #b0c4f3;
+  overflow-y: auto;
+  padding: 6px;
 
   .big-width {
     width: 100%;
@@ -140,10 +138,16 @@ export default {
     }
 
     .search {
-      padding: 10px 7px;
+      margin-bottom: 10px;
     }
   }
 
+  .versiojn {
+    padding-top: 10px;
+    text-align: center;
+    .all-btn {
+    }
+  }
 
   .el-tree-node__content {
     .custom-tree-node {

@@ -47,9 +47,11 @@
         <template v-slot="scope">
           <el-form v-model="scope.row.customFieldDatas" ref="formData">
             <el-row :gutter="20">
-              <el-col v-for="field in scope.row.customFieldDatas" :key="field.customFieldId" :span="24">
+              <el-col v-for="field in scope.row.customFieldDatas" :key="field.customFieldId" :span="12">
                 <el-form-item size="small" :label="field.fieldNameCn" label-width="80px" prop="radio"
-                  :rules="field.fieldNameCn === 'ujkk' ? [{ required: true, message: ' ', trigger: 'change' }] : []">
+                  :rules="field.mandatory ? [{ required: true, message: ' ', trigger: 'change' }] : []"
+                  v-if="hasParentFiled(field)"
+                  >
                   <el-input v-if="field.fieldType === 'text'" v-model="field.valueData" type="text"
                     :length="field.length"  @input="handleInput(scope.row)"/>
                   <el-input v-if="field.fieldType === 'memo'" v-model="field.valueData" type="textarea" :rows="2"
@@ -63,20 +65,21 @@
                   <el-checkbox v-if="field.fieldType === 'checkbox'" :checked="field.valueData === 'checked'"
                     @change="field.valueData = field.valueData === 'checked' ? 'un-checked' : 'checked'" />
 
-                  <el-select v-if="['number', 'dropDown', 'multiList', 'userList'].includes(field.fieldType)"
+                  <el-select v-if="['number', 'dropDown', 'multiList', 'userList','linkedDropDown'].includes(field.fieldType)"
                     v-model="field.valueData" :multiple="['multiList'].includes(field.fieldType)"
-                    :placeholder="`请选择${field.fieldNameCn}`" :value="field.id">
-                    <el-option v-for="item in handleOptions(field.possibleValue)" :key="item.value" :label="item.label"
+                    :placeholder="`请选择${field.fieldNameCn}`">
+                    <el-option v-for="item in handleOptions(field.possibleValue, field.fieldType === 'linkedDropDown',scope.row)" :key="item.value" :label="item.label"
                       :value="item.value" />
                     <el-option label="添加新值" value="999" @click.native="handleAddPossibleValue(field)" />
                   </el-select>
-                  <el-link v-if="field.fieldType === 'link'" :href="field.defaultValue" target="_blank">
+                  <!-- <el-link v-if="field.fieldType === 'link'" :href="field.defaultValue" target="_blank">
                     {{ field.defaultValue }}
-                  </el-link>
-                  <el-input v-if="field.fieldType === 'link'" v-model="field.valueData" type="text" />
+                  </el-link> -->
+                  <el-input v-if="['link', 'linkedModue'].includes(field.fieldType)" v-model="field.valueData" type="text" />
                   <el-date-picker v-if="field.fieldType === 'Date'" v-model="field.valueData" type="date"
                     placeholder="选择日期" />
                 </el-form-item>
+                <div  v-else class="tips"><i class="el-icon-info"></i>{{ field.fieldNameCn }}没显示是因为没有父级关联字段</div>
               </el-col>
             </el-row>
             <addPossibleValue :field="currentField" :visible.sync="addPossibleValueVisible" @refresh="getData" />
@@ -121,11 +124,6 @@ export default {
   created() {
     // 初始化自定义字段
     this.getData()
-  },
-  mounted() {
-
-    //
-
   },
   methods: {
     // 删除步骤
@@ -190,7 +188,7 @@ export default {
         scopeId: '4000001'
       }).then((res) => {
         if (res.code === '200') {
-          const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'rad', 'linkedDropDown', 'userList', 'memo', 'text', 'checkbox']
+          const arr = ['number', 'dropDown', 'link', 'multiList', 'Date', 'radio', 'linkedDropDown', 'linkedModue','userList', 'memo', 'text', 'checkbox']
           this.sysCustomFields = res.data.filter(item => item.type === 'sField').map((item, index) => {
             return {
               label: 'sField' + item.fieldNameEn,
@@ -242,13 +240,15 @@ export default {
         }
       })
     },
-    handleOptions(obj, flag) {
+    handleOptions(obj, flag, data) {
+      const that = this;
       try {
+        obj = JSON.parse(obj)
         if (flag) {
-          obj = JSON.parse(obj)
           const list = []
+          const parent = [...that.sysCustomFields, ...data.customFieldDatas].find(item => item.customFieldId === obj.others.parentListId);
           Object.keys(obj).forEach(key => {
-            if (obj[key] instanceof Array) {
+            if (key === parent.valueData && obj[key] instanceof Array) {
               obj[key].forEach((value) => {
                 list.push({ value, label: value + '(' + key + ')' })
               })
@@ -256,7 +256,7 @@ export default {
           })
           return list
         } else {
-          return Object.values(JSON.parse(obj)).map(item => {
+          return Object.values(obj).map(item => {
             return {
               label: item,
               value: item
@@ -266,6 +266,15 @@ export default {
       } catch (error) {
         return []
       }
+    },
+    // 如果找不到父级 就不显示 并提示用户
+    hasParentFiled (filed) {
+      if (filed.fieldType === 'linkedDropDown') {
+        const possibleValue = JSON.parse(filed.possibleValue);
+        const index = [...this.sysCustomFields, ...this.customFields].findIndex(item => item.customFieldId === possibleValue.others.parentListId);
+        return index > -1;
+      }
+      return true;
     },
     // 添加下拉框值
     handleAddPossibleValue(field) {
@@ -309,7 +318,7 @@ export default {
     handleInput(row){
       this.isModified = true;
       row.isRowModified = true;
-  }
+    }
   }
 
  
@@ -317,4 +326,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '../index.scss';
+::v-deep .el-table .el-table__cell{
+  vertical-align: top;
+}
+.tips{
+  font-size: 14px;
+  color: #909399;
+   .el-icon-info {
+    margin-right: 10px;
+}
+}
 </style>

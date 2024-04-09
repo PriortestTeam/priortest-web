@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import viewTree from '../project/viewTree.vue'
+import viewTree from '../viewManage/viewTree.vue'
 import { message } from '@/utils/common'
 import { sprintList, delSprint, cloneSprint } from '@/api/sprint'
 // import { queryViews } from '@/api/project'
