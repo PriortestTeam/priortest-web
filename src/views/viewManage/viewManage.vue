@@ -60,6 +60,7 @@
           <el-select
             :disabled="form.isAuto == 1"
             v-model="form.parentId"
+            value-key="id"
             clearable
             size="small"
             filterable
@@ -71,7 +72,7 @@
               v-for="i in viewParents"
               :key="i.id"
               :label="i.title"
-              :value="i.id"
+              :value="i.id + ''"
             />
           </el-select>
         </el-form-item>
@@ -85,8 +86,8 @@
           <el-checkbox
             :disabled="form.parentId !== ''"
             v-model="form.isAuto"
-            true-label="1"
-            false-label="0"
+            :true-label="1"
+            :false-label="0"
             @change="autoCreateChange"
           />
         </el-form-item>
@@ -127,7 +128,7 @@
                   </el-col>
                   <el-col :span="4">
                     <el-select
-                      v-model="filterSelValue[index]"
+                      v-model="item.fieldNameCn"
                       value-key="fieldNameEn"
                       size="small"
                       placeholder="请选择字段"
@@ -178,7 +179,7 @@
                       placeholder="请选择状态"
                     >
                       <el-option
-                        v-for="i in filterSelValue[index].possibleValue"
+                        v-for="i in filterSelValue[index]?.possibleValue"
                         :key="i.optionValue"
                         :label="i"
                         :value="i"
@@ -188,7 +189,7 @@
                     <el-cascader
                       v-else-if="item.fieldType === 'linkedDropDown'"
                       v-model="item.sourceVal"
-                      :options="filterSelValue[index].possibleValue"
+                      :options="filterSelValue[index]?.possibleValue"
                     />
                     <!-- 当选择的类型为日期时,第3个查询条件框出现日期选择框 -->
                     <el-date-picker
@@ -551,7 +552,7 @@ export default {
       this.scopeDis = false;
       this.filterConditionList = [];
       this.scopeSelvalue = [];
-      this.viewParents = [];
+      //this.viewParents = [];
       this.filterSelValue = [];
       this.addfilter = false;
       this.$refs["form"].resetFields();
@@ -858,8 +859,6 @@ export default {
     //视图修改
     async toEdit(row) {
       console.log("获取查询条件数据...");
-      // console.log("row", row);
-      
       this.isClick = true;
       this.resetForm();
       this.form.id = row.id;
@@ -867,21 +866,21 @@ export default {
       // this.$refs.viewData.clearSelection();
       // this.$refs.viewData.toggleRowSelection(row);
 
-      // console.log(row, "filter");
-
       this.form.title = row.title;
 
       this.form.scopeName = row.scopeName;
-      this.scopeSelvalue = this.form.scopeName; 
+      this.scopeSelvalue = this.form.scopeName;
 
-      console.log("this.form.isPrivate："+this.form.isPrivate);
-      console.log("row.isPrivate："+row.isPrivate);
-      // console.log("this.isPrivate："+this.isPrivate);
+      // console.log("this.form.isPrivate："+this.form.isPrivate);
+      // console.log("row.isPrivate："+row.isPrivate);
+      this.form.parentId = row.parentId;
+      this.form.isAuto = row.isAuto;
+      this.form.oneFilters = row.oneFilters;
+      this.form.auto_filter=row.auto_filter;
 
-      this.form.parentId= row.parentId;
-      this.form.isPrivate=row.isPrivate.toString();
+      this.form.isPrivate = row.isPrivate.toString();
+      this.addfilter = true;
 
-      
       // row.filter.length
       //   ? (this.form.oneFilters = JSON.parse(row.filter))
       //   : (this.form.oneFilters = [
